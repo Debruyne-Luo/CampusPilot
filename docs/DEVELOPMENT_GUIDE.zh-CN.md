@@ -13,9 +13,10 @@
   Evidence、Trace、Risk/Permission 有明确边界。工程团队分工不等于产品内的多 Agent。
 - **DEFERRED**：登录后个人数据、认证接入、提交、撤销、修改记录、支付、身份变更等真实写操作。
   展示官方服务链接不代表已替用户登录、办理或完成业务。
-- 本次只创建文档与治理文件，没有实现运行时、安全控制、应用目录或可执行命令。
-  Core Framework Skeleton 是 **PROPOSED，PLAN ONLY**，必须另行批准后才能实施。
-- 语言、运行时版本、开发工具、框架、生产 Agent runtime、模型供应商、数据库及 GIS 供应商均未选定。
+- Core Framework Skeleton 技术方案已 **CONFIRMED**，本地实现及开发自测已完成，等待人类 Review 和 Muse 独立 QA。
+  使用 Python 3.14.7、uv、Protocol、Pydantic 2、pytest、mypy strict、Ruff 和 CLI；状态与日志仅在内存中。
+  运行命令见 [README](../README.md)，批准依据见 [ADR 0003](adr/0003-python-skeleton-toolchain.md)。
+- 生产 Agent runtime、Web 框架、模型供应商、持久数据库及 GIS 供应商仍未选定。
   全部 **OPEN** 项及其他技术状态以 [架构登记表](ARCHITECTURE.md) 为准，不能把建议当作批准。
 - **REJECTED FOR V1** 项不得借模块实现绕过。新增决定由 Tech Lead 批准后进入 ADR。
   来源优先级、适用范围和冲突处理以 [PRODUCT](PRODUCT.md) 为准；第三方数据不能悄悄覆盖学校官方信息。
@@ -39,7 +40,8 @@
 本节描述未来工作。每张卡都给出责任、禁区、上下游、契约、Skeleton 与后续范围、负责人、
 评审、Muse 验证和完成条件。所有契约字段、状态值及运行语义仍为 **PROPOSED**，以
 [API_CONTRACT](API_CONTRACT.md) 为唯一接口草案；这里不另设枚举或数据结构。
-“Skeleton”仅表示下一任务获批后的建议内容，不是本次执行授权。
+下列模块卡保留分阶段目标；Skeleton 的当前实现与限制以 ARCHITECTURE 的状态说明为准，
+其余阶段不是执行授权。具体 Python 契约已实现，但不代表冻结未来 Web API。
 
 ### 1. API
 
@@ -232,7 +234,8 @@
 
 ## 开发阶段
 
-以下是 **PROPOSED** 路线图，不是执行授权。阶段顺序固定为 Phase 0–8；每个阶段由独立 Issue
+以下是阶段路线图：Phase 0 已获批并完成本地实现；Phase 1–8 仍为 **PROPOSED**，不是执行授权。
+阶段顺序为 Phase 0–8；每个阶段由独立 Issue
 约定范围和验收。评估、测试、安全边界与数据质量应从最早相关模块开始，Phase 6/7 是专项深化，
 并不意味着此前可以跳过这些工作。Phase 8 超出当前只读 v1，需新的明确批准。
 
@@ -249,13 +252,13 @@
 | Phase 8：Authorized Actions | 仅执行被明确授权的真实操作 | 另行设计身份、逐项审批、幂等、结果核对、恢复和审计 | Codex；Muse QA/Red Team，Tech Lead 批准 | Phase 7；新产品范围及每种 Action、认证与安全要求获批 | 逐项通过批准绑定、重复／未知结果和恢复测试；未批准操作不可达 |
 
 Skeleton 的具体顺序、验收、排除项及必须先做的技术选择见
-[下一任务计划](ARCHITECTURE.md#next-task-core-framework-skeleton--proposed-plan-only)。
-本手册不提供尚未存在的安装、运行或测试命令。
+[Skeleton 当前状态](ARCHITECTURE.md#core-framework-skeleton--implemented-locally)。
+实际安装、运行及测试命令统一维护在 README，避免多处复制。
 
 ## GitHub 协作流程
 
 GitHub 是项目唯一事实记录源。聊天建议应转成 Issue、文档、评审或 ADR 才成为团队可追踪记录。
-本次仍只修改本地文档，**不得 commit、push、merge**；下面是未来获准发布后的流程。
+本次在本地实现获批 Skeleton，**不得 commit、push、merge**；下面是未来获准发布后的流程。
 
 1. **Issue**：写目标、允许／禁止修改范围、依赖、验收、负责人、评审人和 QA；先暴露 OPEN 决策。
 2. **短期分支**：从核实的基线开始，范围对应 Issue；保留他人工作，不因文档中的目录建议创建空应用结构。

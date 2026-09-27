@@ -26,7 +26,8 @@ service has completed their request.
 | Multi-step task guidance | Track what is known, missing, completed, and still required |
 | Official online-service deep links | Hand the user to the relevant official service |
 
-These are approved capability areas, not implemented features. Their first
+These are approved production capability areas, not implemented production features.
+The local Skeleton demonstrates a synthetic service/office/route sequence only. Their first
 service set, data coverage, rollout order, and acceptance thresholds are **OPEN**.
 An official deep link does not authorize CampusPilot to log in, automate the
 destination, or submit anything on the user's behalf.
@@ -93,8 +94,8 @@ architecture approval, acceptance, and merge decisions. GitHub is the project's
 single source of truth. The responsibility matrix and future delivery phases are
 in the [Chinese development guide](DEVELOPMENT_GUIDE.zh-CN.md).
 
-This bootstrap records decisions and contracts only. The Core Framework Skeleton
-is a **PROPOSED** next task requiring separate approval; it must use clearly
-synthetic fixtures and must not introduce real university data or integrations.
+The Core Framework Skeleton technical plan is **CONFIRMED** and implemented locally
+with synthetic fixtures; human Review and Muse QA are pending. It introduces no real
+university data or integrations. See [ADR 0003](adr/0003-python-skeleton-toolchain.md).
 See the [architecture decision register](ARCHITECTURE.md) for unresolved choices
 and the [ADR index](adr/README.md) for approved decisions.

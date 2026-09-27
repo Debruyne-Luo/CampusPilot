@@ -1,9 +1,10 @@
 # API and domain contract proposals
 
-**Status: PROPOSED.** These are framework-independent responsibilities and field proposals,
-not implemented APIs, approved wire schemas, or a choice of HTTP/REST/streaming transport.
-The architecture boundaries are [CONFIRMED](ARCHITECTURE.md); contract details need review
-before the Skeleton. No endpoint, authentication protocol, or persistence engine is selected.
+**Status:** Architecture and Skeleton implementation scope are **CONFIRMED**. The local Python
+contracts are implemented for human Review; the broader production API proposals below remain
+**PROPOSED**. No HTTP endpoint, authentication protocol, or persistence engine is selected.
+The concrete local schema is in [contracts.py](../backend/src/campuspilot/contracts.py);
+interfaces are in [interfaces.py](../backend/src/campuspilot/interfaces.py).
 
 ## Contract conventions
 
@@ -105,3 +106,32 @@ Contract review must settle required/optional fields, status/error categories, i
 behavior, session isolation, trace failure semantics, and mock risk policy. Muse should verify
 both expected results and rejection paths. [SKILLS](SKILLS.md) owns execution rules;
 [ARCHITECTURE](ARCHITECTURE.md) owns technology decisions and the next-task acceptance plan.
+
+## Implemented local contract subset
+
+- Strict, frozen Pydantic records reject extra fields and unintended input coercion. Collections
+  use tuples where stored; the raw ToolCall arguments mapping is validated and copied before use.
+- TaskRequest carries session/task IDs, an objective, Skill ID and max_steps (1–10; default 3).
+  There is no user identity or authenticated API in this local program.
+- RunResult statuses are completed/needs_input/failed/cancelled. Task outcome is only
+  synthetic_guidance or unresolved; no real university completion status is emitted.
+- ToolResult statuses are success/empty/denied/invalid/failed/cancelled. Only success carries
+  data; unsuccessful non-empty outcomes require a safe error_code. No automatic retries occur.
+- Synthetic service/office/route payloads are a discriminated union and require Evidence.
+  Evidence verification and synthetic flags are restricted to synthetic fixtures. Official
+  source types and verification workflow need a later reviewed extension; they are not mocked
+  as verified university facts. Optional timestamp/URL fields are null in current fixtures.
+- PermissionDecision exposes allow/deny plus a reason. Pending approval remains a production
+  proposal only. The application supplies ExecutionContext; model arguments cannot carry it.
+- Session records retain terminal runs and evidence in one process. Missing IDs raise KeyError;
+  duplicate sessions, active-run conflicts and incorrect run ownership raise SessionConflict.
+- TraceEvent carries sequence and session/task/run/call IDs, component version, safe category
+  and evidence IDs. Skill selection records ID/version. No timestamp or raw result copy is used.
+  It is an observable journal, not a persistent replay engine.
+- The synchronous Protocols are ModelProvider, AgentHarness, SessionStore, Skill, Tool,
+  PermissionPolicy and ExecutionJournal. No provider SDK or orchestration framework is imported.
+
+The demo completes three Tools with 12 events. Journal failures may leave an incomplete journal;
+no recovery or atomic checkpoint guarantee is claimed. All mock data and CLI results identify
+synthetic status. Public transport schemas, hard timeouts, async execution, privacy retention
+and durable state remain OPEN. See ARCHITECTURE for the current implementation limits.

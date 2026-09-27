@@ -4,10 +4,10 @@
 later it also owns Red Team work. The Tech Lead accepts work and authorizes merges.
 GitHub Issues, PRs, and repository documents are the project record.
 
-This repository currently contains documentation only. No application, runtime
-permission enforcement, automated test suite, deployment, monitoring, backup, or
-release pipeline exists. The procedures below describe responsibilities and future
-acceptance expectations; they are not claims of implemented controls.
+The local Python Skeleton implements mock-tool permissions, synthetic evidence, an
+in-memory journal and developer tests. It has no deployment, monitoring, backup or release
+pipeline. Human Review and Muse independent QA remain pending. Future operational procedures
+below are not claims of production controls; run commands are in [README](README.md).
 
 ## Responsibilities
 
@@ -35,9 +35,10 @@ and unresolved findings. Muse records reproduction steps and severity in GitHub.
 Unresolved acceptance failures return to the owner; disputed requirements go to the
 Tech Lead. A merge is not deployment authorization.
 
-For this documentation bootstrap, validate file links, decision labels, ownership,
-scope, and agreement between documents. Runtime checks are **not applicable**;
-do not invent test results or initialize tooling just to validate these documents.
+For the Skeleton, validate links and decision consistency, run pytest/mypy/Ruff and the
+offline demo, and independently challenge permission denial, invalid inputs/outputs, empty
+results, journal failures and session isolation. Confirm every fixture is synthetic.
+Developer results do not substitute for Muse QA; production checks remain not applicable.
 
 **PROPOSED** future release evidence, once implementation and an environment exist:
 
@@ -74,8 +75,8 @@ or withdrawn data out of published answers according to the future approved poli
 
 **OPEN:** actual source owners and reviewers, approved sources, permitted acquisition
 methods, verification criteria, refresh intervals, retention, and withdrawal rules.
-No university dataset is included in this bootstrap. Any future mock fixtures must
-be unmistakably synthetic.
+No university dataset is included. Existing mock fixtures are explicitly synthetic;
+new fixtures must preserve that distinction.
 
 ## DevOps and incident readiness
 
