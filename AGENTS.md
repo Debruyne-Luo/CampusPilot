@@ -48,7 +48,9 @@ Read the relevant contracts and accepted [ADRs](docs/adr/README.md) before chang
 
 ## Current repository stage
 
-The approved Python Core Framework Skeleton is implemented locally with synthetic mocks,
-in-memory state and developer checks. It awaits human Review and Muse independent QA.
+The approved Python Core Framework Skeleton uses synthetic mocks and in-memory state.
+Issue #2 adds the approved three-service CDUT JSON inventory and isolated source-backed queries;
+all real records remain needs_review. See data/cdut/README.md for source and review limitations.
+The Phase 1 implementation awaits human Review and Muse independent QA.
 Production capabilities and runtime selection remain OPEN; see ARCHITECTURE and ADR 0003.
 Do not expand into real integrations or claim that mock tests establish production security.

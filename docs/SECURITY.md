@@ -9,6 +9,16 @@ Authentication, approval execution, sandboxing, monitoring and production privac
 are not implemented. Trace records omit raw prompts, arguments, and exception contents;
 this is data minimization, not a general-purpose redaction engine.
 
+Issue #2 extends these checks to offline source-backed directory reads. Real data loads only
+from explicit local JSON, requires official CDUT source hosts and resolvable field evidence,
+and stays needs_review. Source URLs are never fetched during queries. Real/synthetic Tool
+registries are assembled separately; declared payload and Evidence types reject incompatible
+outputs. This is data separation, not a general authorization boundary. Allowlist and risk
+checks remain the permission boundary; no dataset flag is added to the context. Public instructions
+may describe credentials the official site asks for, but CampusPilot neither requests nor stores
+their actual values. There is no login, loss-report submission, signing, payment or personal-data
+access. Tests validate structural provenance, not truth or current validity of university rules.
+
 The approved public, read-only boundary is defined in [PRODUCT](PRODUCT.md).
 Authenticated personal-data access and real write actions are **DEFERRED**.
 

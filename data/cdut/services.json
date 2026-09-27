@@ -1,0 +1,113 @@
+[
+  {
+    "service_id": "cdut:service:campus-card-loss",
+    "name": "校园卡挂失",
+    "aliases": ["一卡通挂失", "校园卡丢失"],
+    "department": "网络与信息化处",
+    "office_id": "cdut:office:network-information",
+    "audience": "校园卡持卡学生；按学生版指南记录",
+    "academic_year": null,
+    "modes": ["online", "self_service"],
+    "entry_points": ["成理校园卡微信小程序", "校园卡自助设备（当前位置未知）"],
+    "required_materials": null,
+    "required_inputs": ["小程序绑定：学工号及砚湖易办密码", "小程序挂失：证件号及消费密码", "自助设备挂失：校园卡卡号及密码"],
+    "steps": [
+      {"mode": "online", "instruction": "在成理校园卡小程序完成校园卡绑定后，选择卡片挂失，并按提示输入验证信息。", "condition": "依据2024年8月指南，当前界面及规则待复核"},
+      {"mode": "self_service", "instruction": "在自助设备选择校园卡挂失，输入卡号查询，再输入密码进行挂失。", "condition": "自助设备当前位置与开放时间未知"}
+    ],
+    "availability": null,
+    "fees": null,
+    "limits": null,
+    "verification_status": "needs_review",
+    "synthetic": false,
+    "notes": ["仅记录用户自行办理的公开指引；CampusPilot不会收集密码、证件号或执行挂失。", "当前人工窗口、设备位置、开放时间、费用与处理时限未知。", "本条不包含补卡，也不推断挂失后的其他业务影响。"],
+    "field_evidence": [
+      {"field_path": "name", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "正文第25页校园卡挂失标题。"},
+      {"field_path": "aliases", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "项目根据校园卡挂失事项整理的检索别名，不是新增官方名称。"},
+      {"field_path": "department", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "封面编制单位和第五章校园卡服务；不推断具体受理科室。"},
+      {"field_path": "audience", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "学生版指南范围。"},
+      {"field_path": "modes", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "正文第25、34页分别说明自助设备和小程序渠道。"},
+      {"field_path": "entry_points.0", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "正文第29、34页成理校园卡小程序。"},
+      {"field_path": "entry_points.1", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "正文第25页；没有据此补写设备地点。"},
+      {"field_path": "required_inputs.0", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "正文第29页绑定；仅记录输入类型。"},
+      {"field_path": "required_inputs.1", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "正文第34页挂失验证信息；仅记录输入类型。"},
+      {"field_path": "required_inputs.2", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "正文第25页自助设备；不推断密码与其他渠道相同。"},
+      {"field_path": "steps.0", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "正文第29、34页。"},
+      {"field_path": "steps.1", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "正文第25页。"}
+    ]
+  },
+  {
+    "service_id": "cdut:service:graduate-enrollment-proof",
+    "name": "研究生在读证明申请",
+    "aliases": ["研究生在读证明", "在读证明"],
+    "department": "研究生院",
+    "office_id": "cdut:office:graduate-school",
+    "audience": "研究生；不得据此扩展至本科生",
+    "academic_year": null,
+    "modes": ["online", "self_service"],
+    "entry_points": ["砚湖易办 → 常用系统入口 → 管理服务相关 → 可信电子凭证平台", "线下自助打印机（位置未确认）"],
+    "required_materials": null,
+    "required_inputs": ["线上按平台要求补全证明内容；线下使用统一身份认证或校园卡进入个人账户"],
+    "steps": [
+      {"mode": "online", "instruction": "进入可信电子凭证平台的电子签约，在用印流程选择在读证明，补全内容并生成文件，签署后下载。", "condition": "2023年试运行通知记载的流程，当前规则待复核"},
+      {"mode": "self_service", "instruction": "在自助打印机选择研究生，进入个人账户，选择在读证明，预览并选择份数后打印。", "condition": "2023年试运行通知记载的流程；设备位置未知"}
+    ],
+    "availability": null,
+    "fees": ["2023年通知：电子证明申请免费；纸质证明每类有免费打印次数，具体份数未列明"],
+    "limits": ["2023年通知：线上每天申请一次，下载不受限制；线下申请次数不限制，免费打印份数另有限制"],
+    "verification_status": "needs_review",
+    "synthetic": false,
+    "notes": ["仅提供来源指引，CampusPilot不会登录、签署或申请证明。", "2023年试运行规则延续情况待复核；2026年官方资料仅支持平台仍被列出。", "材料未知不表示无需材料；纸质免费份数和超额费用未知。"],
+    "field_evidence": [
+      {"field_path": "name", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "第一节；项目归纳的事务名称。"},
+      {"field_path": "aliases", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "基于第一节事项名称整理的检索别名，不是新增官方名称。"},
+      {"field_path": "department", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "研究生院发布并提供业务咨询；不推断具体科室。"},
+      {"field_path": "audience", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "第一节适用人群。"},
+      {"field_path": "modes", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "第二节：线上和线下自助。"},
+      {"field_path": "entry_points.0", "evidence_ids": ["cdut:evidence:graduate-proof-2023", "cdut:evidence:credential-platform-2026"], "note": "路径来自2023年第二节；2026年第四节仅佐证平台被列出，不佐证旧路径或旧规则仍有效。"},
+      {"field_path": "entry_points.1", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "第二节线下渠道；位置未给出。"},
+      {"field_path": "required_inputs", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "第二节；只记录输入类别，不收集实际身份或账户信息。"},
+      {"field_path": "steps.0", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "第二节线上流程，保留试运行条件。"},
+      {"field_path": "steps.1", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "第二节线下流程。"},
+      {"field_path": "fees", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "第三节；不是当前收费已核验结论。"},
+      {"field_path": "limits", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "第三节；2026年平台资料不能支持这些限制。"}
+    ]
+  },
+  {
+    "service_id": "cdut:service:tuition-receipt-2026-2027",
+    "name": "学杂费电子票据获取（2026-2027学年）",
+    "aliases": ["学杂费电子票据", "学费发票", "缴费票据"],
+    "department": "财务处",
+    "office_id": "cdut:office:finance",
+    "audience": "2026-2027学年在校生；按通知明确的缴费方式区分等待条件",
+    "academic_year": "2026-2027",
+    "modes": ["online"],
+    "entry_points": ["https://jcc.cdut.edu.cn → 学生网上缴费；校外按通知从砚湖易办VPN入口访问财务缴费平台"],
+    "required_materials": null,
+    "required_inputs": null,
+    "steps": [
+      {"mode": "online", "instruction": "在网上缴费平台进入缴费历史查询，再选择电子票据下载。", "condition": "仅限2026-2027学年，并满足对应缴费方式的等待条件"}
+    ],
+    "availability": [
+      {"condition": "微信或网页缴费成功；仅限2026-2027学年", "wait": "缴费成功24小时后"},
+      {"condition": "生源地贷款；仅限2026-2027学年", "wait": "银行放款满1个月，或确认支用成功满1个月后"}
+    ],
+    "fees": null,
+    "limits": null,
+    "verification_status": "needs_review",
+    "synthetic": false,
+    "notes": ["仅提供获取指引；CampusPilot不会登录、缴费或读取个人票据。", "支付宝缴费的票据等待时间未知，不适用本记录的24小时规则推断。", "票据缺失或错误处理流程、专门窗口和当前办公时间未知。"],
+    "field_evidence": [
+      {"field_path": "name", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "标题和第三节；项目归纳的事务名称。"},
+      {"field_path": "aliases", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "第三节事项的项目检索别名，不代表另一种票据业务。"},
+      {"field_path": "department", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "通知正文及落款单位。"},
+      {"field_path": "audience", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "标题和第三节条件。"},
+      {"field_path": "academic_year", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "标题明确2026-2027学年，不转换为推测的起止日期。"},
+      {"field_path": "modes", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "第三节网上获取。"},
+      {"field_path": "entry_points", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "第二节（三）校内/校外访问方式。"},
+      {"field_path": "steps.0", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "第三节下载路径。"},
+      {"field_path": "availability.0", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "第三节首段只明确微信/网页，不包含支付宝。"},
+      {"field_path": "availability.1", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "第三节贷款等待条件。"}
+    ]
+  }
+]

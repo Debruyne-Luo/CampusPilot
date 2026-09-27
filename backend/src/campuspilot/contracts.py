@@ -1,53 +1,38 @@
-"""Provider-independent records. All current payloads are synthetic fixtures."""
+"""Provider-independent execution records and discriminated Tool results."""
 
 from typing import Annotated, Literal, Self
 
-from pydantic import BaseModel, ConfigDict, Field, JsonValue, model_validator
+from pydantic import Field, JsonValue, model_validator
 
-Identifier = Annotated[str, Field(min_length=1, max_length=120)]
+from campuspilot.domain import CampusOffice, CampusService, DirectoryRecord
+from campuspilot.evidence import Contract as Contract
+from campuspilot.evidence import Evidence as Evidence
+from campuspilot.evidence import FieldEvidence as FieldEvidence
+from campuspilot.evidence import Identifier as Identifier
+from campuspilot.evidence import Payload as Payload
+from campuspilot.evidence import SourceEvidence as SourceEvidence
+from campuspilot.evidence import SyntheticEvidence as SyntheticEvidence
+from campuspilot.evidence import SyntheticPayload
+
 Risk = Literal["public_read", "restricted_read", "write", "sensitive", "unknown"]
 Status = Literal["success", "empty", "denied", "invalid", "failed", "cancelled"]
 
 
-class Contract(BaseModel):
-    model_config = ConfigDict(strict=True, extra="forbid", frozen=True)
-
-
-class Evidence(Contract):
-    evidence_id: Identifier
-    source_id: Identifier
-    source_reference: Identifier
-    version: Identifier = "fixture-v1"
-    locator: Identifier
-    applicability: str = "synthetic demo only; not university information"
-    source_url: str | None = None
-    source_updated_at: str | None = None
-    retrieved_at: str | None = None
-    verified_at: str | None = None
-    verification: Literal["synthetic"] = "synthetic"
-    synthetic: Literal[True] = True
-
-
-class Payload(Contract):
-    synthetic: Literal[True] = True
-    evidence: tuple[Evidence, ...] = Field(min_length=1)
-
-
-class ServiceResult(Payload):
+class ServiceResult(SyntheticPayload):
     kind: Literal["service"] = "service"
     service_id: Identifier
     office_id: Identifier
     label: str
 
 
-class OfficeResult(Payload):
+class OfficeResult(SyntheticPayload):
     kind: Literal["office"] = "office"
     office_id: Identifier
     place_id: Identifier
     label: str
 
 
-class RouteResult(Payload):
+class RouteResult(SyntheticPayload):
     kind: Literal["route"] = "route"
     origin: Identifier
     destination: Identifier
@@ -57,7 +42,57 @@ class RouteResult(Payload):
     )
 
 
-ToolData = Annotated[ServiceResult | OfficeResult | RouteResult, Field(discriminator="kind")]
+class DirectoryPayload(Payload):
+    synthetic: Literal[False] = False
+    evidence: tuple[SourceEvidence, ...] = Field(min_length=1)
+    notice: Literal["Source-backed guidance; needs human review. No action was performed."] = (
+        "Source-backed guidance; needs human review. No action was performed."
+    )
+
+
+class ServiceSearchResult(DirectoryPayload):
+    kind: Literal["directory_services"] = "directory_services"
+    matches: tuple[CampusService, ...] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def referenced_evidence_present(self) -> Self:
+        check_result_evidence(self.matches, self.evidence)
+        return self
+
+
+class DirectoryOfficeResult(DirectoryPayload):
+    kind: Literal["directory_office"] = "directory_office"
+    office: CampusOffice
+
+    @model_validator(mode="after")
+    def referenced_evidence_present(self) -> Self:
+        check_result_evidence((self.office,), self.evidence)
+        return self
+
+
+def check_result_evidence(
+    records: tuple[DirectoryRecord, ...], evidence: tuple[SourceEvidence, ...]
+) -> None:
+    referenced = {
+        eid for record in records for link in record.field_evidence for eid in link.evidence_ids
+    }
+    if referenced != {item.evidence_id for item in evidence}:
+        raise ValueError("Result evidence must exactly resolve its field references")
+
+
+ToolData = Annotated[
+    ServiceResult | OfficeResult | RouteResult | ServiceSearchResult | DirectoryOfficeResult,
+    Field(discriminator="kind"),
+]
+
+
+class SearchInput(Contract):
+    query: Annotated[str, Field(min_length=1, max_length=120, pattern=r"\S")]
+    academic_year: Annotated[str, Field(pattern=r"^\d{4}-\d{4}$")] | None = None
+
+
+class OfficeInput(Contract):
+    office_id: Identifier
 
 
 class ToolCall(Contract):
@@ -151,6 +186,12 @@ class RunResult(Contract):
     results: tuple[ToolResult, ...]
     error_code: str | None = None
     synthetic: Literal[True] = True
+
+    @model_validator(mode="after")
+    def synthetic_results_only(self) -> Self:
+        if any(result.data and not result.data.synthetic for result in self.results):
+            raise ValueError("The fake harness cannot contain real directory results")
+        return self
 
 
 class Session(Contract):

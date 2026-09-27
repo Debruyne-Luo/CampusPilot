@@ -27,8 +27,9 @@ service has completed their request.
 | Official online-service deep links | Hand the user to the relevant official service |
 
 These are approved production capability areas, not implemented production features.
-The local Skeleton demonstrates a synthetic service/office/route sequence only. Their first
-service set, data coverage, rollout order, and acceptance thresholds are **OPEN**.
+The local Skeleton demonstrates a synthetic service/office/route sequence. Issue #2 separately
+approves three source-backed local directory queries; see the [inventory](../data/cdut/README.md).
+Production rollout and acceptance thresholds remain **OPEN**.
 An official deep link does not authorize CampusPilot to log in, automate the
 destination, or submit anything on the user's behalf.
 
@@ -64,10 +65,11 @@ authority for service eligibility, contacts, opening hours, or procedures.
 Manual verification must identify what was checked and against which source;
 it does not create institutional authority.
 
-**OPEN:** The actual service corpus, approved source inventory, source owners,
-public faculty fields, locations, contacts, opening hours, official URLs, GIS
-coverage, and refresh thresholds. No record in this repository should imply that
-these facts have already been collected or verified. Data review and publication
+**CONFIRMED:** The first local inventory covers campus card loss reporting, graduate enrollment
+proof, and 2026–2027 tuition electronic receipts. Source collection and inventory approval do not
+mean that university facts are verified: all Phase 1 records remain `needs_review`.
+**OPEN:** Additional corpus, ongoing source owners, missing locations/contacts/hours,
+public faculty fields, GIS coverage, refresh thresholds and verified publication. Data review and publication
 responsibilities are defined in [OPS](../OPS.md).
 
 ## Task outcomes and acceptance
@@ -95,7 +97,8 @@ single source of truth. The responsibility matrix and future delivery phases are
 in the [Chinese development guide](DEVELOPMENT_GUIDE.zh-CN.md).
 
 The Core Framework Skeleton technical plan is **CONFIRMED** and implemented locally
-with synthetic fixtures; human Review and Muse QA are pending. It introduces no real
-university data or integrations. See [ADR 0003](adr/0003-python-skeleton-toolchain.md).
+with synthetic fixtures. It introduces no real university integrations; the separately approved
+Phase 1 adds a local public-data inventory pending source review and independent QA.
+See [ADR 0003](adr/0003-python-skeleton-toolchain.md) for the original Skeleton scope.
 See the [architecture decision register](ARCHITECTURE.md) for unresolved choices
 and the [ADR index](adr/README.md) for approved decisions.

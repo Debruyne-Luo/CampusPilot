@@ -117,10 +117,8 @@ both expected results and rejection paths. [SKILLS](SKILLS.md) owns execution ru
   synthetic_guidance or unresolved; no real university completion status is emitted.
 - ToolResult statuses are success/empty/denied/invalid/failed/cancelled. Only success carries
   data; unsuccessful non-empty outcomes require a safe error_code. No automatic retries occur.
-- Synthetic service/office/route payloads are a discriminated union and require Evidence.
-  Evidence verification and synthetic flags are restricted to synthetic fixtures. Official
-  source types and verification workflow need a later reviewed extension; they are not mocked
-  as verified university facts. Optional timestamp/URL fields are null in current fixtures.
+- Synthetic service/office/route payloads require SyntheticEvidence. The Phase 1 extension below
+  adds distinct source-backed result variants; neither origin can substitute for the other.
 - PermissionDecision exposes allow/deny plus a reason. Pending approval remains a production
   proposal only. The application supplies ExecutionContext; model arguments cannot carry it.
 - Session records retain terminal runs and evidence in one process. Missing IDs raise KeyError;
@@ -135,3 +133,49 @@ The demo completes three Tools with 12 events. Journal failures may leave an inc
 no recovery or atomic checkpoint guarantee is claimed. All mock data and CLI results identify
 synthetic status. Public transport schemas, hard timeouts, async execution, privacy retention
 and durable state remain OPEN. See ARCHITECTURE for the current implementation limits.
+
+## Confirmed Phase 1 local contracts — Issue #2
+
+The Tech Lead approved the three-service inventory and local implementation after Stage A review.
+This extends local Python/CLI contracts only; it does not select an HTTP API or production Agent.
+
+- `Evidence` is a discriminated union keyed by `synthetic`: SyntheticEvidence (`true`, status
+  `synthetic`) and SourceEvidence (`false`, status `needs_review` or `verified`). Source authority
+  is independent: official university / department / college. URLs, issuer, version, locator,
+  applicability, access method and retrieval date are explicit. Unknown source dates remain null.
+  `verified` requires reviewer/date metadata, but no automatic verification workflow exists.
+- `FieldEvidence(field_path, evidence_ids, note)` uses record-relative dot paths, with numeric
+  tuple indices, e.g. `availability.0`. Paths and references must resolve; all populated fact
+  fields need coverage. Parent paths can cover a group from one passage. Project IDs are exempt;
+  notes explain limitations rather than supplying unsourced facts. An unknown field may carry
+  an empty reference list with an explanation; that is not evidence of absence.
+- CampusService preserves name/aliases, department/office reference, audience, optional academic
+  year, channels, required input categories/materials, conditional steps, availability, fees,
+  limits and notes. CampusOffice represents a department; location/hours/contact may be null.
+  Both are strictly real, immutable, use `cdut:` identifiers, and currently only accept
+  `verification_status=needs_review`. A verified publication workflow remains OPEN.
+- The repository checks IDs, official CDUT source hosts, office links, field paths and evidence
+  references before exposing any snapshot. It performs no network access or writes.
+- `search_service({query, academic_year?})` returns `directory_services` with a nonempty `matches`
+  tuple. It searches names/aliases, returns every candidate in ID order, and preserves each
+  record's scope. A supplied year excludes records restricted to other years. Unscoped records
+  retain their source-age warnings. No match is `empty`, not a synthetic fallback.
+- `find_office({office_id})` returns `directory_office` with an exact department record, or empty.
+  Missing location remains null; no place ID, coordinates or route is invented.
+- Both real results carry exactly the SourceEvidence referenced by returned fields and an
+  unreviewed-guidance notice. Real CLI JSON exposes `verification_status=needs_review` on each
+  record and source; a successful lookup is not a verified university fact.
+- Shared campus records live in core `domain.py`; public result variants and ToolResult live
+  in core `contracts.py`. Directory depends on Core, with no reverse implementation dependency.
+- Real and synthetic application paths assemble separate executors. Each Tool's output schema
+  and Evidence family are validated; fake RunResult cannot contain real payloads. ExecutionContext
+  and ToolDescriptor have no `data_origin` field. Dataset selection is an assembly decision, not
+  a general security boundary. Permission checks continue to use the allowlist and risk policy.
+
+Compatibility impact: local callers constructing old `Evidence(...)` now construct
+`SyntheticEvidence(...)`; its `verification` field is renamed `verification_status`. ToolResult's
+discriminated union adds two real variants. Existing synthetic kinds and input keys remain;
+SearchInput gains optional academic_year. CLI `demo` is unchanged. No deployed API migration is
+claimed. Upstream real queries bypass the fake harness; downstream callers must inspect kind,
+synthetic status, review state and missing fields. Regression coverage includes original demo,
+permissions, trace, real lookup, ambiguity, missing facts, year scope and origin separation.
