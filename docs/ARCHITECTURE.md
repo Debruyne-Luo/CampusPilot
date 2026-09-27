@@ -163,14 +163,41 @@ Developer verification is not Muse QA or human acceptance.
 
 ### Remaining scope
 
-Production Agent runtime remains OPEN. There is no real LLM, RAG, university data, database,
+Production Agent runtime remains OPEN. There is no real LLM, RAG, database,
 GIS/AMap, YanhuyiBan, authentication, write action, multi-agent runtime, MCP or deployment.
-The Evidence and result models currently support synthetic fixtures only; a reviewed real-source
-contract is required before Phase 1. No empty future capability directories have been created.
+The synthetic-only Skeleton scope above remains the demo boundary. The separately approved
+Phase 1 implementation below adds source-backed local queries, without a production runtime.
 
-Next proposed Issue after Review: **Phase 1 Structured Campus Data — source inventory and
-field contract**. First select a few public services, approved official sources, reviewers,
-refresh policy, storage needs and acceptance cases. Do not ingest real data by inference.
+## Phase 1 — Structured Campus Data (Issue #2)
+
+**CONFIRMED:** Following Stage A review, implement exactly three public CDUT matters using the
+existing Python toolchain: campus card loss reporting, graduate enrollment proof, and tuition
+electronic receipts limited to academic year 2026–2027. The reviewed source inventory and access
+limitations are recorded in [data/cdut](../data/cdut/README.md). All data remains `needs_review`.
+
+Real path: CLI → ToolExecutor → directory Tool → validated in-memory JSON snapshot → typed result
+and SourceEvidence/FieldEvidence. This path has no model or harness. The existing synthetic demo
+retains its own executor, evidence and session path. These application assemblies do not mix
+Tool registries or fall back between datasets.
+
+`evidence.py` holds shared provenance/base contracts; core `domain.py` owns shared campus records
+and field validation, and core `contracts.py` owns public Tool result variants and envelopes.
+The dependency direction is Directory → Core. Core contracts never import the Directory
+implementation. `data_origin` is not part of execution context or Tool metadata: this dataset
+distinction is handled by application assembly and payload/Evidence schemas, not authorization.
+`directory/repository.py` validates and reads explicit local JSON files; `directory/tools.py`
+adapts the two query operations to the existing permission and journal boundaries.
+JSON files are versioned review inputs, not a database or durable SessionStore choice.
+Locations and office hours remain null where unsupported. Real routing is unavailable.
+
+The Tech Lead confirmed that the supplied August 2024 fourth-edition student guide comes from
+the current homepage link. The graduate canonical URL is `/info/1007/5283.htm`; 2026 platform
+evidence does not verify the old trial rules. Receipt waiting conditions do not include Alipay
+in the 24-hour rule. See [API_CONTRACT](API_CONTRACT.md) for contract compatibility impacts.
+
+**OPEN:** independent QA, source reviewer/refresh ownership, current trial-rule validity,
+missing office facts, verified-record publication workflow, and all production technology choices
+already listed above. No new framework, provider or infrastructure is selected by this phase.
 
 ## Research lineage (references, not dependencies)
 

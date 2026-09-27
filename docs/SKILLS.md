@@ -4,6 +4,8 @@
 Risk/Permission and Trace records. **PROPOSED:** the detailed contracts and policies below.
 The Skeleton implements these boundaries for synchronous synthetic Tools; review its concrete
 behavior in [API_CONTRACT](API_CONTRACT.md). Production execution and approval remain deferred.
+Phase 1 adds two source-backed directory Tools using the same public-read policy and journal.
+They run in a separate registry/context from the demo, with no model, new Skill or route Tool.
 
 ## Three distinct responsibilities
 
@@ -75,6 +77,13 @@ session isolation. The model cannot lower a Tool's risk or approve itself.
 Use a small example Skill to connect these Tools through a deterministic fake harness. All
 fixtures identify themselves as synthetic and must not be rendered as verified university facts.
 Mock behavior is not a production workflow or runtime selection.
+
+The real `search_service` returns all matching records with field provenance; real `find_office`
+resolves a department ID without fabricating missing location/hours. Application assembly selects
+the real or synthetic executor; concrete payload and Evidence types constrain its outputs.
+No Skill text, input parameter or failed lookup switches between datasets. No `data_origin`
+permission field is needed for this assembly choice. The CLI directly invokes ToolExecutor;
+the synthetic Skill's three-step completion rule does not apply to real directory queries.
 
 ## Review and QA
 

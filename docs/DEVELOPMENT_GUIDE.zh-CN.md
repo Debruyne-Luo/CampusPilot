@@ -234,7 +234,9 @@
 
 ## 开发阶段
 
-以下是阶段路线图：Phase 0 已获批并完成本地实现；Phase 1–8 仍为 **PROPOSED**，不是执行授权。
+以下是阶段路线图：Phase 0 已获批并完成本地实现；Issue #2 的 Phase 1 三事务范围已获批，
+具体实现和来源限制见 [结构化数据说明](../data/cdut/README.md)。Phase 1 的其余覆盖和
+Phase 2–8 仍为 **PROPOSED**，不是执行授权。
 阶段顺序为 Phase 0–8；每个阶段由独立 Issue
 约定范围和验收。评估、测试、安全边界与数据质量应从最早相关模块开始，Phase 6/7 是专项深化，
 并不意味着此前可以跳过这些工作。Phase 8 超出当前只读 v1，需新的明确批准。
@@ -254,6 +256,14 @@
 Skeleton 的具体顺序、验收、排除项及必须先做的技术选择见
 [Skeleton 当前状态](ARCHITECTURE.md#core-framework-skeleton--implemented-locally)。
 实际安装、运行及测试命令统一维护在 README，避免多处复制。
+
+Issue #2 交接：真实查询由 CLI 直接经过 ToolExecutor 调用 Directory，使用本地 JSON；
+不经过 Fake ModelProvider / Fake AgentHarness。Evidence 统一区分 SyntheticEvidence 与
+SourceEvidence，FieldEvidence 关联具体字段。所有真实记录为 needs_review，来源权威与
+核验状态分开。find_office 可以只返回部门和未知地点；不得用页脚地址补全。
+研究生证明保留2023年试运行限制，2026年平台资料不能把这些规则升级为已核实。
+人工提供并确认当前首页链接的校园卡指南为2024年8月第四版；票据限定2026–2027学年，
+24小时条件不包含支付宝。开发者检查与 Muse 独立 QA、指定来源审核人的事实核验分开。
 
 ## GitHub 协作流程
 

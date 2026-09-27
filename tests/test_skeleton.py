@@ -8,11 +8,11 @@ from threading import Event
 import pytest
 from campuspilot.agent import FakeModelProvider
 from campuspilot.contracts import (
-    Evidence,
     ExecutionContext,
     ModelRequest,
     ModelResponse,
     Payload,
+    SyntheticEvidence,
     TaskRequest,
     ToolCall,
     ToolDescriptor,
@@ -74,7 +74,9 @@ def test_demo_offline_deterministic(monkeypatch: pytest.MonkeyPatch) -> None:
     assert len(first.result.results) == 3
     for result in first.result.results:
         assert result.data is not None and result.data.synthetic
-        assert all(e.synthetic and e.verification == "synthetic" for e in result.data.evidence)
+        assert all(
+            e.synthetic and e.verification_status == "synthetic" for e in result.data.evidence
+        )
     assert [e.sequence for e in first.trace] == list(range(1, 13))
     assert [e.kind for e in first.trace] == [
         "run_started",
@@ -249,7 +251,7 @@ def test_contract_rejects_false_success_and_forged_fixture() -> None:
     with pytest.raises(ValidationError):
         ToolResult(call_id="c", status="failed")
     with pytest.raises(ValidationError):
-        Evidence.model_validate(
+        SyntheticEvidence.model_validate(
             {
                 "evidence_id": "x",
                 "source_id": "x",

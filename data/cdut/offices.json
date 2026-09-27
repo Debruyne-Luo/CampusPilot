@@ -1,0 +1,50 @@
+[
+  {
+    "office_id": "cdut:office:network-information",
+    "name": "网络与信息化处",
+    "location": null,
+    "office_hours": null,
+    "contacts": null,
+    "verification_status": "needs_review",
+    "synthetic": false,
+    "notes": ["部门条目，不等同于实体受理窗口。", "未将过期寒假通知的自助设备分布和时间当作当前安排。"],
+    "field_evidence": [
+      {"field_path": "name", "evidence_ids": ["cdut:evidence:card-guide-2024"], "note": "指南封面编制单位及校园卡服务章节。"},
+      {"field_path": "location", "evidence_ids": [], "note": "未确认挂失服务设备或人工窗口位置。"},
+      {"field_path": "office_hours", "evidence_ids": [], "note": "未确认常规开放时间。"},
+      {"field_path": "contacts", "evidence_ids": [], "note": "本次来源未确认业务联系电话。"}
+    ]
+  },
+  {
+    "office_id": "cdut:office:graduate-school",
+    "name": "研究生院",
+    "location": null,
+    "office_hours": null,
+    "contacts": [{"label": "2023年通知列出的业务咨询电话", "value": "84078860"}],
+    "verification_status": "needs_review",
+    "synthetic": false,
+    "notes": ["部门条目，不等同于实体受理窗口。", "电话取自2023年试运行通知，当前有效性待复核；未补写区号。", "未将网页页脚地址当作自助打印位置。"],
+    "field_evidence": [
+      {"field_path": "name", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "发布单位和正文开头；部门名称。"},
+      {"field_path": "contacts.0", "evidence_ids": ["cdut:evidence:graduate-proof-2023"], "note": "第五节联系方式，保留原文号码。"},
+      {"field_path": "location", "evidence_ids": [], "note": "未确认实际受理窗口或打印机位置。"},
+      {"field_path": "office_hours", "evidence_ids": [], "note": "未公布可用于本事务的开放时间。"}
+    ]
+  },
+  {
+    "office_id": "cdut:office:finance",
+    "name": "财务处",
+    "location": null,
+    "office_hours": null,
+    "contacts": null,
+    "verification_status": "needs_review",
+    "synthetic": false,
+    "notes": ["部门条目，不等同于实体受理窗口。", "未将暑假留言渠道或值班时间推断为常规咨询安排。"],
+    "field_evidence": [
+      {"field_path": "name", "evidence_ids": ["cdut:evidence:tuition-receipt-2026"], "note": "通知正文及落款单位。"},
+      {"field_path": "location", "evidence_ids": [], "note": "未确认本事务受理位置。"},
+      {"field_path": "office_hours", "evidence_ids": [], "note": "未确认常规办公时间。"},
+      {"field_path": "contacts", "evidence_ids": [], "note": "未确认本事务专门联系电话。"}
+    ]
+  }
+]

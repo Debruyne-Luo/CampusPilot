@@ -6,8 +6,9 @@ responsible service, required information, location, route, official source, and
 
 ## Current status
 
-**Core Framework Skeleton implemented locally; human Review and Muse QA pending.**
-It runs a deterministic synthetic demo, with no real university data or external services.
+**Core Framework Skeleton and Phase 1 local directory implemented; Phase 1 Review and Muse QA pending.**
+The synthetic demo stays separate from three source-backed CDUT records, all `needs_review`.
+Neither path calls external services or performs university actions.
 Python 3.14.7, uv, Protocol, Pydantic 2, pytest, mypy strict and Ruff are approved in
 [ADR 0003](docs/adr/0003-python-skeleton-toolchain.md).
 
@@ -55,6 +56,9 @@ packages; the installed demo and checks can then run offline.
 uv sync --locked
 uv run --offline --locked python -m campuspilot demo
 uv run --offline --locked campuspilot demo
+uv run --offline --locked campuspilot search-service "校园卡挂失"
+uv run --offline --locked campuspilot search-service "缴费票据" --academic-year 2026-2027
+uv run --offline --locked campuspilot find-office cdut:office:graduate-school
 uv run --offline --locked pytest -q
 uv run --offline --locked mypy
 uv run --offline --locked ruff check
@@ -79,5 +83,32 @@ repeatability. The core is synchronous and intended for sequential local use. St
 and cooperative cancellation are supported; hard timeouts, parallel execution, durable
 recovery, authentication and real approval execution are not implemented.
 
-Next proposed Issue: **Phase 1 Structured Campus Data — source inventory and field contract**,
-after Skeleton review. Confirm real source ownership and acceptance before importing data.
+## Phase 1 structured campus data
+
+Issue #2 adds a separate offline public directory for three approved CDUT matters. See the
+[source inventory and review limitations](data/cdut/README.md). All records are `needs_review`,
+including official sources; the data is not verified current campus guidance.
+
+`domain.py` contains shared service/department models; `contracts.py` owns public Tool results.
+`directory/` contains a read-only JSON repository and two Tools that depend on these core contracts.
+`evidence.py` contains shared SyntheticEvidence / SourceEvidence / FieldEvidence contracts.
+The `search-service` and `find-office` commands call the permission-checked ToolExecutor directly,
+without the fake model or harness. Results include field provenance, limitations and trace IDs.
+An office result may identify a department while its physical location remains unknown.
+
+Search matches names and aliases using trimmed, case-insensitive substrings and returns all
+candidates in ID order. `--academic-year` excludes records scoped to another year; omitting it
+returns records with their explicit applicability, never an implicit claim of current validity.
+`find-office` accepts exact IDs returned by service lookup. Missing matches return `empty`.
+
+The default data path is `data/cdut` relative to the working directory. When running elsewhere,
+pass `--data-dir D:/Projects/CampusPilot/data/cdut` (adjust for your checkout). The data is a
+reviewable checkout snapshot, not bundled into the Python wheel. CLI JSON uses UTF-8.
+Missing/malformed datasets fail with exit code 2; they never select synthetic data instead.
+Real and synthetic Tools are assembled in separate executors with distinct payload/Evidence types.
+Each Tool's declared output schema is checked by the executor. No real route
+Tool is registered. Demo/session behavior remains synthetic and deterministic.
+
+No dependencies or production integrations were added. Next suggested Issue: **independent
+Muse QA and designated-source review for the three Phase 1 records**, including missing office
+fields and current validity of the 2023 trial rules. Commit, publication and merge are not implied.

@@ -7,22 +7,16 @@ from pydantic import JsonValue
 
 from campuspilot.contracts import (
     Contract,
-    Evidence,
     Identifier,
+    OfficeInput,
     OfficeResult,
     Payload,
     RouteResult,
+    SearchInput,
     ServiceResult,
+    SyntheticEvidence,
     ToolDescriptor,
 )
-
-
-class SearchInput(Contract):
-    query: Identifier
-
-
-class OfficeInput(Contract):
-    office_id: Identifier
 
 
 class RouteInput(Contract):
@@ -30,9 +24,9 @@ class RouteInput(Contract):
     destination: Identifier
 
 
-def evidence(name: str) -> tuple[Evidence, ...]:
+def evidence(name: str) -> tuple[SyntheticEvidence, ...]:
     return (
-        Evidence(
+        SyntheticEvidence(
             evidence_id=f"synthetic:{name}",
             source_id="synthetic:fixtures",
             source_reference="synthetic:offline-demo",
