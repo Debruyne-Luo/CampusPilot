@@ -1,0 +1,9 @@
+# Placeholder only: no active ownership rules are configured.
+# Actual GitHub usernames or team handles and path ownership are OPEN.
+# The Product Owner / Tech Lead approves the final owner mapping.
+# Do not add invented handles or treat project role names as GitHub identities.
+#
+# This file alone does not enforce human review or restrict who can merge.
+# Repository permissions, branch protection / rulesets, required reviews,
+# and ownership-review enforcement remain OPEN configuration decisions.
+# Project policy gives merge authority to the human Tech Lead.
