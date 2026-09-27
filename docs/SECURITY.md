@@ -2,10 +2,12 @@
 
 ## Current state
 
-**CONFIRMED:** This repository bootstrap contains documentation and governance
-only. No runtime, authentication, permission enforcement, approval workflow,
-redaction, monitoring, or other application security control is implemented or
-verified. Requirements below must not be reported as existing protections.
+**CONFIRMED:** The approved local Skeleton implements schema validation, a public-read
+Tool policy, default denial, and observable synthetic execution records. Developer tests
+exercise these boundaries; they are not production security certification or Muse QA.
+Authentication, approval execution, sandboxing, monitoring and production privacy controls
+are not implemented. Trace records omit raw prompts, arguments, and exception contents;
+this is data minimization, not a general-purpose redaction engine.
 
 The approved public, read-only boundary is defined in [PRODUCT](PRODUCT.md).
 Authenticated personal-data access and real write actions are **DEFERRED**.
@@ -94,8 +96,7 @@ authentication, university integrations, or real action approval.
 
 Later feature acceptance should test prompt injection through evidence, resource
 authorization, sensitive-data handling, approval invalidation, and recovery
-according to the capability being introduced. These are planning requirements,
-not tests delivered by this documentation bootstrap.
+according to the capability being introduced. These remain future feature requirements; the Skeleton tests only the local synthetic scope.
 
 **DEFERRED:** The formal AI Security / Red Team phase, adversarial campaigns, and
 production security monitoring. Deferral of that phase does not defer permission

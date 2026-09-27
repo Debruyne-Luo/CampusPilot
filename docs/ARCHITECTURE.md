@@ -3,7 +3,8 @@
 This is the canonical architecture status document. Product scope and source authority live in
 [PRODUCT](PRODUCT.md); domain/interface proposals in [API_CONTRACT](API_CONTRACT.md); module
 handoffs and development phases in the [Chinese guide](DEVELOPMENT_GUIDE.zh-CN.md).
-The repository currently contains documentation only; no runtime control is implemented.
+The approved Python Skeleton is implemented locally with deterministic synthetic mocks;
+human Review and Muse independent QA are pending. No production integration is implemented.
 
 ## Decision labels
 
@@ -88,7 +89,8 @@ a policy explanation can use Retrieval; a route uses GIS. One task may combine t
 | Item | Status | Boundary / reconsideration trigger |
 | --- | --- | --- |
 | Agent runtime: custom loop, LangGraph, or lightweight alternative | OPEN | Later ADR based on actual orchestration/recovery requirements; no preferred implementation is approved |
-| Backend language/runtime/framework and package tools | OPEN | Agree before implementation; framework may be unnecessary for the Skeleton |
+| Skeleton language and tools | CONFIRMED | Python 3.14, uv, Protocol, Pydantic 2, pytest, mypy strict, Ruff and CLI; [ADR 0003](adr/0003-python-skeleton-toolchain.md) |
+| Backend Web framework / HTTP transport | OPEN | Not needed for the local Skeleton |
 | Frontend technology | OPEN | Frontend owner and Tech Lead decide before UI scaffolding |
 | Specific LLM provider/model | OPEN | Evaluate capability, quality, permitted data handling, latency, cost |
 | Specific database/persistence engine | OPEN | Decide before durable state or data-store implementation |
@@ -114,59 +116,61 @@ a policy explanation can use Retrieval; a route uses GIS. One task may combine t
 7. Deployment environment, hosting/residency, secrets, backups, and operational objectives.
 8. Real GitHub reviewer handles, repository permissions, branch protections, license, and visibility.
 
-Technology choices are listed separately above. These unknowns do not authorize campus-data
-collection, authentication, or infrastructure during documentation bootstrap.
+Technology choices are listed separately above. These unknowns do not authorize real data
+collection, authentication or infrastructure during the Skeleton task.
 
-## Next task: Core Framework Skeleton — PROPOSED, plan only
+## Core Framework Skeleton — implemented locally
 
-Goal: an empty but executable architecture with typed contracts and deterministic synthetic
-fixtures. It must prove boundaries without choosing an Agent runtime or integrating real systems.
+The Tech Lead approved the Python toolchain and mock-only scope in
+[ADR 0003](adr/0003-python-skeleton-toolchain.md). Actual commands live in [README](../README.md).
+Python 3.14.7 and dependency versions are pinned; dependency installation succeeded without
+changing Python minor version or the approved tools.
 
-### Approval prerequisites
+### Implemented path
 
-The Tech Lead must approve (1) implementation language and supported runtime version;
-(2) package/dependency and test/type-check tooling; (3) a local execution entry point, such as a
-small CLI/demo or test-driven entry point (HTTP framework only if explicitly chosen);
-(4) the contract and behavior proposals in [API_CONTRACT](API_CONTRACT.md) and [SKILLS](SKILLS.md);
-(5) deterministic fake ModelProvider/AgentHarness and in-memory SessionStore scope, explicitly
-excluding durable recovery. A fake harness is a test double, not a selected production runtime.
+CLI → FakeAgentHarness → FakeModelProvider → ToolExecutor → synthetic Tool → typed result.
+The harness uses StaticSkillRegistry and InMemorySessionStore; the executor applies the
+PermissionPolicy Protocol and writes to InMemoryExecutionJournal. Every successful result
+carries synthetic Evidence. The single demonstration Skill requires service, office and route
+results in that order. It produces synthetic guidance, never real-world completion.
 
-No production model, database, frontend framework, GIS provider, MCP, container, or deployment
-choice is needed for that limited scope. If the accepted scope requires one, stop and identify
-the new decision before implementing it. The final Agent runtime remains OPEN.
+The fake model chooses its next fixed response from the current run's typed results; it has no
+LLM reasoning. Registry dependencies are checked at construction. Tool input/output validation
+uses strict Pydantic records; Tool permissions cannot be changed through arguments.
+Unknown Tools, unknown risk, restricted reads and writes are denied.
 
-### Proposed sequence
+### State and failure semantics
 
-1. Open the bounded Skeleton Issue after approval; record approved technology choices separately.
-2. Establish only the chosen minimal local execution/test setup and typed domain contracts.
-3. Define ModelProvider, AgentHarness, SessionStore, Skill, SkillRegistry, ToolExecutor,
-   PermissionDecision, Evidence, and TraceEvent boundaries.
-4. Add deterministic test doubles and a static registry. Route every tool invocation through
-   validation, permission checking, execution, and trace recording.
-5. Add mock `search_service`, `find_office`, and `route_plan` Tools using unmistakably synthetic
-   identifiers and `synthetic` evidence. Mock routes are fixtures, never navigation guidance.
-6. Demonstrate service lookup → office lookup → route fixture with evidence and ordered traces.
-   Use a scripted fake harness, with no real LLM or production orchestration loop.
-7. Add meaningful contract, registry, permission, and trace tests; document executable commands
-   only once those commands actually exist.
-8. Human review → Muse independent QA → fixes/regression → Tech Lead acceptance and merge.
+- Frozen records and copy-on-read session snapshots preserve application-owned state.
+- A session stores immutable run history and increments a revision on each recorded terminal run.
+  Attempts have distinct run IDs even after failure. Reentrant runs on an active session fail.
+- The implementation supports sequential local use, not thread-safe or distributed execution.
+  Continuation means another run in the same session; partial-run checkpoint recovery is absent.
+- A configurable step count bounds fake orchestration. Cancellation is checked between steps
+  and after model responses. No hard execution timeout or forced mid-call cancellation exists.
+- Journal sequence numbers provide deterministic ordering; wall-clock timestamps and global
+  durable IDs are deferred. No raw objective, arguments, exception text, or reasoning is logged.
+- Request/permission journal failure prevents Tool execution. Outcome journal failure propagates
+  an explicit JournalError without reporting success. A failed final run record prevents the
+  completed session update. State and journal are not a durable atomic transaction.
+- The three mock Tools only return fixed synthetic fixtures or empty results. Missing evidence,
+  validation errors, denials, provider/tool failures and step limits produce distinct outcomes.
 
-### Proposed acceptance checks
+See [API_CONTRACT](API_CONTRACT.md) for concrete local schema details and
+[SKILLS](SKILLS.md) for the policy. Tests verify the offline demo, type contracts, registry
+failures, permission non-execution, output validation, journal failure, isolation and cancellation.
+Developer verification is not Muse QA or human acceptance.
 
-- One documented command or agreed test entry point runs locally and deterministically offline.
-- Domain contracts do not import provider/runtime SDK types. No secrets or network are required.
-- Duplicate Skill/Tool registration, unknown identifiers, and malformed inputs fail explicitly.
-- Denied/unknown-risk operations never execute; denial and tool failures have observable traces.
-- The three mocks return typed results and synthetic evidence; no fictitious record is presented
-  as a real university service, office, coordinate, or route.
-- Trace events correlate task/run/call and remain ordered; success, empty result, failure, and
-  cancellation semantics are tested where the Skeleton contract exposes them.
-- In-memory sessions demonstrate isolation and continuation, with no durability claim.
-- No real writes or approval execution; a reserved future approval contract cannot enable actions.
+### Remaining scope
 
-Excluded: real university data, LLM integration, RAG, embeddings, vector databases, GIS/AMap,
-YanhuyiBan authentication or automation, university SSO, real actions, multi-agent runtime,
-and production deployment. This document authorizes none of that work.
+Production Agent runtime remains OPEN. There is no real LLM, RAG, university data, database,
+GIS/AMap, YanhuyiBan, authentication, write action, multi-agent runtime, MCP or deployment.
+The Evidence and result models currently support synthetic fixtures only; a reviewed real-source
+contract is required before Phase 1. No empty future capability directories have been created.
+
+Next proposed Issue after Review: **Phase 1 Structured Campus Data — source inventory and
+field contract**. First select a few public services, approved official sources, reviewers,
+refresh policy, storage needs and acceptance cases. Do not ingest real data by inference.
 
 ## Research lineage (references, not dependencies)
 

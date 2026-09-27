@@ -6,16 +6,17 @@ responsible service, required information, location, route, official source, and
 
 ## Current status
 
-**Documentation bootstrap only.** There is no executable application, installed framework,
-runtime, dataset, or deployment. The Core Framework Skeleton is planned, not implemented.
-No run or test commands are available yet.
+**Core Framework Skeleton implemented locally; human Review and Muse QA pending.**
+It runs a deterministic synthetic demo, with no real university data or external services.
+Python 3.14.7, uv, Protocol, Pydantic 2, pytest, mypy strict and Ruff are approved in
+[ADR 0003](docs/adr/0003-python-skeleton-toolchain.md).
 
 **CONFIRMED:** v1 provides public-information and read-only task assistance through one primary
 Agent with modular Skills in a modular monolith. Model providers are replaceable. Evidence,
 execution records, and permission boundaries are explicit parts of the architecture.
 
-Authenticated personal-data access and real write actions are **DEFERRED**. Language, Agent
-runtime, frameworks, model provider, storage, and GIS provider remain **OPEN**. See the
+Authenticated personal-data access and real write actions are **DEFERRED**. Production Agent
+runtime, Web frameworks, model provider, durable storage, and GIS provider remain **OPEN**. See the
 [decision register and Skeleton plan](docs/ARCHITECTURE.md).
 
 ## Start here
@@ -45,6 +46,38 @@ implementation, PR, human review, Muse QA, fixes/regression, and Tech Lead merge
 merge themselves. Templates live in [.github](.github/); [CODEOWNERS](.github/CODEOWNERS) is a
 placeholder until real reviewer identities are confirmed.
 
-Next proposed Issue: **CampusPilot Core Framework Skeleton**. Its approval prerequisites and
-acceptance checklist are in [ARCHITECTURE](docs/ARCHITECTURE.md). This bootstrap does not
-authorize implementation of that Issue.
+## Run and verify
+
+Run from the repository root with uv installed. Initial environment setup downloads locked
+packages; the installed demo and checks can then run offline.
+
+```powershell
+uv sync --locked
+uv run --offline --locked python -m campuspilot demo
+uv run --offline --locked campuspilot demo
+uv run --offline --locked pytest -q
+uv run --offline --locked mypy
+uv run --offline --locked ruff check
+uv run --offline --locked ruff format --check
+```
+
+On Windows, if uv is not on PATH after installation, invoke it as
+`& "$env:USERPROFILE\.local\bin\uv.exe"` in place of `uv`.
+Python is pinned to 3.14.7; no fallback to another minor version is supported.
+
+The JSON demo contains three synthetic results, source references, a session snapshot and
+12 ordered events. It is not campus guidance or navigation. Running the CLI again starts a
+fresh in-memory application. The session API preserves completed/failed run history within
+one process; it does not resume a partially executed run or survive restart.
+
+## Source layout and limitations
+
+`backend/src/campuspilot/` contains contracts, Protocol interfaces, Skills, mock Tools,
+permission-checked execution, memory state, fake orchestration and the CLI.
+`tests/test_skeleton.py` checks contracts, rejection paths, failures, isolation and offline
+repeatability. The core is synchronous and intended for sequential local use. Step limits
+and cooperative cancellation are supported; hard timeouts, parallel execution, durable
+recovery, authentication and real approval execution are not implemented.
+
+Next proposed Issue: **Phase 1 Structured Campus Data — source inventory and field contract**,
+after Skeleton review. Confirm real source ownership and acceptance before importing data.

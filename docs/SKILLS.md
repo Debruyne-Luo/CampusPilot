@@ -2,7 +2,8 @@
 
 **CONFIRMED:** one primary Agent, modular Skills, a static trusted Skill Registry, explicit
 Risk/Permission and Trace records. **PROPOSED:** the detailed contracts and policies below.
-Nothing here is implemented. Review alongside [API_CONTRACT](API_CONTRACT.md) before the Skeleton.
+The Skeleton implements these boundaries for synchronous synthetic Tools; review its concrete
+behavior in [API_CONTRACT](API_CONTRACT.md). Production execution and approval remain deferred.
 
 ## Three distinct responsibilities
 
@@ -63,7 +64,7 @@ The confirmed requirement is explicit permissions and future human approval; the
 and exact rules are proposals. Read-only scope does not remove source access restrictions or
 session isolation. The model cannot lower a Tool's risk or approve itself.
 
-## Planned Skeleton demonstrations
+## Implemented Skeleton demonstrations
 
 | Mock Tool | Purpose | Boundaries |
 | --- | --- | --- |

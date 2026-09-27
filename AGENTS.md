@@ -48,6 +48,7 @@ Read the relevant contracts and accepted [ADRs](docs/adr/README.md) before chang
 
 ## Current repository stage
 
-This bootstrap creates documentation and governance only. No application, runtime, checks,
-deployment, or security control is implemented yet. The proposed Core Framework Skeleton
-requires separate approval and resolution of its prerequisites in ARCHITECTURE.
+The approved Python Core Framework Skeleton is implemented locally with synthetic mocks,
+in-memory state and developer checks. It awaits human Review and Muse independent QA.
+Production capabilities and runtime selection remain OPEN; see ARCHITECTURE and ADR 0003.
+Do not expand into real integrations or claim that mock tests establish production security.
