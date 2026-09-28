@@ -7,8 +7,9 @@ Read the relevant contracts and accepted [ADRs](docs/adr/README.md) before chang
 
 ## Authority and scope
 
-- The human Product Owner / Tech Lead approves product scope and architecture, accepts work,
-  and has merge authority. Coding agents must never merge changes themselves.
+- The human Product Owner / Tech Lead approves product scope, architecture, and campus facts,
+  including `verified` data status, and retains final Review and Merge authority.
+  Coding agents and Muse must never merge changes themselves.
 - Work from the assigned Issue and its allowed modification scope. Current user authorization
   takes precedence over this document; do not infer permission to commit, push, publish, or deploy.
 - Preserve unrelated work. Report boundary changes before expanding an Issue's scope.
@@ -39,10 +40,20 @@ Read the relevant contracts and accepted [ADRs](docs/adr/README.md) before chang
   ownership, and scope. Do not initialize tooling solely to validate documentation.
 - For implementation, test meaningful contracts and failure behavior, not only happy paths.
   Record commands, results, limitations, and unresolved risks in the PR or handoff.
-- Follow the Issue → short-lived branch → implementation → PR → human review → Muse QA
-  → fixes/regression → Tech Lead merge workflow when publication is authorized.
-- Muse independently validates behavior and operations. QA findings may propose design changes,
-  but must not silently redesign the Agent core. The Tech Lead resolves disputed requirements.
+- Follow the Issue → Codex / teammate implementation on a short-lived branch → PR
+  → Muse independent QA / source verification (for real data) → Codex fixes
+  → Muse regression → Tech Lead final review → Merge workflow when publication is authorized.
+- Muse owns Independent QA + DataOps + Security Validation / Release Gate. For important PRs,
+  use an independent environment, design boundary/negative/adversarial tests, lock the Tested
+  Commit SHA, and report PASS / FAIL with blocking / non-blocking findings. Changed commits
+  require regression; developer checks do not replace independent QA.
+- Muse may organize QA tests, DataOps tools, and test scripts, but must report production bugs
+  for Codex to fix, not modify core production code to make tests pass or unilaterally refactor Agent Core.
+  The Tech Lead retains final architecture authority and resolves disputed requirements.
+- Muse may precollect official public campus sources in a browser before implementation.
+  Candidates remain `needs_review`; writing them to `data/cdut` requires explicit Tech Lead
+  authorization for Muse. Codex structures the approved sources; Muse rechecks the PR against
+  official sources. Only the Tech Lead can approve `verified`. See [OPS](OPS.md) for the workflow.
 - Update the smallest authoritative document affected; link to it instead of copying rules.
   Use the module handoff template in the development guide for transfers of ownership.
 
@@ -51,6 +62,7 @@ Read the relevant contracts and accepted [ADRs](docs/adr/README.md) before chang
 The approved Python Core Framework Skeleton uses synthetic mocks and in-memory state.
 Issue #2 adds the approved three-service CDUT JSON inventory and isolated source-backed queries;
 all real records remain needs_review. See data/cdut/README.md for source and review limitations.
-The Phase 1 implementation awaits human Review and Muse independent QA.
+Skeleton and Phase 1 implementation PRs are merged. Muse's reported QA baseline and remaining
+source-review handoff are recorded in [OPS](OPS.md); implementation acceptance does not verify data.
 Production capabilities and runtime selection remain OPEN; see ARCHITECTURE and ADR 0003.
 Do not expand into real integrations or claim that mock tests establish production security.

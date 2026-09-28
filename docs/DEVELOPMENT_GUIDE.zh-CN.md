@@ -3,7 +3,7 @@
 本手册用于领任务、划定模块边界、交接和验收。先读 [产品范围](PRODUCT.md) 与
 [架构及决策登记表](ARCHITECTURE.md)，实现时以 [接口草案](API_CONTRACT.md)、
 [Skill 约定](SKILLS.md)、[安全边界](SECURITY.md) 和已批准的 [ADR](adr/README.md) 为依据。
-工程代理遵守 [AGENTS](../AGENTS.md)；Muse 的运行与发布职责见 [OPS](../OPS.md)。
+工程代理遵守 [AGENTS](../AGENTS.md)；Muse 的独立 QA、DataOps 和安全／发布验证职责见 [OPS](../OPS.md)。
 
 ## 当前阶段与决策边界
 
@@ -13,7 +13,8 @@
   Evidence、Trace、Risk/Permission 有明确边界。工程团队分工不等于产品内的多 Agent。
 - **DEFERRED**：登录后个人数据、认证接入、提交、撤销、修改记录、支付、身份变更等真实写操作。
   展示官方服务链接不代表已替用户登录、办理或完成业务。
-- Core Framework Skeleton 技术方案已 **CONFIRMED**，本地实现及开发自测已完成，等待人类 Review 和 Muse 独立 QA。
+- Core Framework Skeleton 技术方案已 **CONFIRMED**，Skeleton 与 Phase 1 实现 PR 已合并；
+  Muse 报告 golden eval 基线为 22/22 通过，固定于 `554d7cb1`，报告依据与待交接项见 [OPS](../OPS.md#review-and-release-workflow)。
   使用 Python 3.14.7、uv、Protocol、Pydantic 2、pytest、mypy strict、Ruff 和 CLI；状态与日志仅在内存中。
   运行命令见 [README](../README.md)，批准依据见 [ADR 0003](adr/0003-python-skeleton-toolchain.md)。
 - 生产 Agent runtime、Web 框架、模型供应商、持久数据库及 GIS 供应商仍未选定。
@@ -25,13 +26,17 @@
 
 | 角色 | 主要职责 | 评审与交接责任 | 权限边界 |
 | --- | --- | --- | --- |
-| Product Owner / Tech Lead | 产品范围、架构批准、验收、最终决策 | 确认 Issue、跨模块变更和发布门槛 | 唯一合并决策者；实际账号仍待确认 |
-| 前端同学 | 前端、UI/UX、地图交互 | 评审用户流程、前后端契约、可访问性 | 不在客户端代替后端授权或生成校园事实 |
+| Product Owner / Tech Lead | 产品、架构、事实批准、最终 Review / Merge | 确认 Issue、跨模块变更、发布门槛和数据 `verified` 状态 | 保留最终评审与合并权；实际账号仍待确认 |
+| 前端同学（Teammate） | Frontend & Product Experience，包括 UI/UX、地图交互 | 评审用户流程、前后端契约、可访问性 | 不在客户端代替后端授权或生成校园事实 |
 | Codex + GPT-6 Astra | 主要实现、开发自测、契约维护 | 提供变更证据、修复缺陷、完成模块交接 | 不自行合并，不自行选择未批准技术 |
-| Muse | 独立 QA、DevOps、DataOps、发布验证；后续 Red Team | 输出可复现缺陷、数据质量与运维验证结果 | QA 不得悄悄重设计 Agent 核心；争议交 Tech Lead |
+| Muse | Independent QA + DataOps + Security Validation / Release Gate；后续 Agent Red Team | 独立测试、浏览器来源复核，锁定 Tested Commit SHA，输出 PASS / FAIL 与 blocking / non-blocking findings | 不决定最终架构、不 Merge、不自行标记 `verified`，不修改核心生产代码来使测试通过 |
 | ChatGPT | 架构、研究、规划、评估设计、技术评审 | 检查边界、评估方法及设计取舍 | 建议不等于产品或架构批准 |
 
-下面的模块负责人和技术评审分配是 **PROPOSED**，应在具体 Issue 中确认。
+上述角色职责为 **CONFIRMED**。Muse 对重要 PR 使用独立环境，除复现开发测试外，主动设计边界、
+负面和对抗测试；发现 production bug 先报告，由 Codex 修复。Muse 可以整理 QA 测试、DataOps 工具
+或测试脚本，但不得擅自重构 Agent Core。QA 结论只适用于锁定的 Tested Commit SHA，提交变化后需回归。
+
+下面的具体模块任务分配是 **PROPOSED**，应在上述角色边界内由具体 Issue 确认。
 “审：Tech Lead”表示人类评审与批准；ChatGPT、前端同学、Muse 可按职责参与技术评审。
 每个模块都要通过 Muse 独立 QA，不能用开发自测替代。代码归属不意味着模块要独立部署。
 
@@ -85,7 +90,7 @@
 - **上游／下游**：任务和可用上下文 → 给主 Agent 的流程要求与所需 Tool 描述。
 - **契约**：Skill 标识、版本、输入、结果、工具依赖、风险与完成条件，详见 SKILLS。
 - **Skeleton／后续**：最小合成流程定义；后续基于批准的真实服务逐项加入，避免通用大而全流程。
-- **负责人／评审**：Codex；审：Tech Lead、ChatGPT，真实业务由指定数据审核人核验。
+- **负责人／评审**：Codex；审：Tech Lead、ChatGPT；Muse 用浏览器核对真实业务来源，Tech Lead 最终批准事实。
 - **Muse／完成**：验证缺输入、工具失败和未达完成条件；Skill 可独立解释依赖和完成依据。
 
 ### 6. Skill Registry
@@ -118,10 +123,10 @@
 ### 9. Structured Campus Data / Directory
 
 - **职责／禁区**：精确查询服务、部门、公开联系方式、公开教师及地点；不得推断或收集非公开个人信息。
-- **上游／下游**：DataOps 已审核记录和查询条件 → 精确字段、来源与未知结果。
+- **上游／下游**：Tech Lead 批准来源后由 Codex 结构化的记录和查询条件 → 精确字段、来源、核验状态与未知结果。
 - **契约**：稳定记录标识、字段含义、适用范围及 Evidence；存储引擎不属于已批准契约。
 - **Skeleton／后续**：只使用明显合成的服务／办公室 fixture；Phase 1 建立批准的真实记录与更新流程。
-- **负责人／评审**：Codex 实现，Muse DataOps 维护导入流程；审：Tech Lead、指定来源审核人。
+- **负责人／评审**：Codex 结构化实现，Muse DataOps 采集候选来源并复核；Tech Lead 最终批准事实及 `verified` 状态。
 - **Muse／完成**：验证字段准确、来源一致、同名消歧与缺失信息；记录可追溯且更新责任明确。
 
 ### 10. GIS / Routing
@@ -175,7 +180,7 @@
 - **上游／下游**：Harness、Executor、权限和能力事件 → 可关联的执行轨迹及后续运维信号。
 - **契约**：TraceEvent、关联标识、排序、脱敏及执行日志；持久性与保留策略仍 OPEN。
 - **Skeleton／后续**：内存有序日志覆盖成功、拒绝和失败；后续批准持久化、访问、监控及保留策略。
-- **负责人／评审**：Codex 实现，Muse 定义运维使用需求；审：Tech Lead、ChatGPT。
+- **负责人／评审**：Codex 实现，Muse 提供 QA 与安全验证的可观察性需求；审：Tech Lead、ChatGPT。
 - **Muse／完成**：验证关联、顺序、失败可见及脱敏；可从结果追到相应调用而不泄漏敏感内容。
 
 ### 16. Evaluation
@@ -194,7 +199,7 @@
 - **契约**：每项验证关联行为、预期和执行方式；测试工具及命令待批准后创建。
 - **Skeleton／后续**：最小契约、Registry、权限、Trace、内存隔离测试；后续扩展集成和端到端验证。
 - **负责人／评审**：Codex 开发测试、Muse 独立 QA；审：Tech Lead，相关模块负责人参与。
-- **Muse／完成**：独立复跑并挑战拒绝、无结果、失败等路径；证据完整，缺陷关闭或获批准处置。
+- **Muse／完成**：在独立环境复跑并主动设计边界、负面、对抗测试；锁定 Tested Commit SHA，输出 PASS / FAIL、blocking / non-blocking findings，缺陷经修复后回归。
 
 ### 18. Frontend
 
@@ -207,12 +212,16 @@
 
 ### 19. DataOps
 
-- **职责／禁区**：管理来源登记、导入检查、审核发布、更新和撤回；Muse 维护流程但不能自行创造学校权威。
-- **上游／下游**：授权官方来源与审核决定 → 有版本、可追溯的 Directory／RAG／GIS 数据。
-- **契约**：来源负责人、适用范围、核验人、刷新规则、冲突处置与版本记录，参见 PRODUCT、OPS。
-- **Skeleton／后续**：审核 fixture 的合成标记，不采集真实数据；后续在来源和审核责任确认后建立流程。
-- **负责人／评审**：Muse；审：Tech Lead、指定来源审核人，Codex 评审导入契约。
-- **Muse／完成**：保留检查证据并请指定审核人批准权威内容；可定位来源、识别过期、撤回错误且不丢失历史依据。
+- **职责／禁区**：Muse 可在功能开发前用浏览器预采集官方公开资料，整理 Source Inventory 和候选事实；未经 Tech Lead 明确授权不得写入 `data/cdut` 正式数据集，不得自行标记 `verified`。
+- **上游／下游**：官方公开来源 → 默认 `verification_status=needs_review` 的候选数据 → Tech Lead 审核来源后由 Codex 按正式契约结构化实现；预采集不等于正式 CampusPilot 数据。
+- **契约**：记录并核对 URL、页面标题、发布单位、时间、字段证据、版本、适用范围、冲突和过期风险，参见 PRODUCT、OPS；缺失事实不推断。
+- **Skeleton／后续**：继续检查 fixture 的 synthetic 标记；真实数据的浏览器采集和复核与 synthetic demo 隔离，后续刷新与撤回细则仍待批准。
+- **负责人／评审**：Muse 采集和 Source Review / Data Verification，Codex 结构化实现；Tech Lead 批准来源并保留事实最终批准权。
+- **Muse／完成**：PR 阶段再次用浏览器对照正式数据与官方来源，保留差异和风险证据；由 Tech Lead 最终决定是否 `verified`。
+
+真实数据流程：Muse 浏览器采集／复核官方来源 → `needs_review` → Tech Lead 批准来源
+→ Codex 结构化实现 → Muse 对照官网再次复核 → Tech Lead 决定是否 `verified`。
+批准来源不自动升级核验状态，数据默认保持 `needs_review`。
 
 ### 20. DevOps / Release
 
@@ -220,12 +229,12 @@
 - **上游／下游**：获审版本、配置要求和验证结果 → 可运行交接、发布建议及恢复说明。
 - **契约**：环境前提、配置和秘密边界、验证／恢复步骤及发布门槛，详见 OPS。
 - **Skeleton／后续**：获批后验证本地最小执行方式；无生产部署。后续单独批准托管、日志、备份和发布流程。
-- **负责人／评审**：Muse；审：Tech Lead，Codex 评审应用运行需求。
+- **负责人／评审**：Muse 负责 Security Validation / Release Gate；部署执行负责人由具体 Issue 指定；审：Tech Lead，Codex 评审应用运行需求。
 - **Muse／完成**：在声明的环境复跑，检查无秘密和隐含依赖；限制与命令可复现，发布决定由 Tech Lead 作出。
 
 ### 21. AI Security / Red Team
 
-- **职责／禁区**：检验提示注入、权限绕过、数据泄漏和误导来源；不在 QA 中悄悄改架构，不测试未授权外部目标。
+- **职责／禁区**：检验 prompt injection、RAG poisoning、tool abuse、permission bypass、data leakage 等风险；不在 QA 中悄悄改架构，不测试未授权外部目标。
 - **上游／下游**：SECURITY 边界、允许测试范围与版本 → 可复现发现、严重度、缓解及回归建议。
 - **契约**：威胁场景、测试边界、证据脱敏、缺陷升级与关闭规则；当前与未来控制必须分开记录。
 - **Skeleton／后续**：只验证最小拒绝和输入信任边界，不建完整安全平台；Phase 7 再扩展系统化 Red Team。
@@ -244,7 +253,7 @@ Phase 2–8 仍为 **PROPOSED**，不是执行授权。
 | 阶段 | 目标 | 主要工作 | 负责人 | 依赖 | 完成条件 |
 | --- | --- | --- | --- | --- | --- |
 | Phase 0：Core Framework Skeleton | 空但可执行的边界演示 | 类型契约、假 ModelProvider／AgentHarness、内存 SessionStore、静态 Registry、权限 Executor、合成 Evidence／Trace、三个 mock 和最小测试 | Codex；Muse 独立 QA | 单独批准 Skeleton 及其语言／工具／入口／契约范围 | 确定性离线执行、拒绝不执行、轨迹完整；无真实数据和外部服务 |
-| Phase 1：Structured Campus Data | 公共结构化信息可查且可追溯 | 来源登记、字段和记录审核、服务／部门／公开教师／地点查询、更新规则 | Codex + Muse DataOps；来源审核人核验 | Phase 0；具体试点服务、来源、存储方案获批 | 指定查询正确，缺失不编造，每项关键字段有依据和维护责任 |
+| Phase 1：Structured Campus Data | 公共结构化信息可查且可追溯 | 来源登记、字段和记录审核、服务／部门／公开教师／地点查询、更新规则 | Codex 结构化实现；Muse 浏览器采集／复核；Tech Lead 批准事实 | Phase 0；具体试点服务、来源、存储方案获批 | 指定查询正确，缺失不编造，每项关键字段有依据和维护责任 |
 | Phase 2：Retrieval / RAG | 政策解释有适用原文支持 | 批准语料、解析检查、检索和引用、冲突与无结果处理；评估是否需要嵌入等技术 | Codex + Muse；ChatGPT 支持评估设计 | Phase 1；语料权限、检索方案和质量门槛 | 代表场景达到获批标准，原文可定位，过期及冲突可见 |
 | Phase 3：Real LLM Agent | 主 Agent 能组合真实只读能力 | 比较并批准运行时和模型、接入 Provider、澄清、预算、失败回退和任务状态 | Codex；ChatGPT 设计评审，Muse QA | Phase 0–2；运行时 ADR、模型和数据处理规则获批 | 多步任务和失败场景达到门槛，权限与证据不受模型替换破坏 |
 | Phase 4：Campus GIS | 提供有依据的地点和路线 | 批准地图／路线数据和供应商、约束表达、地图 UI、隐私与未知情况 | Codex + 前端同学；Muse QA/DataOps | Phase 3；数据许可、覆盖、位置处理和 GIS 选择 | 指定路线可验证，歧义与不可达有回退，未知无障碍条件不被保证 |
@@ -263,21 +272,22 @@ SourceEvidence，FieldEvidence 关联具体字段。所有真实记录为 needs_
 核验状态分开。find_office 可以只返回部门和未知地点；不得用页脚地址补全。
 研究生证明保留2023年试运行限制，2026年平台资料不能把这些规则升级为已核实。
 人工提供并确认当前首页链接的校园卡指南为2024年8月第四版；票据限定2026–2027学年，
-24小时条件不包含支付宝。开发者检查与 Muse 独立 QA、指定来源审核人的事实核验分开。
+24小时条件不包含支付宝。Codex 开发者检查、Muse 独立 QA／浏览器来源复核与 Tech Lead 对事实及 `verified` 的最终批准分开。
 
 ## GitHub 协作流程
 
 GitHub 是项目唯一事实记录源。聊天建议应转成 Issue、文档、评审或 ADR 才成为团队可追踪记录。
-本次在本地实现获批 Skeleton，**不得 commit、push、merge**；下面是未来获准发布后的流程。
+commit、push 和发布按具体任务授权；以下流程本身不授予权限，Muse 和 Codex 均不得自行 Merge。
 
 1. **Issue**：写目标、允许／禁止修改范围、依赖、验收、负责人、评审人和 QA；先暴露 OPEN 决策。
 2. **短期分支**：从核实的基线开始，范围对应 Issue；保留他人工作，不因文档中的目录建议创建空应用结构。
-3. **实现**：按批准契约开发并自测；跨边界变化先更新受影响契约、通知上下游，必要时请求架构批准。
+3. **Codex / teammate 实现**：按批准契约开发并自测；跨边界变化先更新受影响契约、通知上下游，必要时请求架构批准。
 4. **Pull Request**：解释问题、实际变化、验证和限制，关联 Issue／ADR；没有执行的检查明确标为未执行。
-5. **人类评审**：Tech Lead 和相关人类模块负责人核对范围、产品效果与契约；技术辅助评审不能代替此步骤。
-6. **Muse 独立 QA**：依据验收复跑和挑战失败路径，记录环境、版本、复现、预期与实际；不自行重设计 Agent。
-7. **修复／回归**：Codex 或对应负责人修复，Muse 验证；涉及产品或架构的变化回到 Tech Lead 评审。
-8. **Tech Lead 合并**：确认人类评审、QA、残余风险和相关记录后决定合并；Codex 不得自行合并。
+5. **Muse 独立 QA / source verification**：重要 PR 在独立环境中验证并主动设计边界、负面、对抗测试；锁定 Tested Commit SHA，输出 PASS / FAIL 和 blocking / non-blocking findings；涉及真实数据时用浏览器复核官方来源。
+6. **Codex 修复**：根据 findings 修复 production bug；涉及产品或架构的变化交 Tech Lead 决定，Muse 不修改核心生产代码来使测试通过。
+7. **Muse regression**：验证修复和受影响行为，提交变化后记录新的 Tested Commit SHA 和 QA 结果。
+8. **Tech Lead final review**：核对范围、产品效果、契约、QA、事实及残余风险；辅助评审和 QA 不替代最终人类 Review。
+9. **Merge**：由 Tech Lead 作出最终决定并合并。
 
 ## 可复用模块交接模板
 
@@ -297,6 +307,8 @@ GitHub 是项目唯一事实记录源。聊天建议应转成 Issue、文档、�
 已知问题：（复现、影响、回退和待决事项）
 风险等级：（依据、影响对象及是否需要批准；未知时明确未知）
 测试：（执行方式、环境、结果、证据、未执行项；不存在的命令不得虚构）
+Tested Commit SHA：（Muse 实际独立验证并锁定的完整 SHA；提交变化后重新回归）
+QA 结果：（PASS / FAIL；blocking / non-blocking findings，复现证据与回归情况）
 验收标准：（可观察行为、失败路径、证据和完成判据）
 相关 ADR / 文档：（链接；只有已批准决定进入 ADR）
 负责人：
