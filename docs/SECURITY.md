@@ -99,20 +99,35 @@ See [API_CONTRACT](API_CONTRACT.md), [SKILLS](SKILLS.md), and
 
 ## Verification and ownership
 
+**CONFIRMED:** Muse owns Independent QA + DataOps + Security Validation / Release Gate.
+Important PRs require QA in an independent environment, with actively designed boundary,
+negative, and adversarial tests beyond developer checks. Muse locks the Tested Commit SHA,
+reports PASS / FAIL and blocking / non-blocking findings, and records a new tested SHA after
+regression on changed commits.
+
+Muse may precollect official public campus sources in a browser before feature development.
+Candidate data defaults to `verification_status=needs_review`; Muse cannot write it into
+`data/cdut` without explicit Tech Lead authorization or independently mark it `verified`.
+After Tech Lead source approval, Codex structures the data; Muse rechecks the PR against
+official sources in a browser. Source authority does not establish verification status;
+the Tech Lead retains final fact approval, including `verified`. See [OPS](../OPS.md) for
+the Source Inventory fields and review workflow.
+
 **PROPOSED:** Future skeleton verification should establish that invalid tool
 requests and denied permissions do not execute, and that allowed mock calls
 produce evidence and trace records. It must not claim to validate production
 authentication, university integrations, or real action approval.
 
-Later feature acceptance should test prompt injection through evidence, resource
-authorization, sensitive-data handling, approval invalidation, and recovery
+Later Agent Red Team and feature acceptance should test prompt injection, RAG poisoning,
+tool abuse, permission bypass, data leakage, approval invalidation, and recovery
 according to the capability being introduced. These remain future feature requirements; the Skeleton tests only the local synthetic scope.
 
 **DEFERRED:** The formal AI Security / Red Team phase, adversarial campaigns, and
 production security monitoring. Deferral of that phase does not defer permission
-checks and privacy requirements for earlier implemented capabilities. Muse owns
-independent QA and later Red Team execution; the Tech Lead approves disputed
-requirements and architecture changes. Muse must not silently redesign the Agent
-core during QA. Operations and incident responsibilities are in [OPS](../OPS.md);
+checks and privacy requirements for earlier implemented capabilities. Muse owns later
+Agent Red Team execution; the Tech Lead retains final architecture, Review and Merge authority.
+Muse may organize QA tests, DataOps tools and test scripts, but must not unilaterally refactor Agent Core,
+modify core production code to make QA pass, or Merge PRs. Production bugs are reported first
+and fixed by Codex. Operations and incident responsibilities are in [OPS](../OPS.md);
 module ownership and acceptance handoffs are in the
 [Chinese development guide](DEVELOPMENT_GUIDE.zh-CN.md).

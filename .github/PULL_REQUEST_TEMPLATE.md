@@ -40,7 +40,8 @@ Owner / human reviewer / QA owner:
 
 Unresolved findings and handoff notes:
 
-Workflow: Issue → short-lived branch → implementation → PR → human review → Muse
-independent QA → fixes / regression → Tech Lead merge. Coding agents must not merge.
+Workflow: Issue → Codex / teammate implementation on a short-lived branch → PR → Muse
+independent QA / source verification (for real data) → Codex fixes → Muse regression
+→ Tech Lead final review → Merge. Coding agents and Muse must not merge.
 See [AGENTS](../AGENTS.md), [OPS](../OPS.md), and the
 [module handoff guide](../docs/DEVELOPMENT_GUIDE.zh-CN.md).

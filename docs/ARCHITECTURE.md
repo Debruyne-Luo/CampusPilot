@@ -4,7 +4,8 @@ This is the canonical architecture status document. Product scope and source aut
 [PRODUCT](PRODUCT.md); domain/interface proposals in [API_CONTRACT](API_CONTRACT.md); module
 handoffs and development phases in the [Chinese guide](DEVELOPMENT_GUIDE.zh-CN.md).
 The approved Python Skeleton is implemented locally with deterministic synthetic mocks;
-human Review and Muse independent QA are pending. No production integration is implemented.
+the Skeleton and Phase 1 implementation PRs are merged. QA handoff status is recorded in
+[OPS](../OPS.md#review-and-release-workflow). No production integration is implemented.
 
 ## Decision labels
 
@@ -79,8 +80,10 @@ a policy explanation can use Retrieval; a route uses GIS. One task may combine t
   the operation contract permits it. Future writes require idempotency/reconciliation design.
 - Evidence identifies source, version, field/passage, applicability, update/retrieval/verification
   times, and reviewer status. Unknown values remain unknown; retrieval time is not freshness.
-- DataOps proposes review and refresh processes; designated reviewers establish verification.
-  A model cannot mark its own inference as verified. See [PRODUCT](PRODUCT.md) and [OPS](../OPS.md).
+- **CONFIRMED ownership:** Muse collects/reviews official public sources in a browser; candidates
+  default to `needs_review`. After Tech Lead source approval, Codex structures formal data and Muse
+  rechecks it against official sources. Only the Tech Lead can approve `verified` status; Muse
+  cannot independently upgrade it. See [PRODUCT](PRODUCT.md) and [OPS](../OPS.md).
 - Trace observable choices, policy decisions, redacted tool results, and failures. Keep evidence
   available through compaction; do not require private chain-of-thought or raw sensitive prompts.
 
@@ -108,7 +111,8 @@ a policy explanation can use Retrieval; a route uses GIS. One task may combine t
 
 1. Exact first services, corpus, authoritative source inventory, campus/site coverage, languages,
    and measurable acceptance thresholds; broad capability areas are already confirmed.
-2. Approved source reviewers/data owners, refresh intervals, conflict escalation, and verification rules.
+2. Institutional source owners, refresh intervals, detailed conflict handling and verification criteria;
+   Muse performs source review and the Tech Lead retains final fact / `verified` approval.
 3. API transport, domain field/enumeration details, error model, and session/concurrency/recovery behavior.
 4. User/session isolation, personal-input and location handling, retention/deletion, and logging access.
 5. GIS data licensing, entrances, closures, accessibility coverage, and uncertainty presentation.
@@ -195,8 +199,10 @@ the current homepage link. The graduate canonical URL is `/info/1007/5283.htm`; 
 evidence does not verify the old trial rules. Receipt waiting conditions do not include Alipay
 in the 24-hour rule. See [API_CONTRACT](API_CONTRACT.md) for contract compatibility impacts.
 
-**OPEN:** independent QA, source reviewer/refresh ownership, current trial-rule validity,
-missing office facts, verified-record publication workflow, and all production technology choices
+Muse reports a passing golden eval baseline; see [OPS](../OPS.md#review-and-release-workflow).
+Browser source-review evidence and Tech Lead final fact approval remain separate requirements.
+**OPEN:** source refresh ownership and intervals, current trial-rule validity,
+missing office facts, publication mechanics for verified records, and all production technology choices
 already listed above. No new framework, provider or infrastructure is selected by this phase.
 
 ## Research lineage (references, not dependencies)

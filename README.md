@@ -6,7 +6,9 @@ responsible service, required information, location, route, official source, and
 
 ## Current status
 
-**Core Framework Skeleton and Phase 1 local directory implemented; Phase 1 Review and Muse QA pending.**
+**Core Framework Skeleton and Phase 1 local directory merged into main.**
+Muse reports a 22/22 golden eval baseline on Python 3.14.7 at `554d7cb1`; see
+[the QA handoff](OPS.md#review-and-release-workflow) for evidence and remaining review boundaries.
 The synthetic demo stays separate from three source-backed CDUT records, all `needs_review`.
 Neither path calls external services or performs university actions.
 Python 3.14.7, uv, Protocol, Pydantic 2, pytest, mypy strict and Ruff are approved in
@@ -30,22 +32,31 @@ runtime, Web frameworks, model provider, durable storage, and GIS provider remai
 | [Skills](docs/SKILLS.md) | Skill, registry, Tool, execution, and risk responsibilities |
 | [中文开发协作手册](docs/DEVELOPMENT_GUIDE.zh-CN.md) | Module ownership, phases, handoffs, collaboration |
 | [Engineering rules](AGENTS.md) | Durable instructions for coding agents |
-| [Operations and QA](OPS.md) | Muse's QA, DataOps, operations, and release responsibilities |
+| [Operations and QA](OPS.md) | Muse's Independent QA, DataOps, Security Validation / Release Gate responsibilities |
 | [Security](docs/SECURITY.md) | Trust boundaries and current requirements versus future controls |
 | [Approved decisions](docs/adr/README.md) | Human-approved ADRs |
 
 ## Team and workflow
 
-The human Product Owner / Tech Lead owns product decisions, architecture approval, acceptance,
-and merges. Codex + GPT-6 Astra is the primary implementation engineer. The human frontend
-teammate owns UI/UX and map interaction. Muse owns independent QA, DevOps, DataOps, and release
-validation, with Red Team work later. ChatGPT supports architecture, research, planning,
+The human Product Owner / Tech Lead owns product decisions, architecture and fact approval,
+and final Review / Merge. Codex + GPT-6 Astra is the primary implementation engineer. The human
+teammate owns Frontend & Product Experience, including UI/UX and map interaction.
+Muse owns Independent QA + DataOps + Security Validation / Release Gate, with Agent Red Team
+work later. ChatGPT supports architecture, research, planning,
 evaluation design, and review. See the [responsibility matrix](docs/DEVELOPMENT_GUIDE.zh-CN.md).
 
-GitHub is the single source of truth. Work proceeds through an Issue, a short-lived branch,
-implementation, PR, human review, Muse QA, fixes/regression, and Tech Lead merge. Agents never
-merge themselves. Templates live in [.github](.github/); [CODEOWNERS](.github/CODEOWNERS) is a
+GitHub is the single source of truth. Work proceeds through Issue → Codex / teammate
+implementation on a short-lived branch → PR → Muse independent QA / source verification
+(for real data) → Codex fixes → Muse regression → Tech Lead final review → Merge.
+Muse locks the Tested Commit SHA and reports PASS / FAIL with blocking / non-blocking findings.
+Agents never merge themselves. Templates live in [.github](.github/); [CODEOWNERS](.github/CODEOWNERS) is a
 placeholder until real reviewer identities are confirmed.
+
+Muse may precollect official public sources in a browser before feature development; candidates
+remain `needs_review`. After Tech Lead source approval, Codex structures the formal data, Muse
+rechecks it against official sources in the PR, and the Tech Lead decides whether it is `verified`.
+Muse cannot write candidates to `data/cdut` without explicit Tech Lead authorization or independently
+mark them `verified`. See [OPS](OPS.md) for QA, data, and production-code boundaries.
 
 ## Run and verify
 
@@ -109,6 +120,6 @@ Real and synthetic Tools are assembled in separate executors with distinct paylo
 Each Tool's declared output schema is checked by the executor. No real route
 Tool is registered. Demo/session behavior remains synthetic and deterministic.
 
-No dependencies or production integrations were added. Next suggested Issue: **independent
-Muse QA and designated-source review for the three Phase 1 records**, including missing office
-fields and current validity of the 2023 trial rules. Commit, publication and merge are not implied.
+No dependencies or production integrations were added. Next handoff: **archive the Muse golden eval
+baseline and browser Source Review for the three Phase 1 records**, including missing office
+fields and current validity of the 2023 trial rules. Passing tests does not approve `verified` status.
