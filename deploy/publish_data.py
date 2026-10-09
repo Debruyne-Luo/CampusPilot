@@ -85,10 +85,12 @@ def main() -> None:
         f"ns['FILES'] = {FILES!r}\n"
         f"ns['BACKUP_DIRECTORY'] = {BACKUP_DIRECTORY!r}\n"
         f"ns['SUCCESS_LABEL'] = {SUCCESS_LABEL!r}\n"
-        f"ns['PLAN_SHA256'] = {PLAN_SHA256!r}\n"
         "sys.stdin = io.StringIO(base64.b64decode('"
         + encoded_payload
         + "').decode())\n"
+        # The probe is defined in this top-level namespace, so anything it reads must live
+        # here too; names placed only in `ns` are invisible to it.
+        + f"PLAN_SHA256 = {PLAN_SHA256!r}\n"
         + VERIFY
         + f"\nns['main'](verify_extra={VERIFY_FUNCTION})\n"
     )

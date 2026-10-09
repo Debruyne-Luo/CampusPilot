@@ -81,17 +81,19 @@ def test_route_release_rejects_drift_before_writing(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
-    ("message", "expected"),
+    ("message", "expected", "echoed"),
     [
         (
             "workspace_provider_search_failed",
             "update_failed_restored:workspace_provider_search_failed",
+            True,
         ),
-        ("SYNTHETIC sensitive response", "update_failed_restored"),
+        # An unrecognised exception reports only its class name, never its message.
+        ("SYNTHETIC sensitive response", "update_failed_restored:RuntimeError", False),
     ],
 )
 def test_release_failure_exposes_only_safe_phase_codes(
-    tmp_path: Path, message: str, expected: str
+    tmp_path: Path, message: str, expected: str, echoed: bool
 ) -> None:
     mod = updater()
     name = "backend/src/campuspilot/web.py"
@@ -110,6 +112,7 @@ def test_release_failure_exposes_only_safe_phase_codes(
             tmp_path, {name: (mod.digest(old), b"SYNTHETIC NEXT")}, tmp_path / "backups", verify
         )
     assert str(failure.value) == expected
+    assert (message in str(failure.value)) is echoed
     assert path.read_bytes() == old
 
 

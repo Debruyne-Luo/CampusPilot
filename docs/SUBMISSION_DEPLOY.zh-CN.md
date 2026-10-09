@@ -510,3 +510,41 @@ map-frame.js/css、workspace.css、map-discovery.js、guidance.js。没有新增
 `/opt/campuspilot/workspace-backups/20261009T092049Z-0845d0ec` 恢复；回退前先核对当前
 文件未被后续编辑。当前 10 文件集的漂移拒绝与失败回滚沿用既有实现，未修改其逻辑。
 
+### 目录数据增量（2026-10-09，已发布）
+
+本轮资料复核只改了两个数据文件（`places.json`、`sources.json`），因此新增
+`deploy/publish_data.py`：只发布这两个文件，复用 `update_routes.py` 事务式引擎
+（基线漂移拒绝、私有备份、重启、服务端语义探针、失败全量恢复）。
+**不沿用 `update-map-layout.ps1`**：它的 `BASE`/`PLACES_BASE` 常量早于本轮发布，
+且它会连带重发已由 `publish_workspace.py` 替换过的网页文件，属于文档中明确警告的
+"用旧静态更新器覆盖新功能"。
+
+```powershell
+.venv/Scripts/python.exe deploy/publish_data.py --baseline release-backups/campuspilot-20261008T155354Z.zip --check-only
+.venv/Scripts/python.exe deploy/publish_data.py --baseline release-backups/campuspilot-20261008T155354Z.zip
+```
+
+发布前经只读 SSH 核对服务器实际哈希与基线 `before` 完全一致（places
+`1d573277…`、sources `2b08a8c2…`），无漂移。实际返回
+`DATA UPDATED`，2 个文件，私有备份
+`/opt/campuspilot/data-backups/20261009T093052Z-6c2155b2`。
+
+发布后独立核验：服务器工作区哈希与工作区一致（places `246ad8b9…`、sources
+`317de552…`）；`/api/places` 返回 20 个地点、14 个坐标、**0 个导航 URL**；
+`card-centre` 与 `network-security` 均无坐标且已带上新的限制说明；官方平面图来源为
+`access_method=direct`、`source_file_sha256=2d354d43…`、`retrieved_at=2026-10-09`；
+公网 healthz 200；服务 active。
+
+**首次尝试失败并自动回滚。** 探针抛出 `NameError`：`publish_data.py` 把 `PLAN_SHA256`
+放进了引擎的 `ns` 命名空间，而探针函数定义在程序顶层命名空间、看不到该名字。
+第一次失败只报 `update_failed_restored`、没有阶段码，因为该异常消息不在引擎的
+`safe_failures` 白名单里；两个缺陷都已在同轮修复：
+
+- 探针所需的常量改为在顶层命名空间定义；新增的 `data_*` 阶段码加入引擎白名单。
+- 引擎对**白名单以外**的异常改为只回报异常类名（不含消息），既保留"不回显任意
+  上游正文/会话数据"的性质，又让失败可诊断。对应测试已同步更新。
+- 回滚行为经实际验证：失败后旧文件被完整恢复，服务健康，备份 manifest 记录前后哈希。
+
+需要回退数据增量时使用 `data-backups/20261009T093052Z-6c2155b2`；回退前核对该两个
+文件未被后续编辑。数据发布会重启本项目后端，刷新网页后开始新对话。
+

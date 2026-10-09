@@ -128,8 +128,15 @@ def apply(target, records, backups, verify):
             "workspace_provider_search_failed",
             "workspace_provider_detail_failed",
             "workspace_provider_route_failed",
+            "data_place_count_failed",
+            "data_position_state_failed",
+            "data_lead_note_failed",
+            "data_provenance_failed",
         }
-        failure_code = str(failure) if str(failure) in safe_failures else ""
+        # A known phase code is echoed verbatim. Anything else reports only the exception
+        # class name: enough to tell a JSON decode failure from a timeout, without echoing
+        # a message that could carry response bodies, cookies or upstream text.
+        failure_code = str(failure) if str(failure) in safe_failures else type(failure).__name__
         for name in reversed(changed):
             if previous[name] is None:
                 (target / name).unlink(missing_ok=True)
