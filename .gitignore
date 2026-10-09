@@ -9,3 +9,8 @@ dist/
 build/
 .env
 .env.*
+pytest-of-*/
+.test-runs/
+release-backups/
+.playwright-cli/
+output/
