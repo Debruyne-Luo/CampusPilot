@@ -18,7 +18,7 @@ def updater() -> ModuleType:
 
 
 @pytest.mark.parametrize("fail", [False, True])
-@pytest.mark.parametrize("profile", ["routes", "knowledge", "workspace"])
+@pytest.mark.parametrize("profile", ["routes", "knowledge", "workspace", "data"])
 def test_route_release_restores_all_files_on_failure(
     tmp_path: Path, fail: bool, profile: str
 ) -> None:
@@ -42,6 +42,12 @@ def test_route_release_restores_all_files_on_failure(
             path.write_bytes(old)
         old_files[name] = old
         records[name] = (mod.digest(old) if old is not None else None, b"SYNTHETIC NEXT FILE")
+    # The engine reads this file's metadata as the template for newly added files, so a
+    # profile that does not publish it still needs the path to exist.
+    template = target / "backend/src/campuspilot/web.py"
+    if not template.exists():
+        template.parent.mkdir(parents=True, exist_ok=True)
+        template.write_bytes(b"SYNTHETIC TEMPLATE FILE")
     checks = []
 
     def verify(restored: bool = False) -> None:
@@ -105,3 +111,19 @@ def test_release_failure_exposes_only_safe_phase_codes(
         )
     assert str(failure.value) == expected
     assert path.read_bytes() == old
+
+
+@pytest.mark.parametrize("profile", ["data"])
+def test_data_publisher_probe_reads_the_local_snapshot(profile: str) -> None:
+    """The remote probe is the release gate; run it against the real snapshot locally."""
+    pytest.importorskip("fastapi")
+    from campuspilot.web import create_web_app  # noqa: PLC0415
+    from fastapi.testclient import TestClient  # noqa: PLC0415
+
+    root = Path(__file__).resolve().parents[1]
+    module = runpy.run_path(str(root / f"deploy/publish_{profile}.py"))
+    namespace: dict[str, object] = {"PLAN_SHA256": module["PLAN_SHA256"]}
+    exec(module["VERIFY"], namespace)  # noqa: S102
+    app = create_web_app(data_dir=root / "data" / "cdut")
+    with TestClient(app) as client:
+        namespace["verify_data"](client)  # type: ignore[operator]

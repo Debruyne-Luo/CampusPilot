@@ -77,7 +77,63 @@
 - `mypy .`（显式传路径）还会检查 `deploy/`、`scripts/`、`integrations/`；这些目录从未在
   `[tool.mypy] files` 声明范围内，仍有 158 项既有标注问题。本轮只把声明范围修到通过，
   没有擅自扩大类型检查范围。
-- 本轮未重启生产服务、未改动线上文件、未改动 `data/cdut`。
+- 本轮未重启生产服务、未改动线上文件、未改动 `data/cdut`（该句指 A 增量当时的状态；
+  随后的资料复核见下一节）。
+
+## 2026-10-09 资料复核：两处核心事实仍无法由公开来源闭环
+
+用户同时要求补齐网安楼与校园卡补卡/一卡通服务点。本轮做了主动检索与直连核对，
+结论是**两处都无法只靠公开官方来源闭环**，因此没有新增坐标，也没有升级任何核验状态。
+
+### 实测到的来源可用性
+
+| 目标 | 结果 |
+| --- | --- |
+| `cist` / `news` / `wxc` / `gra` 的 HTML 正文页 | 直连一律 **412**（4 个 URL 实测） |
+| `https://www.cdut.edu.cn/files/mapcl.pdf` | 直连 **200**，1254101 字节，SHA256 `2d354d43…` |
+| 2024 年 8 月第四版学生指南 PDF | 直连 **200**，3581743 字节，SHA256 `825729937c…` |
+
+两份 PDF 的实测哈希与仓库既有记录**完全一致**，说明文件未变化。这解释了既有记录里
+`access_method=search_index` 的成因：同域 HTML 正文不可直读，静态 PDF 可以。
+
+### 官方平面图能确认与不能确认的内容
+
+下载单页 PDF、渲染并放大 3 倍逐条核对图例：第 15 号为“财务处、校园一卡通中心”，
+第 22 号为“计算机与网络安全学院（牛津布鲁克斯学院）、生态环境学院”，第 23 号为“商学院”。
+图例**不含“网安楼”**，因此该图不能把网安楼对应到任何编号建筑；图例也**不提供坐标**，
+第 15 号只说明财务处与一卡通中心同栋，是线索而非房间号或点位。
+
+期间出现过一次“该学院为第 23 号”的读法，放大核对后纠正为第 22 号；这正是本轮坚持
+逐条复核而不直接采信摘要的原因。
+
+### 数据侧改动（范围很小）
+
+- `cdut:evidence:campus-plan`：访问方式由 `search_index` 更正为 `direct`，补充
+  `source_file_sha256` 与两条限制（HTML 412 / 图例不含网安楼且无坐标）。
+- `cdut:place:card-centre`、`cdut:place:network-security`：各新增一条 `notes.2`
+  限制说明，`field_evidence` 指向官方平面图来源。
+- **没有**新增坐标、**没有**升级核验状态、**没有**新增导航、**没有**修改教师字段。
+
+### 检查结果
+
+| 检查 | 结果 |
+| --- | --- |
+| `.venv/Scripts/python.exe -m pytest -q` | **193 passed**（新增 3 项：data 档案的回滚/失败恢复、发布探针本地复跑） |
+| `node --test tests/guidance_progress.test.js` | 6 passed |
+| `ruff check .` / `format --check .` | All checks passed / 93 files formatted |
+| `mypy`（声明范围） | Success，36 个源文件 |
+| 快照校验 | `DirectoryRepository.load` 通过；20 地点/14 坐标/0 导航 |
+| `deploy/publish_data.py --check-only` | DATA RELEASE CHECK OK：2 个固定文件，哈希、JSON 与 py3.12 语法均通过 |
+| 发布探针本地复跑 | 新增测试用真实快照执行远程探针逻辑（地点数、坐标状态、新增备注、来源哈希） |
+
+新增 `deploy/publish_data.py`：只发布 `places.json` 与 `sources.json` 两个数据文件，
+复用既有事务式更新引擎（漂移拒绝、私有备份、重启、服务端语义校验、失败全量恢复）。
+不沿用 `update-map-layout.ps1`，因为它的基线常量早于 2026-10-09 的静态资源发布，
+会连带重发已由 `publish_workspace.py` 替换过的网页文件。
+
+未找到清单、冲突线索与边界说明见
+[来源可用性记录](research/source-access-20261009.json) 与
+[地图候选核对清单](MAP_CANDIDATE_REVIEW.zh-CN.md)。**未找到不等于不存在。**
 
 ## 最新增量：官方知识、双模式与前台步行引导
 
