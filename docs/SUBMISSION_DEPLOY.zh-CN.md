@@ -468,3 +468,45 @@ app.js、journey.js、map-frame.js/css、新workspace.css、map-discovery.js与g
 输入聚焦scale=1；官方指南短答和返回对话不重发通过。公网HTTPS健康/鉴权另行核验。
 更新后再独立检查教师/补卡Dify会话、确定ID与缺坐标文字降级，均通过。
 本轮没有切换Dify模型、修改凭据或业务目录。真机GPS/校园步行及iOS仍待下一轮实测。
+
+### 演示稳固性与缓存策略增量（2026-10-09，已发布）
+
+用户明确授权提交、推送与线上发布。本轮沿用 `deploy/publish_workspace.py`，固定文件清单
+由 9 个增加到 **10 个**，新增此前未纳入该清单的 `web_assets/style.css`（本轮删除了其中
+从未生效的孤儿规则）。其余 9 个文件不变：web.py、index.html、app.js、journey.js、
+map-frame.js/css、workspace.css、map-discovery.js、guidance.js。没有新增部署工具。
+
+```powershell
+.venv/Scripts/python.exe deploy/publish_workspace.py --baseline release-backups/campuspilot-20261008T155354Z.zip --check-only
+.venv/Scripts/python.exe deploy/publish_workspace.py --baseline release-backups/campuspilot-20261008T155354Z.zip
+```
+
+基线包 `campuspilot-20261008T155354Z.zip`（用户此前记录的 SHA256
+`b9ee276feff45fab8030832782062023929c5115a6a8311377562de0e44f9ef0`）的 manifest 含本次全部
+4 个被修改文件。发布前经只读 SSH 逐文件核对服务器实际哈希，与基线 `before` 完全一致，
+无漂移；`--check-only` 返回 `WORKSPACE RELEASE CHECK OK: 10 fixed files`。
+
+实际返回 `WORKSPACE UPDATED`，10 个文件，私有备份目录
+`/opt/campuspilot/workspace-backups/20261009T092049Z-0845d0ec`。
+
+发布后独立核验（只读 SSH + loopback，未使用访客口令）：
+
+- 服务器工作区 4 个文件哈希与本机完全一致：web.py `5a71f814…`、app.js `3241b8be…`、
+  style.css `e9bf93e5…`、index.html `9b31e812…`。
+- loopback 实际提供的 `/assets/app.js`、`/assets/style.css`、`/`（index.html）字节哈希
+  与上述值相同，即"工作区 = 实际提供"。
+- `/assets/app.js` 响应头为 `cache-control: no-cache` 且带 ETag；`/api/catalog` 仍为
+  `cache-control: no-store`，原有契约未变。
+- 提供的 index.html 中 `mobile-new-chat` 出现 0 次、`send-label` 出现 1 次；
+  提供的 app.js 中 `newGeneration` 出现 3 次、裸 `crypto.randomUUID()` 出现 0 次。
+- 公网 `https://campuspilot.38-244-61-184.sslip.io/healthz` 为 200 `{"status":"ready"}`，
+  根路径 401（Basic 网关生效）；`campuspilot.service` 与 `campuspilot-gateway.service` 均 active。
+
+本次不涉及凭据、网关、systemd、Dify 工作流或目录数据；`data/cdut` 未变，因此
+`PLACES_BASE`/`BASE` 等旧更新器基线不需要改动，`update-map-layout.ps1` 仍只用于
+它自己的固定静态文件集，不要用它覆盖本增量。后端重启会清空内存会话，刷新后开始新对话。
+
+需要回退本次增量时，按同一基线包反向使用既有发布器或从
+`/opt/campuspilot/workspace-backups/20261009T092049Z-0845d0ec` 恢复；回退前先核对当前
+文件未被后续编辑。当前 10 文件集的漂移拒绝与失败回滚沿用既有实现，未修改其逻辑。
+

@@ -1,4 +1,4 @@
-"""Publish nine fixed map/mobile files with backup, real provider probes and rollback."""
+"""Publish ten fixed map/mobile files with backup, real provider probes and rollback."""
 
 import importlib.util
 from pathlib import Path
@@ -13,6 +13,7 @@ FILES = (
     "backend/src/campuspilot/web_assets/workspace.css",
     "backend/src/campuspilot/web_assets/map-discovery.js",
     "backend/src/campuspilot/web_assets/guidance.js",
+    "backend/src/campuspilot/web_assets/style.css",
 )
 
 VERIFY = """
