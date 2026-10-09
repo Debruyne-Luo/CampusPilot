@@ -1,8 +1,10 @@
 """Shared campus domain contracts, independent of Directory implementations."""
 
+from datetime import date
 from typing import Annotated, Literal, Self
+from urllib.parse import parse_qsl
 
-from pydantic import Field, JsonValue, model_validator
+from pydantic import Field, HttpUrl, JsonValue, model_validator
 
 from campuspilot.evidence import Contract, FieldEvidence, Text
 
@@ -17,7 +19,7 @@ class DirectoryRecord(Contract):
 
     @model_validator(mode="after")
     def provenance_coverage(self) -> Self:
-        metadata = {"synthetic", "verification_status", "field_evidence", "notes"}
+        metadata = {"synthetic", "verification_status", "field_evidence", "notes", "position"}
         data = self.model_dump(mode="json", exclude=metadata)
         paths: dict[str, JsonValue] = {}
 
@@ -32,6 +34,9 @@ class DirectoryRecord(Contract):
 
         for key, value in data.items():
             collect(value, key)
+        # Project notes are optional provenance; a source-backed note may cite its own evidence.
+        for index, note in enumerate(self.notes):
+            paths[f"notes.{index}"] = note
         links = {item.field_path: item for item in self.field_evidence}
         if len(links) != len(self.field_evidence):
             raise ValueError("Duplicate field provenance path")
@@ -41,9 +46,11 @@ class DirectoryRecord(Contract):
             if paths[path] is None and link.evidence_ids:
                 raise ValueError("Unknown fields must not claim supporting evidence")
         for path, value in paths.items():
+            if path.startswith("notes."):
+                continue
             if value is None or isinstance(value, (dict, list)) and value:
                 continue
-            if path in {"service_id", "office_id"}:
+            if path in {"service_id", "office_id", "place_id", "teacher_id"}:
                 continue  # Project-assigned identifiers, not university facts.
             if not any(
                 link.evidence_ids and (path == prefix or path.startswith(prefix + "."))
@@ -57,6 +64,7 @@ class ServiceStep(Contract):
     mode: Literal["online", "self_service"]
     instruction: Text
     condition: Text | None = None
+    place_ids: tuple[CampusId, ...] | None = None
 
 
 class AvailabilityRule(Contract):
@@ -95,3 +103,59 @@ class CampusOffice(DirectoryRecord):
     location: Text | None = None
     office_hours: Text | None = None
     contacts: tuple[PublicContact, ...] | None = None
+
+
+class MapPosition(Contract):
+    """Spatial evidence is separate from official service/teacher evidence."""
+
+    longitude: Annotated[float, Field(ge=-180, le=180, allow_inf_nan=False)]
+    latitude: Annotated[float, Field(ge=-90, le=90, allow_inf_nan=False)]
+    coordinate_system: Literal["GCJ02", "WGS84"]
+    source_kind: Literal["map_provider", "onsite_confirmation"]
+    source_url: HttpUrl
+    retrieved_at: date
+    verification_status: Literal["needs_review", "confirmed"] = "needs_review"
+    confirmed_at: date | None = None
+    reviewer: Text | None = None
+    note: Text
+
+    @model_validator(mode="after")
+    def spatial_review(self) -> Self:
+        if (
+            self.source_url.scheme != "https"
+            or self.source_url.username
+            or self.source_url.password
+        ):
+            raise ValueError("Spatial reference requires a credential-free HTTPS URL")
+        if any(
+            key.casefold() in {"key", "api_key", "token", "jscode", "password"}
+            for key, _ in parse_qsl(self.source_url.query or "")
+        ):
+            raise ValueError("Spatial references cannot publish API credentials")
+        if self.verification_status == "confirmed":
+            if self.confirmed_at is None or self.reviewer is None:
+                raise ValueError("Confirmed position requires reviewer and date")
+        elif self.confirmed_at is not None or self.reviewer is not None:
+            raise ValueError("Unconfirmed position cannot claim review")
+        return self
+
+
+class CampusPlace(DirectoryRecord):
+    place_id: CampusId
+    name: Text
+    aliases: tuple[Text, ...]
+    campus: Text | None
+    category: Literal["teaching", "office", "library", "dining", "service", "sports", "gate"]
+    address_detail: Text | None = None
+    position: MapPosition | None = None
+
+
+class CampusTeacher(DirectoryRecord):
+    teacher_id: CampusId
+    name: Text
+    aliases: tuple[Text, ...]
+    department: Text
+    campus: Text | None = None
+    office: Text | None = None
+    place_id: CampusId | None = None
+    profile_url: HttpUrl

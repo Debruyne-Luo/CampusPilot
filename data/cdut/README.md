@@ -1,4 +1,19 @@
-# CDUT public source inventory — Issue #2
+# CDUT public source inventory
+
+2026-10-07 的提交版增量依据用户批准的 [ADR 0004](../../docs/adr/0004-submission-web-map-and-dify.md)。
+现在包含 4 项事务、3 个部门、20 个地点候选、5 位计算机与网络安全学院教师和 13 条来源证据。
+新增 `places.json`、`teachers.json`。全部资料仍 `needs_review`。
+2026-10-08 本地增量为 14 个地点添加高德 GCJ02 建筑坐标候选，6 个仍为 `null`，
+0 个坐标获人工确认，未开放导航。用户已部署该快照，完整 API 记录与网页字节检查通过。
+高德坐标依据独立于校园业务来源；
+导入清单、排除理由及可复现查询记录见
+[地图候选核对清单](../../docs/MAP_CANDIDATE_REVIEW.zh-CN.md)。
+王洪辉的官网文本列出网安楼 204 室，但校区、建筑关联和当前办公室未确认，`place_id=null`。
+其他 4 位办公室未收录。学生补卡指引取自 2024 年指南；2026 年寒假自助区名单仅作核验线索，
+未把旧通知的卡种、设备状态或值班时间当成 10 月现行规则。详细清单与录入方法见
+[提交版资料核验](../../docs/SUBMISSION_DATA.zh-CN.md)。
+
+以下保留 Issue #2 原始三事务来源说明，新增记录不改变其原有出处。
 
 **CONFIRMED:** Tech Lead approved Stage A and implementation for exactly three matters:
 campus card loss reporting, graduate enrollment proof, and tuition electronic receipts

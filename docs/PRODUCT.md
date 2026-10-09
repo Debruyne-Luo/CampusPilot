@@ -12,6 +12,15 @@ service has completed their request.
 
 ## V1 boundary
 
+**CONFIRMED (2026-10-08, latest user request):** Provide campus-map and task-assistant
+spaces, improve mobile touch use, extend place interaction beyond the curated directory,
+and address the gap between route planning and navigation. The current web increment adds
+transient Amap POI discovery/map destinations and foreground walking guidance. Explicitly
+starting guidance requests continuous browser location; leaving the foreground or assistant
+mode pauses it. No personal location reaches Dify or durable storage. Provider discoveries
+do not create faculty-office/service-machine associations. Native background navigation,
+indoor/floor routing and verified campus entrances remain **DEFERRED**.
+
 **CONFIRMED:** V1 provides public-information, read-only task assistance:
 
 | Capability | Intended user outcome |
@@ -29,9 +38,19 @@ service has completed their request.
 These are approved production capability areas, not implemented production features.
 The local Skeleton demonstrates a synthetic service/office/route sequence. Issue #2 separately
 approves three source-backed local directory queries; see the [inventory](../data/cdut/README.md).
-Production rollout and acceptance thresholds remain **OPEN**.
+The 2026-10-07 submission increment is **CONFIRMED** in
+[ADR 0004](adr/0004-submission-web-map-and-dify.md): card replacement and faculty office lookup,
+prioritizing the computer/network security college, with 15–25 selected place candidates and
+3–5 faculty records. At least one current, confirmed office-to-building example and the card
+replacement service point are required before claiming acceptance. See [status](SUBMISSION_STATUS.zh-CN.md).
 An official deep link does not authorize CampusPilot to log in, automate the
 destination, or submit anything on the user's behalf.
+
+**CONFIRMED (2026-10-08):** The current increment adds query-result cards and embedded,
+one-shot walking reference routes using Amap. The 14 provider-coordinate candidates may be
+used without upgrading their review status. Missing faculty/card-machine locations do not block
+this increment; their real business-location acceptance remains separate. Users explicitly choose
+their current location, a catalogue origin or a map point. See ADR 0004 for the approved boundary.
 
 **DEFERRED:** Authenticated personal-data access and all real write actions,
 including form submissions, application cancellations, record modifications,
@@ -43,6 +62,18 @@ training. The approved component boundaries are in
 [ARCHITECTURE](ARCHITECTURE.md); engineering team roles do not create runtime Agents.
 
 ## Source authority and applicability
+
+**CONFIRMED (2026-10-08, current policy):** The user explicitly authorizes direct use of
+clear official files/pages found through research. No per-information human confirmation is
+required. Check issuer, audience, campus and effective dates, retain the exact source, and
+adopt supported facts. Ask the user only when substantial uncertainty or contradictory evidence
+cannot be resolved independently and materially affects the outcome. Official WeChat articles
+may be adopted when publisher identity is attributable to an official campus source.
+The new knowledge inventory uses `adoption=official_document`; it does not imply on-site
+inspection or live availability. Legacy `needs_review` metadata remains historical provenance,
+not a queue requiring the user to approve each fact. This policy supersedes older per-item
+approval gates in the Phase 1 documents. Architecture, merge and sensitive-action boundaries
+remain as previously defined.
 
 **CONFIRMED:** Prefer sources in this order:
 

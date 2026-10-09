@@ -1,8 +1,102 @@
 # API and domain contract proposals
 
+## Implemented map discovery and foreground guidance (2026-10-08)
+
+- No new chat/model tool. Provider POIs use transient `amap:poi:<id>` identifiers and selected
+  map points use `map:point:<sequence>` only in the browser. They cannot replace `cdut:`
+  business associations, official policy, room numbers, service locations or directory data.
+- Same-origin iframe messages add `place-search`, `place-search-result`, `destination-pick`,
+  `map-destination`, `poi-selection`, and `discovery-cancel`. Request revisions invalidate
+  searches and detail callbacks. Latest pending searches run after map readiness.
+  Every post-initialization message also carries a map-frame generation. Reloading only the
+  iframe preserves chat while rejecting readiness/results from the previous document.
+- SDK proxy adds only observed `v3/place/around` and `v3/place/detail`. Around search uses the
+  fixed campus viewport centre, radius <=2000m, <=10 results/page and bounded page/keyword.
+  Details require one bounded alphanumeric POI ID. Fixed upstream, credential overwrite,
+  JSONP checks, time/size/rate limits and no-store continue to apply.
+- `route-result` additionally includes GCJ02 `geometry` and vertex-index `step_ends` for
+  progress matching. The existing distance/time/steps fields remain compatible.
+- `guidance-start/update/follow/stop` and `guidance-position` carry route request and
+  navigation revision IDs. Only the active route/navigation accepts updates. WGS84 fixes
+  are converted with Amap, throttled to at most one conversion every six seconds and never
+  included in `/api/chat`, storage or ordinary logs. See SECURITY for lifecycle controls.
+
+## Implemented official knowledge increment (2026-10-08)
+
+- `POST /api/knowledge/search` takes `{query, category, audience, period}`. Query is bounded
+  to 2000 characters; category is all/guide/notice/event; audience is all/undergraduate/
+  graduate/staff/alumni; period is all/current/week/registration/history. It requires the
+  existing browser cookie, same origin and custom header. No upstream fetch or model call.
+- Response includes `knowledge`, `answer`, `result_status`, `as_of`, `collected_on`,
+  `answer_mode=official_retrieval`, empty legacy card arrays, and `request_id`. Time uses
+  China UTC+8. Registration requires both start and deadline; unknown dates are not active.
+- `POST /api/chat` handles supported public-guide/notice questions through this local retriever.
+  Existing business questions still go to Dify. Only explicit references to the last result
+  retain local context; unrelated business questions and session reset clear that context.
+- `POST /api/session` additionally returns `knowledge_available`; `configured` still means
+  that Dify is configured. Knowledge browsing works when Dify is unavailable.
+- `KnowledgeRecord` separates source publication/collection, applicability, registration and
+  event dates. Sources are credential-free HTTPS CDUT URLs, or attributed WeChat article URLs.
+  `adoption=official_document` records the user's direct-adoption policy, not manual verification.
+- Knowledge locations use existing validated place IDs. Raw text never produces coordinates.
+- See [source workflow and checks](KNOWLEDGE.zh-CN.md) for import/export and limitations.
+
 **Status:** Architecture and Skeleton implementation scope are **CONFIRMED**. The local Python
 contracts are implemented for human Review; the broader production API proposals below remain
-**PROPOSED**. No HTTP endpoint, authentication protocol, or persistence engine is selected.
+**PROPOSED** except the bounded submission API below, confirmed by ADR 0004.
+An optional local read-only HTTP pilot is implemented under the user's 2026-10-03 continuation
+request; see [its concrete endpoints and error mapping](DIFY_API_SETUP.zh-CN.md).
+
+## Confirmed submission increment (2026-10-07)
+
+Browser GET `/api/places?q=&category=` and `/api/teachers?q=` return source-backed arrays.
+POST `/v1/directory/places/search` and `/v1/directory/teachers/search` use the same snapshot,
+SearchInput and permission boundary as service tools. Bearer authentication applies to all `/v1/*`.
+POST `/v1/directory/assist` accepts `kind` (service/teacher/place/unknown), bounded `query`,
+`service_key`, `audience` and optional `academic_year`. No ID, URL or authority can be supplied.
+It returns status/message, services/teachers/places arrays, department, evidence and trace;
+multiple matches are needs_clarification candidates. Unknown/failure responses have no places.
+The existing `/v1/directory/lookup` remains compatible with an additive places array and replacement key.
+Machine schema: [OpenAPI](dify-directory.openapi.json).
+
+CampusPlace separates its official field evidence from optional MapPosition: coordinates,
+GCJ02/WGS84, provider/onsite source URL, retrieved date, review state, reviewer/date and limitations.
+CampusTeacher preserves name, department, optional campus/office/place_id and official profile.
+Teacher-place associations require a matching explicit campus; service steps use optional place_ids.
+Missing fields remain null. Real directory records remain needs_review.
+
+The structured Dify answer is exactly a JSON AnswerEnvelope: schema_version=1, status, answer,
+service_ids, teacher_ids, place_ids. The model provides prose only. Deterministic workflow Code
+derives IDs from authenticated HTTP results; Python rejects unknown IDs and unrelated place links.
+The frontend receives resolved cards and never extracts coordinates from prose. Non-success
+responses contain no IDs, except needs_clarification may carry candidates. Unavailable becomes
+a controlled error. Old RAG mode returns text with empty card arrays.
+
+GET `/api/map-config` exposes only the public JS key and local proxy path. Security code stays
+in the server-side fixed-host/path proxy. Only reviewed GCJ02 points receive an Amap navigation URL;
+WGS84 is preserved as provenance without automatic conversion. External navigation opens a new tab.
+Map SDK/tiles unavailable: directory and text cards remain usable.
+
+**CONFIRMED (2026-10-08):** `/api/chat` additionally returns `result_status` from the validated
+AnswerEnvelope; legacy unstructured replies use null. Frontend auto-selection requires success,
+an unambiguous business result and exactly one associated place, not one geocoded candidate.
+Embedded reference routes accept existing GCJ02 provider candidates without changing review
+state or the external-navigation gate. Only transient browser GPS origins are converted from WGS84.
+The map iframe accepts `route-request` (request_id, origin, destination_place_id), `route-clear`,
+`route-pick` and `route-insets`; it reports `route-result` (status, distance/metres, time/seconds,
+steps) and `route-origin`. Same-origin/source checks and request IDs discard stale results.
+The destination must exist in the current map result set. SDK proxy additions are limited to
+`v3/direction/walking` and `v3/assistant/coordinate/convert`, with finite coordinate validation,
+bounded parameters, fixed upstream, server-owned credentials, existing rate/size/time limits
+and `Cache-Control: no-store`. No new model tool or persisted route entity is introduced.
+
+Production visitor password protection is at the HTTPS reverse proxy; tools use an independent token.
+Same-origin browser POSTs, secure cookies, single worker and independent chat/tool quotas are
+defined in [deployment](SUBMISSION_DEPLOY.zh-CN.md). Session reset works after process restart.
+It does not provide student authentication or change the provider-independent domain contracts.
+The subsequent [local web/chat pilot](WEB_DIFY_SETUP.zh-CN.md) adds `/api/session`,
+`/api/session/reset`, `/api/chat` and `/api/catalog`. Its server owns Dify user/conversation
+mapping; these routes do not accept client-supplied provider identities or tool authority.
 The concrete local schema is in [contracts.py](../backend/src/campuspilot/contracts.py);
 interfaces are in [interfaces.py](../backend/src/campuspilot/interfaces.py).
 

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f5f0"><title>CampusPilot · 校园行动助手</title>
+  <link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/assets/map-shell.css"><link rel="stylesheet" href="/assets/journey.css"><link rel="stylesheet" href="/assets/knowledge.css"><link rel="stylesheet" href="/assets/workspace.css"><script src="/assets/guidance.js" defer></script><script src="/assets/journey.js" defer></script><script src="/assets/app.js" defer></script><script src="/assets/map-discovery.js" defer></script><script src="/assets/knowledge.js" defer></script>
+</head>
+<body data-workspace="map">
+  <header class="app-header">
+    <a href="#campus-map" class="brand"><span class="brand-mark">C↗</span><span>CampusPilot<small>成都理工大学</small></span></a>
+    <nav class="desktop-modes" aria-label="工作空间"><button class="nav-item active" data-workspace="map" aria-pressed="true">校园地图</button><button class="nav-item" data-workspace="assistant" aria-pressed="false">事务助手</button></nav>
+    <button class="assistant-launch" data-panel="assistant"><span>✳</span> 问助手</button>
+  </header>
+  <main class="map-workspace" id="campus-map" aria-label="校园地点与地图">
+    <div class="map-heading"><div><h1>校园地图<span>搜地点，选目的地，步行出发</span></h1><p>成都理工大学 · 成都校区</p></div></div>
+    <form id="place-search" class="map-search">
+      <div class="search-modes" aria-label="查询类型"><button type="button" class="active" data-search-mode="places" aria-pressed="true">找地点</button><button type="button" data-search-mode="teachers" aria-pressed="false">找老师</button><button type="button" data-search-mode="knowledge" aria-pressed="false">通知与资料</button><button type="button" data-search-mode="assistant" aria-pressed="false">问助手</button></div>
+      <div class="search-input-row"><span class="search-symbol" aria-hidden="true">⌕</span><label class="sr-only" for="place-query">搜索校园地点、教师或询问办事问题</label><input id="place-query" maxlength="120" autocomplete="off" placeholder="想去哪里？搜索图书馆、网安楼、餐厅…"><button type="submit" class="search-submit" aria-label="开始查询">查找 <span>↗</span></button></div>
+      <label class="sr-only" for="place-category">地点类型</label><select id="place-category" hidden><option value="">全部</option><option value="teaching">教学</option><option value="office">院系与办公</option><option value="library">图书馆</option><option value="dining">餐厅</option><option value="service">服务</option><option value="sports">运动</option><option value="gate">校门</option></select>
+    </form>
+    <section id="map-stage" class="map-stage" aria-label="地图与地点结果">
+      <div id="map" class="map-canvas"><iframe id="map-frame" class="map-view" src="/map-view" title="高德地图视图" sandbox="allow-scripts allow-same-origin"></iframe><div id="map-notice" class="map-empty"><span>⌖</span><h2>正在打开地图</h2><p>地点资料会同步显示在下方。</p></div></div>
+      <div class="map-filters" aria-label="地点分类"><button data-category="" class="active" aria-pressed="true">全部</button><button data-category="teaching" aria-pressed="false">教学</button><button data-category="office" aria-pressed="false">院系与办公</button><button data-category="library" aria-pressed="false">图书馆</button><button data-category="dining" aria-pressed="false">餐厅</button><button data-category="service" aria-pressed="false">服务</button><button data-category="sports" aria-pressed="false">运动</button><button data-category="gate" aria-pressed="false">校门</button></div>
+      <div class="map-controls" aria-label="地图控制"><button id="map-expand" aria-label="展开地图" aria-pressed="false">⛶</button><button id="map-zoom-in" aria-label="放大地图" disabled>＋</button><button id="map-zoom-out" aria-label="缩小地图" disabled>−</button><button id="map-overview" aria-label="查看全部已收录点位" disabled>⌖</button><button id="map-pick-destination" aria-label="地图选目的地" aria-pressed="false" disabled>⚑</button></div>
+      <div id="map-discovery-status" class="map-discovery-status" role="status" hidden></div>
+      <section id="place-detail" class="place-detail" aria-label="地点详情" aria-live="polite" hidden></section>
+      <section id="journey-card" class="journey-card" aria-label="查询结果与路线" hidden></section>
+      <div class="results-dock"><div class="results-heading"><div><strong>已收录地点</strong><span id="place-count">正在读取地点…</span></div><div class="carousel-controls"><button id="places-prev" aria-label="上一组地点">←</button><button id="places-next" aria-label="下一组地点">→</button></div></div><div id="place-list" class="place-list" aria-label="地点结果" aria-live="polite"></div></div>
+    </section>
+    <footer><span>高德地图</span><span class="status"><i id="status-dot"></i><span id="status-text">正在连接服务</span></span></footer>
+  </main>
+  <nav id="assistant-tools" class="assistant-tools" aria-label="事务助手工具" hidden><button data-panel="assistant" aria-pressed="true">办事对话</button><button data-panel="guides-panel">事务指南</button><button data-panel="teacher-panel">找老师</button><button data-panel="knowledge-panel">通知与资料</button></nav>
+  <section id="assistant" class="workspace-panel chat-panel" aria-label="办事对话" hidden>
+    <div class="panel-heading"><div><span class="spark">✳</span><h2>事务助手</h2></div><div class="panel-actions"><button id="new-chat" class="text-button">新对话</button><button class="close-panel" data-close-panel aria-label="返回校园地图">×</button></div></div>
+    <div id="messages" role="log" aria-live="polite" aria-label="对话记录"><article class="welcome"><span class="assistant-avatar">✳</span><div><p class="welcome-label">从校园信息，到下一步行动</p><h3>少翻几篇通知，少跑一趟冤枉路。</h3><p>告诉我你要办什么：查官方依据、看办理步骤，再找到目的地。</p><div class="suggestions"><button data-question="校园卡需要补办，应该怎么做，去哪里？">校园卡补办 ↗</button><button data-question="王洪辉老师的办公室在哪里？">找老师办公室 ↗</button><button data-question="研究生在读证明应该怎么申请？">申请在读证明 ↗</button></div></div></article></div>
+    <div class="quick-actions"><button data-question="校园卡丢了，应该怎么挂失？">校园卡挂失</button><button data-question="2026-2027学年的学杂费电子票据在哪里下载？">学杂费票据</button><button data-question="本周有哪些活动？">校园活动</button></div>
+    <div id="connection-note" class="connection-note" role="status" hidden></div>
+    <form id="chat-form"><label class="sr-only" for="question">你的办事问题</label><textarea id="question" rows="2" maxlength="2000" placeholder="问问补卡流程，或找一位老师…"></textarea><div class="composer-bottom"><span>Enter 发送 · Shift + Enter 换行</span><button id="send" type="submit" disabled><span id="send-label">发送</span> <span aria-hidden="true">↑</span></button></div></form>
+  </section>
+  <section id="guides-panel" class="workspace-panel guide-panel" aria-label="事务指南" hidden><div class="panel-heading"><div><h2>事务指南</h2></div><button class="close-panel" data-close-panel aria-label="关闭事务指南">×</button></div><div class="panel-body"><div id="service-list" aria-label="事务目录"><p class="loading">正在读取事务资料…</p></div></div></section>
+  <section id="teacher-panel" class="workspace-panel teacher-section" aria-label="查找教师办公室" hidden><div class="panel-heading"><div><h2>找老师</h2></div><button class="close-panel" data-close-panel aria-label="关闭教师查询">×</button></div><div class="panel-body"><form id="teacher-search" class="search-bar"><label class="sr-only" for="teacher-query">教师姓名</label><input id="teacher-query" maxlength="120" placeholder="输入老师姓名"><button type="submit">查询</button></form><div id="teacher-list" class="teacher-grid" aria-live="polite"></div></div></section>
+  <section id="detail" class="workspace-panel detail-panel" hidden aria-label="事务详情"><div class="panel-heading"><h2>办理指引</h2><button id="close-detail" class="close-panel" aria-label="关闭事务详情">×</button></div><div id="detail-content" class="panel-body"></div></section>
+  <section id="knowledge-panel" class="workspace-panel knowledge-panel" hidden aria-label="通知与资料">
+    <div class="panel-heading"><h2>通知与资料</h2><button class="close-panel" data-close-panel aria-label="关闭通知与资料">×</button></div>
+    <div class="panel-body">
+      <form id="knowledge-form">
+        <div class="search-bar"><label class="sr-only" for="knowledge-query">资料关键词</label><input id="knowledge-query" maxlength="120" placeholder="例如：借书、校园网、校庆"><button type="submit">查询</button></div>
+        <div class="knowledge-filters">
+          <label>类型<select id="knowledge-category"><option value="all">全部资料</option><option value="guide">办事与生活</option><option value="notice">通知</option><option value="event">活动</option></select></label>
+          <label>时间<select id="knowledge-period"><option value="all">全部时间</option><option value="current">当前适用</option><option value="week">本周活动</option><option value="registration">报名期内</option><option value="history">历史通知</option></select></label>
+          <label>对象<select id="knowledge-audience"><option value="all">全部人群</option><option value="undergraduate">本科生</option><option value="graduate">研究生</option><option value="staff">教职工</option><option value="alumni">校友</option></select></label>
+        </div>
+      </form>
+      <p id="knowledge-status" class="knowledge-meta" role="status"></p>
+      <div id="knowledge-results" aria-live="polite"></div>
+    </div>
+  </section>
+  <nav class="mobile-modes" aria-label="切换校园模式"><button data-workspace="map" aria-pressed="true" class="active"><span aria-hidden="true">⌖</span>校园地图</button><button data-workspace="assistant" aria-pressed="false"><span aria-hidden="true">✳</span>事务助手</button></nav>
+</body>
+</html>

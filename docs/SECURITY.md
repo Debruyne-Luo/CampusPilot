@@ -1,6 +1,33 @@
 # Security boundaries and principles
 
+## Approved one-shot route origins (2026-10-08)
+
+Latest user-requested navigation increment also supports explicit “开始步行引导”.
+This registers a foreground browser location watch; switching to assistant mode, page
+visibility loss, exit, new query/origin and replanning clear the watch. Pausing/ending clears
+the displayed location and latest personal fix; the public planned route can remain visible.
+Resuming is an explicit action. Stale GPS/conversion callbacks cannot restart tracking.
+Fixes remain transient and go only through Amap conversion/routing, never Dify or storage.
+Poor accuracy cannot advance instructions, and sustained deviation prompts user-controlled
+replanning. This is a reference walking guide, without background/lock-screen guarantees.
+
+The route increment uses browser location only after the user clicks “我的位置”. Origins remain
+in transient page/SDK/proxy memory, are sent to Amap for conversion/routing, and never enter Dify,
+chat bodies, persistent storage or ordinary logs. Exiting/replacing the route drops the origin.
+Permissions-Policy limits geolocation to self. The existing gateway and Uvicorn deployment disable
+access logs; route/conversion responses are no-store. Route proxy paths and parameters are bounded,
+credentials remain server-owned, and callback validation is retained. Browser QA uses public campus
+points or explicitly synthetic positions, not the operator's personal location.
+
 ## Current state
+
+The 2026-10-07 submission web increment uses same-origin POST checks, private server-owned Dify
+conversation IDs, bounded requests, independent tool tokens and reference validation. Visitor
+passwords are enforced by the HTTPS reverse proxy; the backend binds loopback only. Provider
+credentials remain outside the checkout. The Amap JS key is public, while its security code is
+used only by the bounded fixed-host proxy. Sessions/quotas reset on restart. See
+[deployment](SUBMISSION_DEPLOY.zh-CN.md) and [validation limitations](SUBMISSION_VALIDATION.zh-CN.md).
+These are local implementation checks, not proof of deployed production security.
 
 **CONFIRMED:** The approved local Skeleton implements schema validation, a public-read
 Tool policy, default denial, and observable synthetic execution records. Developer tests
@@ -96,6 +123,20 @@ must not cause an automatic repeat of a possibly completed write. Specific actio
 policies, approval presentation, and recovery semantics require separate approval.
 See [API_CONTRACT](API_CONTRACT.md), [SKILLS](SKILLS.md), and
 [ARCHITECTURE](ARCHITECTURE.md) for their related boundaries.
+
+## Submission map execution boundary
+
+The real Amap SDK uses WebAssembly, dynamic JavaScript compilation and inline startup
+scripts. These permissions are scoped to the `/map-view` page. The chat and inventory
+page retains `script-src 'self'`; its model text still enters the DOM through text nodes.
+The same-origin map iframe is not a separate trust origin: vendor code remains trusted.
+Its sandbox excludes forms, popups and top navigation. Map messages must match both the
+expected window and exact origin; only catalogue positions and IDs reach the map view,
+never model prose or the server-side security code.
+
+SDK initialization uses a fixed `/v3/log/init` proxy path. Validated JSONP callbacks receive
+an explicit JavaScript MIME type under `nosniff`; callers cannot override server-owned
+credentials, choose arbitrary upstreams, or forward arbitrary service paths.
 
 ## Verification and ownership
 

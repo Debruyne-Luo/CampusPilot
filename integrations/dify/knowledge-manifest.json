@@ -1,0 +1,40 @@
+{
+  "export_date": "2026-10-03",
+  "verification_status": "needs_review",
+  "purpose": "Dify development retrieval pilot; not current-policy verification",
+  "source_sha256": {
+    "services.json": "87afc61253fa065cd7e42e8a49eb71a626bc6d10d3961271028f77377b862d06",
+    "offices.json": "61a23f85aadcc6dde19637d7f23f97698b8fc2725bfe694695b87d106d1f7df5",
+    "sources.json": "1911bb8352cd5e0bb1159fc5629467385427991a065e12a2bcdd0f4e27d655c5"
+  },
+  "documents": [
+    {
+      "file": "campus-card-loss.md",
+      "service_id": "cdut:service:campus-card-loss",
+      "evidence_ids": [
+        "cdut:evidence:card-guide-2024"
+      ],
+      "sha256": "f1d4ac7e5269fa0129541ddc674897ccc426c56cdc722105fae64778969c88e7",
+      "characters": 1554
+    },
+    {
+      "file": "graduate-enrollment-proof.md",
+      "service_id": "cdut:service:graduate-enrollment-proof",
+      "evidence_ids": [
+        "cdut:evidence:credential-platform-2026",
+        "cdut:evidence:graduate-proof-2023"
+      ],
+      "sha256": "71708d4f0f75873cc20a72ec7f815a6174104949a34b92a29f9f3de24e435ef4",
+      "characters": 1886
+    },
+    {
+      "file": "tuition-receipt-2026-2027.md",
+      "service_id": "cdut:service:tuition-receipt-2026-2027",
+      "evidence_ids": [
+        "cdut:evidence:tuition-receipt-2026"
+      ],
+      "sha256": "3bffa55712bce7eaf4e5e09590378d7b930fb61a88ae137c4a3b83a725d21178",
+      "characters": 1487
+    }
+  ]
+}

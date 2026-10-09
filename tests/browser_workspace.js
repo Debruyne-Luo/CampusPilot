@@ -1,0 +1,127 @@
+// Real provider searches/routes. GPS, later callbacks and chat replies are SYNTHETIC.
+// Public route vertices are reused solely as synthetic location fixes; no real GPS is read.
+async (page) => {
+  const check=(ok,label)=>{if(!ok) throw new Error(label);};
+  const errors=[]; const onError=error=>errors.push(error.name); page.on('pageerror',onError);
+  await page.setViewportSize({width:390,height:844});
+  await page.goto('http://127.0.0.1:8767/');
+  await page.waitForFunction(()=>mapState === 'ready');
+  const frame=page.frames().find(f=>f.url().endsWith('/map-view'));
+  const mode=name=>page.locator(`.mobile-modes [data-workspace="${name}"]`);
+  const search=async q=>{
+    await page.locator('[data-search-mode="places"]').click();
+    await page.locator('#place-query').fill(q); await page.locator('#place-search').getByRole('button',{name:'开始查询'}).click();
+  };
+  check(await page.evaluate(()=>getComputedStyle(document.querySelector('#place-query')).fontSize === '16px'),'mobile input avoids focus zoom');
+  check(await page.evaluate(()=>getComputedStyle(document.body).touchAction === 'manipulation'),'double-tap page zoom disabled');
+  check(await frame.evaluate(()=>map.getStatus().touchZoom !== false),'map pinch zoom retained');
+  await mode('assistant').click();
+  check(await page.evaluate(()=>document.body.dataset.workspace === 'assistant' && getComputedStyle(document.querySelector('#campus-map')).visibility === 'hidden'),'separate assistant space');
+  await page.locator('#assistant-tools [data-panel="guides-panel"]').click();
+  await page.locator('#service-list .service-card').first().waitFor();
+  await page.getByRole('button',{name:'关闭事务指南',exact:true}).click();
+  let chats=0;
+  await page.route('**/api/session',route=>route.fulfill({json:{configured:true}}));
+  await page.route('**/api/chat',route=>{
+    chats++; const body=route.request().postDataJSON(); check(Object.keys(body).join(',') === 'message','chat contains no position');
+    return route.fulfill({json:{answer:'SYNTHETIC office answer',result_status:'success',services:[],
+      teachers:[{teacher_id:'synthetic:faculty',name:'SYNTHETIC Faculty',department:'SYNTHETIC',office:'SYNTHETIC ROOM',place_id:'cdut:place:east-library',notes:[]}],
+      places:[{place_id:'cdut:place:east-library',name:'东区图书馆',category:'library',campus:'成都校区',position:{longitude:104.148,latitude:30.678,coordinate_system:'GCJ02'},field_evidence:[],notes:[]}],excerpts:[]}});
+  });
+  await page.evaluate(()=>{configured=true; updateState();});
+  await page.locator('#question').fill('SYNTHETIC find office'); await page.locator('#send').click();
+  await page.locator('#journey-card').getByText('SYNTHETIC ROOM',{exact:true}).waitFor();
+  check(await page.evaluate(()=>document.body.dataset.workspace === 'map'),'query hands off to map mode');
+  await page.getByRole('button',{name:'返回对话',exact:true}).click();
+  check(chats === 1,'return never re-sends');
+  await page.evaluate(()=>{for(let i=0;i<12;i++) message('SYNTHETIC history '+i,'assistant'); document.querySelector('#messages').scrollTop=60;});
+  await mode('map').click(); await mode('assistant').click();
+  check(await page.locator('#messages').evaluate(node=>Math.abs(node.scrollTop-60)<2),'mode switch preserves scroll');
+  await page.screenshot({path:'output/playwright/assistant-mobile.png'});
+  await page.unroute('**/api/session'); await page.unroute('**/api/chat');
+  await mode('map').click();
+  await search('攻坚楼');
+  await page.waitForFunction(()=>!document.querySelector('#journey-card').hidden && !document.querySelector('#map-discovery-status').textContent.includes('正在搜索'));
+  if (await page.locator('.journey-choices button').count()) await page.locator('.journey-choices button').first().click();
+  check((await page.locator('#journey-card').innerText()).includes('攻坚楼'),'real POI beyond 20 catalogue entries');
+  await page.getByRole('button',{name:'查看路线',exact:true}).click();
+  await page.locator('#route-origin').selectOption('cdut:place:east-library');
+  await page.getByText('参考路线 · 步行至建筑',{exact:true}).waitFor({timeout:25000});
+  check(await frame.evaluate(()=>map.getAllOverlays('polyline').some(p=>p.getPath().length>2)),'real route to provider destination');
+  const poi=await frame.evaluate(()=>[...placeRecords.values()][0]);
+  await page.getByRole('button',{name:'查看全部地点',exact:true}).click();
+  await frame.waitForFunction(()=>placeRecords.size === 20);
+  // The event is synthetic; the plugin details lookup and source POI are real.
+  await frame.evaluate(id=>map.emit('hotspotclick',{id}),poi.place_id.slice('amap:poi:'.length));
+  await page.locator('#journey-card h3').filter({hasText:'攻坚楼'}).waitFor({timeout:20000});
+  check(await page.getByRole('button',{name:'查看路线',exact:true}).isVisible(),'base-map hotspot details linked');
+  await page.getByRole('button',{name:'查看全部地点',exact:true}).click();
+  await page.getByRole('button',{name:'地图选目的地',exact:true}).click();
+  await frame.locator('#map-view').click({position:{x:145,y:150}});
+  await page.getByRole('heading',{name:'地图选定地点',exact:true}).waitFor();
+  await page.getByRole('button',{name:'查看路线',exact:true}).click();
+  await page.locator('#route-origin').selectOption('cdut:place:east-library');
+  await page.getByText('参考路线 · 步行至建筑',{exact:true}).waitFor({timeout:25000});
+  await search('珙桐'); await page.getByRole('button',{name:'查看路线',exact:true}).click();
+  await page.locator('#route-origin').selectOption('cdut:place:east-library');
+  await page.getByText('参考路线 · 步行至建筑',{exact:true}).waitFor({timeout:25000});
+  const geometry=await frame.evaluate(()=>map.getAllOverlays('polyline')[0].getPath().map(p=>[p.lng,p.lat]));
+  await page.evaluate(()=>{
+    window.savedWatch=navigator.geolocation.watchPosition; window.savedClear=navigator.geolocation.clearWatch;
+    window.savedNow=Date.now; window.syntheticNow=Date.now(); Date.now=()=>window.syntheticNow;
+    window.watchCount=0; window.clearCount=0;
+    navigator.geolocation.watchPosition=(ok,fail)=>{window.syntheticFix=ok;window.syntheticFail=fail;window.watchCount++;return 77;};
+    navigator.geolocation.clearWatch=()=>{window.clearCount++;};
+  });
+  await frame.evaluate(()=>{window.savedConvert=AMap.convertFrom; AMap.convertFrom=(point,_system,callback)=>callback('complete',{locations:[new AMap.LngLat(...point)]});});
+  const fix=async(point,accuracy=5,advance=7000)=>{
+    await page.evaluate(({point,accuracy,advance})=>{window.syntheticNow+=advance; window.syntheticFix({timestamp:Date.now(),coords:{longitude:point[0],latitude:point[1],accuracy}});},{point,accuracy,advance});
+  };
+  await page.getByRole('button',{name:'开始步行引导',exact:true}).click();
+  check(await page.evaluate(()=>window.watchCount === 1),'GPS only begins after start');
+  await fix(geometry[0]);
+  await page.getByText('下一步 · 第 1 / 8 步',{exact:true}).waitFor();
+  await frame.locator('.guidance-location').waitFor();
+  await page.screenshot({path:'output/playwright/guidance-mobile-synthetic.png'});
+  await mode('assistant').click();
+  check(await page.evaluate(()=>window.clearCount === 1),'assistant mode stops continuous GPS');
+  await mode('map').click(); await page.getByRole('button',{name:'继续引导',exact:true}).click();
+  await fix(geometry[0]);
+  await page.getByText('下一步 · 第 1 / 8 步',{exact:true}).waitFor();
+  await fix(geometry[geometry.length-1],100);
+  await page.getByText('定位精度约 100 米，暂不更新步行进度。',{exact:true}).waitFor();
+  const away=[geometry[0][0]+.003,geometry[0][1]+.003];
+  await fix(away); await page.waitForFunction(()=>document.querySelector('.guidance-box')?.textContent.includes('正在确认定位'));
+  await fix(away); await page.waitForFunction(()=>document.querySelector('.guidance-box')?.textContent.includes('距参考路线约'));
+  await page.getByRole('button',{name:'从当前位置重新规划',exact:true}).click();
+  await page.getByText('参考路线 · 步行至建筑',{exact:true}).waitFor({timeout:25000});
+  check(await page.evaluate(()=>window.clearCount === 2),'replanning stops old watcher');
+  await page.getByRole('button',{name:'开始步行引导',exact:true}).click();
+  await page.evaluate(()=>window.syntheticFail({code:1}));
+  await page.getByText('定位权限未允许，可继续查看分步指引。',{exact:true}).waitFor();
+  await page.getByRole('button',{name:'结束引导',exact:true}).click();
+  await page.getByRole('button',{name:'开始步行引导',exact:true}).click();
+  await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true}); document.dispatchEvent(new Event('visibilitychange')); delete document.hidden;});
+  await page.getByText('页面已离开前台，步行引导已暂停。',{exact:true}).waitFor();
+  await page.getByRole('button',{name:'继续引导',exact:true}).click();
+  await frame.evaluate(()=>{AMap.convertFrom=(_point,_system,callback)=>{window.delayedSyntheticConversion=callback;};});
+  await fix(geometry[0]);
+  await frame.waitForFunction(()=>typeof window.delayedSyntheticConversion === 'function');
+  await page.getByRole('button',{name:'退出路线',exact:true}).click();
+  await frame.waitForFunction(()=>navigationId === null && !locationLayer && map.getAllOverlays('polyline').length === 0);
+  await frame.evaluate(point=>{window.delayedSyntheticConversion('complete',{locations:[new AMap.LngLat(...point)]});delete window.delayedSyntheticConversion;},geometry[0]);
+  await fix(geometry[0]);
+  check(await frame.evaluate(()=>navigationId === null && !locationLayer && map.getAllOverlays('polyline').length === 0),'exit ignores late GPS and clears location');
+  await page.evaluate(()=>{navigator.geolocation.watchPosition=window.savedWatch;navigator.geolocation.clearWatch=window.savedClear;Date.now=window.savedNow;['savedWatch','savedClear','savedNow','syntheticNow','syntheticFix','syntheticFail'].forEach(k=>delete window[k]);});
+  await frame.evaluate(()=>{AMap.convertFrom=window.savedConvert;delete window.savedConvert;});
+  await page.setViewportSize({width:360,height:640});
+  check(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),'small phone no overflow');
+  await mode('assistant').click();
+  const panel=await page.locator('#assistant').boundingBox();
+  check(panel.y>=60 && panel.y+panel.height<=640-64,'small phone composer fits above mode bar');
+  await page.setViewportSize({width:1366,height:900});
+  check(await page.locator('#assistant').isVisible(),'desktop assistant space');
+  await page.screenshot({path:'output/playwright/assistant-desktop.png'});
+  page.off('pageerror',onError); check(!errors.length,'no page script errors');
+  await page.evaluate(()=>{window.workspaceBrowserReport={passed:true,scenarios:['mobile modes','focus zoom prevention','chat scroll and no resend','real extra POI and route','real hotspot details with synthetic event','map destination','foreground guidance with synthetic GPS','pause on mode and visibility','poor accuracy','off route replanning','denied GPS','exit stale cleanup','small phone and desktop']};});
+}

@@ -1,0 +1,31 @@
+[Unit]
+Description=CampusPilot protected HTTPS gateway
+After=network-online.target campuspilot.service
+Wants=network-online.target
+
+[Service]
+Type=notify
+User=campuspilot-gateway
+Group=campuspilot-gateway
+EnvironmentFile=/etc/campuspilot/gateway.env
+Environment=XDG_DATA_HOME=/var/lib/campuspilot-gateway
+Environment=XDG_CONFIG_HOME=/var/lib/campuspilot-gateway
+Environment=GOMAXPROCS=1
+Environment=GOMEMLIMIT=96MiB
+ExecStart=/opt/campuspilot/tooling/caddy/caddy run --config /opt/campuspilot/gateway/Caddyfile --adapter caddyfile
+Restart=on-failure
+RestartSec=5
+StateDirectory=campuspilot-gateway
+StateDirectoryMode=0700
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+UMask=0077
+MemoryMax=128M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

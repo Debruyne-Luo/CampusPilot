@@ -1,0 +1,143 @@
+"use strict";
+// Geometry and noisy-fix handling are independent of GPS, UI and the map provider.
+const WalkingProgress = (() => {
+  const valid = (p) => Array.isArray(p) && p.length === 2 && p.every(Number.isFinite) && Math.abs(p[0]) <= 180 && Math.abs(p[1]) <= 90;
+  function metres(a,b) {
+    const x = (b[0]-a[0]) * 111320 * Math.cos((a[1]+b[1]) * Math.PI / 360);
+    const y = (b[1]-a[1]) * 111320; return Math.hypot(x,y);
+  }
+  function create(geometry,stepEnds,totalDistance) {
+    if (!Array.isArray(geometry) || geometry.length < 2 || geometry.length > 20000 || !geometry.every(valid) ||
+        !Array.isArray(stepEnds) || !stepEnds.length || !stepEnds.every((i,n) => Number.isSafeInteger(i) && i >= 0 && i < geometry.length && (!n || i >= stepEnds[n-1])) ||
+        !Number.isFinite(totalDistance) || totalDistance <= 0) throw new Error("Invalid walking geometry");
+    const cumulative = [0];
+    for (let i=1;i<geometry.length;i++) cumulative.push(cumulative[i-1]+metres(geometry[i-1],geometry[i]));
+    const length = cumulative[cumulative.length-1]; if (length < 1) throw new Error("Empty walking geometry");
+    let along = null, lastTime = null, offSince = null, arrivalSince = null;
+    function project(point) {
+      let best = null;
+      const scale = 111320 * Math.cos(point[1] * Math.PI / 180);
+      for (let i=1;i<geometry.length;i++) {
+        if (along !== null && (cumulative[i] < along-40 || cumulative[i-1] > along+200)) continue;
+        const a=geometry[i-1],b=geometry[i];
+        const ax=(a[0]-point[0])*scale, ay=(a[1]-point[1])*111320;
+        const dx=(b[0]-a[0])*scale,dy=(b[1]-a[1])*111320;
+        const denominator=dx*dx+dy*dy;
+        const t=denominator ? Math.max(0,Math.min(1,-(ax*dx+ay*dy)/denominator)) : 0;
+        const distance=Math.hypot(ax+t*dx,ay+t*dy), candidate=cumulative[i-1]+t*(cumulative[i]-cumulative[i-1]);
+        if (!best || distance < best.distance-.5 || (Math.abs(distance-best.distance) <= .5 && along !== null && Math.abs(candidate-along) < Math.abs(best.along-along))) best={distance,along:candidate};
+      }
+      return best;
+    }
+    function update(point,accuracy,now) {
+      if (!valid(point) || !Number.isFinite(accuracy) || accuracy < 0 || !Number.isFinite(now)) return {status:"invalid"};
+      if (accuracy > 60) {offSince=null; arrivalSince=null; return {status:"inaccurate",accuracy};}
+      const nearest=project(point); if (!nearest) return {status:"invalid"};
+      const threshold=Math.max(35,accuracy*1.5);
+      if (nearest.distance > threshold) {
+        arrivalSince=null; if (offSince === null) offSince=now;
+        return {status:now-offSince >= 6000 ? "off_route" : "checking",deviation:Math.round(nearest.distance)};
+      }
+      offSince=null;
+      if (along !== null && lastTime !== null && nearest.along-along > Math.max(60,(now-lastTime)/1000*2.5+accuracy*2)) {
+        arrivalSince=null; return {status:"unstable"};
+      }
+      along=Math.max(along || 0,nearest.along); lastTime=now;
+      const remaining=Math.max(0,totalDistance*(1-along/length));
+      let step=0; while (step < stepEnds.length-1 && along > cumulative[stepEnds[step]]-8) step++;
+      const atEnd=accuracy <= 25 && along/length >= .85 && metres(point,geometry[geometry.length-1]) <= 20;
+      if (atEnd) {if (arrivalSince === null) arrivalSince=now;} else arrivalSince=null;
+      return {status:arrivalSince !== null && now-arrivalSince >= 6000 ? "arrived" : "walking",remaining,step,accuracy};
+    }
+    return {update};
+  }
+  return {create,metres};
+})();
+if (typeof module !== "undefined" && module.exports) module.exports = WalkingProgress;
+
+const Guidance = typeof document === "undefined" ? null : (() => {
+  let context=null, tracker=null, watchId=null, sequence=0, phase="idle", note="", progress=null;
+  let rawPosition=null, lastSent=0;
+  function button(text,action) {const b=element("button",text,"journey-button"); b.type="button"; b.addEventListener("click",action); return b;}
+  function clearWatch() {
+    if (watchId !== null) navigator.geolocation?.clearWatch(watchId);
+    watchId=null; rawPosition=null;
+    if (context) sendToMap({action:"guidance-stop",request_id:context.requestId,navigation_id:sequence});
+  }
+  function stop() {
+    clearWatch(); sequence++; context=null; tracker=null; progress=null; phase="idle"; note=""; render();
+  }
+  function pause(message="页面已离开前台，步行引导已暂停。") {
+    if (!context || ["paused","error","arrived"].includes(phase)) return;
+    clearWatch(); phase="paused"; note=message; render();
+  }
+  function start(options) {
+    stop(); context=options; sequence++; const id=sequence; lastSent=0;
+    try {tracker=WalkingProgress.create(options.route.geometry,options.route.stepEnds,options.route.distance);}
+    catch {phase="error"; note="当前路线未提供完整引导信息，请重新规划。"; render(); return;}
+    if (!navigator.geolocation || !window.isSecureContext) {phase="error"; note="当前浏览器无法持续定位，可展开分步指引。"; render(); return;}
+    phase="locating"; note="正在获取当前位置…"; render();
+    sendToMap({action:"guidance-start",request_id:context.requestId,navigation_id:id});
+    watchId=navigator.geolocation.watchPosition((fix) => {
+      if (!context || id !== sequence || !["locating","walking"].includes(phase)) return;
+      const {longitude,latitude,accuracy}=fix.coords;
+      if (![longitude,latitude,accuracy].every(Number.isFinite) || Math.abs(longitude)>180 || Math.abs(latitude)>90 ||
+          !Number.isFinite(fix.timestamp) || Date.now()-fix.timestamp > 15000) return;
+      rawPosition={longitude,latitude,coordinate_system:"WGS84"};
+      const now=Date.now(); if (now-lastSent < 6000) return; lastSent=now;
+      sendToMap({action:"guidance-update",request_id:context.requestId,navigation_id:id,position:rawPosition,accuracy});
+    }, (error) => {
+      if (!context || id !== sequence) return;
+      clearWatch(); phase="error"; note=error.code === 1 ? "定位权限未允许，可继续查看分步指引。" : "暂未取得有效定位，请重试或查看分步指引。"; render();
+    }, {enableHighAccuracy:true,timeout:15000,maximumAge:0});
+  }
+  function receive(data) {
+    if (!context || data.navigation_id !== sequence || data.request_id !== context.requestId || !["locating","walking"].includes(phase)) return;
+    if (data.status !== "success") {note="坐标转换暂不可用，等待下一次定位…"; render(); return;}
+    const p=data.position;
+    if (p?.coordinate_system !== "GCJ02") return;
+    const next=tracker.update([p.longitude,p.latitude],data.accuracy,Date.now());
+    phase="walking";
+    if (next.status === "walking") {progress=next; note="按参考路线步行，留意现场道路与入口。";}
+    else if (next.status === "arrived") {progress=next; phase="arrived"; note="已到达目的地附近，请核对建筑入口。"; clearWatch();}
+    else if (next.status === "inaccurate") {note=`定位精度约 ${Math.round(next.accuracy)} 米，暂不更新步行进度。`;}
+    else if (next.status === "off_route") {progress=next; note=`距参考路线约 ${next.deviation} 米，可从当前位置重新规划。`;}
+    else {note="正在确认定位，请留意地图上的当前位置。";}
+    render();
+  }
+  function replan() {
+    if (!context || !rawPosition) return;
+    const origin={...rawPosition}, callback=context.replan; stop(); callback(origin);
+  }
+  function render() {
+    const slot=document.querySelector('.guidance-slot'); if (!slot) return;
+    slot.replaceChildren();
+    const active=!!context;
+    $('journey-card').classList.toggle('guiding',active);
+    $('journey-title').textContent=active ? '步行引导' : '步行参考路线';
+    document.querySelector('.start-guidance')?.toggleAttribute('hidden',active);
+    document.querySelector('.route-guidance-note')?.toggleAttribute('hidden',active);
+    if (!active) return;
+    const box=element('section',undefined,'guidance-box'); box.setAttribute('aria-label','前台步行引导');
+    box.append(element('p','前往 ' + context.target.name,'guidance-target'));
+    if (context.detail) box.append(element('p',context.detail));
+    const status=element('p',note); status.setAttribute('role','status'); box.append(status);
+    if (phase === 'arrived') box.append(element('h3','已到达目的地附近'));
+    else if (progress?.status === 'walking') {
+      box.append(element('p',`下一步 · 第 ${progress.step+1} / ${context.route.steps.length} 步`));
+      box.append(element('h3',context.route.steps[progress.step] || '继续沿路线步行'));
+      const remaining=Math.round(progress.remaining), time=Math.max(1,Math.ceil(context.route.time*progress.remaining/context.route.distance/60));
+      box.append(element('p',`剩余约 ${remaining} 米 · ${time} 分钟`,'guidance-progress'));
+    }
+    if (['paused','error'].includes(phase)) box.append(button(phase === 'paused' ? '继续引导' : '重试定位',() => start(context)));
+    else if (phase !== 'arrived') {
+      box.append(button('暂停引导',() => pause('步行引导已暂停。')),
+        button('跟随位置',() => sendToMap({action:'guidance-follow',navigation_id:sequence})));
+      if (rawPosition && progress?.status === 'off_route') box.append(button('从当前位置重新规划',replan));
+    }
+    box.append(button('结束引导',stop),button('退出路线',() => Journey.exitRoute())); slot.append(box);
+  }
+  document.addEventListener('visibilitychange',() => {if (document.hidden) pause();});
+  window.addEventListener('pagehide',stop);
+  return {start,stop,pause,receive,render,active:() => !!context};
+})();

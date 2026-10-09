@@ -1,0 +1,19 @@
+# Import this site into an existing Caddy configuration; do not overwrite other sites.
+# Caddy's own environment must supply DOMAIN, VISITOR_USER and VISITOR_HASH.
+{$CAMPUSPILOT_DOMAIN} {
+    encode zstd gzip
+    request_body {
+        max_size 16KB
+    }
+    @public_tools path /v1/* /healthz
+    handle @public_tools {
+        reverse_proxy 127.0.0.1:8766
+    }
+    handle {
+        basic_auth {
+            {$CAMPUSPILOT_VISITOR_USER} {$CAMPUSPILOT_VISITOR_HASH}
+        }
+        reverse_proxy 127.0.0.1:8766
+    }
+    # Access logs disabled: no transcripts, query strings or user identities written here.
+}

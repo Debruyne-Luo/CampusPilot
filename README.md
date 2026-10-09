@@ -6,11 +6,20 @@ responsible service, required information, location, route, official source, and
 
 ## Current status
 
-**Core Framework Skeleton and Phase 1 local directory merged into main.**
+**2026-10-08: 提交版持续交付；当前改动保留在工作区，尚未提交/推送。**
+主线是需求 → 官方资料/步骤 → 地点 → 站内步行参考路线。FastAPI/原生网页与 Dify/Amap
+已通过真实联通与上线检查。现有4项事务、20条地点目录（14个高德坐标候选）、5位教师，
+新增6条官方知识资料及时间/人群筛选。地图与事务助手分为两种空间，高德热点、周边搜索
+和地图目的地扩展目录覆盖；网页前台步行引导支持持续定位/进度与偏航重规划。
+室内、后台导航和校园真机步行尚未验收；网安楼及当前补卡设备准确位置继续补齐。详见
+[提交版交付状态与设计](docs/SUBMISSION_STATUS.zh-CN.md)、
+[部署与回滚](docs/SUBMISSION_DEPLOY.zh-CN.md)、[ADR 0004](docs/adr/0004-submission-web-map-and-dify.md)。
+
+Core Framework Skeleton and Phase 1 local directory are merged into main.
 Muse reports a 22/22 golden eval baseline on Python 3.14.7 at `554d7cb1`; see
 [the QA handoff](OPS.md#review-and-release-workflow) for evidence and remaining review boundaries.
-The synthetic demo stays separate from three source-backed CDUT records, all `needs_review`.
-Neither path calls external services or performs university actions.
+The synthetic demo stays separate from the public inventory, all `needs_review`.
+The demo/CLI remain offline; the web adapter can call Dify Cloud. No university actions run.
 Python 3.14.7, uv, Protocol, Pydantic 2, pytest, mypy strict and Ruff are approved in
 [ADR 0003](docs/adr/0003-python-skeleton-toolchain.md).
 
@@ -18,9 +27,9 @@ Python 3.14.7, uv, Protocol, Pydantic 2, pytest, mypy strict and Ruff are approv
 Agent with modular Skills in a modular monolith. Model providers are replaceable. Evidence,
 execution records, and permission boundaries are explicit parts of the architecture.
 
-Authenticated personal-data access and real write actions are **DEFERRED**. Production Agent
-runtime, Web frameworks, model provider, durable storage, and GIS provider remain **OPEN**. See the
-[decision register and Skeleton plan](docs/ARCHITECTURE.md).
+Authenticated personal-data access and real write actions are **DEFERRED**. The submission version
+uses Dify Cloud, Python/FastAPI, plain HTML/CSS/JS, Amap and in-memory sessions under ADR 0004.
+Domestic campus-network, physical walking and independent QA checks remain outstanding.
 
 ## Start here
 
@@ -32,14 +41,19 @@ runtime, Web frameworks, model provider, durable storage, and GIS provider remai
 | [Skills](docs/SKILLS.md) | Skill, registry, Tool, execution, and risk responsibilities |
 | [中文开发协作手册](docs/DEVELOPMENT_GUIDE.zh-CN.md) | Module ownership, phases, handoffs, collaboration |
 | [Engineering rules](AGENTS.md) | Durable instructions for coding agents |
+| [DeepSeek Harness 交接](docs/DEEPSEEK_HANDOFF.zh-CN.md) | Current local workspace, delivered features, evidence and continuation notes |
 | [Operations and QA](OPS.md) | Muse's Independent QA, DataOps, Security Validation / Release Gate responsibilities |
 | [Security](docs/SECURITY.md) | Trust boundaries and current requirements versus future controls |
+| [官方知识资料](docs/KNOWLEDGE.zh-CN.md) | Source adoption, date filters, import/export and WeChat attribution |
+| [网页步行引导](docs/WEB_GUIDANCE.zh-CN.md) | Two workspaces, dynamic places, foreground location and limitations |
+| [比赛展示思路](docs/DEMO_STRATEGY.zh-CN.md) | Proposed audience, pain points and reproducible demo |
 | [Approved decisions](docs/adr/README.md) | Human-approved ADRs |
 
 ## Team and workflow
 
 The human Product Owner / Tech Lead owns product decisions, architecture and fact approval,
-and final Review / Merge. Codex + GPT-6 Astra is the primary implementation engineer. The human
+and final Review / Merge. Codex is the primary implementation engineer; its selected development
+model is independent of the deployed application's Dify model. The human
 teammate owns Frontend & Product Experience, including UI/UX and map interaction.
 Muse owns Independent QA + DataOps + Security Validation / Release Gate, with Agent Red Team
 work later. ChatGPT supports architecture, research, planning,
@@ -60,25 +74,40 @@ mark them `verified`. See [OPS](OPS.md) for QA, data, and production-code bounda
 
 ## Run and verify
 
+The optional [CampusPilot web + Dify pilot](docs/WEB_DIFY_SETUP.zh-CN.md) adds a local
+browser UI, public service cards, and a server-side Dify adapter. Run
+`uv run --locked --extra api python -m campuspilot.web` and open <http://127.0.0.1:8766>.
+Without a Dify app credential, service guides work and AI chat is explicitly disabled.
+For real chat, use `--prompt-key` after publishing the Chatflow. The fake harness is not
+part of this path. Set `DIFY_STRUCTURED_ANSWERS=1` only for the new structured candidate workflow.
+Production deployment and Dify-to-directory live callbacks remain outstanding.
+
+An optional local Dify directory API pilot is available; see
+[API setup](docs/DIFY_API_SETUP.zh-CN.md) and [data preparation](docs/DATA_PREPARATION.zh-CN.md).
+Use `uv sync --locked --extra api` for its checks. It has not been deployed or connected to
+Dify Cloud. The submission architecture is confirmed in ADR 0004; the CLI stays independent.
+
 Run from the repository root with uv installed. Initial environment setup downloads locked
 packages; the installed demo and checks can then run offline.
 
 ```powershell
-uv sync --locked
-uv run --offline --locked python -m campuspilot demo
-uv run --offline --locked campuspilot demo
-uv run --offline --locked campuspilot search-service "校园卡挂失"
-uv run --offline --locked campuspilot search-service "缴费票据" --academic-year 2026-2027
-uv run --offline --locked campuspilot find-office cdut:office:graduate-school
-uv run --offline --locked pytest -q
-uv run --offline --locked mypy
-uv run --offline --locked ruff check
-uv run --offline --locked ruff format --check
+uv sync --locked --extra api
+uv run --offline --locked --extra api python -m campuspilot demo
+uv run --offline --locked --extra api campuspilot demo
+uv run --offline --locked --extra api campuspilot search-service "校园卡挂失"
+uv run --offline --locked --extra api campuspilot search-service "缴费票据" --academic-year 2026-2027
+uv run --offline --locked --extra api campuspilot find-office cdut:office:graduate-school
+uv run --offline --locked --extra api pytest -q
+uv run --offline --locked --extra api mypy
+uv run --offline --locked --extra api ruff check
+uv run --offline --locked --extra api ruff format --check
 ```
 
 On Windows, if uv is not on PATH after installation, invoke it as
 `& "$env:USERPROFILE\.local\bin\uv.exe"` in place of `uv`.
 Python is pinned to 3.14.7; no fallback to another minor version is supported.
+
+For CLI-only use, omit `--extra api`; full development/type checks above include the optional API.
 
 The JSON demo contains three synthetic results, source references, a session snapshot and
 12 ordered events. It is not campus guidance or navigation. Running the CLI again starts a

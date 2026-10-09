@@ -55,12 +55,16 @@ def repository() -> DirectoryRepository:
 
 
 def test_seed_sources_remain_unreviewed() -> None:
-    assert len(services()) == 3 and len(offices()) == 3
+    assert len(services()) == 4 and len(offices()) == 3
     assert all(
         not row.synthetic and row.verification_status == "needs_review" for row in services()
     )
     for source in sources():
-        assert source.source_authority == "official_department"
+        assert source.source_authority in {
+            "official_department",
+            "official_college",
+            "official_university",
+        }
         assert source.verification_status == "needs_review"
         assert source.reviewer is None and source.verified_at is None
         assert source.source_updated_at is None  # Retrieval is not a source update.
@@ -200,7 +204,7 @@ def test_separate_assemblies_and_no_fallback() -> None:
     executor = ToolExecutor(real, ReadOnlyPermissionPolicy(), journal)
     demo, _, demo_journal = build_demo()
     assert executor is not demo.executor and journal is not demo_journal
-    assert executor.tool_ids == {"search_service", "find_office"}
+    assert executor.tool_ids == {"search_service", "find_office", "search_place", "search_teacher"}
     assert demo.executor.tool_ids == {"search_service", "find_office", "route_plan"}
     call = ToolCall(call_id="c", tool_id="search_service", arguments={"query": "在读证明"})
     context = ExecutionContext(
