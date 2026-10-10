@@ -3,8 +3,7 @@
 2026-10-11：**代码和离线验证交付，尚未上线，迁移验收未完成。**
 批准范围见 [ADR 0005](adr/0005-backend-runtime-and-knowledge-publication.md)。
 检查命令、证据与限制见 [离线验证记录](RUNTIME_MIGRATION_VALIDATION.zh-CN.md)。
-此前的工作区改动随完整项目纳入 GitHub 重构交接分支；没有付费推理或远端部署。
-分支与重构交接见 [Grok 交接](GROK_REFACTOR_HANDOFF.zh-CN.md)。
+此前的工作区改动随完整项目纳入 GitHub 代码分支；没有付费推理或远端部署。
 
 ## 当前证据与待完成项
 

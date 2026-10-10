@@ -12,8 +12,6 @@ HTTPS 模型直连、不可变知识发布、轻量词法 RAG 和 OpenRouter Jev
 发布门槛保持关闭。配置、维护命令和具体状态见
 [迁移交付与验收](docs/RUNTIME_MIGRATION.zh-CN.md)、
 [ADR 0005](docs/adr/0005-backend-runtime-and-knowledge-publication.md)。
-Grok 重构从 `handoff/grok-refactor-20261011` 分支开始，阅读
-[重构交接](docs/GROK_REFACTOR_HANDOFF.zh-CN.md)。
 
 **2026-10-08: 提交版持续交付记录。**
 主线是需求 → 官方资料/步骤 → 地点 → 站内步行参考路线。FastAPI/原生网页与 Dify/Amap

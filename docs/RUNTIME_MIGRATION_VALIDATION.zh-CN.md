@@ -3,7 +3,7 @@
 完成日期：2026-10-11。状态：**DEVELOPER_OFFLINE_PASS**。
 这是开发者验证记录，独立 QA、真实答案质量和生产性能仍为 PENDING。
 上述离线验证阶段没有实际付费推理或部署。其后用户授权将完整代码提交并推送至
-GitHub 重构交接分支；交接见 [Grok 重构说明](GROK_REFACTOR_HANDOFF.zh-CN.md)。
+GitHub 代码分支。
 
 | 检查 | 结果 |
 | --- | --- |
