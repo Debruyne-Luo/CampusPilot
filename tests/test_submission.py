@@ -54,22 +54,28 @@ def workflow_node(name: str) -> Any:
 
 def test_public_candidates_unknowns_and_authenticated_shared_queries() -> None:
     repo = DirectoryRepository.load(DATA)
-    assert len(repo.search_place("")) == 20
+    assert len(repo.search_place("")) == 40
     positions = [p.position for p in repo.search_place("") if p.position is not None]
-    assert len(positions) == 14
+    assert len(positions) == 32
     assert all(p.verification_status == "needs_review" for p in positions)
     assert all(place_card(p)["navigation_url"] is None for p in repo.search_place(""))
-    # The provider's college POI is not accepted as the former middle-school building.
-    assert repo.search_place("网安楼")[0].position is None
+    # User-provided same-building association uses the ecological college provider point.
+    assert repo.search_place("网安楼")[0].position is not None
     assert repo.search_place("校园一卡通中心")[0].position is None
     assert repo.search_place("珙桐食堂")[0].name == "珙桐餐厅"
     assert all(p.category == "library" for p in repo.search_place("", "library"))
     teacher = repo.search_teacher("王洪辉")[0]
-    assert teacher.office == "网安楼204室" and teacher.place_id is None
+    assert teacher.office == "网安楼204室" and teacher.place_id == "cdut:place:network-security"
     replacement = assist(
         repo, AssistInput(kind="service", service_key="campus_card_replacement"), "test"
     )
-    assert replacement.status == "success" and not replacement.places
+    assert replacement.status == "success"
+    assert {p.place_id for p in replacement.places} == {
+        "cdut:place:gongtong-dining",
+        "cdut:place:camphor-dining",
+        "cdut:place:finance",
+        "cdut:place:ginkgo-dining",
+    }
     assert replacement.services[0].service_id != "cdut:service:campus-card-loss"
     with TestClient(create_app(data_dir=DATA, api_token=TOKEN)) as client:
         for endpoint, query in (("teachers", "王洪辉"), ("places", "网安楼")):
@@ -92,7 +98,7 @@ def test_ambiguity_returns_candidates_and_cross_campus_association_rejected() ->
     repo = DirectoryRepository(services, offices, sources, places, (*teachers, copy))
     result = assist(repo, AssistInput(kind="teacher", query=teachers[0].name), "test")
     assert result.status == "needs_clarification" and len(result.teachers) == 2
-    assert not result.places
+    assert [p.place_id for p in result.places] == ["cdut:place:network-security"]
     broken = teachers[0].model_dump(mode="json")
     broken.update(
         campus="SYNTHETIC WRONG CAMPUS", office="SYNTHETIC ROOM", place_id=places[0].place_id
@@ -151,8 +157,11 @@ def test_deterministic_api_workflow_cards_and_invalid_references_fail_closed() -
     prose = "SYNTHETIC answer asks for cdut:place:unrelated; prose cannot select cards."
     packed = workflow_node("pack_answer.py")(prose, parsed["state"], parsed["references"])["answer"]
     envelope = AnswerEnvelope.model_validate_json(packed)
-    assert envelope.teacher_ids == ("cdut:teacher:wang-honghui",) and not envelope.place_ids
-    assert resolve_cards(repo, envelope)["places"] == []
+    assert envelope.teacher_ids == ("cdut:teacher:wang-honghui",)
+    assert envelope.place_ids == ("cdut:place:network-security",)
+    places = resolve_cards(repo, envelope)["places"]
+    assert isinstance(places, list) and isinstance(places[0], dict)
+    assert places[0]["place_id"] == "cdut:place:network-security"
 
     def handler(request: httpx.Request) -> httpx.Response:
         return httpx.Response(200, json={"answer": packed, "conversation_id": str(uuid4())})
@@ -166,7 +175,7 @@ def test_deterministic_api_workflow_cards_and_invalid_references_fail_closed() -
         client.post("/api/session", headers=HEADERS)
         reply = client.post("/api/chat", json={"message": "Synthetic test"}, headers=HEADERS)
         assert reply.status_code == 200 and reply.json()["teachers"][0]["name"] == "王洪辉"
-        assert reply.json()["places"] == []
+        assert reply.json()["places"][0]["place_id"] == "cdut:place:network-security"
     for ids in (("cdut:place:unrecorded",), (repo.search_place("")[0].place_id,)):
         with pytest.raises(ValueError):
             resolve_cards(repo, envelope.model_copy(update={"place_ids": ids}))

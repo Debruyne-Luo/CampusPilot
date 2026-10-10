@@ -6,7 +6,16 @@ responsible service, required information, location, route, official source, and
 
 ## Current status
 
-**2026-10-08: 提交版持续交付；当前改动保留在工作区，尚未提交/推送。**
+**2026-10-11：本分支收录完整项目代码及后端迁移实现，离线验证通过，尚未上线。** 两阶段后端路由、
+HTTPS 模型直连、不可变知识发布、轻量词法 RAG 和 OpenRouter Jev 影子评测已实现。
+默认仍为 legacy；Dify 当前发布基线、真实模型/付费评测及独立 QA 未完成时，
+发布门槛保持关闭。配置、维护命令和具体状态见
+[迁移交付与验收](docs/RUNTIME_MIGRATION.zh-CN.md)、
+[ADR 0005](docs/adr/0005-backend-runtime-and-knowledge-publication.md)。
+Grok 重构从 `handoff/grok-refactor-20261011` 分支开始，阅读
+[重构交接](docs/GROK_REFACTOR_HANDOFF.zh-CN.md)。
+
+**2026-10-08: 提交版持续交付记录。**
 主线是需求 → 官方资料/步骤 → 地点 → 站内步行参考路线。FastAPI/原生网页与 Dify/Amap
 已通过真实联通与上线检查。现有4项事务、20条地点目录（14个高德坐标候选）、5位教师，
 新增6条官方知识资料及时间/人群筛选。地图与事务助手分为两种空间，高德热点、周边搜索
@@ -45,6 +54,7 @@ Domestic campus-network, physical walking and independent QA checks remain outst
 | [Operations and QA](OPS.md) | Muse's Independent QA, DataOps, Security Validation / Release Gate responsibilities |
 | [Security](docs/SECURITY.md) | Trust boundaries and current requirements versus future controls |
 | [官方知识资料](docs/KNOWLEDGE.zh-CN.md) | Source adoption, date filters, import/export and WeChat attribution |
+| [后端问答迁移](docs/RUNTIME_MIGRATION.zh-CN.md) | Two-stage runtime, immutable releases, private configuration and acceptance gates |
 | [网页步行引导](docs/WEB_GUIDANCE.zh-CN.md) | Two workspaces, dynamic places, foreground location and limitations |
 | [比赛展示思路](docs/DEMO_STRATEGY.zh-CN.md) | Proposed audience, pain points and reproducible demo |
 | [Approved decisions](docs/adr/README.md) | Human-approved ADRs |

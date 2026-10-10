@@ -293,7 +293,7 @@ def main() -> None:
     )
     try:
         app = create_app(data_dir=args.data_dir, api_token=token, tool_gateway=args.tool_gateway)
-    except OSError, ValueError:
+    except (OSError, ValueError):
         parser.exit(2, "API configuration or directory data invalid; no synthetic fallback.\n")
     if args.export_openapi:
         args.export_openapi.write_text(

@@ -98,6 +98,8 @@ window.addEventListener("message", (event) => {
     if (place) selectPlace(place);
   } else if (["route-result", "route-origin"].includes(data.action)) {
     Journey.receive(data);
+  } else if (data.action === 'nearby-origin-result') {
+    Nearby.receive(data);
   } else if (["place-search-result", "map-destination", "poi-selection"].includes(data.action)) {
     MapDiscovery.receive(data);
   } else if (data.action === 'guidance-position') {
@@ -129,7 +131,8 @@ async function request(path, body = {}) {
     // Restarting the single worker clears in-memory sessions. Re-establish the cookie once
     // instead of telling the user to reload, which would lose the visible conversation.
     if (first.response.status === 401 && path !== "/api/session") {
-      await send("/api/session");
+      const renewed = await send("/api/session");
+      if (renewed.data.context_notice) message("已开启新会话，请重新说明身份、学年或办理事项。", "assistant");
       const second = await send(path, body);
       if (!second.response.ok) throw new Error(second.data.message || "会话已重置，请重新提问。");
       return second.data;
@@ -150,8 +153,9 @@ function updateState() {
 function showStatus(data) {
   configured = data.configured || data.knowledge_available;
   $("status-text").textContent = data.configured ? "办事助手可提问" : "官方资料可查询";
-  $("connection-note").hidden = data.configured;
+  $("connection-note").hidden = data.configured && !data.context_notice;
   $("connection-note").textContent = "AI 对话暂未连接，可查询已收录的官方资料，或查看事务、地点与老师目录。";
+  if (data.context_notice) $("connection-note").textContent = "已开启新的会话，请重新说明本次办理事项、身份和学年。";
   updateState();
 }
 function message(text, role) {
@@ -178,7 +182,8 @@ $("chat-form").addEventListener("submit", async (event) => {
   event.preventDefault();
   const text = $("question").value.trim();
   if (!text || busy || !configured) return;
-  const ticket = Journey.begin();
+  Journey.begin();
+  Nearby.cancel();
   document.querySelector(".welcome")?.remove();
   message(text, "user");
   $("question").value = "";
@@ -188,16 +193,22 @@ $("chat-form").addEventListener("submit", async (event) => {
     const data = await request("/api/chat", { message: text });
     pending.remove();
     const answer = message(data.answer, "assistant");
+    if (data.nearby_kind) Nearby.attach(answer, data.places || [], {replacement:'补卡点',food:'餐饮地点',parcel:'快递点'}[data.nearby_kind] || '地点', 'assistant');
     for (const record of data.knowledge || []) answer.append(Knowledge.card(record));
     for (const service of data.services || []) {
-      const button = element("button", service.name + " · 查看步骤 ↗", "linked-card");
+      appendServiceLinks(answer, service);
+      const button = element("button", service.name + " · 详细说明 ↗", "linked-card");
       button.addEventListener("click", () => showService(service)); answer.append(button);
     }
     for (const teacher of data.teachers || []) answer.append(teacherCard(teacher));
+    const placeActions = element("div", undefined, "assistant-actions assistant-map-actions");
     for (const place of data.places || []) {
-      const button = element("button", place.name + " · 查看地点 ↗", "linked-card");
-      button.addEventListener("click", () => selectPlace(place)); answer.append(button);
+      const button = element("button", place.name + " · 查看地图 ↗", "linked-card");
+      button.addEventListener("click", () => {
+        Journey.present({...data, places: [place], result_status: "success"}, "assistant");
+      }); placeActions.append(button);
     }
+    if (placeActions.childElementCount) answer.append(placeActions);
     if (data.excerpts?.length) {
       const details = element("details");
       details.className = "source-details";
@@ -209,10 +220,10 @@ $("chat-form").addEventListener("submit", async (event) => {
       }
       answer.append(details);
     }
-    $("status-text").textContent = data.answer_mode === "official_retrieval" ? "官方资料查询完成" : "AI 对话已连接";
+    $("status-text").textContent = data.answer_mode === "campus_retrieval" ? "校园资料查询完成" : data.answer_mode === "official_retrieval" ? "官方资料查询完成" : "AI 对话已连接";
     $("status-dot").classList.add("ready");
     Journey.saveChat();
-    if (Journey.current(ticket) && (data.teachers?.length || data.services?.length || data.places?.length)) Journey.present(data, "assistant", ticket);
+    // Keep the answer visible. A place button opens the map only when the user chooses it.
   } catch (error) {
     pending.remove(); message(error.message || "网络连接失败，请检查本地服务。", "error");
     $("status-text").textContent = "本次对话未完成";
@@ -226,6 +237,7 @@ document.querySelectorAll("[data-question]").forEach((button) => button.addEvent
   openPanel("assistant"); $("question").value = button.dataset.question; $("question").focus();
 }));
 async function resetChat() {
+  Nearby.cancel();
   if (busy) return;
   Journey.all();
   busy = true; updateState();
@@ -234,6 +246,22 @@ async function resetChat() {
   finally { busy = false; updateState(); }
 }
 $("new-chat").addEventListener("click", resetChat);
+function appendServiceLinks(parent, service) {
+  const actions = element("div", undefined, "assistant-actions");
+  const links = service.source_links || [];
+  const guide = links.find(link => /指南|操作流程|操作手册/.test(link.title) && !/寒假|暑假/.test(link.title))
+    || links.find(link => /补办|补卡|办理/.test(link.title)) || links[0];
+  if (guide) actions.append(officialLink(guide.url, "官方办理指南"));
+  const location = links.find(link => /补卡等相关事宜/.test(link.title));
+  if (location && location.url !== guide?.url) actions.append(officialLink(location.url, "补卡地点说明"));
+  for (const contact of service.contacts || []) {
+    const number = contact.value.replace(/[\s-]/g, "");
+    if (!/^\+?\d{7,15}$/.test(number)) continue;
+    const link = element("a", `${contact.label} ${contact.value}`);
+    link.href = "tel:" + number; actions.append(link);
+  }
+  if (actions.childElementCount) parent.append(actions);
+}
 function showService(service) {
   // Tolerate a record missing an optional field instead of breaking the demo panel.
   const content = $("detail-content"); content.replaceChildren();
@@ -241,6 +269,15 @@ function showService(service) {
   const steps = service.steps || [];
   content.append(element("h2", service.name || "事务"));
   content.append(element("p", `${service.department || ""} · ${audience.split(/[；;]/)[0]}`, "detail-meta"));
+  if (service.limits?.length) {
+    content.append(element("h3", "办理前须知"));
+    for (const limit of service.limits) content.append(element("p", limit));
+  }
+  if (service.required_materials?.length) {
+    content.append(element("h3", "准备材料"));
+    for (const material of service.required_materials) content.append(element("p", material));
+  }
+  appendServiceLinks(content, service);
   content.append(element("h3", "办理步骤"));
   const list = element("ol");
   for (const step of steps) {
@@ -259,10 +296,13 @@ function showService(service) {
   for (const step of steps) {
     if (step.condition && /(指南|通知|待复核|未知)/.test(step.condition)) details.append(element("p", step.condition));
   }
-  for (const note of [...(service.notes || []), ...(service.limits || [])]) details.append(element("p", note));
+  for (const note of service.notes || []) details.append(element("p", note));
   const ids = new Set((service.field_evidence || []).flatMap((field) => field.evidence_ids || []));
   const seen = new Set();
   for (const source of catalogue.sources.filter((item) => ids.has(item.evidence_id))) {
+    if (!source.source_url || !source.source_authority.startsWith('official_')) {
+      details.append(element('p', source.source_reference + ' · ' + source.publisher)); continue;
+    }
     if (seen.has(source.source_url)) continue;
     seen.add(source.source_url);
     const url = new URL(source.source_url);
@@ -338,7 +378,7 @@ async function loadPlaces() {
 function filterPlaces() {
   if (Journey.active()) Journey.all(false); else Journey.begin();
   const q = $("place-query").value.trim().toLowerCase(); const category = $("place-category").value;
-  renderPlaces(places.filter((p) => (!category || p.category === category) && (!q || [p.name, ...p.aliases].some((x) => x.toLowerCase().includes(q)))));
+  renderPlaces(Nearby.match(places,q).filter((p) => !category || p.category === category));
 }
 function setSearchMode(mode) {
   searchMode = mode;
@@ -369,7 +409,7 @@ $("place-search").addEventListener("submit", (event) => {
     if (query && configured && !busy) $("chat-form").requestSubmit();
   } else {
     closePanels(); $("place-detail").hidden = true;
-    const records = places.filter((p) => !query || [p.name, ...p.aliases].some((name) => name.toLowerCase().includes(query.toLowerCase())));
+    const records = Nearby.match(places,query);
     if (query && !records.length) MapDiscovery.search(query);
     else if (query) { MapDiscovery.cancel(); Journey.begin(); Journey.present({places: records, result_status: records.length === 1 ? "success" : "needs_clarification"}); }
     else Journey.all();
@@ -410,6 +450,7 @@ function mapNotice(title, text, compact = false) {
   if (mapState === 'failed') {const retry=element('button','重新加载地图','journey-button');retry.type='button';retry.addEventListener('click',restartMap);$('map-notice').append(retry);}
 }
 function restartMap() {
+  Nearby.cancel();
   clearTimeout(mapTimer); mapGeneration=newGeneration(); mapState='loading';
   for (const id of ['map-zoom-in','map-zoom-out','map-overview','map-pick-destination']) $(id).disabled=true;
   mapNotice('正在重新加载地图','对话和资料会保留。');
@@ -438,3 +479,18 @@ async function initMap() {
   }
 }
 loadPlaces().then(() => {loadTeachers(); initMap();});
+document.querySelectorAll('[data-campus-collection]').forEach(button=>button.addEventListener('click',()=>{
+  MapDiscovery.cancel();Nearby.cancel();Journey.begin();
+  const kind=button.dataset.campusCollection;
+  const service=catalogue.services.find(s=>s.service_id==='cdut:service:campus-card-replacement');
+  const ids=new Set((service?.steps||[]).flatMap(s=>s.place_ids||[]));
+  const records=places.filter(p=>kind==='replacement' ? ids.has(p.place_id) : (p.tags||[]).includes(kind));
+  Journey.present({places:records,result_status:'needs_clarification'});
+  if (kind!=='east-teaching') {
+    const holder=element('div');$('journey-body').prepend(holder);
+    if(kind==='replacement') holder.append(element('p','补卡前：带身份证，卡内余额须大于20元。'));
+    Nearby.attach(holder,records,{replacement:'补卡点',food:'餐饮地点',parcel:'快递点'}[kind]);
+  }
+}));
+document.addEventListener('visibilitychange',()=>{if(document.hidden) Nearby.cancel();});
+window.addEventListener('pagehide',()=>Nearby.cancel());

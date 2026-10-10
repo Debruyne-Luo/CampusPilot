@@ -4,7 +4,7 @@ let markers = [];
 let started = false;
 let frameGeneration = null;
 let placeRecords = new Map();
-let routeId = 0, pickingOrigin = false, routeLayers = [], routeBottom = 200;
+let routeId = 0, pickingOrigin = false, routeLayers = [], routeBottom = 200, requestedRouteBottom = 200;
 let discoveryId = 0, pickingDestination = false, hotspotSequence = 0;
 let navigationId = null, locationLayer = null, followingLocation = true, locationSequence = 0;
 // Viewport only; not a service/office destination. Amap campus POI B001C7X6H7,
@@ -46,7 +46,7 @@ async function init(config) {
     });
     map.on("hotspotclick", selectHotspot);
     map.on("dragstart", () => {followingLocation = false;});
-    map.on("resize", () => requestAnimationFrame(fitRoute));
+    map.on("resize", () => requestAnimationFrame(resizeRouteView));
     notify("ready");
   } catch {
     if (map) {map.destroy(); map = null;}
@@ -124,6 +124,9 @@ window.addEventListener("message", (event) => {
     routeId = data.request_id; pickingOrigin = true; map.setDefaultCursor("crosshair");
   } else if (data.action === "route-request" && map && Number.isSafeInteger(data.request_id)) {
     routeId = data.request_id; clearRoute(); planWalking(data);
+  } else if (data.action === 'nearby-origin' && map && Number.isSafeInteger(data.request_id)) {
+    convertPosition(data.position).then(position => notify('nearby-origin-result', {request_id:data.request_id,status:'success',position}))
+      .catch(() => notify('nearby-origin-result', {request_id:data.request_id,status:'error'}));
   } else if (data.action === "discovery-cancel" && Number.isSafeInteger(data.request_id)) {
     discoveryId = data.request_id; pickingDestination = false; hotspotSequence++;
     if (map && !pickingOrigin) map.setDefaultCursor("default");
@@ -141,8 +144,7 @@ window.addEventListener("message", (event) => {
     followingLocation = true;
     if (map && locationLayer) followPosition(locationLayer.getPosition());
   } else if (data.action === "route-insets" && map && Number.isFinite(data.bottom)) {
-    routeBottom = Math.min(Math.max(80, data.bottom), window.innerHeight * .55);
-    fitRoute();
+    requestedRouteBottom=data.bottom; resizeRouteView();
   } else if (data.action === "zoom" && map && (data.delta === 1 || data.delta === -1)) {
     map.setZoom(Math.max(3, Math.min(20, map.getZoom() + data.delta)));
   } else if (data.action === "overview" && map) {
@@ -161,6 +163,12 @@ function clearRoute() {
 }
 function fitRoute() {
   if (map && routeLayers.length && navigationId === null) map.setFitView(routeLayers, true, [70, routeBottom, 40, 60], 18);
+}
+function resizeRouteView() {
+  if (!map) return;
+  routeBottom = Math.min(Math.max(80, requestedRouteBottom), Math.max(80,map.getSize().getHeight()-60));
+  if (navigationId !== null && followingLocation && locationLayer) followPosition(locationLayer.getPosition());
+  else fitRoute();
 }
 async function convertPosition(origin) {
   if (validPosition(origin)) return origin;
@@ -247,8 +255,13 @@ function clearLocation() {
   locationLayer = null;
 }
 function followPosition(position) {
-  map.setCenter(position);
-  map.panBy(0,-Math.min(routeBottom*.5,window.innerHeight*.27));
+  // Center the fix in the visible strip above the card in one camera operation.
+  // A queued pan after setCenter could finish behind an expanded mobile card.
+  const height=map.getSize().getHeight(), point=map.lngLatToContainer(position);
+  if (!height) return;
+  const visibleY=(60+Math.max(60,height-routeBottom))/2;
+  const center=map.containerToLngLat(new AMap.Pixel(point.getX(),point.getY()+height/2-visibleY));
+  map.setCenter(center,true);
 }
 async function updateLocation(data) {
   const id = navigationId, sequence = ++locationSequence;

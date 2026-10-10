@@ -28,9 +28,15 @@ class SourceEvidence(Contract):
     evidence_id: Identifier
     source_id: Identifier
     source_reference: Text
-    source_url: HttpUrl
+    source_url: HttpUrl | None
     publisher: Text
-    source_authority: Literal["official_university", "official_department", "official_college"]
+    source_authority: Literal[
+        "official_university",
+        "official_department",
+        "official_college",
+        "map_provider",
+        "user_supplement",
+    ]
     version: Text
     locator: Text
     applicability: Text
@@ -40,14 +46,26 @@ class SourceEvidence(Contract):
     verification_status: Literal["needs_review", "verified"] = "needs_review"
     verified_at: date | None = None
     reviewer: Text | None = None
-    access_method: Literal["direct", "search_index", "user_provided_file"]
+    # `reader_proxy` means the page text was retrieved through a third-party rendering or
+    # reader service because direct requests to that host are refused; it is not the same
+    # claim as fetching the page ourselves, so it stays a distinct value.
+    access_method: Literal[
+        "direct",
+        "search_index",
+        "user_provided_file",
+        "reader_proxy",
+        "provider_api",
+        "user_message",
+    ]
     source_file_sha256: Annotated[str, Field(pattern=r"^[a-f0-9]{64}$")] | None = None
     limitations: tuple[Text, ...] = ()
     synthetic: Literal[False] = False
 
     @model_validator(mode="after")
     def review_metadata(self) -> Self:
-        if self.source_url.username or self.source_url.password:
+        if self.source_url is None and self.source_authority != "user_supplement":
+            raise ValueError("Only an attributed user supplement may omit its URL")
+        if self.source_url and (self.source_url.username or self.source_url.password):
             raise ValueError("Source URLs cannot contain credentials")
         if self.verification_status == "verified":
             if self.verified_at is None or self.reviewer is None:

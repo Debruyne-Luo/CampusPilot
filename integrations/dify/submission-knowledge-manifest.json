@@ -1,15 +1,16 @@
 {
-  "export_date": "2026-10-07",
+  "export_date": "2026-10-09",
   "verification_status": "needs_review",
   "purpose": "Public submission corpus for economical keyword RAG; no factual verification",
   "document": "CampusPilot-submission-knowledge.txt",
-  "document_sha256": "b94bb9f95989b585f6b32acbdb2165af4559a2995dbb31f4e368b531c6b3cf09",
+  "document_sha256": "20da3c3ab1307712905ac9ae1c7c4d789f3f7de0ac5b42697a444de2524491fe",
   "source_sha256": {
     "integrations/dify/knowledge/campus-card-loss.md": "f1d4ac7e5269fa0129541ddc674897ccc426c56cdc722105fae64778969c88e7",
     "integrations/dify/knowledge/graduate-enrollment-proof.md": "71708d4f0f75873cc20a72ec7f815a6174104949a34b92a29f9f3de24e435ef4",
     "integrations/dify/knowledge/tuition-receipt-2026-2027.md": "3bffa55712bce7eaf4e5e09590378d7b930fb61a88ae137c4a3b83a725d21178",
-    "data/cdut/services.json": "c4c933edbfb674191baa2eb9e0d097d7a60fa49083fe406e6f27ab755b9ce3d0",
-    "data/cdut/teachers.json": "8543080ee2649cbe488b08ea39004b4988486e140e0604e1d4ed02d0c2018844",
-    "data/cdut/sources.json": "2b08a8c21b3349771b024be395ab09c394776ff21cf0aa3e1a136f06379220f5"
+    "data/cdut/services.json": "486ac11209148b0364970640a703120cff551442a8d7336b78b40c2c3294b807",
+    "data/cdut/teachers.json": "aa0646da42f79bf09550ecd7bd4dc3b7b76323eb2f0ca4a787a8f440e78d2ec0",
+    "data/cdut/sources.json": "448dd83043b02f816776946060965c07fcb6925ecdb5ae44131cf971e163f2a8",
+    "data/cdut/places.json": "25003bb3186c357a46f4fe3899283060313d2f566c552a694a3578cb33d1e736"
   }
 }

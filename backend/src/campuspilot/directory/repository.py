@@ -1,5 +1,7 @@
 """Load only explicit local files; validate the whole snapshot before exposing records."""
 
+import re
+import unicodedata
 from pathlib import Path
 from typing import Self
 
@@ -49,9 +51,24 @@ class DirectoryRepository:
         if set(self._services) & set(self._offices):
             raise ValueError("Service and office identifiers must be distinct")
         for source in sources:
-            host = source.source_url.host or ""
-            if host != "cdut.edu.cn" and not host.endswith(".cdut.edu.cn"):
-                raise ValueError("CDUT directory requires official CDUT sources")
+            host = source.source_url.host if source.source_url else ""
+            if source.source_authority.startswith("official_"):
+                if host != "cdut.edu.cn" and not (host or "").endswith(".cdut.edu.cn"):
+                    raise ValueError("Directory requires official CDUT sources for official claims")
+            elif source.source_authority == "map_provider":
+                if (
+                    host != "ditu.amap.com"
+                    or source.access_method != "provider_api"
+                    or source.source_url is None
+                    or source.source_url.scheme != "https"
+                    or not re.fullmatch(r"/place/[A-Za-z0-9]{8,32}", source.source_url.path or "")
+                    or source.source_url.query
+                ):
+                    raise ValueError("Provider evidence requires an Amap public POI reference")
+            elif source.access_method != "user_message" or source.source_url is not None:
+                raise ValueError(
+                    "User supplements must be explicitly attributed without a source URL"
+                )
             if not source.evidence_id.startswith("cdut:") or not source.source_id.startswith(
                 "cdut:"
             ):
@@ -138,13 +155,46 @@ class DirectoryRepository:
         return self._teachers.get(teacher_id)
 
     def search_place(self, query: str = "", category: str | None = None) -> tuple[CampusPlace, ...]:
-        text = query.strip().casefold()
-        return tuple(
+        text = normalise_place_query(query)
+        # A classroom code resolves its building/wing, never a fictitious room coordinate.
+        block = re.search(r"e[12][abc](?=\d|\b)", text)
+        if block:
+            text = block.group()
+        found = tuple(
             p
             for _, p in sorted(self._places.items())
             if (category is None or p.category == category)
-            and (not text or any(text in x.casefold() for x in (p.name, *p.aliases)))
+            and (not text or any(text in normalise_place_query(x) for x in (p.name, *p.aliases)))
         )
+        if found or block or not text:
+            return found
+        return tuple(
+            p
+            for p in self.match_places_in_question(query)
+            if category is None or p.category == category
+        )
+
+    def match_places_in_question(self, query: str) -> tuple[CampusPlace, ...]:
+        text = normalise_place_query(query)
+        block = re.search(r"e[12][abc](?=\d|\b)", text)
+        if block:
+            return self.search_place(block.group())
+        matches = [
+            (
+                max(
+                    (
+                        len(label)
+                        for raw in (p.name, *p.aliases)
+                        if (label := normalise_place_query(raw)) in text
+                    ),
+                    default=0,
+                ),
+                p,
+            )
+            for p in self._places.values()
+        ]
+        longest = max((score for score, _ in matches), default=0)
+        return tuple(p for score, p in matches if score == longest and score > 1)
 
     def search_teacher(self, query: str = "") -> tuple[CampusTeacher, ...]:
         text = query.strip().casefold()
@@ -163,3 +213,7 @@ class DirectoryRepository:
             eid for record in records for link in record.field_evidence for eid in link.evidence_ids
         }
         return tuple(self._sources[eid] for eid in sorted(ids))
+
+
+def normalise_place_query(query: str) -> str:
+    return re.sub(r"[\s·（）()_-]+", "", unicodedata.normalize("NFKC", query).casefold())

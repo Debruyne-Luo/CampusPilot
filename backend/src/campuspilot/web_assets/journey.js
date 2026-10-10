@@ -2,7 +2,7 @@
 // One transient query/route state. Personal origins never enter chat or storage.
 const Journey = (() => {
   let result = null, target = null, route = null, epoch = 0, routeSequence = 0;
-  let chatScroll = 0, pendingRoute = null, routeTimer;
+  let chatScroll = 0, pendingRoute = null, routeTimer, routeCompact = false;
   const located = (p) => p?.position?.coordinate_system === "GCJ02" &&
     Number.isFinite(p.position.longitude) && Number.isFinite(p.position.latitude);
   function button(text, action, primary = false) {
@@ -12,6 +12,7 @@ const Journey = (() => {
   function invalidateRoute() {
     Guidance.stop();
     clearTimeout(routeTimer); routeSequence++; pendingRoute = null; route = null;
+    routeCompact = false; $('journey-card').classList.remove('route-compact');
     sendToMap({action: "route-clear", request_id: routeSequence});
   }
   function begin() {
@@ -70,10 +71,21 @@ const Journey = (() => {
   function render() {
     const card = $("journey-card"); card.replaceChildren(); card.hidden = !result;
     if (!result) return;
+    card.classList.toggle('route-compact',routeCompact);
     const head = element("div", undefined, "journey-heading");
     const title = element("h2", route ? "步行参考路线" : "查询结果"); title.id = "journey-title"; title.tabIndex = -1;
-    head.append(title, button("查看全部地点", all)); card.append(head);
-    const body = element("div", undefined, "journey-body"); card.append(body);
+    const controls = element('div',undefined,'journey-heading-actions');
+    if (route?.phase === 'ready') {
+      const toggle=button(routeCompact ? '展开' : '收起',() => {
+        routeCompact=!routeCompact; render();
+        document.querySelector('.route-card-toggle')?.focus({preventScroll:true});
+      });
+      toggle.classList.add('route-card-toggle'); toggle.setAttribute('aria-label',routeCompact ? '展开路线卡片' : '收起路线卡片');
+      toggle.setAttribute('aria-expanded',String(!routeCompact)); toggle.setAttribute('aria-controls','journey-body');
+      controls.append(toggle);
+    }
+    controls.append(button("查看全部地点", all)); head.append(title,controls); card.append(head);
+    const body = element("div", undefined, "journey-body"); body.id='journey-body'; card.append(body);
     let placeDetails = null;
     const ambiguous = result.result_status === "needs_clarification" || result.teachers.length > 1 || result.services.length > 1;
     if (ambiguous) {
@@ -142,9 +154,10 @@ const Journey = (() => {
       box.append(element("div", undefined, "guidance-slot"));
       const start = button("开始步行引导", () => Guidance.start({requestId:routeSequence, route, target,
         detail:result.teachers.map(t => t.office || "").filter(Boolean).join("；") || result.services[0]?.name || "",
-        replan:(origin) => plan(origin, "我的位置")}), true); start.classList.add("start-guidance"); box.append(start);
-      box.append(element("p", "前台持续定位；切换页面或锁屏时暂停。", "route-guidance-note"));
+        replan:(origin) => plan(origin, "我的位置")}), true); start.classList.add("start-guidance"); start.disabled=!!route.mapUnavailable; box.append(start);
+      box.append(element("p", route.mapUnavailable ? "地图暂不可用，可继续查看分步指引。" : "前台持续定位；切换页面或锁屏时暂停。", "route-guidance-note"));
       const details = element("details", undefined, "route-instructions"); details.append(element("summary", "分步指引"));
+      details.open=!!route.mapUnavailable;
       const list = element("ol"); route.steps.forEach((s) => list.append(element("li", s))); details.append(list); box.append(details);
       const options = element("div", undefined, "route-options");
       options.append(button("更换起点", startRoute), button("重新规划", () => plan(route.origin, route.originName))); box.append(options);
@@ -165,7 +178,7 @@ const Journey = (() => {
   function exitRoute() {invalidateRoute(); focusTarget(); render();}
   function plan(origin, name) {
     if (!route || !located(target)) return;
-    Guidance.stop();
+    Guidance.stop(); routeCompact=false;
     clearTimeout(routeTimer); const id = ++routeSequence;
     sendToMap({action: "route-clear", request_id: id});
     route = {phase: "loading", origin, originName: name, message: mapState === "ready" ? "正在规划步行路线…" : "正在等待地图…"};
@@ -218,10 +231,15 @@ const Journey = (() => {
   }
   function ready() {
     if (result) focusTarget();
+    if (route?.mapUnavailable) {plan(route.origin,route.originName); return;}
     if (pendingRoute) {sendToMap(pendingRoute); pendingRoute = null;}
   }
   function failed() {
-    if (route) {invalidatePending(); route.phase = "error"; route.message = "地图加载失败，请稍后重试。"; render();}
+    if (!route) return;
+    Guidance.stop(); routeCompact=false; invalidatePending();
+    if (route.phase === 'ready') {route.mapUnavailable=true; route.message='地图暂不可用，已保留分步指引。';}
+    else {route.phase = "error"; route.message = "地图加载失败，请稍后重试。";}
+    render();
   }
   function all(reset = true) {
     begin(); result = null; target = null; $("journey-card").hidden = true;

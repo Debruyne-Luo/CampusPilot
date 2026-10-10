@@ -1,5 +1,22 @@
 # 提交版部署与回滚
 
+## 2026-10-09 办事短答与实际地点修复
+
+后续补充：余额要求与入口去重，只同步 app.js、index.html、services.json 三份文件，
+备份 `assistant-backups/20261009T135342Z-c455c70e`。生产真实补卡查询验证短答包含
+“大于20元”和“不是补卡费”；办理详情直接显示限制与材料。顶部移除重复“问助手”，
+保留桌面/手机“事务助手”模式切换。Dify第8版主动保留必要前提的提示词已发布。
+
+`deploy/publish_assistant.py` 复用既有备份、漂移检测和失败回滚引擎，只同步九份固定
+代码/数据文件，保留其他在途引导修改。补卡关联珙桐、香樟和财务处建筑；答复先提供
+地点、做法、官方链接和电话，地图由用户点击开启。单教师办公室问题直接提供已有房号。
+最终样式备份 `/opt/campuspilot/assistant-backups/20261009T132253Z-79a947d0`；代码备份
+`20261009T131812Z-5d637db1`；此前完整增量备份
+`20261009T131003Z-4c88f79a`。发布器实际调用生产 Dify 查询并验证三个地点及完整短答。
+云端工作流第7版已发布。经济检索库启用 `CampusPilot-submission-knowledge-20261009.txt`，
+旧 `CampusPilot-submission-knowledge.txt` 已禁用保留，可重新启用回退；没有更换模型或密钥。
+`submission-export.yml` 仍为第6版脱敏归档，不冒充本轮新导出；本轮提示词和便携候选已同步。
+
 2026-10-07 用户完成首次安装，公网 HTTPS 已就绪：
 `https://campuspilot.38-244-61-184.sslip.io`。独立外部检查以正常证书验证取得 healthz 200；
 网页缺访客口令为 Basic 401，POST 工具缺 token 为 Bearer 401。
@@ -548,3 +565,35 @@ map-frame.js/css、workspace.css、map-discovery.js、guidance.js。没有新增
 需要回退数据增量时使用 `data-backups/20261009T093052Z-6c2155b2`；回退前核对该两个
 文件未被后续编辑。数据发布会重启本项目后端，刷新网页后开始新对话。
 
+### 地图与前台步行引导增量（2026-10-09，已发布）
+
+本轮按用户选择优先完善地图/引导。运行内容改动为 `guidance.js`、`journey.js`、
+`map-frame.js`、`workspace.css`；沿用 `publish_workspace.py` 的10个固定文件集。
+本轮未发布进入任务时已有的 `evidence.py` / `reader_proxy` 未提交改动，未改目录数据。
+
+发布前只读核对服务器10个文件与基线提交
+`64a0591a4ebfa3175cd9fc9b3385c83d133d1fc8` 的内容一致（仅归一CRLF/LF进行比较），
+再保存服务器**实际字节**与逐文件SHA256到
+`release-backups/campuspilot-map-baseline-20261009T125105Z.zip`。
+发布器继续按实际字节的精确哈希拒绝漂移，没有放宽更新与回滚规则。
+
+```powershell
+.venv/Scripts/python.exe deploy/publish_workspace.py --baseline release-backups/campuspilot-map-baseline-20261009T125105Z.zip --check-only
+.venv/Scripts/python.exe deploy/publish_workspace.py --baseline release-backups/campuspilot-map-baseline-20261009T125105Z.zip
+```
+
+结果：`WORKSPACE UPDATED`，10文件，服务器私有备份
+`/opt/campuspilot/workspace-backups/20261009T125253Z-f26b455a`。发布器的官方资料、实际
+高德周边搜索/详情/步行道路探针通过。随后独立核对10个部署文件哈希及9个实际提供的
+网页资源字节与本地一致，资源均 `Cache-Control: no-cache`，服务active、healthz ready。
+正常TLS下公网healthz 200；未提供访客口令的网页401、未提供token的工具401。
+
+浏览器以真实HTTPS来源，经日志关闭的认证SSH连接读取生产文件/API，重跑新增14个
+引导场景全部通过。验证包含小屏收起/展开与位置可见、旧回调取消、进度恢复、
+地图失败保留文字及退出清理；所有GPS/时间/错误回调均为合成数据。浏览器转发连接与
+公网TLS/认证检查分别记录，不把转发结果当作校园网络或真机GPS验收。
+详见 [开发验证](SUBMISSION_VALIDATION.zh-CN.md) 和 [引导行为](WEB_GUIDANCE.zh-CN.md)。
+
+回退使用上述10文件私有备份，操作前核对其manifest与当前文件是否有后续漂移；
+此前目录数据备份保持独立。本次发布会清空服务端内存会话，前端可自动重建会话；
+已打开网页须刷新一次取得新的JS/CSS。校园真机/iOS及独立QA继续待验。

@@ -24,7 +24,7 @@ from campuspilot.contracts import (
 from campuspilot.demo import build_demo, run_demo
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.directory.tools import directory_tools
-from campuspilot.domain import CampusOffice, CampusService
+from campuspilot.domain import CampusOffice, CampusPlace, CampusService
 from campuspilot.evidence import FieldEvidence, SourceEvidence
 from campuspilot.mocks import demo_tools
 from campuspilot.state import InMemoryExecutionJournal
@@ -63,7 +63,7 @@ def test_seed_sources_remain_unreviewed() -> None:
         assert source.source_authority in {
             "official_department",
             "official_college",
-            "official_university",
+            "official_university", "map_provider", "user_supplement",
         }
         assert source.verification_status == "needs_review"
         assert source.reviewer is None and source.verified_at is None
@@ -107,7 +107,8 @@ def test_ambiguous_lookup_returns_all_in_stable_order() -> None:
     original = repository().search_service("在读证明")[0]
     # Collision test derived from a real record; this copy is never a published campus fact.
     duplicate = original.model_copy(update={"service_id": "cdut:service:collision-test"})
-    repo = DirectoryRepository((*services(), duplicate), offices(), sources())
+    places = TypeAdapter(tuple[CampusPlace, ...]).validate_json((DATA / "places.json").read_bytes())
+    repo = DirectoryRepository((*services(), duplicate), offices(), sources(), places)
     result = repo.search_service("在读证明")
     assert len(result) == 2
     assert [row.service_id for row in result] == sorted(row.service_id for row in result)

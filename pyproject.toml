@@ -55,7 +55,22 @@ line-length = 100
 "integrations/dify/*.py" = "py310"
 "deploy/*.py" = "py312"
 "backend/src/campuspilot/web.py" = "py312"
+"backend/src/campuspilot/api.py" = "py312"
+"backend/src/campuspilot/dify.py" = "py312"
+"backend/src/campuspilot/tools.py" = "py312"
+"backend/src/campuspilot/__main__.py" = "py312"
 "backend/src/campuspilot/knowledge.py" = "py312"
+"backend/src/campuspilot/chat_model.py" = "py312"
+"backend/src/campuspilot/chat_runtime.py" = "py312"
+"backend/src/campuspilot/dify_knowledge.py" = "py312"
+"backend/src/campuspilot/evaluation_budget.py" = "py312"
+"backend/src/campuspilot/jev_shadow.py" = "py312"
+"backend/src/campuspilot/knowledge_release.py" = "py312"
+"backend/src/campuspilot/migration_config.py" = "py312"
+"backend/src/campuspilot/rag.py" = "py312"
+"backend/src/campuspilot/migration_eval.py" = "py312"
+"backend/src/campuspilot/release_gate.py" = "py312"
+"backend/src/campuspilot/api_evaluation.py" = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

@@ -49,7 +49,9 @@ const WalkingProgress = (() => {
       if (atEnd) {if (arrivalSince === null) arrivalSince=now;} else arrivalSince=null;
       return {status:arrivalSince !== null && now-arrivalSince >= 6000 ? "arrived" : "walking",remaining,step,accuracy};
     }
-    return {update};
+    // Pausing breaks consecutive-fix evidence, but retains the last route progress.
+    function resetContinuity() {offSince=null; arrivalSince=null;}
+    return {update,resetContinuity};
   }
   return {create,metres};
 })();
@@ -69,27 +71,39 @@ const Guidance = typeof document === "undefined" ? null : (() => {
   }
   function pause(message="页面已离开前台，步行引导已暂停。") {
     if (!context || ["paused","error","arrived"].includes(phase)) return;
-    clearWatch(); phase="paused"; note=message; render();
+    clearWatch(); sequence++; tracker?.resetContinuity(); phase="paused"; note=message; render();
   }
   function start(options) {
-    stop(); context=options; sequence++; const id=sequence; lastSent=0;
+    stop(); context=options;
     try {tracker=WalkingProgress.create(options.route.geometry,options.route.stepEnds,options.route.distance);}
     catch {phase="error"; note="当前路线未提供完整引导信息，请重新规划。"; render(); return;}
+    watch();
+  }
+  function resume() {
+    if (!context || !tracker || !["paused","error"].includes(phase)) return;
+    tracker.resetContinuity(); watch();
+  }
+  function watch() {
+    const id=++sequence; lastSent=-Infinity;
     if (!navigator.geolocation || !window.isSecureContext) {phase="error"; note="当前浏览器无法持续定位，可展开分步指引。"; render(); return;}
     phase="locating"; note="正在获取当前位置…"; render();
     sendToMap({action:"guidance-start",request_id:context.requestId,navigation_id:id});
-    watchId=navigator.geolocation.watchPosition((fix) => {
+    const fail=(error) => {
+      if (!context || id !== sequence || !["locating","walking"].includes(phase)) return;
+      clearWatch(); sequence++; tracker.resetContinuity(); phase="error";
+      note=error.code === 1 ? "定位权限未允许，可继续查看分步指引。" : "暂未取得有效定位，请重试或查看分步指引。"; render();
+    };
+    try {watchId=navigator.geolocation.watchPosition((fix) => {
       if (!context || id !== sequence || !["locating","walking"].includes(phase)) return;
       const {longitude,latitude,accuracy}=fix.coords;
       if (![longitude,latitude,accuracy].every(Number.isFinite) || Math.abs(longitude)>180 || Math.abs(latitude)>90 ||
-          !Number.isFinite(fix.timestamp) || Date.now()-fix.timestamp > 15000) return;
-      rawPosition={longitude,latitude,coordinate_system:"WGS84"};
+          accuracy < 0 || !Number.isFinite(fix.timestamp) || Date.now()-fix.timestamp > 15000 || fix.timestamp-Date.now() > 2000) return;
+      rawPosition=accuracy <= 60 ? {longitude,latitude,coordinate_system:"WGS84"} : null;
       const now=Date.now(); if (now-lastSent < 6000) return; lastSent=now;
-      sendToMap({action:"guidance-update",request_id:context.requestId,navigation_id:id,position:rawPosition,accuracy});
-    }, (error) => {
-      if (!context || id !== sequence) return;
-      clearWatch(); phase="error"; note=error.code === 1 ? "定位权限未允许，可继续查看分步指引。" : "暂未取得有效定位，请重试或查看分步指引。"; render();
-    }, {enableHighAccuracy:true,timeout:15000,maximumAge:0});
+      sendToMap({action:"guidance-update",request_id:context.requestId,navigation_id:id,
+        position:{longitude,latitude,coordinate_system:"WGS84"},accuracy});
+    }, fail, {enableHighAccuracy:true,timeout:15000,maximumAge:0});}
+    catch {fail({code:2});}
   }
   function receive(data) {
     if (!context || data.navigation_id !== sequence || data.request_id !== context.requestId || !["locating","walking"].includes(phase)) return;
@@ -97,6 +111,7 @@ const Guidance = typeof document === "undefined" ? null : (() => {
     const p=data.position;
     if (p?.coordinate_system !== "GCJ02") return;
     const next=tracker.update([p.longitude,p.latitude],data.accuracy,Date.now());
+    if (next.status === "invalid") return;
     phase="walking";
     if (next.status === "walking") {progress=next; note="按参考路线步行，留意现场道路与入口。";}
     else if (next.status === "arrived") {progress=next; phase="arrived"; note="已到达目的地附近，请核对建筑入口。"; clearWatch();}
@@ -120,22 +135,24 @@ const Guidance = typeof document === "undefined" ? null : (() => {
     if (!active) return;
     const box=element('section',undefined,'guidance-box'); box.setAttribute('aria-label','前台步行引导');
     box.append(element('p','前往 ' + context.target.name,'guidance-target'));
-    if (context.detail) box.append(element('p',context.detail));
-    const status=element('p',note); status.setAttribute('role','status'); box.append(status);
+    if (context.detail) box.append(element('p',context.detail,'guidance-detail'));
+    const status=element('p',note,note === '按参考路线步行，留意现场道路与入口。' ? 'guidance-normal-note' : ''); status.setAttribute('role','status'); box.append(status);
     if (phase === 'arrived') box.append(element('h3','已到达目的地附近'));
     else if (progress?.status === 'walking') {
-      box.append(element('p',`下一步 · 第 ${progress.step+1} / ${context.route.steps.length} 步`));
+      box.append(element('p',`下一步 · 第 ${progress.step+1} / ${context.route.steps.length} 步`,'guidance-step-label'));
       box.append(element('h3',context.route.steps[progress.step] || '继续沿路线步行'));
       const remaining=Math.round(progress.remaining), time=Math.max(1,Math.ceil(context.route.time*progress.remaining/context.route.distance/60));
       box.append(element('p',`剩余约 ${remaining} 米 · ${time} 分钟`,'guidance-progress'));
     }
-    if (['paused','error'].includes(phase)) box.append(button(phase === 'paused' ? '继续引导' : '重试定位',() => start(context)));
+    if (['paused','error'].includes(phase)) box.append(button(phase === 'paused' ? '继续引导' : '重试定位',resume));
     else if (phase !== 'arrived') {
-      box.append(button('暂停引导',() => pause('步行引导已暂停。')),
-        button('跟随位置',() => sendToMap({action:'guidance-follow',navigation_id:sequence})));
+      const follow=button('跟随位置',() => sendToMap({action:'guidance-follow',navigation_id:sequence})); follow.classList.add('guidance-follow-button');
+      box.append(button('暂停引导',() => pause('步行引导已暂停。')),follow);
       if (rawPosition && progress?.status === 'off_route') box.append(button('从当前位置重新规划',replan));
     }
-    box.append(button('结束引导',stop),button('退出路线',() => Journey.exitRoute())); slot.append(box);
+    const end=button('结束引导',stop), exit=button('退出路线',() => Journey.exitRoute());
+    end.classList.add('guidance-end-button'); exit.classList.add('guidance-exit-button');
+    box.append(end,exit); slot.append(box);
   }
   document.addEventListener('visibilitychange',() => {if (document.hidden) pause();});
   window.addEventListener('pagehide',stop);

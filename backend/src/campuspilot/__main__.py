@@ -67,7 +67,7 @@ def main() -> None:
             args.query,
             getattr(args, "academic_year", None),
         )
-    except OSError, ValidationError, ValueError:
+    except (OSError, ValidationError, ValueError):
         parser.exit(2, "Directory data unavailable or invalid; no synthetic fallback.\n")
     print(output.model_dump_json(indent=2))
     if output.result.status not in {"success", "empty"}:

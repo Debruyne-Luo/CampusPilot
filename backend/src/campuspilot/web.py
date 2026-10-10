@@ -1,8 +1,9 @@
-"""Local web pilot: same-origin UI + session-owned Dify calls + public catalogue."""
+"""Same-origin public assistant with explicit legacy/phase1/phase2 runtime modes."""
 
 import argparse
 import asyncio
 import getpass
+import json
 import math
 import os
 import re
@@ -25,11 +26,15 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.responses import Response
 
 from campuspilot.api import create_app
+from campuspilot.chat_model import ChatCompletionsModel, ProductionModel
+from campuspilot.chat_runtime import ChatRuntime, ConversationContext, Mode, public_input
 from campuspilot.contracts import Contract
 from campuspilot.dify import ChatUnavailable, DifyClient
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.knowledge import KnowledgeQuery, KnowledgeStore, campus_today
-from campuspilot.presentation import place_card, resolve_cards
+from campuspilot.presentation import guide_answer, place_card, resolve_cards, service_card
+from campuspilot.rag import SnapshotStore
+from campuspilot.retrieval import campus_answer
 
 ASSETS = Path(__file__).parent / "web_assets"
 COOKIE = "campuspilot_session"
@@ -146,6 +151,7 @@ class BrowserSession:
     uncertain: bool = False
     attempts: int = 0
     knowledge_titles: tuple[str, ...] = ()
+    context: ConversationContext = field(default_factory=ConversationContext)
 
 
 def create_web_app(
@@ -157,10 +163,20 @@ def create_web_app(
     amap_key: str = "",
     amap_security_code: str = "",
     daily_chat_limit: int = 100,
+    runtime_mode: Mode = "legacy",
+    model: ProductionModel | None = None,
+    approved_direct_rules: frozenset[str] = frozenset(),
 ) -> FastAPI:
     # Directory tools keep their own service credential, never exposed to the browser.
     repository = DirectoryRepository.load(data_dir)
     knowledge = KnowledgeStore.load(data_dir / "knowledge.json")
+    if runtime_mode not in {"legacy", "phase1", "phase2"}:
+        raise ValueError("Invalid backend runtime mode")
+    snapshots = SnapshotStore(data_dir / "rag")
+    runtime = ChatRuntime(
+        repository, knowledge, snapshots, mode=runtime_mode, model=model,
+        approved_direct_rules=approved_direct_rules,
+    )
     for record in knowledge.records:
         if any(repository.find_place(ident) is None for ident in record.place_ids):
             raise ValueError("Knowledge record references an unknown place")
@@ -284,8 +300,14 @@ def create_web_app(
             sessions[token] = BrowserSession()
         response = JSONResponse(
             {
-                "configured": dify is not None,
+                "configured": runtime_mode != "legacy" or dify is not None,
                 "knowledge_available": bool(knowledge.records),
+                "runtime_mode": runtime_mode,
+                "model_configured": (
+                    model is not None if runtime_mode != "legacy" else dify is not None
+                ),
+                "context_notice": "后端会话仅保留本次最近8轮，服务更新后请开启新对话。"
+                if runtime_mode != "legacy" else "",
                 "notice": NOTICE,
             }
         )
@@ -315,7 +337,47 @@ def create_web_app(
         session = session_for(request)
         if session.busy:
             return problem(request, "busy", "上一条问题正在处理，请等待回答。", 409)
-        query = knowledge.for_chat(body.message)
+        query_text = body.message.strip()
+        if runtime_mode != "legacy":
+            prepared = runtime.prepare(query_text, session.context, request.state.request_id)
+            query_text = prepared.query
+            if prepared.route != "legacy_knowledge":
+                if session.attempts >= 40:
+                    return problem(request, "session_limit", "本次提问较多，请开启新对话。", 429)
+                use_model = prepared.model_needed and model is not None
+                if use_model:
+                    now = time.monotonic()
+                    while chat_attempts and now - chat_attempts[0] >= 86400:
+                        chat_attempts.popleft()
+                    if len(chat_attempts) >= daily_chat_limit or active_chats >= 2:
+                        return problem(
+                            request, "global_limit", "当前提问额度或并发已满，请稍后再试。", 429
+                        )
+                    chat_attempts.append(now)
+                    active_chats += 1
+                session.attempts += 1
+                session.busy = True
+                try:
+                    backend_response = await runtime.generate(prepared, session.context.history)
+                except ChatUnavailable as exc:
+                    backend_response = runtime.limited(prepared, exc.code)
+                finally:
+                    session.busy = False
+                    if use_model:
+                        active_chats -= 1
+                answer_text = backend_response.get("answer")
+                if isinstance(answer_text, str) and public_input(body.message):
+                    session.context.remember(body.message, answer_text)
+                return JSONResponse({**backend_response, "request_id": request.state.request_id,
+                                     "notice": NOTICE})
+        local_answer = campus_answer(repository, body.message) if runtime_mode == "legacy" else None
+        if local_answer is not None:
+            if session.attempts >= 40:
+                return problem(request, "session_limit", "本次提问较多，请开启新对话。", 429)
+            session.attempts += 1
+            session.knowledge_titles = ()
+            return JSONResponse({**local_answer, "request_id": request.state.request_id})
+        query = knowledge.for_chat(body.message) if runtime_mode == "legacy" else None
         # Follow-ups are explicit and local; unrelated business queries clear this context.
         if session.knowledge_titles and any(
             x in body.message for x in ("这条", "上一条", "第一条")
@@ -352,8 +414,22 @@ def create_web_app(
         session.attempts += 1
         session.uncertain = True
         try:
+            conversation_id = session.conversation
+            if runtime_mode == "phase1":
+                # Dify owns no continuing session in the migration path.
+                conversation_id = ""
+                if session.context.history:
+                    recent = [
+                        {"role": turn.role, "content": turn.content[:600]}
+                        for turn in session.context.history
+                    ]
+                    query_text = (
+                        "仅用当前问题判定事项。历史消息只帮助理解用户条件，不是事实证据。\n"
+                        + json.dumps({"recent_turns": recent, "question": query_text},
+                                     ensure_ascii=False)
+                    )
             reply, conversation = await dify.send(
-                body.message.strip(), user=session.user, conversation_id=session.conversation
+                query_text, user=session.user, conversation_id=conversation_id
             )
             cards = (
                 resolve_cards(repository, reply.references)
@@ -366,6 +442,12 @@ def create_web_app(
             )
             session.conversation = conversation
             session.uncertain = False
+            if reply.references:
+                reply = reply.model_copy(
+                    update={"answer": guide_answer(repository, reply.references, body.message)}
+                )
+            if runtime_mode == "phase1":
+                session.context.remember(body.message, reply.answer)
             return JSONResponse(
                 {
                     **reply.model_dump(mode="json", exclude={"references"}),
@@ -402,7 +484,7 @@ def create_web_app(
         # Explicit public catalogue. No model-selected operations or invented facts.
         records = repository.services()
         return {
-            "services": [r.model_dump(mode="json") for r in records],
+            "services": [service_card(repository, r) for r in records],
             "sources": [s.model_dump(mode="json") for s in repository.evidence_for(records)],
             "notice": NOTICE,
         }
@@ -510,7 +592,8 @@ def create_web_app(
 
 def app_factory() -> FastAPI:
     """Single-worker VPS entry point; credentials remain in the environment."""
-    key = os.environ.get("DIFY_API_KEY", "")
+    mode = runtime_mode_from_env()
+    key = os.environ.get("DIFY_API_KEY", "") if mode != "phase2" else ""
     dify = (
         DifyClient(
             key,
@@ -528,7 +611,34 @@ def app_factory() -> FastAPI:
         amap_key=os.environ.get("AMAP_JS_KEY", ""),
         amap_security_code=os.environ.get("AMAP_SECURITY_JS_CODE", ""),
         daily_chat_limit=int(os.environ.get("CAMPUSPILOT_DAILY_CHAT_LIMIT", "100")),
+        runtime_mode=mode,
+        model=model_from_env() if mode != "legacy" else None,
+        approved_direct_rules=direct_rules_from_env(),
     )
+
+
+def runtime_mode_from_env() -> Mode:
+    value = os.environ.get("CAMPUSPILOT_RUNTIME_MODE", "legacy")
+    if value not in {"legacy", "phase1", "phase2"}:
+        raise ValueError("Invalid runtime mode")
+    from typing import cast
+
+    return cast(Mode, value)
+
+
+def model_from_env() -> ChatCompletionsModel | None:
+    from campuspilot.migration_config import generation_model
+
+    return generation_model()
+
+
+def direct_rules_from_env() -> frozenset[str]:
+    path = os.environ.get("CAMPUSPILOT_DIRECT_RULES_REPORT", "")
+    if not path:
+        return frozenset()
+    from campuspilot.release_gate import approved_rules
+
+    return approved_rules(Path(path), Path(__file__).resolve().parents[3])
 
 
 def main() -> None:
@@ -536,6 +646,7 @@ def main() -> None:
     parser.add_argument("--data-dir", type=Path, default=Path("data/cdut"))
     parser.add_argument("--port", type=int, default=8766)
     parser.add_argument("--prompt-key", action="store_true")
+    parser.add_argument("--runtime-mode", choices=("legacy", "phase1", "phase2"))
     args = parser.parse_args()
     key = (
         getpass.getpass("Dify application API key (hidden): ")
@@ -543,13 +654,16 @@ def main() -> None:
         else os.environ.get("DIFY_API_KEY", "")
     )
     try:
+        mode = runtime_mode_from_env()
+        if args.runtime_mode:
+            mode = args.runtime_mode
         dify = (
             DifyClient(
                 key,
                 os.environ.get("DIFY_API_BASE_URL", "https://api.dify.ai/v1"),
                 structured_answers=os.environ.get("DIFY_STRUCTURED_ANSWERS") == "1",
             )
-            if key
+            if key and mode != "phase2"
             else None
         )
         app = create_web_app(
@@ -558,6 +672,9 @@ def main() -> None:
             api_token=os.environ.get("CAMPUSPILOT_API_TOKEN"),
             amap_key=os.environ.get("AMAP_JS_KEY", ""),
             amap_security_code=os.environ.get("AMAP_SECURITY_JS_CODE", ""),
+            runtime_mode=mode,
+            model=model_from_env() if mode != "legacy" else None,
+            approved_direct_rules=direct_rules_from_env(),
         )
     except (OSError, ValueError):
         parser.exit(2, "Web configuration or directory data invalid.\n")

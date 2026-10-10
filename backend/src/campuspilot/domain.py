@@ -61,7 +61,7 @@ class DirectoryRecord(Contract):
 
 
 class ServiceStep(Contract):
-    mode: Literal["online", "self_service"]
+    mode: Literal["online", "self_service", "in_person"]
     instruction: Text
     condition: Text | None = None
     place_ids: tuple[CampusId, ...] | None = None
@@ -80,8 +80,9 @@ class CampusService(DirectoryRecord):
     office_id: CampusId | None
     audience: Text
     academic_year: Annotated[str, Field(pattern=r"^\d{4}-\d{4}$")] | None = None
-    modes: tuple[Literal["online", "self_service"], ...] = Field(min_length=1)
+    modes: tuple[Literal["online", "self_service", "in_person"], ...] = Field(min_length=1)
     entry_points: tuple[Text, ...]
+    summary: Text | None = None
     required_materials: tuple[Text, ...] | None = None
     required_inputs: tuple[Text, ...] | None = None
     steps: tuple[ServiceStep, ...] = Field(min_length=1)
@@ -147,6 +148,7 @@ class CampusPlace(DirectoryRecord):
     campus: Text | None
     category: Literal["teaching", "office", "library", "dining", "service", "sports", "gate"]
     address_detail: Text | None = None
+    tags: tuple[Text, ...] | None = None
     position: MapPosition | None = None
 
 

@@ -201,6 +201,8 @@ def test_synthetic_teacher_and_service_associations(tmp_path: Path) -> None:
     service = next(s for s in services if s["service_id"] == "cdut:service:campus-card-replacement")
     service["aliases"].append(service["name"])
     service["name"] = "SYNTHETIC service"
+    for step in service["steps"]:
+        step.pop("place_ids", None)
     service["steps"][0]["place_ids"] = ["cdut:place:east-library", "cdut:place:gongtong-dining"]
     (tmp_path / "services.json").write_text(json.dumps(services), encoding="utf-8")
     repo = DirectoryRepository.load(tmp_path)

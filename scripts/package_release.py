@@ -17,6 +17,7 @@ DIRECTORIES = (
     "deploy",
     "scripts",
     "tests",
+    "evaluation/runtime-migration",
 )
 FILES = (
     "README.md",
@@ -31,6 +32,8 @@ FILES = (
 SUFFIXES = {
     ".py",
     ".json",
+    ".jsonl",
+    ".csv",
     ".md",
     ".yml",
     ".yaml",

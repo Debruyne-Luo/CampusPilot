@@ -3,13 +3,12 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#f4f5f0"><title>CampusPilot · 校园行动助手</title>
-  <link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/assets/map-shell.css"><link rel="stylesheet" href="/assets/journey.css"><link rel="stylesheet" href="/assets/knowledge.css"><link rel="stylesheet" href="/assets/workspace.css"><script src="/assets/guidance.js" defer></script><script src="/assets/journey.js" defer></script><script src="/assets/app.js" defer></script><script src="/assets/map-discovery.js" defer></script><script src="/assets/knowledge.js" defer></script>
+  <link rel="stylesheet" href="/assets/style.css"><link rel="stylesheet" href="/assets/map-shell.css"><link rel="stylesheet" href="/assets/journey.css"><link rel="stylesheet" href="/assets/knowledge.css"><link rel="stylesheet" href="/assets/workspace.css"><script src="/assets/guidance.js" defer></script><script src="/assets/journey.js" defer></script><script src="/assets/nearby.js" defer></script><script src="/assets/app.js" defer></script><script src="/assets/map-discovery.js" defer></script><script src="/assets/knowledge.js" defer></script>
 </head>
 <body data-workspace="map">
   <header class="app-header">
     <a href="#campus-map" class="brand"><span class="brand-mark">C↗</span><span>CampusPilot<small>成都理工大学</small></span></a>
     <nav class="desktop-modes" aria-label="工作空间"><button class="nav-item active" data-workspace="map" aria-pressed="true">校园地图</button><button class="nav-item" data-workspace="assistant" aria-pressed="false">事务助手</button></nav>
-    <button class="assistant-launch" data-panel="assistant"><span>✳</span> 问助手</button>
   </header>
   <main class="map-workspace" id="campus-map" aria-label="校园地点与地图">
     <div class="map-heading"><div><h1>校园地图<span>搜地点，选目的地，步行出发</span></h1><p>成都理工大学 · 成都校区</p></div></div>
@@ -18,6 +17,7 @@
       <div class="search-input-row"><span class="search-symbol" aria-hidden="true">⌕</span><label class="sr-only" for="place-query">搜索校园地点、教师或询问办事问题</label><input id="place-query" maxlength="120" autocomplete="off" placeholder="想去哪里？搜索图书馆、网安楼、餐厅…"><button type="submit" class="search-submit" aria-label="开始查询">查找 <span>↗</span></button></div>
       <label class="sr-only" for="place-category">地点类型</label><select id="place-category" hidden><option value="">全部</option><option value="teaching">教学</option><option value="office">院系与办公</option><option value="library">图书馆</option><option value="dining">餐厅</option><option value="service">服务</option><option value="sports">运动</option><option value="gate">校门</option></select>
     </form>
+    <div class="campus-collections" aria-label="校园常用地点"><button data-campus-collection="replacement">补卡地点</button><button data-campus-collection="food">吃什么</button><button data-campus-collection="parcel">拿快递</button><button data-campus-collection="east-teaching">东区教学楼</button></div>
     <section id="map-stage" class="map-stage" aria-label="地图与地点结果">
       <div id="map" class="map-canvas"><iframe id="map-frame" class="map-view" src="/map-view" title="高德地图视图" sandbox="allow-scripts allow-same-origin"></iframe><div id="map-notice" class="map-empty"><span>⌖</span><h2>正在打开地图</h2><p>地点资料会同步显示在下方。</p></div></div>
       <div class="map-filters" aria-label="地点分类"><button data-category="" class="active" aria-pressed="true">全部</button><button data-category="teaching" aria-pressed="false">教学</button><button data-category="office" aria-pressed="false">院系与办公</button><button data-category="library" aria-pressed="false">图书馆</button><button data-category="dining" aria-pressed="false">餐厅</button><button data-category="service" aria-pressed="false">服务</button><button data-category="sports" aria-pressed="false">运动</button><button data-category="gate" aria-pressed="false">校门</button></div>

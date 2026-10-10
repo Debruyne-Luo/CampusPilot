@@ -245,5 +245,351 @@
       "寒假安排已过期，不用其值班时间描述当前开放时间。",
       "通知未说明每台设备是否支持当前补卡及对应卡种。"
     ]
+  },
+  {
+    "evidence_id": "cdut:evidence:card-self-service-2023",
+    "source_id": "cdut:source:card-self-service-2023",
+    "source_reference": "关于2023年寒假期间校园卡补卡等相关事宜的通知",
+    "source_url": "https://wxc.cdut.edu.cn/info/1006/3424.htm",
+    "publisher": "成都理工大学网络与信息化处",
+    "source_authority": "official_department",
+    "version": "2023-01-13",
+    "locator": "校园卡补办相关事项、终端所在食堂自助服务区、联系电话",
+    "applicability": "历史通知明确列出珙桐学生卡、香樟家属卡等设备分布和一卡通联系电话；2026年设备点仍见寒假指南。",
+    "source_published_at": "2023-01-13",
+    "retrieved_at": "2026-10-09",
+    "access_method": "search_index",
+    "verification_status": "needs_review",
+    "synthetic": false,
+    "limitations": [
+      "不沿用2023年寒假24小时、值班时间或卡种分配作为2026年实时保证。",
+      "2026-10-09用户明确补充珙桐、香樟均有自助补卡设备；机器当前支持卡种以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:card-operation-2020",
+    "source_id": "cdut:source:card-operation-2020",
+    "source_reference": "自助补卡操作流程",
+    "source_url": "https://wxc.cdut.edu.cn/info/1006/1083.htm",
+    "publisher": "成都理工大学网络与信息化处",
+    "source_authority": "official_department",
+    "version": "2020-01-10",
+    "locator": "账户与身份证验证、缴费取卡、旧卡余额领取",
+    "applicability": "历史操作说明；身份验证可作为准备指引，收费与领款等待规则必须注明来源年份。",
+    "source_published_at": "2020-01-10",
+    "retrieved_at": "2026-10-09",
+    "access_method": "search_index",
+    "verification_status": "needs_review",
+    "synthetic": false,
+    "limitations": [
+      "不把2020年25元工本费、现金面值和72小时领款等待直接作为2026年现行规则。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:card-counter-2019",
+    "source_id": "cdut:source:card-counter-2019",
+    "source_reference": "计划财务处关于2019年寒假值班工作安排有关事宜的通知",
+    "source_url": "https://jcc.cdut.edu.cn/info/1012/1230.htm",
+    "publisher": "成都理工大学财务处",
+    "source_authority": "official_department",
+    "version": "2019-01-09",
+    "locator": "对外办理事项第3条：校园一卡通中心可办理解挂、解冻、补办",
+    "applicability": "历史通知支持人工补办渠道，位置结合官方平面图及2026-10-09用户明确补充。",
+    "source_published_at": "2019-01-09",
+    "retrieved_at": "2026-10-09",
+    "access_method": "search_index",
+    "verification_status": "needs_review",
+    "synthetic": false,
+    "limitations": [
+      "不沿用2019年寒假值班日期或每周二安排作为当前开放时间。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:user-campus-life-20261009",
+    "source_id": "cdut:source:user-campus-life",
+    "source_reference": "用户补充的校园地点与生活信息（2026-10-09）",
+    "source_url": null,
+    "publisher": "项目用户",
+    "source_authority": "user_supplement",
+    "version": "2026-10-09",
+    "locator": "本次需求：银杏补卡机、网安楼与生态环境学院同楼、五个东区教学分区、食堂品牌与东苑快递点",
+    "applicability": "校园地点别名与生活检索补充；不作为学校办理政策、费用、营业时间或现场核验依据。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "user_message",
+    "limitations": [
+      "用户补充与官方来源、地图供应商来源分开标记。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0ffj5vgfy",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "成都理工大学二仙桥校区生态环境学院",
+    "source_url": "https://ditu.amap.com/place/B0FFJ5VGFY",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0FFJ5VGFY",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0j2gzcstd",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "成都理工大学二仙桥校区东区第一教学楼(E1A)",
+    "source_url": "https://ditu.amap.com/place/B0J2GZCSTD",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0J2GZCSTD",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0mahrm70e",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "达美乐比萨(成都理工大学店)",
+    "source_url": "https://ditu.amap.com/place/B0MAHRM70E",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0MAHRM70E",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0mdprmz6i",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "麦当劳(理工大学芙蓉餐厅)",
+    "source_url": "https://ditu.amap.com/place/B0MDPRMZ6I",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0MDPRMZ6I",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0mdd5or46",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "赛百味(成都理工大学店)",
+    "source_url": "https://ditu.amap.com/place/B0MDD5OR46",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0MDD5OR46",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0m6f11f3t",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "肯德基(成都理工大学店)",
+    "source_url": "https://ditu.amap.com/place/B0M6F11F3T",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0M6F11F3T",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0mg05hg7u",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "吉野家(理工珙桐花园店)",
+    "source_url": "https://ditu.amap.com/place/B0MG05HG7U",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0MG05HG7U",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0fffaq2cz",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "理工东苑商业街",
+    "source_url": "https://ditu.amap.com/place/B0FFFAQ2CZ",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0FFFAQ2CZ",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0kdju0uaj",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "理工东苑",
+    "source_url": "https://ditu.amap.com/place/B0KDJU0UAJ",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0KDJU0UAJ",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0huhcmb9k",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "菜鸟驿站快递服务中心",
+    "source_url": "https://ditu.amap.com/place/B0HUHCMB9K",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0HUHCMB9K",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0ffkw5e3b",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "京东派(成都理工东苑店)",
+    "source_url": "https://ditu.amap.com/place/B0FFKW5E3B",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0FFKW5E3B",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0g1z56gsb",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "顺丰速运(理工大学店)",
+    "source_url": "https://ditu.amap.com/place/B0G1Z56GSB",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0G1Z56GSB",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0ffhfdnoo",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "奇味干锅理工东苑店",
+    "source_url": "https://ditu.amap.com/place/B0FFHFDNOO",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0FFHFDNOO",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0hacbtc8j",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "沙县小吃(理工东苑店)",
+    "source_url": "https://ditu.amap.com/place/B0HACBTC8J",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0HACBTC8J",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0ikcrtgfq",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "泸州小笼包(理工东苑西区店)",
+    "source_url": "https://ditu.amap.com/place/B0IKCRTGFQ",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0IKCRTGFQ",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0ffllfwtz",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "胡师烧烤(理工东苑西区店)",
+    "source_url": "https://ditu.amap.com/place/B0FFLLFWTZ",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0FFLLFWTZ",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
+  },
+  {
+    "evidence_id": "cdut:evidence:amap-b0ffj1luim",
+    "source_id": "cdut:source:amap-poi",
+    "source_reference": "蜜雪冰城(理工东苑店)",
+    "source_url": "https://ditu.amap.com/place/B0FFJ1LUIM",
+    "publisher": "高德地图",
+    "source_authority": "map_provider",
+    "version": "2026-10-09",
+    "locator": "B0FFJ1LUIM",
+    "applicability": "仅支持供应商记录的名称、地址和GCJ02点位；不确认当前营业、设备、入口、室内分区或教师所在。",
+    "retrieved_at": "2026-10-09",
+    "access_method": "provider_api",
+    "limitations": [
+      "不是学校官方资料；店铺现状以现场为准。"
+    ]
   }
 ]

@@ -97,7 +97,7 @@ class ToolExecutor:
                         "data": checked.model_dump(),
                     }
                 )
-            except ValidationError, AttributeError:
+            except (ValidationError, AttributeError):
                 return reject("failed", "invalid_output")
         evidence_ids = tuple(e.evidence_id for e in result.data.evidence) if result.data else ()
         record("tool_result", result.status, evidence_ids)

@@ -27,6 +27,18 @@ test('a jump to a later segment cannot immediately skip instructions',() => {
   const t=tracker(); t.update([1,1],5,0);
   assert.equal(t.update([1.0015,1],5,2000).status,'unstable');
 });
+
+test('pause retains progress but breaks consecutive arrival and deviation evidence',() => {
+  const t=tracker();
+  t.update([1.004,1],5,0); t.resetContinuity();
+  assert.equal(t.update([1.004,1],5,10000).status,'walking');
+  assert.equal(t.update([1.004,1],5,12000).status,'walking');
+  assert.equal(t.update([1.004,1],5,17000).status,'arrived');
+  const off=tracker();
+  off.update([1,1],5,0); off.update([1,1.002],5,10000); off.resetContinuity();
+  assert.equal(off.update([1,1.002],5,20000).status,'checking');
+  assert.equal(off.update([1,1.002],5,27000).status,'off_route');
+});
 test('invalid fixes and malformed geometry are rejected',() => {
   assert.equal(tracker().update([NaN,1],5,0).status,'invalid');
   assert.throws(()=>create([[1,1],[1,1]],[1],10));

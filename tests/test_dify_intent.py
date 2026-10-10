@@ -34,7 +34,10 @@ def test_recognized_card_service_with_unknown_kind_reaches_real_directory(
     result = assist(DirectoryRepository.load(DATA), AssistInput.model_validate(body), "synthetic")
     assert body["kind"] == "service" and result.status == "success"
     assert [record.service_id for record in result.services] == [service_id]
-    assert result.places == ()
+    expected = {"cdut:place:gongtong-dining", "cdut:place:camphor-dining"}
+    if service_key == "campus_card_replacement":
+        expected.update({"cdut:place:finance", "cdut:place:ginkgo-dining"})
+    assert {place.place_id for place in result.places} == expected
 
 
 @pytest.mark.parametrize(
@@ -59,5 +62,6 @@ def test_explicit_teacher_kind_is_preserved() -> None:
     )
     result = assist(DirectoryRepository.load(DATA), AssistInput.model_validate(body), "synthetic")
     assert body["kind"] == "teacher" and result.status == "success"
-    assert not result.services and not result.places
+    assert not result.services
+    assert [p.place_id for p in result.places] == ["cdut:place:network-security"]
     assert [teacher.teacher_id for teacher in result.teachers] == ["cdut:teacher:wang-honghui"]

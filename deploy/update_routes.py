@@ -75,6 +75,23 @@ def write_atomic(path, data, metadata):
         Path(temp).unlink(missing_ok=True)
 
 
+def ensure_public_parent(path, target):
+    """New source directories inherit the existing branch, despite the private umask."""
+    if not path.resolve().is_relative_to(target.resolve()):
+        raise UpdateFailure("unsafe_target")
+    missing = []
+    cursor = path
+    while not cursor.exists():
+        missing.append(cursor)
+        cursor = cursor.parent
+    metadata = cursor.stat()
+    for directory in reversed(missing):
+        directory.mkdir()
+        os.chmod(directory, stat.S_IMODE(metadata.st_mode))
+        if hasattr(os, "chown"):
+            os.chown(directory, metadata.st_uid, metadata.st_gid)
+
+
 def apply(target, records, backups, verify):
     previous, metadata = {}, {}
     template = (target / "backend/src/campuspilot/web.py").stat()
@@ -113,6 +130,7 @@ def apply(target, records, backups, verify):
     changed = []
     try:
         for name in FILES:
+            ensure_public_parent((target / name).parent, target)
             write_atomic(target / name, records[name][1], metadata[name])
             changed.append(name)
         verify()

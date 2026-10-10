@@ -6,9 +6,9 @@
       "王洪辉老师"
     ],
     "department": "计算机与网络安全学院",
-    "campus": null,
+    "campus": "成都校区",
     "office": "网安楼204室",
-    "place_id": null,
+    "place_id": "cdut:place:network-security",
     "profile_url": "https://cist.cdut.edu.cn/info/1231/7607.htm",
     "field_evidence": [
       {
@@ -45,11 +45,26 @@
           "cdut:evidence:teacher-wang-honghui"
         ],
         "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:cist-building-2025",
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "网安楼校区与用户当前同楼说明关联。"
+      },
+      {
+        "field_path": "place_id",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "办公室原文写网安楼；同楼名称由用户补充，点位来自高德。"
       }
     ],
     "notes": [
-      "公开教师资料；不表示老师当前在办公室或可随时接待。",
-      "成都/宜宾校区归属和办公室现行性待确认，尚未建立导航关联。"
+      "办公室原文来自官方教师页；网安楼建筑点位已关联，不表示老师现在在场。",
+      "楼内办公室位置与接待时间仍以老师确认或现场为准。"
     ]
   },
   {

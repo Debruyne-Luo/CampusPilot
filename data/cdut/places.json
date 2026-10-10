@@ -3,12 +3,24 @@
     "place_id": "cdut:place:network-security",
     "name": "网安楼",
     "aliases": [
-      "网络安全楼"
+      "网络安全楼",
+      "生态环境学院",
+      "生态楼",
+      "计算机与网络安全学院旁的生态环境学院"
     ],
     "campus": "成都校区",
     "category": "office",
-    "address_detail": null,
-    "position": null,
+    "address_detail": "生态环境学院所在楼栋；与网安楼为同一栋楼（用户补充）。",
+    "position": {
+      "longitude": 104.148825,
+      "latitude": 30.676325,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0FFJ5VGFY",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：成都理工大学二仙桥校区生态环境学院。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
     "field_evidence": [
       {
         "field_path": "name",
@@ -20,9 +32,11 @@
       {
         "field_path": "aliases",
         "evidence_ids": [
-          "cdut:evidence:cist-building-2025"
+          "cdut:evidence:cist-building-2025",
+          "cdut:evidence:user-campus-life-20261009",
+          "cdut:evidence:amap-b0ffj5vgfy"
         ],
-        "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+        "note": "官方网安楼名称、用户同楼关系与高德生态环境学院点位分开记录。"
       },
       {
         "field_path": "campus",
@@ -39,17 +53,16 @@
         "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
       },
       {
-        "field_path": "notes.2",
+        "field_path": "address_detail",
         "evidence_ids": [
-          "cdut:evidence:campus-plan"
+          "cdut:evidence:user-campus-life-20261009"
         ],
-        "note": "官方平面图图例的同楼标注或不含该楼，均为来源陈述，不是坐标依据。"
+        "note": "2026-10-09用户明确说明同楼关系；不是现场复核。"
       }
     ],
     "notes": [
-      "公开资料候选，当前名称、具体建筑和位置尚待复核。",
-      "未录入坐标，不提供精确地图点位或导航；院系条目不是教师办公室。",
-      "官方平面图图例不含“网安楼”，不能用该图定位本楼；本次复核仍未找到官方方位说明。"
+      "网安楼与生态环境学院同楼关系由用户于2026-10-09补充；建筑坐标来自高德生态环境学院点位。",
+      "地图只到建筑，不确认教师当前在场、办公室入口或楼内路线。"
     ]
   },
   {
@@ -111,11 +124,23 @@
   {
     "place_id": "cdut:place:east-teaching",
     "name": "东区教学楼",
-    "aliases": [],
+    "aliases": [
+      "东教",
+      "东区教学楼群"
+    ],
     "campus": "成都校区",
     "category": "teaching",
-    "address_detail": null,
-    "position": null,
+    "address_detail": "E1A、E1B、E2A、E2B、E2C五个分区；本点为E1A参考点。",
+    "position": {
+      "longitude": 104.150587,
+      "latitude": 30.67794,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0J2GZCSTD",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：成都理工大学二仙桥校区东区第一教学楼(E1A)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
     "field_evidence": [
       {
         "field_path": "name",
@@ -144,11 +169,18 @@
           "cdut:evidence:campus-plan"
         ],
         "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "分区由用户补充；坐标仅为E1A，不代表整个楼群的精确中心。"
       }
     ],
     "notes": [
-      "公开资料候选，当前名称、具体建筑和位置尚待复核。",
-      "未录入坐标，不提供精确地图点位或导航；院系条目不是教师办公室。"
+      "东区教学分区单独收录，可按E2A101等教室编号检索。",
+      "楼群总条目位置采用E1A参考点，不能据此确认E2各分区的位置。"
     ]
   },
   {
@@ -259,10 +291,13 @@
   {
     "place_id": "cdut:place:finance",
     "name": "财务处",
-    "aliases": [],
+    "aliases": [
+      "计划财务处",
+      "财务处楼"
+    ],
     "campus": "成都校区",
     "category": "office",
-    "address_detail": null,
+    "address_detail": "官方学校平面图将财务处、校园一卡通中心标为同一编号建筑。",
     "position": {
       "longitude": 104.143618,
       "latitude": 30.676646,
@@ -303,11 +338,18 @@
           "cdut:evidence:campus-plan"
         ],
         "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:campus-plan"
+        ],
+        "note": "平面图同楼标注；不推断房间号。"
       }
     ],
     "notes": [
-      "公开资料候选，当前名称、具体建筑和位置尚待复核。",
-      "已收录高德建筑坐标候选，位置待核验；不表示这里可办理补卡或是老师办公室。"
+      "财务处楼的校园一卡通中心可作为人工补办渠道，已采用2026-10-09用户补充及官方历史资料。",
+      "地图对应财务处建筑，不是具体受理窗口；去前可拨一卡通中心确认受理时间。"
     ]
   },
   {
@@ -534,7 +576,7 @@
     ],
     "campus": "成都校区",
     "category": "dining",
-    "address_detail": null,
+    "address_detail": "校园卡自助服务区所在食堂；进入后按现场指示找到补卡设备。",
     "position": {
       "longitude": 104.149025,
       "latitude": 30.672625,
@@ -575,11 +617,19 @@
           "cdut:evidence:campus-plan"
         ],
         "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:card-self-service-2023",
+          "cdut:evidence:card-winter-2026"
+        ],
+        "note": "官方通知列出食堂自助服务区，地图标记仅对应建筑。"
       }
     ],
     "notes": [
-      "公开资料候选，当前名称、具体建筑和位置尚待复核。",
-      "已收录高德建筑坐标候选，位置待核验；不表示这里可办理补卡或是老师办公室。"
+      "该建筑有校园卡自助服务区，补卡终端分布见官方通知并采用2026-10-09用户补充。",
+      "地图对应食堂建筑，不是室内机器的精确位置；当前卡种与开放时间按现场提示。"
     ]
   },
   {
@@ -590,7 +640,7 @@
     ],
     "campus": "成都校区",
     "category": "dining",
-    "address_detail": null,
+    "address_detail": "校园卡自助服务区所在食堂；进入后按现场指示找到补卡设备。",
     "position": {
       "longitude": 104.154625,
       "latitude": 30.676964,
@@ -631,11 +681,19 @@
           "cdut:evidence:campus-plan"
         ],
         "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:card-self-service-2023",
+          "cdut:evidence:card-winter-2026"
+        ],
+        "note": "官方通知列出食堂自助服务区，地图标记仅对应建筑。"
       }
     ],
     "notes": [
-      "公开资料候选，当前名称、具体建筑和位置尚待复核。",
-      "已收录高德建筑坐标候选，位置待核验；不表示这里可办理补卡或是老师办公室。"
+      "该建筑有校园卡自助服务区，补卡终端分布见官方通知并采用2026-10-09用户补充。",
+      "地图对应食堂建筑，不是室内机器的精确位置；当前卡种与开放时间按现场提示。"
     ]
   },
   {
@@ -1035,6 +1093,1440 @@
     "notes": [
       "公开资料候选，当前名称、具体建筑和位置尚待复核。",
       "未录入坐标，不提供精确地图点位或导航；院系条目不是教师办公室。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:east-e1a",
+    "name": "东区教学楼 E1A",
+    "aliases": [
+      "E1A",
+      "E1A区",
+      "东教E1A"
+    ],
+    "campus": "成都校区",
+    "category": "teaching",
+    "tags": [
+      "classroom",
+      "east-teaching"
+    ],
+    "address_detail": "E1A分区；教室号例如E1A101表示对应分区的101教室。",
+    "position": {
+      "longitude": 104.150587,
+      "latitude": 30.67794,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0J2GZCSTD",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：成都理工大学二仙桥校区东区第一教学楼(E1A)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0j2gzcstd"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0j2gzcstd"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0j2gzcstd"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0j2gzcstd"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0j2gzcstd"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0j2gzcstd"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "分区名称已收录；室内房间与入口未独立定位。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:east-e1b",
+    "name": "东区教学楼 E1B",
+    "aliases": [
+      "E1B",
+      "E1B区",
+      "东教E1B"
+    ],
+    "campus": "成都校区",
+    "category": "teaching",
+    "tags": [
+      "classroom",
+      "east-teaching"
+    ],
+    "address_detail": "E1B分区；教室号例如E1B101表示对应分区的101教室。",
+    "position": null,
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "分区名称由用户补充；独立入口与地图坐标尚未确认，不借用其他分区坐标。",
+      "教室号只用于匹配分区，不表示室内精确位置。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:east-e2a",
+    "name": "东区教学楼 E2A",
+    "aliases": [
+      "E2A",
+      "E2A区",
+      "东教E2A"
+    ],
+    "campus": "成都校区",
+    "category": "teaching",
+    "tags": [
+      "classroom",
+      "east-teaching"
+    ],
+    "address_detail": "E2A分区；教室号例如E2A101表示对应分区的101教室。",
+    "position": null,
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "分区名称由用户补充；独立入口与地图坐标尚未确认，不借用其他分区坐标。",
+      "教室号只用于匹配分区，不表示室内精确位置。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:east-e2b",
+    "name": "东区教学楼 E2B",
+    "aliases": [
+      "E2B",
+      "E2B区",
+      "东教E2B"
+    ],
+    "campus": "成都校区",
+    "category": "teaching",
+    "tags": [
+      "classroom",
+      "east-teaching"
+    ],
+    "address_detail": "E2B分区；教室号例如E2B101表示对应分区的101教室。",
+    "position": null,
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "分区名称由用户补充；独立入口与地图坐标尚未确认，不借用其他分区坐标。",
+      "教室号只用于匹配分区，不表示室内精确位置。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:east-e2c",
+    "name": "东区教学楼 E2C",
+    "aliases": [
+      "E2C",
+      "E2C区",
+      "东教E2C"
+    ],
+    "campus": "成都校区",
+    "category": "teaching",
+    "tags": [
+      "classroom",
+      "east-teaching"
+    ],
+    "address_detail": "E2C分区；教室号例如E2C101表示对应分区的101教室。",
+    "position": null,
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "分区名称由用户补充；独立入口与地图坐标尚未确认，不借用其他分区坐标。",
+      "教室号只用于匹配分区，不表示室内精确位置。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:dominos-furong",
+    "name": "达美乐（芙蓉食堂）",
+    "aliases": [
+      "达美乐",
+      "达美乐披萨",
+      "达美乐比萨"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food",
+      "furong",
+      "pizza"
+    ],
+    "address_detail": "成都理工大学芙蓉餐厅1-11号",
+    "position": {
+      "longitude": 104.140455,
+      "latitude": 30.67442,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0MAHRM70E",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：达美乐比萨(成都理工大学店)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mahrm70e"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mahrm70e"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mahrm70e"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mahrm70e"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mahrm70e"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mahrm70e"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:mcdonalds-furong",
+    "name": "麦当劳（芙蓉食堂）",
+    "aliases": [
+      "麦当劳",
+      "麦麦"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food",
+      "furong",
+      "fast-food"
+    ],
+    "address_detail": "二仙桥东二路11号",
+    "position": {
+      "longitude": 104.140228,
+      "latitude": 30.674132,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0MDPRMZ6I",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：麦当劳(理工大学芙蓉餐厅)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdprmz6i"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdprmz6i"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdprmz6i"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdprmz6i"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdprmz6i"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdprmz6i"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:subway-furong",
+    "name": "赛百味（芙蓉食堂）",
+    "aliases": [
+      "赛百味",
+      "Subway",
+      "三明治"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food",
+      "furong",
+      "sandwich"
+    ],
+    "address_detail": "二仙桥东三路1号成都理工大学芙蓉餐厅1-8号",
+    "position": {
+      "longitude": 104.140524,
+      "latitude": 30.674444,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0MDD5OR46",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：赛百味(成都理工大学店)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdd5or46"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdd5or46"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdd5or46"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdd5or46"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdd5or46"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mdd5or46"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:kfc-gongtong",
+    "name": "肯德基（珙桐食堂）",
+    "aliases": [
+      "肯德基",
+      "KFC",
+      "炸鸡"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food",
+      "gongtong",
+      "fast-food"
+    ],
+    "address_detail": "成都理工大学珙桐园一楼",
+    "position": {
+      "longitude": 104.149449,
+      "latitude": 30.67227,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0M6F11F3T",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：肯德基(成都理工大学店)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0m6f11f3t"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0m6f11f3t"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0m6f11f3t"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0m6f11f3t"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0m6f11f3t"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0m6f11f3t"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:yoshinoya-gongtong",
+    "name": "吉野家（珙桐食堂）",
+    "aliases": [
+      "吉野家",
+      "吉野家饭"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food",
+      "gongtong",
+      "rice"
+    ],
+    "address_detail": "成都理工大学二仙桥校区珙桐园",
+    "position": {
+      "longitude": 104.14893,
+      "latitude": 30.672586,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0MG05HG7U",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：吉野家(理工珙桐花园店)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mg05hg7u"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mg05hg7u"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mg05hg7u"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mg05hg7u"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mg05hg7u"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0mg05hg7u"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:dongyuan-commercial",
+    "name": "理工东苑商业街",
+    "aliases": [
+      "东苑商业街",
+      "东苑美食街"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food-area",
+      "dongyuan"
+    ],
+    "address_detail": "民智巷与民兴路交叉口南100米",
+    "position": {
+      "longitude": 104.153779,
+      "latitude": 30.682326,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0FFFAQ2CZ",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：理工东苑商业街。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0fffaq2cz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0fffaq2cz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0fffaq2cz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0fffaq2cz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0fffaq2cz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0fffaq2cz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:dongyuan",
+    "name": "理工东苑",
+    "aliases": [
+      "东苑",
+      "理工东苑小区"
+    ],
+    "campus": "成都校区",
+    "category": "service",
+    "tags": [
+      "residential",
+      "dongyuan"
+    ],
+    "address_detail": "民兴路888号",
+    "position": {
+      "longitude": 104.151829,
+      "latitude": 30.681786,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0KDJU0UAJ",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：理工东苑。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0kdju0uaj"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0kdju0uaj"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0kdju0uaj"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0kdju0uaj"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0kdju0uaj"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0kdju0uaj"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:cainiao-dongyuan",
+    "name": "菜鸟驿站（理工东苑左转）",
+    "aliases": [
+      "菜鸟驿站",
+      "菜鸟",
+      "理工东苑左转快递服务中心",
+      "快递服务中心"
+    ],
+    "campus": "成都校区",
+    "category": "service",
+    "tags": [
+      "parcel",
+      "dongyuan"
+    ],
+    "address_detail": "二仙桥街道理工东苑左转快递服务中心菜鸟驿站",
+    "position": {
+      "longitude": 104.153014,
+      "latitude": 30.683422,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0HUHCMB9K",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：菜鸟驿站快递服务中心。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0huhcmb9k"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0huhcmb9k"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0huhcmb9k"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0huhcmb9k"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0huhcmb9k"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0huhcmb9k"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:jd-dongyuan",
+    "name": "京东派（理工东苑）",
+    "aliases": [
+      "京东",
+      "京东快递",
+      "京东派",
+      "JD"
+    ],
+    "campus": "成都校区",
+    "category": "service",
+    "tags": [
+      "parcel",
+      "dongyuan"
+    ],
+    "address_detail": "民兴路理工东苑-西区",
+    "position": {
+      "longitude": 104.152044,
+      "latitude": 30.683981,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0FFKW5E3B",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：京东派(成都理工东苑店)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffkw5e3b"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffkw5e3b"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffkw5e3b"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffkw5e3b"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffkw5e3b"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffkw5e3b"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:sf-dongyuan",
+    "name": "顺丰（理工东苑）",
+    "aliases": [
+      "顺丰",
+      "顺丰快递",
+      "顺丰速运",
+      "SF"
+    ],
+    "campus": "成都校区",
+    "category": "service",
+    "tags": [
+      "parcel",
+      "dongyuan"
+    ],
+    "address_detail": "二仙桥街道民兴路788号顺丰速运(理工东苑店)",
+    "position": {
+      "longitude": 104.152358,
+      "latitude": 30.683704,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0G1Z56GSB",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：顺丰速运(理工大学店)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0g1z56gsb"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0g1z56gsb"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0g1z56gsb"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0g1z56gsb"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0g1z56gsb"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0g1z56gsb"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:qiwei-dongyuan",
+    "name": "奇味干锅（理工东苑）",
+    "aliases": [
+      "奇味干锅",
+      "干锅"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food",
+      "dongyuan",
+      "hotpot"
+    ],
+    "address_detail": "明智巷80号",
+    "position": {
+      "longitude": 104.152835,
+      "latitude": 30.681507,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0FFHFDNOO",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：奇味干锅理工东苑店。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffhfdnoo"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffhfdnoo"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffhfdnoo"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffhfdnoo"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffhfdnoo"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffhfdnoo"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:shaxian-dongyuan",
+    "name": "沙县小吃（理工东苑）",
+    "aliases": [
+      "沙县小吃",
+      "沙县"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food",
+      "dongyuan",
+      "rice"
+    ],
+    "address_detail": "理工东苑西区6号门旁",
+    "position": {
+      "longitude": 104.153131,
+      "latitude": 30.681997,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0HACBTC8J",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：沙县小吃(理工东苑店)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0hacbtc8j"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0hacbtc8j"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0hacbtc8j"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0hacbtc8j"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0hacbtc8j"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0hacbtc8j"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:buns-dongyuan",
+    "name": "泸州小笼包（理工东苑）",
+    "aliases": [
+      "泸州小笼包",
+      "小笼包"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food",
+      "dongyuan",
+      "breakfast"
+    ],
+    "address_detail": "理工东苑西区6号门旁",
+    "position": {
+      "longitude": 104.153163,
+      "latitude": 30.682161,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0IKCRTGFQ",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：泸州小笼包(理工东苑西区店)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ikcrtgfq"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ikcrtgfq"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ikcrtgfq"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ikcrtgfq"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ikcrtgfq"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ikcrtgfq"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:bbq-dongyuan",
+    "name": "胡师烧烤（理工东苑）",
+    "aliases": [
+      "胡师烧烤",
+      "烧烤"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food",
+      "dongyuan",
+      "barbecue"
+    ],
+    "address_detail": "民兴路理工东苑24-23号",
+    "position": {
+      "longitude": 104.153552,
+      "latitude": 30.682851,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0FFLLFWTZ",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：胡师烧烤(理工东苑西区店)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffllfwtz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffllfwtz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffllfwtz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffllfwtz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffllfwtz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffllfwtz"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
+    ]
+  },
+  {
+    "place_id": "cdut:place:mixue-dongyuan",
+    "name": "蜜雪冰城（理工东苑）",
+    "aliases": [
+      "蜜雪冰城",
+      "蜜雪",
+      "饮品",
+      "奶茶"
+    ],
+    "campus": "成都校区",
+    "category": "dining",
+    "tags": [
+      "food",
+      "dongyuan",
+      "drink"
+    ],
+    "address_detail": "理工东苑17-7店铺",
+    "position": {
+      "longitude": 104.153256,
+      "latitude": 30.681079,
+      "coordinate_system": "GCJ02",
+      "source_kind": "map_provider",
+      "source_url": "https://ditu.amap.com/place/B0FFJ1LUIM",
+      "retrieved_at": "2026-10-09",
+      "verification_status": "needs_review",
+      "note": "高德地点：蜜雪冰城(理工东苑店)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffj1luim"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffj1luim"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffj1luim"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffj1luim"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "tags",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffj1luim"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:amap-b0ffj1luim"
+        ],
+        "note": "地点名称、地址按所标来源采用；标签为项目检索整理。"
+      }
+    ],
+    "notes": [
+      "店铺/站点现状、营业时间以现场或商家为准。"
     ]
   }
 ]

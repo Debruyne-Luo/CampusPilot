@@ -32,14 +32,14 @@ def verify_data(client):
     base = "http://127.0.0.1:8766"
     served = client.get(base + "/api/places").json()
     places = served["places"]
-    if len(places) != 20:
+    if len(places) != 40:
         raise RuntimeError("data_place_count_failed")
     located = [p for p in places if p.get("position")]
-    if len(located) != 14 or any(p.get("navigation_url") for p in places):
+    if len(located) != 32 or any(p.get("navigation_url") for p in places):
         raise RuntimeError("data_position_state_failed")
     expected = {
         "cdut:place:card-centre": "\\u540c\\u4e00\\u7f16\\u53f7\\u5efa\\u7b51",
-        "cdut:place:network-security": "\\u56fe\\u4f8b\\u4e0d\\u542b",
+        "cdut:place:network-security": "同楼",
     }
     for place_id, marker in expected.items():
         record = next(p for p in places if p["place_id"] == place_id)

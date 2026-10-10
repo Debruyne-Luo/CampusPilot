@@ -28,7 +28,13 @@ def test_unconfigured_ui_catalogue_and_no_mock_answer() -> None:
         catalogue = client.get("/api/catalog").json()
         assert len(catalogue["services"]) == 4
         assert all(x["verification_status"] == "needs_review" for x in catalogue["services"])
-        assert all(x["source_url"].startswith("https://") for x in catalogue["sources"])
+        assert all(
+            x["source_url"].startswith("https://") for x in catalogue["sources"] if x["source_url"]
+        )
+        assert all(
+            x["source_authority"] == "user_supplement"
+            for x in catalogue["sources"] if x["source_url"] is None
+        )
         start = client.post("/api/session", headers=HEADERS)
         assert not start.json()["configured"]
         assert "HttpOnly" in start.headers["set-cookie"]

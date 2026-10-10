@@ -121,7 +121,7 @@ class DifyClient:
                 ),
             )
             return answer, str(reply.conversation_id)
-        except httpx.TimeoutException, TimeoutError:
+        except (httpx.TimeoutException, TimeoutError):
             raise ChatUnavailable("upstream_timeout") from None
-        except httpx.HTTPError, ValueError, ValidationError:
+        except (httpx.HTTPError, ValueError, ValidationError):
             raise ChatUnavailable("invalid_response") from None

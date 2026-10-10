@@ -1,5 +1,38 @@
 # API and domain contract proposals
 
+## Backend runtime migration (2026-10-10, local implementation)
+
+ADR 0005 confirms legacy, phase1, and phase2 modes. /api/chat retains answer, services,
+teachers, places, excerpts, result_status and request_id. Backend results may additionally
+include knowledge_version, validated source_ids and a controlled degraded_reason. Scores rank
+passages and are not returned as confidence. Generated prose cannot create directory IDs,
+coordinates, tools or permissions. Unknown citations are rejected before display.
+
+POST /api/session returns runtime_mode and model_configured. In backend modes, configured
+means local backend capabilities are ready; model_configured separately describes generation.
+The one-hour in-memory expiry, session isolation, restart reset, per-session quota and shared
+concurrency limit remain. Backend context contains at most eight turns and explicit user
+conditions; a new matter removes irrelevant conditions. Switching modes starts a new session
+and never imports Dify history. In phase1, each frozen Dify fallback starts a fresh upstream
+conversation with bounded backend context. Phase2 constructs no Dify chat client and never
+falls back to it. Details and acceptance status are in [migration delivery](RUNTIME_MIGRATION.zh-CN.md).
+
+## Campus map/life increment (2026-10-09)
+
+Public place records may include project retrieval `tags`. Source authority distinguishes
+official CDUT pages, `map_provider` (credential-free HTTPS Amap POI references), and
+`user_supplement` (attributed user message, null URL). These sources are not interchangeable;
+shop/user information cannot establish official service policy. Review status is preserved.
+
+`/api/chat` may return `answer_mode=campus_retrieval` for maintained entities, general card
+replacement guidance and food/parcel discovery, with the same authoritative cards. Specific
+policy questions continue through Dify. `nearby_kind` enables local recommendation controls.
+Chat input accepts no personal coordinates. WGS84 fixes go only through the existing Amap
+conversion proxy; the page compares distances without adding locations to Dify, storage or
+transcripts. `nearby-origin` / `nearby-origin-result` retain source, origin, generation and
+request ID checks. Distances refer to building/shop points and are approximate straight-line
+distances; the existing walking-route flow determines the actual path.
+
 ## Implemented map discovery and foreground guidance (2026-10-08)
 
 - No new chat/model tool. Provider POIs use transient `amap:poi:<id>` identifiers and selected
@@ -34,7 +67,7 @@
   Existing business questions still go to Dify. Only explicit references to the last result
   retain local context; unrelated business questions and session reset clear that context.
 - `POST /api/session` additionally returns `knowledge_available`; `configured` still means
-  that Dify is configured. Knowledge browsing works when Dify is unavailable.
+  that Dify is configured in legacy mode. Backend modes use the readiness contract above.
 - `KnowledgeRecord` separates source publication/collection, applicability, registration and
   event dates. Sources are credential-free HTTPS CDUT URLs, or attributed WeChat article URLs.
   `adoption=official_document` records the user's direct-adoption policy, not manual verification.
@@ -71,6 +104,15 @@ derives IDs from authenticated HTTP results; Python rejects unknown IDs and unre
 The frontend receives resolved cards and never extracts coordinates from prose. Non-success
 responses contain no IDs, except needs_clarification may carry candidates. Unavailable becomes
 a controlled error. Old RAG mode returns text with empty card arrays.
+
+**CONFIRMED (2026-10-09):** CampusService adds optional `summary`, and service/step modes
+accept `in_person`. Resolved browser service cards and `/api/catalog` add source-backed
+`source_links` and office `contacts`. General how/where queries can use the adopted complete
+short guide; specific fee/time/material questions keep the workflow answer.
+Single-teacher office queries use the recorded room, or explicitly report a missing office,
+without inventing an unlinked map invitation. Other teacher questions keep the workflow answer.
+Chat keeps its answer visible and opens the map only after an explicit place choice; the earlier automatic
+map selection rule below no longer applies to chat responses.
 
 GET `/api/map-config` exposes only the public JS key and local proxy path. Security code stays
 in the server-side fixed-host/path proxy. Only reviewed GCJ02 points receive an Amap navigation URL;

@@ -16,7 +16,7 @@
     ],
     "entry_points": [
       "成理校园卡微信小程序",
-      "校园卡自助设备（当前位置未知）"
+      "珙桐、香樟等食堂校园卡自助服务区"
     ],
     "required_materials": null,
     "required_inputs": [
@@ -33,7 +33,11 @@
       {
         "mode": "self_service",
         "instruction": "在自助设备选择校园卡挂失，输入卡号查询，再输入密码进行挂失。",
-        "condition": "自助设备当前位置与开放时间未知"
+        "condition": "自助服务区有官方分布依据；设备实际可用状态与开放时段以现场为准。",
+        "place_ids": [
+          "cdut:place:gongtong-dining",
+          "cdut:place:camphor-dining"
+        ]
       }
     ],
     "availability": null,
@@ -43,7 +47,7 @@
     "synthetic": false,
     "notes": [
       "仅记录用户自行办理的公开指引；CampusPilot不会收集密码、证件号或执行挂失。",
-      "当前人工窗口、设备位置、开放时间、费用与处理时限未知。",
+      "小程序可先自行挂失；自助服务区位置可提供，当前人工受理时段与收费另行咨询。",
       "本条不包含补卡，也不推断挂失后的其他业务影响。"
     ],
     "field_evidence": [
@@ -92,9 +96,11 @@
       {
         "field_path": "entry_points.1",
         "evidence_ids": [
-          "cdut:evidence:card-guide-2024"
+          "cdut:evidence:card-guide-2024",
+          "cdut:evidence:card-self-service-2023",
+          "cdut:evidence:card-winter-2026"
         ],
-        "note": "正文第25页；没有据此补写设备地点。"
+        "note": "操作和服务区分别有官方出处；关联食堂建筑，不推断室内机器坐标。"
       },
       {
         "field_path": "required_inputs.0",
@@ -127,11 +133,23 @@
       {
         "field_path": "steps.1",
         "evidence_ids": [
-          "cdut:evidence:card-guide-2024"
+          "cdut:evidence:card-guide-2024",
+          "cdut:evidence:card-self-service-2023",
+          "cdut:evidence:card-winter-2026"
         ],
-        "note": "正文第25页。"
+        "note": "操作和服务区分别有官方出处；关联食堂建筑，不推断室内机器坐标。"
+      },
+      {
+        "field_path": "summary",
+        "evidence_ids": [
+          "cdut:evidence:card-guide-2024",
+          "cdut:evidence:card-self-service-2023",
+          "cdut:evidence:card-winter-2026"
+        ],
+        "note": "仅整理挂失步骤与设备分布；不执行学校业务。"
       }
-    ]
+    ],
+    "summary": "**先挂失：**微信搜索「成理校园卡」小程序，绑定校园卡后选择「卡片挂失」，按提示验证。\n**线下办理：**也可到珙桐、香樟等食堂自助服务区，用设备的「校园卡挂失」功能。遗失后需要新卡，再办理补卡。"
   },
   {
     "service_id": "cdut:service:graduate-enrollment-proof",
@@ -394,35 +412,66 @@
     "name": "校园卡补办",
     "aliases": [
       "一卡通补办",
-      "校园卡补卡"
+      "校园卡补卡",
+      "饭卡补办",
+      "饭卡补卡"
     ],
     "department": "网络与信息化处",
     "office_id": "cdut:office:network-information",
     "audience": "持校园卡学生；按学生版指南整理",
     "modes": [
-      "self_service"
+      "self_service",
+      "in_person"
     ],
     "entry_points": [
-      "校园卡自助补卡设备（当前服务区待确认）"
+      "珙桐食堂校园卡自助服务区（学生卡优先）",
+      "香樟食堂校园卡自助服务区（按机器支持的卡种选择）",
+      "财务处楼校园一卡通中心（人工办理）"
     ],
     "steps": [
       {
         "mode": "self_service",
-        "instruction": "在自助设备选择自助补卡，选择所在服务区补卡机，再点击开始补卡并按设备提示操作。",
-        "condition": "依据2024年8月指南；当前设备、适用卡种及步骤待复核",
-        "place_ids": null
+        "instruction": "学生卡优先到珙桐食堂校园卡自助服务区；香樟食堂也有自助补卡设备，按机器支持的卡种选择。",
+        "condition": "官方2023年通知列出补卡点与当时卡种，2026年指南继续列出服务区；用户2026-10-09确认珙桐、香樟设备。",
+        "place_ids": [
+          "cdut:place:gongtong-dining",
+          "cdut:place:camphor-dining",
+          "cdut:place:ginkgo-dining"
+        ]
+      },
+      {
+        "mode": "self_service",
+        "instruction": "卡片遗失先在微信小程序“成理校园卡”挂失；自助补卡前确认卡内余额大于20元（余额要求，不是补卡费），带好本人身份证。点击“自助补卡”→选择所在服务区机器→“开始补卡”，按提示验证、缴费并领取新卡。",
+        "condition": "挂失依据2024年指南；补卡按钮流程依据2024年指南，验证缴费取卡详见官方操作说明。"
+      },
+      {
+        "mode": "in_person",
+        "instruction": "自助机无法办理时，可到财务处楼的校园一卡通中心人工办理；去前可拨028-84078750确认受理时间和材料。",
+        "condition": "官方平面图将财务处与一卡通中心标为同楼，历史通知支持人工补办；用户2026-10-09确认该办理渠道。",
+        "place_ids": [
+          "cdut:place:finance"
+        ]
       }
     ],
-    "required_materials": null,
-    "required_inputs": null,
-    "fees": null,
+    "required_materials": [
+      "本人身份证（按设备提示进行身份验证）"
+    ],
+    "required_inputs": [
+      "学工号及校园卡消费密码（仅在学校设备或官方系统输入）"
+    ],
+    "fees": [
+      "2020年官方操作说明曾标注25元/张；当前工本费以设备显示或一卡通中心答复为准。"
+    ],
     "limits": [
-      "2024年指南要求校园卡余额大于20元；这不是已确认的补卡工本费。"
+      "自助补卡前，校园卡内余额须大于20元；这是余额要求，不是补卡工本费。"
     ],
     "notes": [
-      "仅提供补卡指引；未执行挂失、充值或补办。",
-      "当前机器位置、入口、卡种、收费和开放时间未知。",
-      "核验线索：2026年寒假通知列出香樟、珙桐、银杏自助服务区；当前补卡能力与卡种未知。"
+      "2026-10-09采用明确官方资料和用户补充：珙桐、香樟自助补卡，以及财务处楼一卡通中心人工办理。",
+      "关联地图为服务区所在食堂、人工中心所在财务处建筑；不是室内机器或受理窗口的精确坐标。",
+      "2023年通知曾将学生卡分配到珙桐、家属卡到香樟；当前卡种、收费与开放时段以现场为准。",
+      "2020年流程曾说明补卡72小时后可用领款服务领取冻结余额；当前以设备或中心说明为准。",
+      "仅提供办理指引，不收集密码、不执行挂失或补卡。",
+      "2026-10-09用户补充银杏设有自助补卡机；2023年官方设备公告亦列出银杏服务区。卡种支持以设备提示为准。"
     ],
     "field_evidence": [
       {
@@ -430,64 +479,122 @@
         "evidence_ids": [
           "cdut:evidence:card-replacement-guide-2024"
         ],
-        "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+        "note": "官方指南的自助补卡事项；项目归纳名称。"
       },
       {
         "field_path": "aliases",
         "evidence_ids": [
           "cdut:evidence:card-replacement-guide-2024"
         ],
-        "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+        "note": "依据同一事项整理的口语检索别名。"
       },
       {
         "field_path": "department",
         "evidence_ids": [
           "cdut:evidence:card-replacement-guide-2024"
         ],
-        "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+        "note": "指南编制单位；负责单位不等于窗口地址。"
       },
       {
         "field_path": "audience",
         "evidence_ids": [
           "cdut:evidence:card-replacement-guide-2024"
         ],
-        "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+        "note": "学生版指南范围。"
       },
       {
         "field_path": "modes",
         "evidence_ids": [
-          "cdut:evidence:card-replacement-guide-2024"
+          "cdut:evidence:card-replacement-guide-2024",
+          "cdut:evidence:card-counter-2019"
         ],
-        "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+        "note": "自助补办及人工补办渠道；历史时段不沿用。"
       },
       {
         "field_path": "entry_points",
         "evidence_ids": [
-          "cdut:evidence:card-replacement-guide-2024"
+          "cdut:evidence:card-self-service-2023",
+          "cdut:evidence:card-winter-2026",
+          "cdut:evidence:card-counter-2019",
+          "cdut:evidence:campus-plan"
         ],
-        "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+        "note": "官方设备分布与同楼标注，加2026-10-09用户明确确认；不保证机器实时状态。"
+      },
+      {
+        "field_path": "required_materials",
+        "evidence_ids": [
+          "cdut:evidence:card-operation-2020"
+        ],
+        "note": "身份证验证见历史操作说明，按当前设备提示准备。"
+      },
+      {
+        "field_path": "required_inputs",
+        "evidence_ids": [
+          "cdut:evidence:card-operation-2020"
+        ],
+        "note": "只记录学校设备所需输入类型。"
       },
       {
         "field_path": "steps.0",
         "evidence_ids": [
-          "cdut:evidence:card-replacement-guide-2024"
+          "cdut:evidence:card-self-service-2023",
+          "cdut:evidence:card-winter-2026"
         ],
-        "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+        "note": "服务区名称有官方依据，并采用用户当前补充；关联的是食堂建筑。"
+      },
+      {
+        "field_path": "steps.1",
+        "evidence_ids": [
+          "cdut:evidence:card-replacement-guide-2024",
+          "cdut:evidence:card-guide-2024",
+          "cdut:evidence:card-operation-2020"
+        ],
+        "note": "遗失先挂失；操作流程按官方指南，不把余额要求当成工本费。"
+      },
+      {
+        "field_path": "steps.2",
+        "evidence_ids": [
+          "cdut:evidence:card-counter-2019",
+          "cdut:evidence:campus-plan",
+          "cdut:evidence:card-self-service-2023"
+        ],
+        "note": "人工渠道、同楼位置与业务联系电话分别保留出处；用户当前补充已采用。"
+      },
+      {
+        "field_path": "fees",
+        "evidence_ids": [
+          "cdut:evidence:card-operation-2020"
+        ],
+        "note": "明确标注2020年历史收费，不作为当前收费承诺。"
       },
       {
         "field_path": "limits",
         "evidence_ids": [
           "cdut:evidence:card-replacement-guide-2024"
         ],
-        "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+        "note": "2024年指南正文第27页（PDF第30页）明确自助补卡余额大于20元；2026-10-09用户要求主动展示这一前提。不是挂失前提，也不是补卡工本费。"
       },
       {
-        "field_path": "notes.2",
+        "field_path": "summary",
         "evidence_ids": [
-          "cdut:evidence:card-winter-2026"
+          "cdut:evidence:card-guide-2024",
+          "cdut:evidence:card-replacement-guide-2024",
+          "cdut:evidence:card-self-service-2023",
+          "cdut:evidence:card-operation-2020",
+          "cdut:evidence:card-counter-2019",
+          "cdut:evidence:campus-plan",
+          "cdut:evidence:user-campus-life-20261009"
         ],
-        "note": "季节性设备线索，不作为当前补卡点关联依据。"
+        "note": "短答整理自分项来源并采用2026-10-09用户明确补充；机器实时卡种和窗口时间须按现场。"
+      },
+      {
+        "field_path": "notes.5",
+        "evidence_ids": [
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "note": "用户补充；不改变旧公告卡种分配与今天适用性之间的区别。"
       }
-    ]
+    ],
+    "summary": "**去哪办：**珙桐、银杏、香樟食堂自助服务区；机器按支持卡种使用。\n**办理前：**带本人身份证，卡内余额须**大于20元**（余额要求，不是补卡费）。\n**怎么做：**遗失先在「成理校园卡」小程序挂失 → 自助机「自助补卡」→ 按提示验证、缴费、领卡。\n**人工办理：**财务处楼校园一卡通中心，去前拨028-84078750确认时间。"
   }
 ]

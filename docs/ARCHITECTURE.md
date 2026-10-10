@@ -1,5 +1,11 @@
 # Architecture and decision register
 
+2026-10-10 direction is CONFIRMED in [ADR 0005](adr/0005-backend-runtime-and-knowledge-publication.md):
+move routing, model generation and RAG to the Python backend in two releases. Dify retains
+document authoring and explicit snapshot export. OpenRouter Jev is an offline shadow evaluator;
+it has no online decision authority. Local implementation does not mean production migration
+acceptance. The default remains legacy; see [migration gates](RUNTIME_MIGRATION.zh-CN.md).
+
 Latest map/mobile increment: two frontend workspaces share one conversation and query state.
 `map-discovery.js` adds bounded provider POIs without mutating the official directory;
 `guidance.js` matches transient location fixes to real Walking geometry, independently of
@@ -112,7 +118,8 @@ a policy explanation can use Retrieval; a route uses GIS. One task may combine t
 
 | Item | Status | Boundary / reconsideration trigger |
 | --- | --- | --- |
-| Submission orchestration | CONFIRMED | Dify Cloud owns chat/RAG; Python owns directory reads and cards; ADR 0004. The synthetic loop remains a separate demo |
+| Submission orchestration | CONFIRMED | Two releases move chat/RAG to Python; Dify owns authoring and explicit knowledge export; ADR 0005 supersedes the runtime part of ADR 0004. Legacy remains deployed until stage gates pass |
+| Jev integration | CONFIRMED | OpenRouter typed decisions on fixed public fixtures; shadow only, never online routing or tool authority |
 | Skeleton language and tools | CONFIRMED | Python 3.14, uv, Protocol, Pydantic 2, pytest, mypy strict, Ruff and CLI; [ADR 0003](adr/0003-python-skeleton-toolchain.md) |
 | Backend Web framework / HTTP transport | CONFIRMED | FastAPI/Uvicorn shared backend for web and tools; ADR 0004 |
 | Frontend technology | CONFIRMED | Existing plain HTML/CSS/JS responsive web; ADR 0004 |
@@ -130,11 +137,11 @@ a policy explanation can use Retrieval; a route uses GIS. One task may combine t
 
 ## Remaining OPEN requirements
 
-The 2026-10-03 Dify evaluation draft is historical; ADR 0004 now selects its bounded architecture.
-Dify owns chat orchestration; Python owns the directory, permissions, sessions and card validation.
-The new DSL is a locally tested candidate, not evidence of a live Cloud callback.
-See [submission status](SUBMISSION_STATUS.zh-CN.md) for remaining gates.
-The broader requirements below remain open only where ADR 0004 has not bounded them.
+The 2026-10-03 Dify evaluation draft is historical. ADR 0005 confirms backend orchestration
+and retains directory, permission, session and card boundaries. The generation provider/model
+remains OPEN; vector infrastructure and live Jev policy are DEFERRED. Published baseline export,
+live performance and independent QA remain gates in [migration delivery](RUNTIME_MIGRATION.zh-CN.md).
+The broader requirements below remain open where accepted ADRs have not bounded them.
 
 1. Exact first services, corpus, authoritative source inventory, campus/site coverage, languages,
    and measurable acceptance thresholds; broad capability areas are already confirmed.
@@ -197,10 +204,11 @@ Developer verification is not Muse QA or human acceptance.
 
 ### Remaining scope
 
-Production Agent runtime remains OPEN. There is no real LLM, RAG, database,
-GIS/AMap, YanhuyiBan, authentication, write action, multi-agent runtime, MCP or deployment.
-The synthetic-only Skeleton scope above remains the demo boundary. The separately approved
-Phase 1 implementation below adds source-backed local queries, without a production runtime.
+The synthetic Skeleton remains a separate demo and does not call production providers.
+The submission web/GIS deployment is covered by ADR 0004; backend runtime migration is now
+CONFIRMED in ADR 0005 and implemented locally. Its new generation model is OPEN and its live
+acceptance is pending. Authenticated university data, real writes, extra runtime Agents,
+MCP, a database and vector infrastructure remain outside this increment.
 
 ## Phase 1 — Structured Campus Data (Issue #2)
 
