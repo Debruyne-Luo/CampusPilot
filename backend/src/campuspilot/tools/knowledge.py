@@ -10,6 +10,7 @@ from campuspilot.contracts import Contract
 from campuspilot.knowledge import KnowledgeQuery, KnowledgeStore, campus_today
 from campuspilot.llm.embedding import CloudflareEmbedder, EmbeddingUnavailable
 from campuspilot.rag import RetrievalFilters, SnapshotStore
+from campuspilot.retrieval.grounding import POLICY_VERSION, assess
 
 
 class KnowledgeSearchTool:
@@ -61,7 +62,12 @@ class HybridKnowledgeTool:
         filters = RetrievalFilters(
             today=campus_today(), audience=params.audience, academic_year=params.academic_year
         )
-        hits = retriever.search(params.query, filters, params.top_k, query_vector=vector)
+        searched = retriever.search_channels(
+            params.query, filters, params.top_k, query_vector=vector
+        )
+        hits = searched.hits
+        grounding = assess(params.query, searched, len(hits))
+        grounded = grounding.grounded_ids  # every hit when unassessed (no query vector)
         rows: list[JsonValue] = [
             {
                 "chunk_id": h.chunk.chunk_id,
@@ -75,14 +81,19 @@ class HybridKnowledgeTool:
                 "stale": h.chunk.stale,
                 "ocr": h.chunk.ocr,
                 "score": round(h.score, 6),
+                "grounded": h.chunk.chunk_id in grounded,
             }
             for h in hits
         ]
         return {
             "result_status": "success" if hits else "empty",
-            "answer": "\n".join(h.chunk.text for h in hits[:3]),
+            "answer": "\n".join([h.chunk.text for h in hits if h.chunk.chunk_id in grounded][:3]),
             "hits": rows,
             "knowledge_version": retriever.snapshot.version,
             "retrieval_mode": retriever.mode,
             "degraded": retriever.degraded,
+            "grounding": {
+                "policy": POLICY_VERSION,
+                "decision": grounding.decision if hits else "insufficient",
+            },
         }

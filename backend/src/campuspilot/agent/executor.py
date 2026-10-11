@@ -36,6 +36,7 @@ CHITCHAT_ANSWER = (
     "你好！我可以帮你查校园办事流程和材料、找老师办公室和地点、规划校内步行路线，"
     "或检索学校官方资料。请直接描述你要办的事。"
 )
+NO_BASIS_ANSWER = "已发布资料中没有足够依据回答，请补充事项或查看官方资料。"
 IDENTITY_QUESTION = "请问你是本科生、研究生还是教职工？不同身份的办理方式可能不同。"
 
 OCR_NOTE = "图片识别，请以原文为准"
@@ -81,6 +82,9 @@ class Evidence:
     hits: list[dict[str, JsonValue]] = field(default_factory=list)
     checklist: dict[str, JsonValue] | None = None
     citations: dict[str, dict[str, JsonValue]] = field(default_factory=dict)
+    # search_knowledge grounding decisions ("grounded" / "insufficient" / "unassessed").
+    grounding: list[str] = field(default_factory=list)
+    knowledge_sources: set[str] = field(default_factory=set)
     emit: Emit | None = None
 
     async def notify(self, event: str, data: dict[str, JsonValue]) -> None:
@@ -89,6 +93,18 @@ class Evidence:
 
     def text(self) -> str:
         return json.dumps(self.results, ensure_ascii=False)
+
+    def grounded_hits(self) -> list[dict[str, JsonValue]]:
+        """Knowledge hits the grounding policy accepted (legacy rows carry no flag: kept)."""
+        return [h for h in self.hits if h.get("grounded", True) is not False]
+
+    def no_grounding(self) -> bool:
+        """Only knowledge was found, and every knowledge search was judged insufficient."""
+        return (
+            bool(self.grounding)
+            and all(d == "insufficient" for d in self.grounding)
+            and not (self.services or self.places or self.teachers or self.checklist)
+        )
 
 
 def _without_ocr(value: Any, ocr_texts: tuple[str, ...] = ()) -> Any:
@@ -117,6 +133,20 @@ def _collect_ids(value: Any, into: set[str]) -> None:
     elif isinstance(value, list):
         for item in value:
             _collect_ids(item, into)
+
+
+def _apply_grounding(name: str, result: dict[str, Any]) -> dict[str, Any]:
+    """A knowledge search the grounding policy judged insufficient carries no evidence.
+
+    Its chunks never reach the model, the allowed citation set, excerpts or citations; the
+    model still sees an empty result and may call other tools or answer ``empty``.
+    """
+    grounding = result.get("grounding")
+    if name != "search_knowledge" or not isinstance(grounding, dict):
+        return result
+    if grounding.get("decision") != "insufficient" or not result.get("hits"):
+        return result
+    return {**result, "result_status": "empty", "answer": "", "hits": [], "withheld": True}
 
 
 class AgentRunner:
@@ -201,6 +231,7 @@ class AgentRunner:
         except ToolError as exc:
             await ev.notify("tool_end", {"tool": name, "label": label, "status": exc.code})
             return exc.code
+        result = _apply_grounding(name, result)
         status = str(result.get("status") or result.get("result_status") or "success")
         await ev.notify("tool_end", {"tool": name, "label": label, "status": status})
         ev.results.append({"tool": name, "result": result})
@@ -235,9 +266,15 @@ class AgentRunner:
                         if teacher.place_id and (p := self.repository.find_place(teacher.place_id)):
                             ev.places[p.place_id] = p
         elif name == "search_knowledge":
+            grounding = result.get("grounding")
+            decision = grounding.get("decision") if isinstance(grounding, dict) else None
+            if not result.get("hits"):
+                decision = "insufficient"
+            ev.grounding.append(str(decision or "unassessed"))
             for row in result.get("hits") or []:
                 if isinstance(row, dict):
                     ev.hits.append(row)
+                    ev.knowledge_sources.add(str(row.get("source_id")))
                     ev.citations[str(row.get("source_id"))] = {
                         "id": row.get("source_id"),
                         "title": row.get("source_title"),
@@ -418,7 +455,7 @@ class AgentRunner:
         return actions[:6]
 
     def _summary(self, ev: Evidence) -> str:
-        lines = [f"{h.get('title')}：{h.get('text')}" for h in ev.hits[:3]]
+        lines = [f"{h.get('title')}：{h.get('text')}" for h in ev.grounded_hits()[:3]]
         for service in list(ev.services.values())[:1]:
             lines.insert(
                 0, f"{service.name}：" + "；".join(s.instruction for s in service.steps[:2])
@@ -428,7 +465,7 @@ class AgentRunner:
         if ev.teachers and not lines:
             lines = [f"已找到：{'、'.join(t.name for t in list(ev.teachers.values())[:4])}"]
         if not lines:
-            return "已发布资料中没有足够依据回答，请补充事项或查看官方资料。"
+            return NO_BASIS_ANSWER
         return "暂时只能提供已收录的资料摘要：\n" + "\n".join(lines)
 
     def _response(
@@ -452,11 +489,19 @@ class AgentRunner:
                 "chunk_id": h.get("chunk_id"),
                 "source_url": h.get("url"),
             }
-            for h in ev.hits[:4]
+            for h in ev.grounded_hits()[:4]
         ]
-        citations = [ev.citations[c] for c in cited if c in ev.citations] or list(
-            ev.citations.values()
-        )[:6]
+        citations = [ev.citations[c] for c in cited if c in ev.citations]
+        if status == "empty" or answer == NO_BASIS_ANSWER:
+            # An honest refusal shows no excerpts or citations of chunks it did not use.
+            excerpts, citations = [], []
+        elif not citations and status == "limited":
+            # Summary fallback: only sources of hits that passed the grounding policy,
+            # plus non-knowledge evidence (services, teachers).
+            shown = {str(h.get("source_id")) for h in ev.grounded_hits()}
+            citations = [
+                c for k, c in ev.citations.items() if k not in ev.knowledge_sources or k in shown
+            ][:6]
         if (
             answer
             and status in {"success", "limited"}
@@ -483,6 +528,8 @@ class AgentRunner:
         }
         if degraded:
             body["degraded_reason"] = degraded
+        if ev.no_grounding():
+            body["grounding"] = "insufficient"
         return body
 
     async def run(
@@ -603,9 +650,10 @@ class AgentRunner:
                     ev=ev,
                     cited=reply.source_ids,
                 )
+        summary = self._summary(ev)
         return self._response(
-            answer=self._summary(ev),
-            status="limited" if ev.results else "empty",
+            answer=summary,
+            status="limited" if ev.results and summary != NO_BASIS_ANSWER else "empty",
             view=view,
             plan=plan,
             steps=steps,

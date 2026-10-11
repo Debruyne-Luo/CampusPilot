@@ -8,6 +8,7 @@ records `degraded=True` on the retriever's last-search state.
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
+from dataclasses import dataclass
 from typing import Literal
 
 from campuspilot.rag import KnowledgeSnapshot, RetrievalFilters, RetrievalHit
@@ -55,6 +56,15 @@ def rrf(
     return [first[key].model_copy(update={"score": scores[key]}) for key in ordered]
 
 
+@dataclass(frozen=True)
+class ChannelResult:
+    """One search: fused hits and each channel's own ranking (``dense`` None when unused)."""
+
+    hits: tuple[RetrievalHit, ...]
+    lexical: tuple[RetrievalHit, ...]
+    dense: tuple[RetrievalHit, ...] | None
+
+
 class HybridRetriever:
     """Retriever protocol (`snapshot`, `search`) shared with BM25Retriever."""
 
@@ -99,8 +109,19 @@ class HybridRetriever:
         top_k: int = 12,
         query_vector: Sequence[float] | None = None,
     ) -> tuple[RetrievalHit, ...]:
-        return downweight_stale(
-            self._search(query, filters, top_k, query_vector), self.stale_weight
+        return self.search_channels(query, filters, top_k, query_vector).hits
+
+    def search_channels(
+        self,
+        query: str,
+        filters: RetrievalFilters,
+        top_k: int = 12,
+        query_vector: Sequence[float] | None = None,
+    ) -> ChannelResult:
+        """Fused hits plus the per-channel rankings they came from (for grounding checks)."""
+        hits, lexical, dense = self._channels(query, filters, top_k, query_vector)
+        return ChannelResult(
+            hits=downweight_stale(hits, self.stale_weight), lexical=lexical, dense=dense
         )
 
     def _search(
@@ -110,22 +131,34 @@ class HybridRetriever:
         top_k: int = 12,
         query_vector: Sequence[float] | None = None,
     ) -> tuple[RetrievalHit, ...]:
+        """Fused hits before the stale down-weight."""
+        return self._channels(query, filters, top_k, query_vector)[0]
+
+    def _channels(
+        self,
+        query: str,
+        filters: RetrievalFilters,
+        top_k: int = 12,
+        query_vector: Sequence[float] | None = None,
+    ) -> tuple[tuple[RetrievalHit, ...], tuple[RetrievalHit, ...], tuple[RetrievalHit, ...] | None]:
         if not 1 <= top_k <= 100:
             raise ValueError("Invalid candidate limit")
         self.degraded = False
+        depth = max(top_k, self.candidates)
         if self.mode == "lexical":
-            return self.lexical.search(query, filters, top_k)
+            sparse = self.lexical.search(query, filters, depth)
+            return sparse[:top_k], sparse, None
         vector = query_vector if query_vector is not None else self._vector(query)
         if vector is None or self.index is None:
             self.degraded = True
-            return self.lexical.search(query, filters, top_k)
-        depth = max(top_k, self.candidates)
+            sparse = self.lexical.search(query, filters, depth)
+            return sparse[:top_k], sparse, None
         dense = (
             self.index.search(vector, filters, depth)
             if self.min_similarity is None
             else self.index.search(vector, filters, depth, self.min_similarity)
         )
         if self.mode == "vector":
-            return dense[:top_k]
+            return dense[:top_k], (), dense
         sparse = self.lexical.search(query, filters, depth)
-        return tuple(rrf([sparse, dense], self.rrf_k, self.weights)[:top_k])
+        return tuple(rrf([sparse, dense], self.rrf_k, self.weights)[:top_k]), sparse, dense
