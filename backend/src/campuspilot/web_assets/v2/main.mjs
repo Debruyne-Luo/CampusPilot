@@ -28,6 +28,8 @@ const map = createMap({
   onSelect: (place) => highlight(place),
   onOrigin: (position, name) => setOrigin({ type: "map", position, label: name }),
   onPoi: (poi) => showCard({ name: poi.name, position: poi.position, poi: true }),
+  onArrive: () => { if (guideTarget) { document.body.classList.add("arrived"); showCard(guideTarget); } },
+  onGuide: (kind) => { document.body.dataset.guide = kind; },
 });
 
 // ---- origin ---------------------------------------------------------------------------
@@ -137,13 +139,25 @@ async function go(raw) {
     h("span", {}, ` 步行约 ${Math.max(1, Math.round(r.time / 60))} 分钟 · ${Math.round(r.distance)} 米 `),
     h("button", { type: "button", class: "chip go", onclick: () => startGuidance(target, r) }, "开始步行引导"), change());
 }
+// ?demo=1 makes 理小龙 walk the route by itself; ?speed= metres per second (default 9).
+const params = new URLSearchParams(location.search);
+// Without continuous location (desktop, no permission) the guide walks in demo mode.
+let demo = params.get("demo") === "1" || !navigator.geolocation || !window.isSecureContext, guideTarget = null;
+const demoSpeed = Number(params.get("speed")) || undefined;
+function setDemo(on) {
+  demo = on; document.body.classList.toggle("demo", on); $("dino-demo").setAttribute("aria-pressed", String(on)); $("dino-demo").classList.toggle("active", on);
+  map.dinoMode(on, demoSpeed);
+}
+$("dino-demo").addEventListener("click", () => setDemo(!demo));
 function startGuidance(target, r) {
   enableHeading(); // inside the click: iOS asks for motion permission only on a user gesture
+  guideTarget = target; document.body.classList.remove("arrived");
   window.Guidance?.start({
     requestId: map.routeId, target: { name: target.name },
     replan: (gps) => { setOrigin({ type: "use-gps" }); if (gps) setOrigin({ type: "gps", position: gps }); go(target); },
     route: { geometry: r.geometry, stepEnds: r.step_ends, distance: r.distance, time: r.time, steps: r.steps },
   });
+  setDemo(demo); map.dino(demo, demoSpeed, params.get("guide") || undefined);
 }
 // Guidance is a classic script whose own buttons call its internal stop(); observe the
 // slot it renders into to drive the sheet and compass.
@@ -154,7 +168,8 @@ new MutationObserver(() => {
 function guidanceChanged(on) {
   document.body.classList.toggle("guiding", on);
   applySheet({ type: on ? "guidance-start" : "guidance-stop" });
-  $("heading-toggle").hidden = !on;
+  $("heading-toggle").hidden = !on; $("dino-demo").hidden = !on;
+  if (!on) { map.dinoStop(); guideTarget = null; document.body.classList.remove("arrived"); delete document.body.dataset.guide; }
   if (on) { note(); $("place-card").hidden = true; } else stopHeading();
 }
 
@@ -163,7 +178,7 @@ const tracker = createHeadingTracker();
 let headingUp = false, headingOn = false, raf = 0, courseWatch = null;
 const screenAngle = () => screen.orientation?.angle ?? window.orientation ?? 0;
 function onOrientation(e) { tracker.compass(e, screenAngle()); schedule(); }
-function schedule() { if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (tracker.value != null) map.heading(viewRotation(tracker.value, headingUp)); }); }
+function schedule() { if (!raf) raf = requestAnimationFrame(() => { raf = 0; if (tracker.value != null) map.heading({ ...viewRotation(tracker.value, headingUp), value: tracker.value }); }); }
 async function enableHeading() {
   if (headingOn) return; headingOn = true;
   const DOE = window.DeviceOrientationEvent;

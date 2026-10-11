@@ -6,6 +6,7 @@ let frameGeneration = null;
 let placeRecords = new Map();
 let routeId = 0, pickingOrigin = false, routeLayers = [], routeBottom = 200, requestedRouteBottom = 200;
 let discoveryId = 0, pickingDestination = false, hotspotSequence = 0;
+let routeGeometry = [], guide = null, dinoState = null, dinoRaf = 0, dinoToken = 0;
 let markerLayer = null, selectedId = null, handledAt = 0;
 const TOUCH = matchMedia("(pointer: coarse)").matches;
 let navigationId = null, locationLayer = null, followingLocation = true, locationSequence = 0;
@@ -40,9 +41,10 @@ async function init(config) {
       document.head.append(script);
     }), "地图组件加载超时");
     await timed(window.AMapLoader.load({key: config.key, version: "2.0"}), "地图组件加载超时");
-    map = new AMap.Map("map-view", {center: CAMPUS_CENTER, zoom: CAMPUS_ZOOM, zooms: [MIN_ZOOM, 20], viewMode: "2D", isHotspot:true, rotateEnable:true,
+    map = new AMap.Map("map-view", {center: CAMPUS_CENTER, zoom: CAMPUS_ZOOM, zooms: [MIN_ZOOM, 20], viewMode: "3D", pitch: 0, isHotspot:true, rotateEnable:true,
       // Phones: skip 3D building blocks and keep the default canvas cheap while panning.
-      showBuildingBlock: !TOUCH, pitchEnable: false, WebGLParams: {preserveDrawingBuffer: false}});
+      // 3D view mode from the start (AMap cannot switch later); pitched only while guiding.
+      showBuildingBlock: true, pitchEnable: false, WebGLParams: {preserveDrawingBuffer: false}});
     map.setLimitBounds(new AMap.Bounds([AREA.west, AREA.south], [AREA.east, AREA.north]));
     // Belt and braces: programmatic moves (and some SDK paths) can bypass limitBounds.
     map.on("moveend", () => {
@@ -134,6 +136,12 @@ window.addEventListener("message", (event) => {
     discoveryId = data.request_id; pickingDestination = false; searchPlaces(data);
   } else if (data.action === "guidance-start" && data.request_id === routeId && Number.isSafeInteger(data.navigation_id)) {
     navigationId = data.navigation_id; followingLocation = true;
+  } else if (data.action === "dino-start" && map && routeGeometry.length > 1) {
+    startDino(data);
+  } else if (data.action === "dino-stop") {
+    stopDino();
+  } else if (data.action === "dino-mode" && guide && typeof data.demo === "boolean") {
+    setDinoDemo(data.demo, data.speed);
   } else if (data.action === "guidance-stop" && data.navigation_id === navigationId) {
     clearLocation();
   } else if (data.action === "guidance-update" && data.request_id === routeId && data.navigation_id === navigationId && navigationId !== null) {
@@ -158,7 +166,7 @@ window.addEventListener("message", (event) => {
   }
 });
 function clearRoute() {
-  clearLocation();
+  clearLocation(); stopDino(); routeGeometry = [];
   pickingOrigin = false;
   if (map) {map.setDefaultCursor("default"); if (routeLayers.length) map.remove(routeLayers);}
   routeLayers = [];
@@ -169,6 +177,7 @@ function fitRoute() {
 function resizeRouteView() {
   if (!map) return;
   routeBottom = Math.min(Math.max(80, requestedRouteBottom), Math.max(80,map.getSize().getHeight()-60));
+  if (guide) return;
   if (navigationId !== null && followingLocation && locationLayer) followPosition(locationLayer.getPosition());
   else fitRoute();
 }
@@ -208,6 +217,7 @@ async function planWalking(data) {
       return new AMap.Marker({position, content, anchor: "center", zIndex: 200, bubble: true});
     };
     routeLayers = [line, endpoint(path[0], "起"), endpoint(path[path.length - 1], "终")];
+    routeGeometry = path.map((point) => [point.lng, point.lat]);
     map.add(routeLayers); fitRoute();
     let count = 0;
     const stepEnds = route.steps.map(step => {count += (step.path || []).length; return Math.max(0,count - 1);});
@@ -276,6 +286,7 @@ let arrowAngle = 0, hasHeading = false;
 function applyHeading(data) {
   // arrow: screen rotation of the user arrow; rotation: AMap clockwise map rotation.
   if (!Number.isFinite(data.arrow) || !Number.isFinite(data.rotation)) return;
+  if (guide) {if (Number.isFinite(data.heading_value)) dinoState.compass = data.heading_value; return;}
   arrowAngle = data.arrow; hasHeading = true;
   const dot = locationLayer?.getContent?.();
   if (dot instanceof Element) {dot.style.setProperty("--arrow", arrowAngle + "deg"); dot.classList.add("has-heading");}
@@ -308,7 +319,8 @@ async function updateLocation(data) {
       locationLayer = new AMap.Marker({position:[position.longitude,position.latitude],content:dot,anchor:"center",zIndex:300});
       map.add(locationLayer);
     } else locationLayer.setPosition([position.longitude,position.latitude]);
-    if (followingLocation) followPosition([position.longitude,position.latitude]);
+    if (guide && !dinoState.demo) dinoState.gps = [position.longitude, position.latitude];
+    else if (followingLocation && !guide) followPosition([position.longitude,position.latitude]);
     notify("guidance-position", {request_id:routeId,navigation_id:id,position,accuracy:data.accuracy,status:"success"});
   } catch {if (id === navigationId && sequence === locationSequence) notify("guidance-position", {request_id:routeId,navigation_id:id,status:"error"});}
 }
@@ -408,5 +420,83 @@ async function nearestPoi(lnglat) {
     const best = pois[0] && AMap.GeometryUtil.distance(center, pois[0].location) <= 45 ? serialisePoi(pois[0]) : null;
     if (best && id === discoveryId && selection === hotspotSequence) notify("poi-selection", {request_id: id, place: best});
   } catch { /* a tap on empty ground is fine */ }
+}
+// ---- 理小龙 guide: pitched 3D camera following a dinosaur along the route -------------
+async function startDino(data) {
+  stopDino();
+  const token = ++dinoToken;
+  const [{createGuide}, walk] = await Promise.all([import("/assets/dino3d.mjs"), import("/assets/v2/route-walk.mjs")]);
+  if (token !== dinoToken) return;
+  const track = walk.buildTrack(routeGeometry);
+  if (track.pts.length < 2) return;
+  const gl = (() => {try {return !!document.createElement("canvas").getContext("webgl2");} catch {return false;}})();
+  const use3d = walk.canUse3d({webgl: gl && AMap.Browser?.isWebGL !== false, cores: navigator.hardwareConcurrency,
+    memory: navigator.deviceMemory, reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches});
+  const created = await createGuide(map, {use3d: data.guide === "3d" ? gl && AMap.Browser?.isWebGL !== false : data.guide === "sprite" ? false : use3d});
+  if (token !== dinoToken) {created.destroy(); return;}
+  guide = created;
+  const start = walk.pointAt(track, 0);
+  dinoState = {walk, track, demo: data.demo === true, speed: clampSpeed(data.speed), d: 0, shown: {...start},
+    bearing: start.bearing, compass: null, gps: null, arrived: false, last: performance.now(), introUntil: performance.now() + 950};
+  document.body.dataset.guide = guide.kind;
+  map.setStatus({dragEnable: false, zoomEnable: true, rotateEnable: true, pitchEnable: true}); // pitch/rotation are no-ops while disabled
+  map.setZoomAndCenter(18.6, [start.lng, start.lat], false, 900);
+  map.setRotation((360 - start.bearing) % 360, false, 900);
+  if (guide.kind === "3d") map.setPitch(58, false, 900);
+  notify("dino-ready", {kind: guide.kind});
+  dinoRaf = requestAnimationFrame(dinoFrame);
+}
+const clampSpeed = (v) => (Number.isFinite(v) ? Math.min(30, Math.max(1, v)) : 9);
+function setDinoDemo(demo, speed) {
+  dinoState.demo = demo; if (Number.isFinite(speed)) dinoState.speed = clampSpeed(speed);
+  if (!demo) dinoState.gps = null;
+}
+function dinoFrame(now) {
+  if (!guide || !dinoState) return;
+  const s = dinoState, {walk, track} = s, dt = Math.min(0.1, (now - s.last) / 1000); s.last = now;
+  let target, walking = false;
+  if (s.demo) {
+    if (!s.arrived) {s.d = Math.min(track.total, s.d + s.speed * dt); walking = s.d < track.total;}
+    target = walk.pointAt(track, s.d);
+  } else if (s.gps) {
+    // Snap the GPS fix onto the route when it is close; otherwise use the raw fix.
+    const near = walk.project(track, s.gps);
+    target = near.off < 25 ? walk.pointAt(track, near.d) : {lng: s.gps[0], lat: s.gps[1], bearing: s.bearing};
+    if (near.off < 25) s.d = near.d;
+    const moved = walk.meters([s.shown.lng, s.shown.lat], [target.lng, target.lat]);
+    walking = moved > 0.4;
+  } else target = s.shown;
+  // Ease the shown position toward the target (GPS jumps glide), heading toward the travel
+  // direction or the compass when standing still.
+  const k = s.demo ? 1 : 1 - Math.exp(-dt / 0.6);
+  s.shown = {lng: s.shown.lng + (target.lng - s.shown.lng) * k, lat: s.shown.lat + (target.lat - s.shown.lat) * k};
+  const want = !s.demo && !walking && Number.isFinite(s.compass) ? s.compass : target.bearing;
+  s.bearing = walk.easeBearing(s.bearing, want, dt, s.demo ? 0.3 : 0.5);
+  guide.setPose({lng: s.shown.lng, lat: s.shown.lat, bearing: s.bearing}, walking, dt);
+  // Camera behind and above: the dino stays a little below the screen centre, heading up.
+  if (now > s.introUntil) {
+    map.setRotation((360 - s.bearing) % 360, true);
+    map.setCenter(aheadOf(s.shown, s.bearing, 22), true);
+  }
+  if (!s.arrived && track.total - s.d < (s.demo ? 0.5 : 12)) {
+    s.arrived = true; notify("dino-arrived");
+  }
+  dinoRaf = requestAnimationFrame(dinoFrame);
+}
+function aheadOf(p, bearing, metres) {
+  const r = bearing * Math.PI / 180, dLat = metres * Math.cos(r) / 111320, dLng = metres * Math.sin(r) / (111320 * Math.cos(p.lat * Math.PI / 180));
+  return [p.lng + dLng, p.lat + dLat];
+}
+function stopDino() {
+  dinoToken++;
+  if (dinoRaf) cancelAnimationFrame(dinoRaf);
+  dinoRaf = 0;
+  if (guide) {
+    guide.destroy(); guide = null; dinoState = null; delete document.body.dataset.guide;
+    if (map) {
+      map.setPitch(0, true); map.setRotation(0, true);
+      map.setStatus({dragEnable: true, zoomEnable: true, rotateEnable: true, pitchEnable: false});
+    }
+  }
 }
 notify("frame-ready");
