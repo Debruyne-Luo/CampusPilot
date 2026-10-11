@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import cast
 
 from campuspilot.chat_runtime import Mode
+from campuspilot.jev_plugin import JevMode, parse_jev_mode
 from campuspilot.retrieval.grounding import GroundingMode, parse_grounding_mode
 
 DEFAULT_DIFY_BASE_URL = "https://api.dify.ai/v1"
@@ -51,6 +52,10 @@ class Settings:
     agent_loop: bool = False
     # Local no-grounding policy: off | flag (record only, default) | block (refuse).
     grounding: GroundingMode = "flag"
+    # Optional in-process Jev plugin: off (default) | shadow (record only) | on.
+    # Credentials: CAMPUSPILOT_JEV_API_KEY or CAMPUSPILOT_JEV_KEY_FILE (migration_config).
+    jev: JevMode = "off"
+    jev_budget_dir: str = ""
     # In-repo approved knowledge bundle used instead of bootstrap.json (e.g. approved-20261011).
     knowledge_bundle: str = ""
     # "auto" serves the v2 UI under /assets/v-<content hash>/ with immutable caching.
@@ -82,6 +87,8 @@ class Settings:
             embedding_timeout=float(env.get("CAMPUSPILOT_EMBEDDING_TIMEOUT", "2.5")),
             agent_loop=env.get("CAMPUSPILOT_AGENT_LOOP", "off") == "on",
             grounding=parse_grounding_mode(env.get("CAMPUSPILOT_GROUNDING", "flag")),
+            jev=parse_jev_mode(env.get("CAMPUSPILOT_JEV", "off")),
+            jev_budget_dir=env.get("CAMPUSPILOT_JEV_BUDGET_DIR", ""),
             knowledge_bundle=env.get("CAMPUSPILOT_KNOWLEDGE_BUNDLE", ""),
             asset_version=env.get("CAMPUSPILOT_ASSET_VERSION", ""),
         )

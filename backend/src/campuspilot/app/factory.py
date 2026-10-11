@@ -30,6 +30,7 @@ from campuspilot.chat_runtime import ChatRuntime, Mode
 from campuspilot.config import parse_retrieval_mode
 from campuspilot.dify import DifyClient
 from campuspilot.directory.repository import DirectoryRepository
+from campuspilot.jev_plugin import JevMode, build_plugin
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.llm.chat_model import ProductionModel, ToolCallingModel
 from campuspilot.llm.embedding import CloudflareEmbedder
@@ -87,6 +88,8 @@ def create_web_app(
     embedding_model: str = "@cf/baai/bge-m3",
     agent_loop: bool = False,
     grounding: GroundingMode = "flag",
+    jev: JevMode = "off",
+    jev_budget_dir: str = "",
     knowledge_bundle: str = "",
     asset_version: str = "",
 ) -> FastAPI:
@@ -151,6 +154,7 @@ def create_web_app(
                 repository,
                 model if isinstance(model, ToolCallingModel) else None,
                 grounding=grounding,
+                jev=build_plugin(jev, jev_budget_dir, snapshots),
             )
             if agent_loop and runtime_mode == "phase2"
             else None

@@ -25,6 +25,7 @@ from campuspilot.chat_runtime import ConversationContext, public_input
 from campuspilot.contracts import Contract
 from campuspilot.dify import ChatUnavailable
 from campuspilot.directory.repository import DirectoryRepository
+from campuspilot.jev_plugin import JevPlugin, JevReranker, JevSufficiencyPolicy
 from campuspilot.llm.chat_model import GroundedAnswer, ToolCallingModel
 from campuspilot.presentation import place_card, service_card
 from campuspilot.retrieval.grounding import GroundingMode
@@ -40,6 +41,7 @@ CHITCHAT_ANSWER = (
 )
 logger = logging.getLogger(__name__)
 NO_BASIS_ANSWER = "已发布资料中没有足够依据回答，请补充事项或查看官方资料。"
+JEV_CLARIFY_ANSWER = "已收录资料与问题不完全对应，请补充具体事项、身份或时间等条件后再问。"
 IDENTITY_QUESTION = "请问你是本科生、研究生还是教职工？不同身份的办理方式可能不同。"
 
 OCR_NOTE = "图片识别，请以原文为准"
@@ -179,8 +181,10 @@ class AgentRunner:
         model: ToolCallingModel | None,
         max_tool_rounds: int = MAX_TOOL_ROUNDS,
         grounding: GroundingMode = "flag",
+        jev: JevPlugin | None = None,
     ) -> None:
         self.grounding = grounding
+        self.jev = jev
         self.registry = registry
         self.repository = repository
         self.model = model
@@ -530,6 +534,7 @@ class AgentRunner:
         cited: tuple[str, ...] = (),
         degraded: str = "",
         mode: str = "agent",
+        show_sources: bool = True,
     ) -> dict[str, JsonValue]:
         excerpts: list[JsonValue] = [
             {
@@ -559,6 +564,8 @@ class AgentRunner:
             citations = [
                 c for k, c in ev.citations.items() if k not in ev.knowledge_sources or k in shown
             ][:6]
+        if not show_sources:
+            excerpts, citations = [], []
         if (
             answer
             and status in {"success", "limited"}
@@ -688,6 +695,107 @@ class AgentRunner:
             {"steps": [{"step": s.step, "tool": s.tool, "label": s.label} for s in plan.steps]},
         )
         steps = await self._run_plan(plan, ev)
+        return await self._with_jev(question, view, context, ev, plan, steps)
+
+    # -- optional Jev plugin (CAMPUSPILOT_JEV) -------------------------------------------
+
+    def _local_grounding(self, ev: Evidence) -> str:
+        decisions = [str(c.get("decision")) for c in ev.grounding_checks]
+        if any(d == "grounded" for d in decisions):
+            return "grounded"
+        if decisions and all(d == "insufficient" for d in decisions):
+            return "insufficient"
+        return "unassessed"
+
+    def _apply_rerank(self, ev: Evidence, kept: tuple[str, ...]) -> None:
+        """Keep only `kept` knowledge chunks, in that order, everywhere evidence is read."""
+        order = {cid: i for i, cid in enumerate(kept)}
+
+        def rerank(rows: Any) -> list[Any]:
+            rows = [r for r in rows or [] if isinstance(r, dict) and r.get("chunk_id") in order]
+            return sorted(rows, key=lambda r: order[str(r.get("chunk_id"))])
+
+        ev.hits = rerank(ev.hits)
+        for entry in ev.results:
+            result = entry.get("result")
+            if entry.get("tool") == "search_knowledge" and isinstance(result, dict):
+                hits = rerank(result.get("hits"))
+                entry["result"] = {
+                    **result,
+                    "hits": hits,
+                    "answer": "\n".join(str(h.get("text")) for h in hits[:3]),
+                    "result_status": "success" if hits else "empty",
+                }
+        ev.allowed = set()
+        for entry in ev.results:
+            _collect_ids(entry.get("result"), ev.allowed)
+        sources = {str(h.get("source_id")) for h in ev.hits}
+        for source_id in ev.knowledge_sources - sources:
+            ev.citations.pop(source_id, None)
+        ev.knowledge_sources &= sources
+
+    async def _with_jev(
+        self,
+        question: str,
+        view: Understanding,
+        context: ConversationContext,
+        ev: Evidence,
+        plan: Plan,
+        steps: list[StepRecord],
+    ) -> dict[str, JsonValue]:
+        """Hook between _run_plan and _answer. Every Jev fault falls back to the plain flow."""
+        jev = self.jev
+        candidates = jev.resolve(ev.hits) if jev is not None and jev.mode != "off" else ()
+        if jev is None or not candidates:
+            return await self._compose(question, view, context, ev, plan, steps)
+        turn = jev.turn()
+        local = self._local_grounding(ev)
+        if jev.mode == "shadow":
+            # Runs alongside the answer; recorded only, never changes the response.
+            task = asyncio.create_task(turn.assess(question, candidates, local))
+            try:
+                body = await self._compose(question, view, context, ev, plan, steps)
+            except BaseException:
+                task.cancel()
+                raise
+            body["jev"] = (await task).record("shadow")
+            return body
+        decision = await JevSufficiencyPolicy(turn, local).decide(question, candidates)
+        assessment = await turn.assess(question, candidates, local)  # cached: one request
+        other = bool(ev.services or ev.places or ev.teachers or ev.checklist)
+        if assessment.usable and not other and decision in {"insufficient", "clarify"}:
+            refuse = decision == "insufficient"
+            body = self._response(
+                answer=NO_BASIS_ANSWER if refuse else JEV_CLARIFY_ANSWER,
+                status="empty" if refuse else "needs_clarification",
+                view=view,
+                plan=plan,
+                steps=steps,
+                ev=ev,
+                mode="agent_jev",
+                show_sources=False,
+            )
+            body["jev"] = assessment.record("on", "refuse" if refuse else "clarify")
+            return body
+        applied = "none"
+        if assessment.usable and assessment.ranked_ids:
+            kept = await JevReranker(turn, local).rank(question, candidates, len(candidates))
+            if kept != assessment.original_ids:
+                self._apply_rerank(ev, kept)
+                applied = "rerank"
+        body = await self._compose(question, view, context, ev, plan, steps)
+        body["jev"] = assessment.record("on", applied)
+        return body
+
+    async def _compose(
+        self,
+        question: str,
+        view: Understanding,
+        context: ConversationContext,
+        ev: Evidence,
+        plan: Plan,
+        steps: list[StepRecord],
+    ) -> dict[str, JsonValue]:
         await ev.notify("composing", {"label": "组织答案并核对引用"})
         reply, failure, _ = await self._answer(question, view, context, ev)
         if reply is not None:
