@@ -108,3 +108,20 @@ test("ask surfaces guard errors without falling back", async () => {
   assert.deepEqual(urls, ["/api/chat/stream"]);
   assert.equal(r.status, 409); assert.equal(r.body.error_code, "busy");
 });
+
+test("guidance.js exposes Guidance on window and renders without classic journey card", async () => {
+  const { readFileSync } = await import("node:fs");
+  const vm = await import("node:vm");
+  const slot = { children: [], replaceChildren() { this.children = []; }, append(...c) { this.children.push(...c); } };
+  const el = () => ({ append() {}, setAttribute() {}, addEventListener() {}, classList: { add() {}, toggle() {} } });
+  const document = { querySelector: (s) => (s === ".guidance-slot" ? slot : null), getElementById: () => null, addEventListener() {} };
+  const window = { addEventListener() {} };
+  const ctx = { document, window, navigator: {}, element: el, sendToMap() {}, console };
+  ctx.window = Object.assign(window, ctx);
+  vm.createContext(ctx);
+  vm.runInContext(readFileSync(new URL("../backend/src/campuspilot/web_assets/guidance.js", import.meta.url), "utf8"), ctx);
+  assert.equal(typeof ctx.window.Guidance?.start, "function");
+  ctx.window.Guidance.start({ requestId: 1, target: { name: "珙桐餐厅" }, route: { geometry: [[104.1, 30.6], [104.101, 30.601]], stepEnds: [1], distance: 150, time: 120, steps: ["向西"] } });
+  assert.ok(slot.children.length > 0);
+  ctx.window.Guidance.stop();
+});

@@ -42,6 +42,9 @@ async function go(place) {
     const start = h("button", { type: "button", class: "chip go" }, "开始步行引导");
     start.addEventListener("click", () => window.Guidance?.start({
       requestId: map.routeId,
+      target: { name: place.name },
+      detail: hasPosition(place) ? "建筑参考点，入口以现场为准" : "",
+      replan: () => go(place),
       route: { geometry: r.geometry, stepEnds: r.step_ends, distance: r.distance, time: r.time, steps: r.steps },
     }));
     note.append(" ", start);
