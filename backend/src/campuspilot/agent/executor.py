@@ -328,7 +328,10 @@ class AgentRunner:
             return result
         assessment = await turn.assess(ev.question, candidates, local)
         applied = "none"
-        if assessment.usable and assessment.decision == "insufficient":
+        if assessment.usable and (
+            assessment.decision == "insufficient" or not assessment.ranked_ids
+        ):
+            # Insufficient, or every chunk scored rank 0: nothing here may be cited.
             result = {
                 **result,
                 "result_status": "empty",
@@ -907,7 +910,10 @@ class AgentRunner:
             )
             return body
         applied = "none"
-        if assessment.usable and assessment.ranked_ids:
+        if assessment.usable and not assessment.ranked_ids:
+            self._apply_rerank(ev, ())  # every chunk rank 0: none may be cited
+            applied = "drop_all"
+        elif assessment.usable and assessment.ranked_ids:
             kept = await JevReranker(turn, local).rank(question, candidates, len(candidates))
             if kept != assessment.original_ids:
                 self._apply_rerank(ev, kept)

@@ -121,3 +121,12 @@ def test_flag_keeps_grounded_knowledge_next_to_place_evidence() -> None:
     vector = INDEX.vectors[MAIL.chunk_id]
     out = run_turn(grounding_runner(vector, place_model(), "flag"), "学生邮箱几点能激活")
     assert MAIL.chunk_id in [e["chunk_id"] for e in out["excerpts"]]
+
+
+def test_on_mode_withholds_in_loop_search_when_every_chunk_is_rank_zero(tmp_path: Path) -> None:
+    model = in_loop_model(MAIL.source_id)
+    fake = FakeJev(sufficient=0.5, mode="clarify")  # all scores default to 0
+    out = run_jev(jev_runner(OFF_TOPIC, model, fake, "on", tmp_path), "学生邮箱在哪")
+    (payload,) = knowledge_payload(model)
+    assert payload["hits"] == [] and out["jev"]["applied"] == "withhold"
+    assert out["excerpts"] == [] and MAIL.source_id not in [c["id"] for c in out["citations"]]
