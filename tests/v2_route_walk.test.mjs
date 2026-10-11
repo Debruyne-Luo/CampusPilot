@@ -60,21 +60,25 @@ test("guide is code-built (no model files) and Three.js is only loaded lazily", 
   assert.doesNotMatch(frame, /AMap\.Buildings/);
 });
 
-test("chibi guide model: original parts, toon-shaded, animated, under 5k triangles", async () => {
+test("statue guide model: glossy teal sauropod with cap, animated, about 6k triangles", async () => {
   const THREE = await import("../backend/src/campuspilot/web_assets/vendor/three.module.min.js");
   const { buildDino, poseDino } = await import("../backend/src/campuspilot/web_assets/dino3d.mjs");
   const d = buildDino(THREE);
-  let tris = 0, toon = 0;
+  let tris = 0, phong = 0;
+  const colors = new Set();
   d.group.traverse((o) => {
     if (!o.geometry) return;
     tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
-    if (o.material.isMeshToonMaterial) { toon++; assert.notEqual(o.material.flatShading, true); }
+    if (o.material.isMeshPhongMaterial) { phong++; assert.notEqual(o.material.flatShading, true); }
+    colors.add(o.material.color.getHex());
   });
-  assert.ok(tris < 5000, `triangles ${tris}`); assert.ok(toon > 10);
-  // Big head: its centre sits above 60% of the 10-unit height and spans about 4 units.
-  assert.ok(d.head.position.z > 6.5);
+  assert.ok(tris < 6100, `triangles ${tris}`); assert.ok(phong > 10);
+  for (const c of [0x6fc2bd, 0x15181c, 0xf2c230, 0x8c3f22, 0x1f3550]) assert.ok(colors.has(c), c.toString(16));
+  // Long neck: the head sits high above the body.
+  const top = new THREE.Vector3(); d.group.updateMatrixWorld(true); d.head.getWorldPosition(top);
+  assert.ok(top.z > 7, `head z ${top.z}`); assert.equal(d.legs.length, 4);
   poseDino(d, Math.PI / 2, true, 0.05);
-  assert.ok(d.legL.rotation.y > 0.5 && d.legR.rotation.y < -0.5 && d.body.position.z >= 0);
+  assert.ok(d.legL.rotation.y > 0.4 && d.legR.rotation.y < -0.4 && d.legs[3].rotation.y > 0.4 && d.body.position.z >= 0);
   assert.equal(d.eyes[0].scale.z, 0.12); // blinking at t % 3.2 < 0.12
   poseDino(d, 0, false, 1);
   assert.equal(d.legL.rotation.y, 0); assert.equal(d.eyes[0].scale.z, 1);
