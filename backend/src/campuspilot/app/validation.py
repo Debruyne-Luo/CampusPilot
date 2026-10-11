@@ -97,10 +97,16 @@ def validate_place_params(path: str, params: dict[str, str]) -> None:
         return
     try:
         lng, lat = (float(part) for part in params.get("location", "").split(","))
+        radius = int(params.get("radius", "0"))
+        at_center = abs(lng - 104.147531) < 0.000001 and abs(lat - 30.675012) < 0.000001
+        # A tapped base-map label: a small radius around a point on or next to campus
+        # (about 2.5 km box).
+        tap_lookup = (
+            abs(lng - 104.147531) <= 0.026 and abs(lat - 30.675012) <= 0.023 and radius <= 100
+        )
         valid = (
-            abs(lng - 104.147531) < 0.000001
-            and abs(lat - 30.675012) < 0.000001
-            and 1 <= int(params.get("radius", "0")) <= 2000
+            (at_center or tap_lookup)
+            and 1 <= radius <= 2000
             and 1 <= int(params.get("offset", "10")) <= 10
             and 1 <= int(params.get("page", "1")) <= 5
         )

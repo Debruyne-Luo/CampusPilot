@@ -2,14 +2,14 @@
 import { ask } from "./sse.mjs";
 import { initialPlan, reducePlan } from "./plan-state.mjs";
 import { createChecklistStore, sessionId } from "./checklist-store.mjs";
-import { FILTERS, hasPosition, searchPlaces } from "./places.mjs";
+import { FILTERS, filterList, hasPosition, searchPlaces } from "./places.mjs";
 import { h } from "./dom.mjs";
 import { answerCards, planCard } from "./render.mjs";
 import { cardsIn, stepIn, tick } from "./motion.mjs";
 import { createMap } from "./map.mjs";
 import { distanceMeters, formatDistance, toGcj02 } from "./geo.mjs";
 import { initialOrigin, originLabel, reduceOrigin, routeOrigin } from "./origin.mjs";
-import { initialSheet, reduceSheet } from "./sheet.mjs";
+import { dragOffset, initialSheet, reduceSheet, releaseVelocity, sheetOffset, visibleHeight } from "./sheet.mjs";
 import { createHeadingTracker, needsPermission, viewRotation } from "./heading.mjs";
 
 const $ = (id) => document.getElementById(id);
@@ -55,9 +55,19 @@ function locate({ quiet = false } = {}) {
 }
 function pickOnMap() {
   if (!map.pickOrigin()) { note("地图未加载，无法点选起点；可从列表选择地点出发。"); return; }
-  setOrigin({ type: "pick-start" }); collapseForMap();
-  note("在地图上点一下起点（也可点地点标记）。", h("button", { type: "button", class: "chip ghost", onclick: () => { map.cancelPick(); setOrigin({ type: "pick-cancel" }); note(); } }, "取消"));
+  setOrigin({ type: "pick-start" }); collapseForMap(); note();
+  $("place-card").hidden = true; placeCrosshair();
 }
+// Crosshair sits in the middle of the visible map (above the sheet on phones).
+function placeCrosshair() {
+  const wrap = document.querySelector(".mapwrap").getBoundingClientRect();
+  const bottom = mobile() ? sheetVisible() : 0, top = mobile() ? 130 : 110;
+  const y = Math.round(top + (wrap.height - bottom - top) / 2), x = Math.round(wrap.width / 2);
+  $("crosshair").style.transform = `translate(${x}px, ${y}px)`;
+  $("crosshair").dataset.x = x; $("crosshair").dataset.y = y;
+}
+$("pick-here").addEventListener("click", () => map.pickAt(Number($("crosshair").dataset.x), Number($("crosshair").dataset.y)));
+$("pick-cancel").addEventListener("click", () => { map.cancelPick(); setOrigin({ type: "pick-cancel" }); });
 function originChooser(message) {
   const select = h("select", { class: "origin-select", "aria-label": "从地点出发" },
     h("option", { value: "" }, "从地点出发…"),
@@ -173,29 +183,66 @@ $("heading-toggle").addEventListener("click", (e) => {
   schedule();
 });
 
-// ---- mobile bottom sheet --------------------------------------------------------------
+// ---- mobile bottom sheet: follows the finger, snaps on release ---------------------
+const chat = document.querySelector(".chat");
+const PEEK = () => 66 + ($("safe-probe")?.offsetHeight || 0); // handle + header + home indicator
+let sheetY = 0;
+const sheetVisible = () => visibleHeight(chat.offsetHeight, sheetY);
+function setSheetY(y, animate) {
+  sheetY = y;
+  chat.style.transition = animate ? "" : "none";
+  chat.style.transform = `translate3d(0, ${Math.round(y)}px, 0)`;
+  document.body.style.setProperty("--sheet-visible", (mobile() ? sheetVisible() : 0) + "px");
+}
 function applySheet(action) {
   sheet = reduceSheet(sheet, action);
   document.body.classList.toggle("sheet-collapsed", sheet.state === "collapsed");
   $("sheet-handle").setAttribute("aria-expanded", String(sheet.state === "expanded"));
-  setTimeout(() => map.insets(sheet.state === "collapsed" ? 90 : Math.round(innerHeight * 0.4)), 320);
+  if (!mobile()) { chat.style.transform = ""; document.body.style.setProperty("--sheet-visible", "0px"); return; }
+  setSheetY(sheetOffset(sheet.state, chat.offsetHeight, PEEK()), true);
+  map.insets(sheetVisible() + 12);
 }
 const mobile = () => matchMedia("(max-width:760px)").matches;
-const collapseForMap = () => mobile() && applySheet({ type: "drag-end", dy: 100 });
+const collapseForMap = () => mobile() && applySheet({ type: "collapse" });
+addEventListener("resize", () => applySheet({ type: "noop" }));
 $("sheet-handle").addEventListener("click", () => applySheet({ type: "toggle" }));
-let dragY = null, dragT = 0;
-const chat = document.querySelector(".chat");
+let drag = null;
 chat.addEventListener("touchstart", (e) => {
+  if (!mobile() || e.touches.length !== 1) return;
   // Drag from the handle/header anywhere; inside the thread only when it is scrolled to top.
-  const inThread = e.target.closest(".thread");
-  dragY = !inThread || thread.scrollTop <= 0 ? e.touches[0].clientY : null; dragT = e.timeStamp;
+  const inThread = e.target.closest(".thread"), onControl = e.target.closest("textarea,select,input");
+  if (onControl || (inThread && thread.scrollTop > 0 && sheet.state === "expanded")) return;
+  const y = e.touches[0].clientY;
+  drag = { y0: y, base: sheetY, moved: false, inThread: !!inThread, samples: [[e.timeStamp, y]] };
 }, { passive: true });
-chat.addEventListener("touchend", (e) => {
-  if (dragY == null || !mobile()) return;
-  const dy = e.changedTouches[0].clientY - dragY, dt = Math.max(1, e.timeStamp - dragT); dragY = null;
-  if (Math.abs(dy) > 40 && !(sheet.state === "expanded" && dy < 0)) applySheet({ type: "drag-end", dy, velocity: dy / dt });
-}, { passive: true });
+chat.addEventListener("touchmove", (e) => {
+  if (!drag) return;
+  const y = e.touches[0].clientY, dy = y - drag.y0;
+  if (!drag.moved) {
+    if (Math.abs(dy) < 6) return;
+    // Scrolling the expanded thread upward stays a scroll.
+    if (drag.inThread && sheet.state === "expanded" && dy < 0) { drag = null; return; }
+    drag.moved = true;
+  }
+  e.preventDefault();
+  drag.samples.push([e.timeStamp, y]); if (drag.samples.length > 8) drag.samples.shift();
+  setSheetY(dragOffset(drag.base, dy, sheetOffset("collapsed", chat.offsetHeight, PEEK())), false);
+}, { passive: false });
+const endDrag = (e) => {
+  if (!drag) return;
+  const d = drag; drag = null;
+  if (!d.moved) return;
+  const y = e.changedTouches[0].clientY;
+  d.samples.push([e.timeStamp, y]);
+  const max = sheetOffset("collapsed", chat.offsetHeight, PEEK());
+  // Position decides by default (past halfway → collapse); a flick overrides it.
+  const v = releaseVelocity(d.samples), pos = sheetY > max / 2 ? 1 : -1;
+  applySheet({ type: "drag-end", dy: pos * 100, velocity: v });
+};
+chat.addEventListener("touchend", endDrag, { passive: true });
+chat.addEventListener("touchcancel", endDrag, { passive: true });
 input.addEventListener("focus", () => applySheet({ type: "focus-input" }));
+applySheet({ type: "noop" });
 
 // ---- chat -----------------------------------------------------------------------------
 function bubble(text) { const b = h("div", { class: "msg-user" }, text); thread.append(b); return b; }
@@ -274,12 +321,18 @@ searchBox.addEventListener("input", () => { clearTimeout(searchTimer); const q =
 searchBox.addEventListener("keydown", (e) => { if (e.key === "Escape") { searchBox.value = ""; closeSearch(); } if (e.key === "Enter") { e.preventDefault(); results.querySelector("button")?.click(); } });
 document.addEventListener("click", (e) => { if (!e.target.closest(".map-search")) closeSearch(); });
 
-const filters = $("filters");
+const filters = $("filters"), filterRow = $("filter-list");
+function showFilterList(id) {
+  const list = filterList(allPlaces, id);
+  filterRow.replaceChildren(...list.map((p) => h("button", { type: "button", class: "chip", onclick: () => { map.reveal([p.place_id]); highlight(p); collapseForMap(); } }, p.name)));
+  filterRow.hidden = !list.length; filterRow.scrollLeft = 0;
+}
 for (const f of FILTERS) {
   const b = h("button", { type: "button", class: `chip ${f.id === "all" ? "active" : ""}`, "aria-pressed": f.id === "all" ? "true" : "false" }, f.label);
   b.addEventListener("click", () => {
     filters.querySelectorAll("button").forEach((x) => { x.classList.toggle("active", x === b); x.setAttribute("aria-pressed", String(x === b)); });
-    map.setFilter(f.id);
+    map.setFilter(f.id); showFilterList(f.id);
+    if (f.id !== "all") collapseForMap();
   });
   filters.append(b);
 }

@@ -66,7 +66,8 @@ header small{display:block;color:var(--muted);font-size:var(--text-xs);line-heig
 ol.steps{margin:0;padding-left:20px}ol.steps li{margin:4px 0}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:6px 12px;font-size:var(--text-s);cursor:pointer;display:inline-flex;align-items:center;gap:4px}
-.chip:hover{border-color:var(--brand)}
+@media (hover:hover){.chip:hover{border-color:var(--brand)}}
+button,.chip,select,summary{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 .chip.active{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
 .chip.go{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border-color:transparent}
 .chip.unlocated small{color:var(--warn)}
@@ -92,7 +93,7 @@ summary{cursor:pointer;font-size:14px}
 .map-search input:focus{border-color:var(--brand)}
 .search-results{list-style:none;margin:6px 0 0;padding:4px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);max-height:300px;overflow:auto}
 .search-results button{display:flex;flex-direction:column;align-items:flex-start;width:100%;border:0;background:none;padding:7px 10px;border-radius:10px;cursor:pointer;text-align:left}
-.search-results button:hover,.search-results button:focus-visible{background:var(--brand-soft)}
+.search-results button:focus-visible{background:var(--brand-soft)}
 .search-results small{color:var(--muted);font-size:var(--text-xs)}
 .search-results .hint{padding:8px 10px;color:var(--muted);font-size:var(--text-xs)}
 .filters{position:absolute;top:58px;left:14px;right:14px;display:flex;gap:6px;overflow:auto}
@@ -135,28 +136,48 @@ body.picking-origin .origin-bar{border-color:var(--brand);color:var(--brand)}
 .guidance-slot .journey-button{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:5px 12px;margin:6px 6px 0 0;font-size:var(--text-s);cursor:pointer}
 body.guiding .route-note,body.guiding .place-card{display:none}
 .sheet-handle{display:none}
+.safe-probe{position:fixed;left:0;bottom:0;width:0;height:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none}
+.filter-list{position:absolute;top:100px;left:14px;right:14px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;z-index:var(--map-ui-z);padding-bottom:2px}
+.filter-list::-webkit-scrollbar{display:none}
+.filter-list .chip{white-space:nowrap;font-size:var(--text-xs);padding:5px 10px;background:var(--panel)}
+.filter-list:not([hidden])~.origin-bar{top:140px}
+.map-dock{display:contents}
+.crosshair,.pick-bar{display:none}
+body.picking-origin .crosshair{display:block;position:absolute;left:0;top:0;width:0;height:0;z-index:var(--map-ui-z);pointer-events:none}
+.crosshair::before,.crosshair::after{content:"";position:absolute;background:var(--brand);border-radius:2px}
+.crosshair::before{left:-1.5px;top:-18px;width:3px;height:36px}.crosshair::after{top:-1.5px;left:-18px;width:36px;height:3px}
+body.picking-origin .pick-bar{display:flex;flex-direction:column;gap:6px;position:absolute;left:14px;right:14px;bottom:calc(var(--sheet-visible,0px) + 14px);max-width:420px;font-size:var(--text-s);z-index:calc(var(--map-ui-z) + 1)}
+.pick-actions{display:flex;gap:6px}
+body.picking-origin .place-card,body.picking-origin .route-note{display:none}
 @media (max-width:760px){
   .app{display:block;padding:0}
-  .mapwrap{position:fixed;left:0;right:0;top:0;height:calc(36vh + 22px);border-radius:0;border:0;transition:height .3s}
-  .chat{position:fixed;left:0;right:0;bottom:0;height:64vh;background:var(--bg);border-radius:var(--radius-l) var(--radius-l) 0 0;box-shadow:0 -10px 30px rgba(0,0,0,.16);padding:0 14px calc(10px + env(safe-area-inset-bottom));z-index:5;transition:height .3s;overflow:hidden;touch-action:pan-y}
-  .sheet-handle{display:block;width:100%;height:22px;border:0;background:none;margin:0;padding:0;cursor:grab;position:relative}
+  /* Full-screen map that never resizes: the sheet slides over it (cheap, no AMap relayout). */
+  .mapwrap{position:fixed;inset:0;height:100%;border-radius:0;border:0}
+  .chat{position:fixed;left:0;right:0;bottom:0;height:64vh;height:64dvh;background:var(--bg);border-radius:var(--radius-l) var(--radius-l) 0 0;box-shadow:0 -4px 14px rgba(0,0,0,.10);padding:0 14px calc(10px + env(safe-area-inset-bottom));z-index:5;transition:transform .28s cubic-bezier(.2,.8,.2,1);will-change:transform;overflow:hidden;overscroll-behavior:contain}
+  .chat header{touch-action:none}
+  .sheet-handle{display:block;width:100%;height:24px;border:0;background:none;margin:0;padding:0;cursor:grab;position:relative;touch-action:none}
   .sheet-handle::before{content:"";position:absolute;left:50%;top:8px;width:44px;height:5px;margin-left:-22px;border-radius:5px;background:var(--line)}
-  body.sheet-collapsed .chat{height:calc(58px + env(safe-area-inset-bottom))}
-  body.sheet-collapsed .chat>:not(.sheet-handle):not(header){display:none}
   body.sheet-collapsed .chat header{padding-bottom:4px}
-  body.sheet-collapsed .mapwrap{height:calc(100vh - 50px - env(safe-area-inset-bottom))}
   .status{display:none}
-  .map-search{top:10px;left:10px;width:calc(100% - 20px)}
-  .filters{top:52px;left:10px;right:10px}
-  .origin-bar{top:92px;left:10px;max-width:calc(100% - 20px)}
-  .heading-toggle{top:92px;right:10px}
-  .map-status{top:130px;left:10px}
-  body.guiding .filters,body.guiding .origin-bar,body.guiding .map-search{display:none}
-  body.guiding .heading-toggle{top:10px}
-  .place-card{left:10px;right:10px;bottom:10px;width:auto;max-width:none}
-  .route-note{left:10px;right:10px;bottom:10px;max-width:none}
-  .place-card:not([hidden])~.route-note:not([hidden]){bottom:auto;top:130px}
-  .guidance-slot{left:10px;right:10px;bottom:10px;width:auto}
+  .map-search{top:calc(10px + env(safe-area-inset-top));left:10px;width:calc(100% - 20px)}
+  .filters{top:calc(52px + env(safe-area-inset-top));left:10px;right:10px;scrollbar-width:none}
+  .filters::-webkit-scrollbar{display:none}
+  .filter-list{top:calc(92px + env(safe-area-inset-top));left:10px;right:10px}
+  .origin-bar{top:calc(92px + env(safe-area-inset-top));left:10px;max-width:calc(100% - 20px)}
+  .filter-list:not([hidden])~.origin-bar{top:calc(130px + env(safe-area-inset-top))}
+  .heading-toggle{top:calc(92px + env(safe-area-inset-top));right:10px}
+  .map-status{top:calc(130px + env(safe-area-inset-top));left:10px}
+  /* No shadows over the moving map on phones: flat borders composite cheaply. */
+  .map-search input,.filters .chip,.origin-bar,.heading-toggle,.mapwrap .card{box-shadow:none}
+  body.guiding .filters,body.guiding .origin-bar,body.guiding .map-search,body.guiding .filter-list{display:none}
+  body.guiding .heading-toggle{top:calc(10px + env(safe-area-inset-top))}
+  /* Map overlays always sit above the visible part of the sheet. */
+  .map-dock{display:flex;flex-direction:column;gap:8px;position:absolute;left:10px;right:10px;bottom:calc(var(--sheet-visible,64px) + 10px);z-index:var(--map-ui-z);pointer-events:none}
+  .map-dock>*{pointer-events:auto}
+  .map-dock .place-card,.map-dock .route-note{position:relative;left:auto;right:auto;bottom:auto;top:auto;width:auto;max-width:none}
+  .route-note{max-height:34vh;overflow:auto}
+  .guidance-slot{left:10px;right:10px;width:auto;max-width:none;bottom:calc(var(--sheet-visible,64px) + 10px)}
+  .pick-bar{left:10px;right:10px;bottom:calc(var(--sheet-visible,64px) + 10px)}
   body:not(.sheet-collapsed) .place-card,body:not(.sheet-collapsed) .route-note{display:none}
   .guidance-slot .guidance-box{max-height:40vh}
 }

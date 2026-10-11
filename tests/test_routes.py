@@ -169,7 +169,20 @@ def test_provider_place_proxy_is_bounded_and_uses_fixed_credentials(
             == 422
         )
         assert client.get("/_AMapService/v3/place/text", params=params).status_code == 404
-    assert paths == ["/v3/place/around", "/v3/place/detail"]
+        # A tapped base-map label: small radius around a point near campus.
+        tap = {**params, "location": "104.154035,30.675967", "radius": "60", "keywords": "楼|馆"}
+        assert client.get("/_AMapService/v3/place/around", params=tap).status_code == 200
+        for invalid in [
+            {"radius": "500"},
+            {"keywords": ""},
+            {"location": "104.20,30.675012"},
+            {"location": "104.154035,30.75"},
+        ]:
+            assert (
+                client.get("/_AMapService/v3/place/around", params={**tap, **invalid}).status_code
+                == 422
+            )
+    assert paths == ["/v3/place/around", "/v3/place/detail", "/v3/place/around"]
 
 
 def test_synthetic_teacher_and_service_associations(tmp_path: Path) -> None:

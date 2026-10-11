@@ -6,6 +6,8 @@ let frameGeneration = null;
 let placeRecords = new Map();
 let routeId = 0, pickingOrigin = false, routeLayers = [], routeBottom = 200, requestedRouteBottom = 200;
 let discoveryId = 0, pickingDestination = false, hotspotSequence = 0;
+let markerLayer = null, selectedId = null, handledAt = 0;
+const TOUCH = matchMedia("(pointer: coarse)").matches;
 let navigationId = null, locationLayer = null, followingLocation = true, locationSequence = 0;
 // Viewport only; not a service/office destination. Amap campus POI B001C7X6H7,
 // https://ditu.amap.com/place/B001C7X6H7, retrieved 2026-10-08 (GCJ02).
@@ -31,20 +33,15 @@ async function init(config) {
       document.head.append(script);
     }), "地图组件加载超时");
     await timed(window.AMapLoader.load({key: config.key, version: "2.0"}), "地图组件加载超时");
-    map = new AMap.Map("map-view", {center: CAMPUS_CENTER, zoom: CAMPUS_ZOOM, viewMode: "2D", isHotspot:true, rotateEnable:true});
+    map = new AMap.Map("map-view", {center: CAMPUS_CENTER, zoom: CAMPUS_ZOOM, viewMode: "2D", isHotspot:true, rotateEnable:true,
+      // Phones: skip 3D building blocks and keep the default canvas cheap while panning.
+      showBuildingBlock: !TOUCH, pitchEnable: false, WebGLParams: {preserveDrawingBuffer: false}});
+    markerLayer = new AMap.LabelsLayer({zooms: [3, 20], zIndex: 130, collision: false, allowCollision: true});
+    map.add(markerLayer);
     await timed(new Promise((resolve) => map.on("complete", resolve)), "地图图像加载超时");
-    map.on("click", (event) => {
-      if (!event.lnglat) return;
-      const position = {longitude:event.lnglat.lng, latitude:event.lnglat.lat, coordinate_system:"GCJ02"};
-      if (pickingOrigin) {
-        pickingOrigin = false; map.setDefaultCursor("default");
-        notify("route-origin", {request_id:routeId, position});
-      } else if (pickingDestination) {
-        pickingDestination = false; map.setDefaultCursor("default");
-        notify("map-destination", {request_id:discoveryId, position});
-      }
-    });
-    map.on("hotspotclick", selectHotspot);
+    map.on("click", (event) => {if (event.lnglat && Date.now() - handledAt > 450) pickPoint(event.lnglat);});
+    map.on("hotspotclick", (event) => {handledAt = Date.now(); selectHotspot(event);});
+    watchTaps(document.getElementById("map-view"));
     map.on("dragstart", () => {followingLocation = false;});
     map.on("resize", () => requestAnimationFrame(resizeRouteView));
     notify("ready");
@@ -59,31 +56,23 @@ function validPosition(position) {
     Math.abs(position.longitude) <= 180 && Math.abs(position.latitude) <= 90;
 }
 function highlightMarker(placeId) {
-  for (const content of document.querySelectorAll(".campus-marker")) {
-    content.classList.toggle("selected", content.dataset.placeId === placeId);
+  selectedId = placeId || null;
+  for (const marker of markers) {
+    const place = marker.getExtData();
+    marker.setIcon(pinIcon(place, place.place_id === selectedId));
+    marker.setzIndex(place.place_id === selectedId ? 200 : 100);
+    marker.setText(markerText(place, place.place_id === selectedId));
   }
 }
 function fitMarkers() {
-  // Keep points clear of the category chips and bottom result cards.
-  map.setFitView(markers, true, [65, 140, 35, 45], 17);
+  // Keep points clear of the category chips (top) and the sheet / place card (bottom).
+  const pts = markers.map((m) => m.getExtData().position);
+  if (pts.length === 1) {map.setZoomAndCenter(17, [pts[0].longitude, pts[0].latitude]); return;}
+  const lng = pts.map((p) => p.longitude), lat = pts.map((p) => p.latitude);
+  const bottom = Math.min(Math.max(80, requestedRouteBottom) + 20, map.getSize().getHeight() * 0.45);
+  map.setBounds(new AMap.Bounds([Math.min(...lng), Math.min(...lat)], [Math.max(...lng), Math.max(...lat)]), true, [150, bottom, 40, 40]);
+  if (map.getZoom() > 17) map.setZoom(17);
 }
-// The SDK may clone marker content. Delegate to its rendered buttons so mouse,
-// touch and native keyboard clicks all select the same authoritative place ID.
-document.getElementById("map-view").addEventListener("click", (event) => {
-  const button = event.target instanceof Element ? event.target.closest("button.campus-marker") : null;
-  if (!button) return;
-  if (pickingOrigin) {
-    const p = placeRecords.get(button.dataset.placeId);
-    if (p && validPosition(p.position)) {
-      pickingOrigin = false; map.setDefaultCursor("default");
-      notify("route-origin", {request_id: routeId, position: p.position, name: p.name});
-    }
-    event.stopPropagation(); return;
-  }
-  highlightMarker(button.dataset.placeId);
-  pickingDestination = false;
-  notify("select", {place_id: button.dataset.placeId});
-}, true);
 window.addEventListener("message", (event) => {
   if (event.origin !== location.origin || event.source !== parent || event.data?.type !== "campuspilot-map") return;
   const data = event.data;
@@ -93,24 +82,18 @@ window.addEventListener("message", (event) => {
     frameGeneration=data.frame_generation; started = true; init(data.config);
   } else if (data.action === "places" && map && Array.isArray(data.places)) {
     placeRecords = new Map(data.places.map((p) => [p.place_id, p]));
-    map.remove(markers); markers = [];
+    markerLayer.clear(); markers = [];
+    selectedId = data.selected_place_id || null;
     for (const place of data.places.slice(0, 100).filter((p) => validPosition(p.position))) {
-      const reviewed = place.position.verification_status === "confirmed";
-      const content = document.createElement("button");
-      content.className = "campus-marker" + (reviewed ? " confirmed" : " candidate");
-      content.type = "button";
-      content.dataset.placeId = place.place_id;
-      const title = String(place.name);
-      content.setAttribute("aria-label", title);
-      const icons = {teaching: "▤", office: "▥", library: "▣", dining: "♧", service: "⌘", sports: "◎", gate: "⇥"};
-      const icon = document.createElement("span"); icon.textContent = icons[place.category] || "⌖"; icon.setAttribute("aria-hidden", "true");
-      const label = document.createElement("span"); label.className = "campus-marker-label";
-      label.textContent = String(place.name);
-      content.append(icon, label);
-      const marker = new AMap.Marker({position: [place.position.longitude, place.position.latitude], title, content, anchor: "bottom-center"});
+      const selected = place.place_id === selectedId;
+      const marker = new AMap.LabelMarker({position: [place.position.longitude, place.position.latitude],
+        zIndex: selected ? 200 : 100, extData: place, icon: pinIcon(place, selected), text: markerText(place, selected)});
+      const tap = () => {if (Date.now() - handledAt > 450) {handledAt = Date.now(); selectMarker(place);}};
+      marker.on("click", tap); marker.on("touchend", tap);
       markers.push(marker);
     }
-    map.add(markers); if (markers.length) fitMarkers();
+    markerLayer.add(markers); document.body.dataset.markers = String(markers.length);
+    if (markers.length && data.fit !== false) fitMarkers();
     highlightMarker(data.selected_place_id);
   } else if (data.action === "center" && map && validPosition(data.position)) {
     highlightMarker(data.place_id);
@@ -120,6 +103,8 @@ window.addEventListener("message", (event) => {
     highlightMarker(data.place_id);
   } else if (data.action === "route-clear" && Number.isSafeInteger(data.request_id)) {
     routeId = data.request_id; clearRoute();
+  } else if (data.action === "route-pick-point" && map && pickingOrigin && data.request_id === routeId && Number.isFinite(data.x) && Number.isFinite(data.y)) {
+    handledAt = Date.now(); pickPoint(map.containerToLngLat(new AMap.Pixel(data.x, data.y)));
   } else if (data.action === "route-pick" && map && Number.isSafeInteger(data.request_id)) {
     routeId = data.request_id; pickingOrigin = true; map.setDefaultCursor("crosshair");
   } else if (data.action === "route-request" && map && Number.isSafeInteger(data.request_id)) {
@@ -243,6 +228,12 @@ async function searchPlaces(data) {
     if (id === discoveryId) notify("place-search-result", {request_id:id,status:"success",places:(value.poiList?.pois || []).map(serialisePoi).filter(Boolean)});
   } catch {if (id === discoveryId) notify("place-search-result", {request_id:id,status:"error",places:[]});}
 }
+function labelPoi(event) {
+  if (typeof event?.name !== "string" || !event.name.trim() || !event.lnglat) return null;
+  const position = {longitude: event.lnglat.getLng(), latitude: event.lnglat.getLat(), coordinate_system: "GCJ02"};
+  if (!validPosition(position) || AMap.GeometryUtil.distance(CAMPUS_CENTER, [position.longitude, position.latitude]) > 2400) return null;
+  return {poi_id: String(event.id || ""), name: event.name.slice(0, 120), address: "", position};
+}
 async function selectHotspot(event) {
   if (pickingOrigin && event.lnglat) {
     // A POI label swallows the plain map click; use the label as the picked origin.
@@ -261,8 +252,11 @@ async function selectHotspot(event) {
       if (status === "complete" && value?.poiList?.pois?.length) resolve(value.poiList.pois[0]);
       else reject(new Error("place detail"));
     })), "place detail timeout");
-    if (id === discoveryId && selection === hotspotSequence) notify("poi-selection", {request_id:id,place:serialisePoi(value)});
-  } catch {if (id === discoveryId && selection === hotspotSequence) notify("poi-selection", {request_id:id,place:null});}
+    if (id === discoveryId && selection === hotspotSequence) notify("poi-selection", {request_id:id,place:serialisePoi(value) || labelPoi(event)});
+  } catch {
+    // Many base-map labels have no place-detail record; the label itself is enough for a card.
+    if (id === discoveryId && selection === hotspotSequence) notify("poi-selection", {request_id:id,place:labelPoi(event)});
+  }
 }
 let arrowAngle = 0, hasHeading = false;
 function applyHeading(data) {
@@ -303,5 +297,100 @@ async function updateLocation(data) {
     if (followingLocation) followPosition([position.longitude,position.latitude]);
     notify("guidance-position", {request_id:routeId,navigation_id:id,position,accuracy:data.accuracy,status:"success"});
   } catch {if (id === navigationId && sequence === locationSequence) notify("guidance-position", {request_id:routeId,navigation_id:id,status:"error"});}
+}
+// ---- lightweight markers: one WebGL label layer, SVG pins as images ------------------
+const GLYPHS = {
+  dining: ["#d9772b", "M5 11h14a7 7 0 0 1-14 0zM9.5 4.5c-.8 1.2.8 2-.2 3.3M14.5 4.5c-.8 1.2.8 2-.2 3.3"],
+  library: ["#3a6ccf", "M4 5.5h5.5A2.5 2.5 0 0 1 12 8v11a2 2 0 0 0-2-2H4zM20 5.5h-5.5A2.5 2.5 0 0 0 12 8v11a2 2 0 0 1 2-2h6z"],
+  teaching: ["#3b7a53", "M4 9.5 12 5l8 4.5M6 10v8M10 10v8M14 10v8M18 10v8M4 19h16"],
+  office: ["#6656b3", "M6 19V6h12v13M4 19h16M9 9h2M13 9h2M9 12.5h2M13 12.5h2M10.5 19v-3h3v3"],
+  parcel: ["#b07f22", "M4 8 12 4l8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8"],
+  medical: ["#d24848", "M10 5h4v5h5v4h-5v5h-4v-5H5v-4h5z"],
+  card: ["#2a8796", "M3.5 6.5h17v11h-17zM3.5 10h17M7 14.5h4"],
+  service: ["#56636c", "M12 7.5v.2M12 11v6"],
+};
+function glyphOf(place) {
+  if (GLYPHS[place.glyph]) return place.glyph;
+  return {dining: "dining", library: "library", teaching: "teaching", office: "office"}[place.category] || "service";
+}
+const iconCache = new Map();
+function pinIcon(place, selected) {
+  const glyph = glyphOf(place), key = glyph + (selected ? "!" : "");
+  if (!iconCache.has(key)) {
+    const [color, path] = GLYPHS[glyph], r = selected ? 15 : 12, cy = selected ? 17 : 19;
+    // 44x48 image: the transparent margin is the (invisible) tap target around a small pin.
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="48" viewBox="0 0 44 48">`
+      + `<path d="M22 ${cy + r + 9} l-5-${7} h10z" fill="${color}"/>`
+      + `<circle cx="22" cy="${cy}" r="${r + 1.5}" fill="#fff"/><circle cx="22" cy="${cy}" r="${r}" fill="${selected ? "#1f3d2b" : color}"/>`
+      + `<g transform="translate(${22 - r * .62} ${cy - r * .62}) scale(${r * 1.24 / 24})" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></g></svg>`;
+    iconCache.set(key, {type: "image", image: "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg), size: [44, 48], anchor: "bottom-center"});
+  }
+  return iconCache.get(key);
+}
+function markerText(place, selected) {
+  return {content: String(place.name).slice(0, 14), direction: "bottom", offset: [0, -2], zooms: selected ? [3, 20] : [17, 20],
+    style: {fontSize: 12, fontWeight: selected ? "bold" : "normal", fillColor: "#1d2a22", strokeColor: "#ffffff", strokeWidth: 3, padding: [0, 0]}};
+}
+function selectMarker(place) {
+  if (pickingOrigin) {
+    pickingOrigin = false; map.setDefaultCursor("default");
+    notify("route-origin", {request_id: routeId, position: place.position, name: place.name});
+    return;
+  }
+  highlightMarker(place.place_id); pickingDestination = false;
+  notify("select", {place_id: place.place_id});
+}
+function pickPoint(lnglat) {
+  const position = {longitude: lnglat.lng ?? lnglat.getLng(), latitude: lnglat.lat ?? lnglat.getLat(), coordinate_system: "GCJ02"};
+  if (!validPosition(position)) return false;
+  if (pickingOrigin) {
+    pickingOrigin = false; map.setDefaultCursor("default");
+    notify("route-origin", {request_id: routeId, position});
+  } else if (pickingDestination) {
+    pickingDestination = false; map.setDefaultCursor("default");
+    notify("map-destination", {request_id: discoveryId, position});
+  } else return false;
+  return true;
+}
+// iOS Safari does not always turn a tap on the map canvas into an AMap "click" (or a
+// POI "hotspotclick"). Recognise a short, still touch ourselves; the SDK's own handlers
+// (marker / hotspot) get a short head start and win when they fire.
+function watchTaps(el) {
+  let start = null;
+  el.addEventListener("touchstart", (e) => {
+    const t = e.touches[0];
+    start = e.touches.length === 1 ? {x: t.clientX, y: t.clientY, time: Date.now()} : null;
+  }, {passive: true, capture: true});
+  el.addEventListener("touchmove", (e) => {
+    const t = e.touches[0];
+    if (start && Math.hypot(t.clientX - start.x, t.clientY - start.y) > 10) start = null;
+  }, {passive: true, capture: true});
+  el.addEventListener("touchend", (e) => {
+    if (!start || e.touches.length || Date.now() - start.time > 600) {start = null; return;}
+    const {x, y} = start, at = Date.now(); start = null;
+    setTimeout(() => {
+      if (!map || handledAt >= at) return;
+      const rect = el.getBoundingClientRect(), lnglat = map.containerToLngLat(new AMap.Pixel(x - rect.left, y - rect.top));
+      handledAt = Date.now();
+      if (!pickPoint(lnglat)) nearestPoi(lnglat);
+    }, 320);
+  }, {passive: true, capture: true});
+}
+// A base-map label (e.g. 综合实验大楼) tapped on a phone: resolve the nearest AMap POI.
+// The place API needs keywords; an OR-list of common campus words covers labelled buildings.
+const TAP_KEYWORDS = "成都理工大学|楼|馆|中心|食堂|餐厅|驿站|学院|门|超市|医院";
+async function nearestPoi(lnglat) {
+  const id = discoveryId, selection = ++hotspotSequence;
+  try {
+    const service = await placeSearch();
+    const center = [lnglat.getLng(), lnglat.getLat()];
+    const value = await timed(new Promise((resolve, reject) => service.searchNearBy(TAP_KEYWORDS, center, 60, (status, v) => {
+      if (status === "complete") resolve(v); else if (status === "no_data") resolve(null); else reject(new Error("nearby"));
+    })), "nearby timeout");
+    const pois = (value?.poiList?.pois || []).filter((p) => p.location && !/公交/.test(p.type || ""));
+    pois.sort((a, b) => AMap.GeometryUtil.distance(center, a.location) - AMap.GeometryUtil.distance(center, b.location));
+    const best = pois[0] && AMap.GeometryUtil.distance(center, pois[0].location) <= 45 ? serialisePoi(pois[0]) : null;
+    if (best && id === discoveryId && selection === hotspotSequence) notify("poi-selection", {request_id: id, place: best});
+  } catch { /* a tap on empty ground is fine */ }
 }
 notify("frame-ready");
