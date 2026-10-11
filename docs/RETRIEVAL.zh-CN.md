@@ -33,3 +33,83 @@ uv run python scripts/knowledge_release.py embed-bootstrap --store data/cdut/rag
 - BM25 比旧 TF-IDF 的 MRR 从 0.866 提高到 0.941，召回不变。
 - 在这套题上，向量和混合检索**都没有超过 BM25**。原因是题目大多直接沿用片段标题和关键词，词面重合度很高，BM25 已接近上限（Recall@5 = 0.98）。这套题测不出语义检索在同义改写、口语化问法上的优势。
 - 没有调参；保留集只用于报告结果。要证明混合检索的价值，需要另建一套"口语化 / 同义改写"题，并由人工独立标注。
+
+## 口语化检索调参（2026-10-11，rag/02-tuning）
+
+- 测试集：`/workspace/cp-knowledge/eval-colloquial-20261011.jsonl`（99 题，6 题拒答；与仓库 `evaluation/colloquial-heldout-20261011` 同题）。只用于最终测量一次，未参与调参。
+- 开发集：`evaluation/dev-colloquial-20261011/cases.jsonl`（118 题 = 50 道依据知识库条目标题手写的口语问法 + 6 道库外拒答题 + `evaluation/colloquial-20261011` 64 题；按规范化文本去掉与测试集重复的 2 题），由 `build_dev.py` 生成。
+- 改动：
+  1. `stale=true` 的事实类条目，即使来源 `temporal_status=historical`，也保留为候选并降权（`STALE_WEIGHT=0.85`）；`historical/deprecated` 类条目、`superseded` 来源、超过 `valid_until` 的条目仍硬过滤。`excluded_from_retrieval` 条目在导入时即被丢弃，不进入快照与向量索引（新增回归测试）。
+  2. BM25 查询加口语→官方用语扩展（`bm25.SYNONYMS`，只追加不替换）。
+  3. 加权 RRF：`RRF_K=10`，权重（词法 1.0，向量 1.25）。
+- 复现：`uv run python evaluation/eval_colloquial.py --cases <file>`；开发集网格搜索：`uv run python evaluation/tune_dev.py`。报告见 `evaluation/reports/`。
+- 检索层不做拒答：向量相似度阈值 0.35–0.55 在开发集上无法区分库外问题，拒答依赖下游 agent 无答案判定。
+
+## 本地"无依据"拒答策略（2026-10-11，rag/03-local-refusal）
+
+实现 `rag.DecisionPolicy`：`retrieval/grounding.py`（`LocalGroundingPolicy` / `assess`），纯本地、确定性，不调用模型。
+
+- 片段判定为 grounded：查询向量余弦相似度 ≥ 0.60；或 ≥ 0.52 且 BM25 与向量两路排名都 ≤ 3（两路一致）。
+- 展示的前 4 条里没有 grounded 片段 → `insufficient`。没有查询向量（lexical 模式或嵌入服务故障）→ `unassessed`，保持旧行为。
+- 查询词覆盖率、RRF 融合分记录为信号但不参与判定：开发集上二者在相似度 + 两路一致之外没有额外区分度。
+- `search_knowledge` 每条 hit 带 `grounded`，结果带 `grounding.decision`；判为 `insufficient` 时片段不交给模型、不进入可引用集合。
+- Agent：模型返回 `empty` 或最终回答为"已发布资料中没有足够依据回答"时，不再回退展示 citations / excerpts；降级摘要 `_summary` 只用 grounded 片段，没有就给出无依据提示（`result_status=empty`）。
+
+### 运行模式 `CAMPUSPILOT_GROUNDING=off|flag|block`（默认 `flag`）
+
+测试集误拒 8.6% 偏高，决定先**只标记不拦截**：
+
+- `off`：不计算 grounding，行为与 rag/02-tuning 完全一致。
+- `flag`（默认）：计算并记录决定（日志 `grounding mode=… decision=…`、响应元数据 `grounding_check`：`mode` / `policy` / `decisions` / `grounded_chunk_ids` / `would_refuse`），但交给模型的工具结果、答案、citations、excerpts、`_summary` 与 `off` 相同。唯一例外：`result_status=empty`（如模型自己判定无依据）时不展示回退 citations / excerpts。
+- `block`：上文全部拦截行为（片段不交给模型、`_summary` 只用 grounded 片段、响应带 `grounding: "insufficient"`）。
+
+阈值只在开发集上选：`evaluation/dev-colloquial-20261011`（112 可答 + 6 拒答）+ `evaluation/refusal-20261011/dev.jsonl`（25 拒答）。
+选择规则：误拒率 ≤ 2% 的前提下拒答召回最高（扫描见 `evaluation/reports/refusal-dev.json`）。
+测试集只跑一次：`evaluation/colloquial-heldout-20261011`（99 题，只测不调）+ `evaluation/refusal-20261011/test.jsonl`（25 拒答）。
+
+| 集合 | 指标 | 之前（仅零命中拒答） | 之后 |
+|---|---|---|---|
+| dev | 拒答召回 | 0/31 | 16/31（51.6%） |
+| dev | 可答误拒 | 0/112 | 2/112（1.8%） |
+| test | 拒答召回 | 0/31 | 15/31（48.4%） |
+| test | 可答误拒 | 0/93 | 8/93（8.6%） |
+
+检索排序未改变：hybrid dev R@5 0.9643 / MRR@20 0.8163，test R@5 0.8925 / MRR@20 0.8178，与 rag/02-tuning 报告一致。
+
+已知局限：测试集误拒明显高于开发集，多为错别字（"辅道员""转专页""心里中心"）和长口语句，向量相似度偏低；"借了 X 但问 Y"类对抗问题（如"校园卡能在校外超市刷吗"）检索信号无法区分，需要后续相关性/充分性判断。
+
+`evaluation/refusal-20261011/` 的 50 题由 agent（Grok Bot）于 2026-10-11 撰写，模拟成理学生提问，非真实学生数据，未经人工复核（`label_status: authored_unreviewed`）。
+
+## 可选 Jev 插件（2026-10-11，rag/04-jev-plugin）
+
+进程内插件（不走 MCP）：`backend/src/campuspilot/jev_plugin.py`，复用 `jev_shadow.JevShadowClient`
+（OpenRouter `alpha/decisions`、`typesafe/jev-1.13`、3 秒超时、脱敏、注入过滤、严格校验、`EvaluationBudget`）。
+
+- 配置 `CAMPUSPILOT_JEV=off|shadow|on`，默认 `off`。启用时需要 `CAMPUSPILOT_JEV_API_KEY` 或 `CAMPUSPILOT_JEV_KEY_FILE`（仓库外绝对路径）、`CAMPUSPILOT_JEV_INPUT_USD_PER_MILLION` / `CAMPUSPILOT_JEV_OUTPUT_USD_PER_MILLION`、`CAMPUSPILOT_JEV_BUDGET_DIR`（$5 / 1000 次账本），可选 `CAMPUSPILOT_JEV_MODEL`。
+- 挂点：`_run_plan` 之后、`_answer` 之前，每轮一次请求，`JevReranker`（`rag.Reranker`，按 rank_i 0–2 期望分排序，< 0.5 视为 rank 0 丢弃）与 `JevSufficiencyPolicy`（`rag.DecisionPolicy`）共用结果。
+- 判定：`sufficient` 概率 ≥ 0.7 → sufficient；否则 answer_mode=clarify → clarify；≤ 0.3 → insufficient，但本地 grounding 为 grounded 且 Jev 自己仍保留了片段时视为分歧 → unknown。
+- `shadow`：与回答并行请求，只记录（日志 + 响应 `jev` 元数据），不改回答。`on`：重排/丢弃片段；insufficient → 无依据拒答，clarify → 请用户补充条件，均不展示引用；有办事/地点/老师等非知识库证据时不拒答。
+- 超时、错误、预算耗尽、unsure/unknown 一律 fail-open，走原流程。
+- `public_fixture` 限制只对 `online=True` 的在线路径放开；`public_input` 隐私检查、脱敏和注入过滤保留。
+- 四组对比评测：`evaluation/eval_jev_arms.py`（A 当前 / B 本地 block / C Jev shadow / D Jev on）。默认 `--jev fake` 离线；`--jev live` 需加 `--i-understand-this-is-paid`。尚未对真实 API 运行。
+
+### Jev 四组对比与校准（dev，2026-10-11）
+
+全量 dev（dev-colloquial 118 + refusal dev 25 = 143 题；可答 112 / 拒答 31），生成模型 deepseek-flash（thinking 关闭），未用留出测试集。汇总：`evaluation/reports/jev-arms-dev-20261011.json`。
+
+| 组 | 拒答召回 | 误拒 | 引用精度 | 延迟 p50/p95 (ms) | Jev unsure |
+|---|---|---|---|---|---|
+| A 当前 | 4/31 | 1/112 | 0.295 | 3079 / 4022 | – |
+| B 本地 block | 11/31 | 3/112 | 0.404 | 2957 / 4220 | – |
+| C Jev shadow | 3/31 | 0/112 | 0.293 | 3134 / 4058 | 101/119 |
+| D Jev on | 8/31 | 1/112 | 0.306 | 3360 / 4101 | 100/119 |
+
+校准（`evaluation/calibrate_jev.py`，离线、基于 C 组记录的原始 Jev 输出，不再调用 API）：去掉逐片段置信度门槛、`sufficient_at` 0.7→0.6 后，模拟 on 组拒答召回 8/31 → 15/31，误拒 2/112（1.8%），unsure 84.9% → 47.9%。新默认值写入 `jev_plugin.Calibration`。这是 dev 内选参，需在留出集上复核。
+
+## 路由与挂点修正（2026-10-11，rag/05-routing-hook-fixes）
+
+- 路由：找地点 / 路线问题若问的是地点的属性（几点、开放、营业、收费、电话、预约、规定等，`plan.asks_place_attribute`），计划在 `search_place` 之后加 `search_knowledge`；纯位置问题（"快递点在哪"）不变。
+- 挂点：模型在 `_answer` 工具循环里自己发起的 `search_knowledge` 也经过本地 grounding（原本就在 `_call` 中）和 Jev：`on` 丢弃 rank 0 片段、判 insufficient 时整次检索结果不交给模型（不进入可引用集合）；`shadow` 后台只记录；任何故障 fail-open。日志记录带 `phase: "answer"`。
+- 引用：`flag` / `block` 模式下，若答案有地点、老师或办事事项证据，而知识库命中未通过 grounding，则这些片段不作为 excerpts、其来源不作为兜底 citations；只保留模型引用的或通过 grounding 的。答案文本与模型引用不变；`off` 模式保持原行为。这只去掉无关的兜底引用，因此 `flag` 下也启用。
+
+dev 复测（rag/05，deepseek-flash 关思考，dev 118 + 拒答 dev 25，`evaluation/reports/jev-arms-dev-20261011-rag05.json`）：A 拒答召回 2/31、误拒 1/112；D（Jev on，现有默认）拒答召回 14/31、误拒 2/112（1.8%）。离线重新校准（A 的答案 + D 计划阶段的 Jev 原始输出）最好的点只把误拒降到 1/112、召回不变，unsure 从 50% 升到 69%；差异只有 1–2 题，且上一次 dev 校准在 held-out 上没有保持，所以默认值不变。

@@ -1,0 +1,118 @@
+{"case_id": "devK001", "question": "教务处管选课排课的办公室在哪", "chunk_ids": ["cdut:candidate-office:05", "cdut:chunk:aaooffices:01"], "topic": "academic_office", "source": "kb-derived"}
+{"case_id": "devK002", "question": "学籍科电话多少 想问学历注册", "chunk_ids": ["cdut:candidate-office:06", "cdut:chunk:aaooffices:02"], "topic": "academic_office", "source": "kb-derived"}
+{"case_id": "devK003", "question": "教材是在哪个科室领的", "chunk_ids": ["cdut:candidate-office:03", "cdut:chunk:aaooffices:05"], "topic": "academic_office", "source": "kb-derived"}
+{"case_id": "devK004", "question": "毕设和竞赛归哪个科管", "chunk_ids": ["cdut:candidate-office:04", "cdut:chunk:aaooffices:06"], "topic": "academic_office", "source": "kb-derived"}
+{"case_id": "devK005", "question": "贫困认定找学生处哪个办公室", "chunk_ids": ["cdut:candidate-office:09", "cdut:chunk:xscoffices:02"], "topic": "financial_aid", "source": "kb-derived"}
+{"case_id": "devK006", "question": "饭卡丢了咋冻结", "chunk_ids": ["cdut:chunk:card2024:02"], "topic": "campus_card", "source": "kb-derived"}
+{"case_id": "devK007", "question": "一卡通小程序怎么绑", "chunk_ids": ["cdut:chunk:card2024:01"], "topic": "campus_card", "source": "kb-derived"}
+{"case_id": "devK008", "question": "补卡要多少钱在哪补", "chunk_ids": ["cdut:chunk:card2024:03"], "topic": "campus_card", "source": "kb-derived"}
+{"case_id": "devK009", "question": "统一认证账号第一次咋激活", "chunk_ids": ["cdut:chunk:identity2021:01"], "topic": "campus_network", "source": "kb-derived"}
+{"case_id": "devK010", "question": "密码忘了登不上砚湖易办", "chunk_ids": ["cdut:chunk:identity2021:02"], "topic": "campus_network", "source": "kb-derived"}
+{"case_id": "devK011", "question": "换手机号了验证码收不到咋整", "chunk_ids": ["cdut:chunk:identity2021:03"], "topic": "campus_network", "source": "kb-derived"}
+{"case_id": "devK012", "question": "学校邮箱网址是啥", "chunk_ids": ["cdut:chunk:mail2022:01"], "topic": "campus_network", "source": "kb-derived"}
+{"case_id": "devK013", "question": "邮箱能用outlook收信不", "chunk_ids": ["cdut:chunk:mail2022:03"], "topic": "campus_network", "source": "kb-derived"}
+{"case_id": "devK014", "question": "宿舍连不上网 获取不到ip", "chunk_ids": ["cdut:chunk:netfaq2023:03"], "topic": "campus_network", "source": "kb-derived"}
+{"case_id": "devK015", "question": "校园网一个号能同时登几台设备", "chunk_ids": ["cdut:chunk:netfaq2023:02"], "topic": "campus_network", "source": "kb-derived"}
+{"case_id": "devK016", "question": "在家咋上知网 要挂vpn吗", "chunk_ids": ["cdut:chunk:libfaq:02", "cdut:chunk:winter2026:01"], "topic": "library", "source": "kb-derived"}
+{"case_id": "devK017", "question": "图书馆几点关门", "chunk_ids": ["cdut:chunk:libhours:01"], "topic": "library", "source": "kb-derived"}
+{"case_id": "devK019", "question": "书快到期了能续借吗", "chunk_ids": ["cdut:chunk:libfaq:01"], "topic": "library", "source": "kb-derived"}
+{"case_id": "devK020", "question": "图书馆有打印机吗 咋打印", "chunk_ids": ["cdut:chunk:libprint:bs01"], "topic": "campus_print", "source": "kb-derived"}
+{"case_id": "devK021", "question": "想换寝室找谁办", "chunk_ids": ["cdut:chunk:lyfwdorm:bs01"], "topic": "dorm", "source": "kb-derived"}
+{"case_id": "devK022", "question": "搬出去住要交啥材料", "chunk_ids": ["cdut:chunk:lyfwdorm:bs03"], "topic": "dorm", "source": "kb-derived"}
+{"case_id": "devK023", "question": "暑假想留校住怎么申请", "chunk_ids": ["cdut:chunk:lyfwdorm:bs05"], "topic": "dorm", "source": "kb-derived"}
+{"case_id": "devK024", "question": "寝室灯坏了去哪报修", "chunk_ids": ["cdut:chunk:lyfwdorm:bs06", "cdut:chunk:repair:01"], "topic": "dorm", "source": "kb-derived"}
+{"case_id": "devK025", "question": "宿舍没电了咋充电费", "chunk_ids": ["cdut:chunk:lyfwdorm:bs08", "cdut:chunk:cistfresh2025:bs13"], "topic": "dorm", "source": "kb-derived"}
+{"case_id": "devK026", "question": "考试那天发烧了能缓考吗", "chunk_ids": ["cdut:chunk:xjgl2019:08"], "topic": "academic_exam", "source": "kb-derived"}
+{"case_id": "devK027", "question": "挂科了补考还是重修", "chunk_ids": ["cdut:chunk:xjgl2019:08"], "topic": "academic_exam", "source": "kb-derived"}
+{"case_id": "devK028", "question": "优良中及格咋换算成分数", "chunk_ids": ["cdut:chunk:xjgl2019:07"], "topic": "academic_exam", "source": "kb-derived"}
+{"case_id": "devK029", "question": "体测不及格能毕业吗", "chunk_ids": ["cdut:chunk:xjgl2019:09", "cdut:chunk:xjgl2019:14"], "topic": "academic_graduation", "source": "kb-derived"}
+{"case_id": "devK030", "question": "拿不到学位证的情况有哪些", "chunk_ids": ["cdut:chunk:xjgl2019:14", "cdut:chunk:xjgl2019:15"], "topic": "academic_graduation", "source": "kb-derived"}
+{"case_id": "devK031", "question": "毕业证丢了能补吗", "chunk_ids": ["cdut:chunk:xjgl2019:16"], "topic": "academic_graduation", "source": "kb-derived"}
+{"case_id": "devK032", "question": "想休学一年去创业行不行", "chunk_ids": ["cdut:chunk:xjgl2019:12"], "topic": "academic_suspension", "source": "kb-derived"}
+{"case_id": "devK033", "question": "休学回来咋复学", "chunk_ids": ["cdut:chunk:xjgl2019:13"], "topic": "academic_suspension", "source": "kb-derived"}
+{"case_id": "devK034", "question": "大一能转专业吗 几次机会", "chunk_ids": ["cdut:chunk:xjgl2019:10"], "topic": "academic_transfer", "source": "kb-derived"}
+{"case_id": "devK035", "question": "四级过了英语课能免吗", "chunk_ids": ["cdut:chunk:xjgl2019:04"], "topic": "academic_course", "source": "kb-derived"}
+{"case_id": "devK036", "question": "这学期选课啥时候开始", "chunk_ids": ["cdut:chunk:select20262027:bs01"], "topic": "academic_course", "source": "kb-derived"}
+{"case_id": "devK037", "question": "勤工助学一个月给多少钱", "chunk_ids": ["cdut:chunk:cistwork2025:bs03"], "topic": "financial_aid", "source": "kb-derived"}
+{"case_id": "devK038", "question": "国励志奖学金大一能申请吗", "chunk_ids": ["cdut:chunk:mee2025grant:bs02"], "topic": "financial_aid", "source": "kb-derived"}
+{"case_id": "devK039", "question": "助学贷款毕业了要确认啥", "chunk_ids": ["cdut:chunk:loanconfirm2026:bs01"], "topic": "financial_aid", "source": "kb-derived"}
+{"case_id": "devK040", "question": "学费交不起能缓交吗", "chunk_ids": ["cdut:chunk:wx:fee20262027:03"], "topic": "financial_aid", "source": "kb-derived"}
+{"case_id": "devK041", "question": "学费发票去哪下载", "chunk_ids": ["cdut:chunk:wx:feeinvoice:01"], "topic": "financial_aid", "source": "kb-derived"}
+{"case_id": "devK042", "question": "校医院住院能报多少", "chunk_ids": ["cdut:chunk:medins2026:bs02"], "topic": "health_insurance", "source": "kb-derived"}
+{"case_id": "devK043", "question": "医保咋交 多少钱一年", "chunk_ids": ["cdut:chunk:medins2026:bs01"], "topic": "health_insurance", "source": "kb-derived"}
+{"case_id": "devK044", "question": "心理咨询怎么预约", "chunk_ids": ["cdut:chunk:psych2026:bs01"], "topic": "health_mental", "source": "kb-derived"}
+{"case_id": "devK045", "question": "校医院能做彩超吗", "chunk_ids": ["cdut:chunk:hospoverview:bs02"], "topic": "health_insurance", "source": "kb-derived"}
+{"case_id": "devK046", "question": "军训服要自己买吗多少钱", "chunk_ids": ["cdut:chunk:cistfresh2024:bs13", "cdut:chunk:cistfresh2025:bs12"], "topic": "freshman", "source": "kb-derived"}
+{"case_id": "devK047", "question": "新生户口要不要迁过来", "chunk_ids": ["cdut:chunk:cistfresh2025:bs04", "cdut:chunk:cistfresh2024:bs04"], "topic": "freshman", "source": "kb-derived"}
+{"case_id": "devK048", "question": "秋季双选会啥时候", "chunk_ids": ["cdut:chunk:wx:jobfair2027autumn:01"], "topic": "career", "source": "kb-derived"}
+{"case_id": "devK049", "question": "北森平台能模拟面试吗", "chunk_ids": ["cdut:chunk:wx:beisen:04", "cdut:chunk:wx:beisen:05"], "topic": "career", "source": "kb-derived"}
+{"case_id": "devK050", "question": "校团委有哪些学生组织可以加", "chunk_ids": ["cdut:chunk:wx:tworgs2026:01"], "topic": "clubs", "source": "kb-derived"}
+{"case_id": "devR001", "question": "食堂几点开饭", "chunk_ids": [], "topic": "no_answer", "source": "handwritten-refusal"}
+{"case_id": "devR002", "question": "校车时刻表有吗", "chunk_ids": [], "topic": "no_answer", "source": "handwritten-refusal"}
+{"case_id": "devR003", "question": "游泳馆怎么预约", "chunk_ids": [], "topic": "no_answer", "source": "handwritten-refusal"}
+{"case_id": "devR004", "question": "教师资格证在哪报名", "chunk_ids": [], "topic": "no_answer", "source": "handwritten-refusal"}
+{"case_id": "devR005", "question": "驾校报名有优惠吗", "chunk_ids": [], "topic": "no_answer", "source": "handwritten-refusal"}
+{"case_id": "devR006", "question": "考研自习室怎么申请", "chunk_ids": [], "topic": "no_answer", "source": "handwritten-refusal"}
+{"case_id": "devC-cq-001", "question": "四六级啥时候报名啊", "chunk_ids": ["cdut:chunk:cet2026h1:bs01", "cdut:chunk:cet2026h1:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-002", "question": "英语四级报名人满了咋办 先报先得吗", "chunk_ids": ["cdut:chunk:cet2026h1:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-003", "question": "六级笔试几号考", "chunk_ids": ["cdut:chunk:cet2026h1:bs02"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-004", "question": "cet口语考试时间", "chunk_ids": ["cdut:chunk:cet2026h1:bs02"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-005", "question": "大一新生几号报到", "chunk_ids": ["cdut:chunk:cistfresh2025:bs01"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-006", "question": "从火车北站咋去理工", "chunk_ids": ["cdut:chunk:cistfresh2025:bs02", "cdut:chunk:cistfresh2024:bs02"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-007", "question": "天府机场到学校怎么坐车", "chunk_ids": ["cdut:chunk:cistfresh2025:bs03", "cdut:chunk:cistfresh2024:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-008", "question": "东客站过来坐几号线", "chunk_ids": ["cdut:chunk:cistfresh2025:bs02", "cdut:chunk:cistfresh2024:bs02"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-009", "question": "户口要不要迁到学校 咋弄", "chunk_ids": ["cdut:chunk:cistfresh2025:bs04", "cdut:chunk:cistfresh2024:bs04"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-010", "question": "迁移证上有两个编号填哪个", "chunk_ids": ["cdut:chunk:cistfresh2025:bs05"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-011", "question": "团员关系怎么转过来", "chunk_ids": ["cdut:chunk:cistfresh2024:bs05"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-012", "question": "档案寄到哪里 地址是啥", "chunk_ids": ["cdut:chunk:cistfresh2025:bs06"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-013", "question": "新生体检要查啥", "chunk_ids": ["cdut:chunk:cistfresh2025:bs07", "cdut:chunk:cistfresh2024:bs07"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-014", "question": "学费怎么交 微信能交吗", "chunk_ids": ["cdut:chunk:cistfresh2025:bs08"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-015", "question": "贷款交学费的票据在哪打", "chunk_ids": ["cdut:chunk:cistfresh2025:bs09"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-016", "question": "生源地助学贷款要担保不", "chunk_ids": ["cdut:chunk:cistfresh2025:bs10"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-017", "question": "军训有啥要注意的", "chunk_ids": ["cdut:chunk:cistfresh2025:bs11"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-018", "question": "军训服要自己掏钱买吗", "chunk_ids": ["cdut:chunk:cistfresh2025:bs12", "cdut:chunk:cistfresh2024:bs13"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-019", "question": "寝室没电了怎么充", "chunk_ids": ["cdut:chunk:cistfresh2025:bs13", "cdut:chunk:cistfresh2024:bs14", "cdut:chunk:lyfwdorm:bs08"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-020", "question": "宿舍空调欠费断电了", "chunk_ids": ["cdut:chunk:cistfresh2025:bs13", "cdut:chunk:cistfresh2024:bs14"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-021", "question": "校医院能用医保吗", "chunk_ids": ["cdut:chunk:cistfresh2025:bs14", "cdut:chunk:hospoverview:bs01"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-022", "question": "门诊一年能报多少钱", "chunk_ids": ["cdut:chunk:cistfresh2025:bs15"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-023", "question": "在校医院住院报销多少", "chunk_ids": ["cdut:chunk:medins2026:bs02", "cdut:chunk:cistfresh2024:bs16"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-024", "question": "大学生医保怎么买", "chunk_ids": ["cdut:chunk:medins2026:bs01"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-025", "question": "休学了还能买医保吗", "chunk_ids": ["cdut:chunk:medins2026:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-026", "question": "建行卡一定要办吗 奖学金发哪", "chunk_ids": ["cdut:chunk:cistfresh2024:bs09"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-027", "question": "床上用品要不要网上订", "chunk_ids": ["cdut:chunk:cistfresh2024:bs12"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-028", "question": "英语分级考试啥时候", "chunk_ids": ["cdut:chunk:cistfresh2024:bs06"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-029", "question": "学院勤工俭学岗位咋申请", "chunk_ids": ["cdut:chunk:cistwork2025:bs01", "cdut:chunk:cistwork2025:bs02"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-030", "question": "勤工助学一个月多少钱", "chunk_ids": ["cdut:chunk:cistwork2025:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-031", "question": "研究生助管工资多少", "chunk_ids": ["cdut:chunk:cistwork2025:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-032", "question": "哪些社团被注销了", "chunk_ids": ["cdut:chunk:clubaudit2024:bs02"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-033", "question": "社团年审结果在哪看", "chunk_ids": ["cdut:chunk:clubaudit2024:bs01"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-034", "question": "毕业档案转递要审核啥", "chunk_ids": ["cdut:chunk:dagtransfer2023:bs01", "cdut:chunk:dagtransfer2023:bs02"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-035", "question": "校医院能做彩超不", "chunk_ids": ["cdut:chunk:hospoverview:bs02"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-036", "question": "图书馆能自助打成绩单吗", "chunk_ids": ["cdut:chunk:libprint:bs01"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-037", "question": "助学贷款毕业确认咋弄", "chunk_ids": ["cdut:chunk:loanconfirm2026:bs01", "cdut:chunk:loanconfirm2026:bs02"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-038", "question": "农信的助学贷款毕业确认", "chunk_ids": ["cdut:chunk:loanconfirm2026:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-039", "question": "考研了助学贷款还要确认吗", "chunk_ids": ["cdut:chunk:loanconfirm2026:bs04"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-040", "question": "想换寝室找谁", "chunk_ids": ["cdut:chunk:lyfwdorm:bs01"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-041", "question": "搬出去住校外要交啥材料", "chunk_ids": ["cdut:chunk:lyfwdorm:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-042", "question": "寒假留校要申请吗", "chunk_ids": ["cdut:chunk:lyfwdorm:bs05"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-043", "question": "宿舍东西坏了咋报修", "chunk_ids": ["cdut:chunk:lyfwdorm:bs06", "cdut:chunk:lyzn2023:bs10"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-044", "question": "没分到宿舍住宿费能退不", "chunk_ids": ["cdut:chunk:lyfwdorm:bs07"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-045", "question": "退寝室要去哪盖章", "chunk_ids": ["cdut:chunk:lyzn2023:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-046", "question": "公寓开水房几点开", "chunk_ids": ["cdut:chunk:lyzn2023:bs05"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-047", "question": "想借个教室开班会", "chunk_ids": ["cdut:chunk:lyzn2023:bs07"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-048", "question": "国家励志奖学金谁能申请", "chunk_ids": ["cdut:chunk:mee2025grant:bs02"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-049", "question": "国奖申请条件", "chunk_ids": ["cdut:chunk:mee2025grant:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-050", "question": "退役士兵助学金多少", "chunk_ids": ["cdut:chunk:mee2025grant:bs04"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-051", "question": "心里难受想找心理老师聊聊", "chunk_ids": ["cdut:chunk:psych2026:bs01"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-052", "question": "选课啥时候开始", "chunk_ids": ["cdut:chunk:select20262027:bs01"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-053", "question": "过了四级英语课还要选吗", "chunk_ids": ["cdut:chunk:select20262027:bs02", "cdut:chunk:xjgl2019:04"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-054", "question": "没选课能去上课吗", "chunk_ids": ["cdut:chunk:select20262027:bs02", "cdut:chunk:xjgl2019:03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-055", "question": "请假要走什么流程", "chunk_ids": ["cdut:chunk:xjgl2019:05"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-056", "question": "考试那天生病了能缓考吗", "chunk_ids": ["cdut:chunk:xjgl2019:08"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-057", "question": "挂科了能补考吗", "chunk_ids": ["cdut:chunk:xjgl2019:08"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-058", "question": "转专业有几次机会", "chunk_ids": ["cdut:chunk:xjgl2019:10"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-059", "question": "想休学一年咋办", "chunk_ids": ["cdut:chunk:xjgl2019:12"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-060", "question": "毕业证丢了能补不", "chunk_ids": ["cdut:chunk:xjgl2019:16"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-061", "question": "家庭困难认定怎么申请", "chunk_ids": ["cdut:chunk:zzzc:bs01", "cdut:chunk:zzzc:bs03"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-062", "question": "当兵回来学费能补偿吗", "chunk_ids": ["cdut:chunk:zzzc:bs04"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}
+{"case_id": "devC-cq-063", "question": "多滨老师邮箱多少", "chunk_ids": ["cdut:chunk:teacher:多滨"], "topic": "colloquial-20261011", "source": "evaluation/colloquial-20261011"}

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from typing import Any
@@ -24,8 +25,10 @@ from campuspilot.chat_runtime import ConversationContext, public_input
 from campuspilot.contracts import Contract
 from campuspilot.dify import ChatUnavailable
 from campuspilot.directory.repository import DirectoryRepository
+from campuspilot.jev_plugin import JevPlugin, JevReranker, JevSufficiencyPolicy
 from campuspilot.llm.chat_model import GroundedAnswer, ToolCallingModel
 from campuspilot.presentation import place_card, service_card
+from campuspilot.retrieval.grounding import GroundingMode
 from campuspilot.tools.base import ToolError, ToolRegistry
 
 MAX_TOOL_ROUNDS = 3
@@ -36,6 +39,9 @@ CHITCHAT_ANSWER = (
     "你好！我可以帮你查校园办事流程和材料、找老师办公室和地点、规划校内步行路线，"
     "或检索学校官方资料。请直接描述你要办的事。"
 )
+logger = logging.getLogger(__name__)
+NO_BASIS_ANSWER = "已发布资料中没有足够依据回答，请补充事项或查看官方资料。"
+JEV_CLARIFY_ANSWER = "已收录资料与问题不完全对应，请补充具体事项、身份或时间等条件后再问。"
 IDENTITY_QUESTION = "请问你是本科生、研究生还是教职工？不同身份的办理方式可能不同。"
 
 OCR_NOTE = "图片识别，请以原文为准"
@@ -81,6 +87,15 @@ class Evidence:
     hits: list[dict[str, JsonValue]] = field(default_factory=list)
     checklist: dict[str, JsonValue] | None = None
     citations: dict[str, dict[str, JsonValue]] = field(default_factory=dict)
+    # search_knowledge grounding decisions ("grounded" / "insufficient" / "unassessed").
+    grounding: list[str] = field(default_factory=list)
+    knowledge_sources: set[str] = field(default_factory=set)
+    # Per-search grounding records (policy, decision, grounded chunk ids) for the trace.
+    grounding_checks: list[dict[str, JsonValue]] = field(default_factory=list)
+    # Set while the model's own tool loop (_answer) runs: its knowledge searches get the
+    # same Jev check as planned ones.
+    question: str = ""
+    answering: bool = False
     emit: Emit | None = None
 
     async def notify(self, event: str, data: dict[str, JsonValue]) -> None:
@@ -89,6 +104,18 @@ class Evidence:
 
     def text(self) -> str:
         return json.dumps(self.results, ensure_ascii=False)
+
+    def grounded_hits(self) -> list[dict[str, JsonValue]]:
+        """Knowledge hits the grounding policy accepted (legacy rows carry no flag: kept)."""
+        return [h for h in self.hits if h.get("grounded", True) is not False]
+
+    def no_grounding(self) -> bool:
+        """Only knowledge was found, and every knowledge search was judged insufficient."""
+        return (
+            bool(self.grounding)
+            and all(d == "insufficient" for d in self.grounding)
+            and not (self.services or self.places or self.teachers or self.checklist)
+        )
 
 
 def _without_ocr(value: Any, ocr_texts: tuple[str, ...] = ()) -> Any:
@@ -119,6 +146,37 @@ def _collect_ids(value: Any, into: set[str]) -> None:
             _collect_ids(item, into)
 
 
+def _split_grounding(result: dict[str, Any]) -> tuple[dict[str, Any], dict[str, JsonValue]]:
+    """Flag mode: strip grounding fields so the model sees the pre-grounding payload."""
+    grounding = result.get("grounding")
+    record: dict[str, JsonValue] = dict(grounding) if isinstance(grounding, dict) else {}
+    hits = result.get("hits") or []
+    record["grounded_chunk_ids"] = [
+        str(h.get("chunk_id")) for h in hits if isinstance(h, dict) and h.get("grounded")
+    ]
+    clean_hits = [
+        {k: v for k, v in h.items() if k != "grounded"} if isinstance(h, dict) else h for h in hits
+    ]
+    clean = {k: v for k, v in result.items() if k != "grounding"}
+    if "hits" in result:
+        clean["hits"] = clean_hits
+    return clean, record
+
+
+def _apply_grounding(name: str, result: dict[str, Any]) -> dict[str, Any]:
+    """A knowledge search the grounding policy judged insufficient carries no evidence.
+
+    Its chunks never reach the model, the allowed citation set, excerpts or citations; the
+    model still sees an empty result and may call other tools or answer ``empty``.
+    """
+    grounding = result.get("grounding")
+    if name != "search_knowledge" or not isinstance(grounding, dict):
+        return result
+    if grounding.get("decision") != "insufficient" or not result.get("hits"):
+        return result
+    return {**result, "result_status": "empty", "answer": "", "hits": [], "withheld": True}
+
+
 class AgentRunner:
     def __init__(
         self,
@@ -126,7 +184,16 @@ class AgentRunner:
         repository: DirectoryRepository,
         model: ToolCallingModel | None,
         max_tool_rounds: int = MAX_TOOL_ROUNDS,
+        grounding: GroundingMode = "flag",
+        jev: JevPlugin | None = None,
+        trace: Callable[[str, dict[str, JsonValue]], None] | None = None,
     ) -> None:
+        self.grounding = grounding
+        self.jev = jev
+        # Decision records (grounding_check, jev) go to logs and this optional sink only;
+        # they are never part of the response sent to the frontend.
+        self.trace = trace
+        self._background: set[asyncio.Task[Any]] = set()
         self.registry = registry
         self.repository = repository
         self.model = model
@@ -201,12 +268,96 @@ class AgentRunner:
         except ToolError as exc:
             await ev.notify("tool_end", {"tool": name, "label": label, "status": exc.code})
             return exc.code
+        meta: Any = result.get("grounding")
+        if name == "search_knowledge" and isinstance(meta, dict):
+            if self.grounding == "block":
+                record: dict[str, JsonValue] = dict(meta)
+                hits: Any = result.get("hits") or []
+                record["grounded_chunk_ids"] = [
+                    str(h.get("chunk_id"))
+                    for h in hits
+                    if isinstance(h, dict) and h.get("grounded")
+                ]
+                result = _apply_grounding(name, result)
+            else:
+                result, record = _split_grounding(result)
+            if not result.get("hits"):
+                record["decision"] = "insufficient"
+            ev.grounding_checks.append(record)
+            logger.info(
+                "grounding mode=%s decision=%s grounded=%d",
+                self.grounding,
+                record.get("decision"),
+                len(record.get("grounded_chunk_ids") or []),  # type: ignore[arg-type]
+            )
+            if ev.answering and result.get("hits"):
+                result = await self._jev_in_loop(result, ev, str(record.get("decision")))
         status = str(result.get("status") or result.get("result_status") or "success")
         await ev.notify("tool_end", {"tool": name, "label": label, "status": status})
         ev.results.append({"tool": name, "result": result})
         _collect_ids(result, ev.allowed)
         self._absorb(name, result, ev)
         return status
+
+    async def _jev_in_loop(
+        self, result: dict[str, Any], ev: Evidence, local: str
+    ) -> dict[str, Any]:
+        """Jev on a knowledge search the model asked for inside _answer (fail-open).
+
+        on: rank-0 chunks are dropped and an insufficient search is withheld, before the
+        result reaches the model or the allowed citation set. shadow: recorded only.
+        """
+        jev = self.jev
+        if jev is None or jev.mode == "off":
+            return result
+        candidates = jev.resolve(result.get("hits") or [])
+        if not candidates:
+            return result
+        turn = jev.turn()
+        local = {"grounded": "grounded", "insufficient": "insufficient"}.get(local, "unassessed")
+        if jev.mode == "shadow":
+            task = asyncio.create_task(turn.assess(ev.question, candidates, local))
+            self._background.add(task)
+
+            def done(t: asyncio.Task[Any]) -> None:
+                self._background.discard(t)
+                if not t.cancelled() and t.exception() is None:
+                    self._trace("jev", {**t.result().record("shadow"), "phase": "answer"})
+
+            task.add_done_callback(done)
+            return result
+        assessment = await turn.assess(ev.question, candidates, local)
+        applied = "none"
+        if assessment.usable and (
+            assessment.decision == "insufficient" or not assessment.ranked_ids
+        ):
+            # Insufficient, or every chunk scored rank 0: nothing here may be cited.
+            result = {
+                **result,
+                "result_status": "empty",
+                "answer": "",
+                "hits": [],
+                "withheld": True,
+            }
+            applied = "withhold"
+        elif assessment.usable and assessment.ranked_ids:
+            order = {cid: i for i, cid in enumerate(assessment.ranked_ids)}
+            hits = sorted(
+                (h for h in result.get("hits") or [] if h.get("chunk_id") in order),
+                key=lambda h: order[str(h.get("chunk_id"))],
+            )
+            if [h.get("chunk_id") for h in hits] != [
+                h.get("chunk_id") for h in result.get("hits") or []
+            ]:
+                applied = "rerank"
+            result = {
+                **result,
+                "hits": hits,
+                "answer": "\n".join(str(h.get("text")) for h in hits[:3]),
+                "result_status": "success" if hits else "empty",
+            }
+        self._trace("jev", {**assessment.record("on", applied), "phase": "answer"})
+        return result
 
     def _absorb(self, name: str, result: dict[str, Any], ev: Evidence) -> None:
         if name == "search_service":
@@ -235,9 +386,16 @@ class AgentRunner:
                         if teacher.place_id and (p := self.repository.find_place(teacher.place_id)):
                             ev.places[p.place_id] = p
         elif name == "search_knowledge":
+            grounding = result.get("grounding")
+            decision = grounding.get("decision") if isinstance(grounding, dict) else None
+            if self.grounding == "block":
+                if not result.get("hits"):
+                    decision = "insufficient"
+                ev.grounding.append(str(decision or "unassessed"))
             for row in result.get("hits") or []:
                 if isinstance(row, dict):
                     ev.hits.append(row)
+                    ev.knowledge_sources.add(str(row.get("source_id")))
                     ev.citations[str(row.get("source_id"))] = {
                         "id": row.get("source_id"),
                         "title": row.get("source_title"),
@@ -267,7 +425,10 @@ class AgentRunner:
                     }
         elif name == "make_checklist" and result.get("status") == "success":
             ev.checklist = result
-        for row in result.get("evidence") or []:
+        # search_place/search_service return "evidence"; list_places returns the same
+        # records under "sources". Both are non-knowledge citations.
+        evidence_rows = [*(result.get("evidence") or []), *(result.get("sources") or [])]
+        for row in evidence_rows if name != "search_knowledge" else result.get("evidence") or []:
             if isinstance(row, dict) and row.get("evidence_id"):
                 ev.citations.setdefault(
                     str(row["evidence_id"]),
@@ -417,8 +578,12 @@ class AgentRunner:
             )
         return actions[:6]
 
+    def _shown_hits(self, ev: Evidence) -> list[dict[str, JsonValue]]:
+        """Hits eligible for summary/excerpts: grounding-filtered only in block mode."""
+        return ev.grounded_hits() if self.grounding == "block" else ev.hits
+
     def _summary(self, ev: Evidence) -> str:
-        lines = [f"{h.get('title')}：{h.get('text')}" for h in ev.hits[:3]]
+        lines = [f"{h.get('title')}：{h.get('text')}" for h in self._shown_hits(ev)[:3]]
         for service in list(ev.services.values())[:1]:
             lines.insert(
                 0, f"{service.name}：" + "；".join(s.instruction for s in service.steps[:2])
@@ -428,7 +593,7 @@ class AgentRunner:
         if ev.teachers and not lines:
             lines = [f"已找到：{'、'.join(t.name for t in list(ev.teachers.values())[:4])}"]
         if not lines:
-            return "已发布资料中没有足够依据回答，请补充事项或查看官方资料。"
+            return NO_BASIS_ANSWER
         return "暂时只能提供已收录的资料摘要：\n" + "\n".join(lines)
 
     def _response(
@@ -443,6 +608,7 @@ class AgentRunner:
         cited: tuple[str, ...] = (),
         degraded: str = "",
         mode: str = "agent",
+        show_sources: bool = True,
     ) -> dict[str, JsonValue]:
         excerpts: list[JsonValue] = [
             {
@@ -452,11 +618,29 @@ class AgentRunner:
                 "chunk_id": h.get("chunk_id"),
                 "source_url": h.get("url"),
             }
-            for h in ev.hits[:4]
+            for h in self._shown_hits(ev)[:4]
         ]
-        citations = [ev.citations[c] for c in cited if c in ev.citations] or list(
-            ev.citations.values()
-        )[:6]
+        citations = [ev.citations[c] for c in cited if c in ev.citations]
+        if self.grounding != "block":
+            # off / flag: pre-grounding behaviour (fallback to every citation), except that
+            # an "empty" answer (e.g. the model found no basis) shows no unrelated sources.
+            if status == "empty":
+                excerpts, citations = [], []
+            elif not citations:
+                citations = list(ev.citations.values())[:6]
+            excerpts, citations = self._drop_ungrounded(ev, excerpts, citations, cited)
+        elif status == "empty" or answer == NO_BASIS_ANSWER:
+            # An honest refusal shows no excerpts or citations of chunks it did not use.
+            excerpts, citations = [], []
+        elif not citations and status == "limited":
+            # Summary fallback: only sources of hits that passed the grounding policy,
+            # plus non-knowledge evidence (services, teachers).
+            shown = {str(h.get("source_id")) for h in ev.grounded_hits()}
+            citations = [
+                c for k, c in ev.citations.items() if k not in ev.knowledge_sources or k in shown
+            ][:6]
+        if not show_sources:
+            excerpts, citations = [], []
         if (
             answer
             and status in {"success", "limited"}
@@ -483,7 +667,77 @@ class AgentRunner:
         }
         if degraded:
             body["degraded_reason"] = degraded
+        if self.grounding == "block" and ev.no_grounding():
+            body["grounding"] = "insufficient"
+        if self.grounding != "off" and ev.grounding_checks:
+            decisions = [str(c.get("decision")) for c in ev.grounding_checks]
+            other = bool(ev.services or ev.places or ev.teachers or ev.checklist)
+            self._trace(
+                "grounding_check",
+                {
+                    "mode": self.grounding,
+                    "policy": ev.grounding_checks[0].get("policy"),
+                    "decisions": list(decisions),
+                    "grounded_chunk_ids": sorted(  # type: ignore[dict-item]
+                        {
+                            str(i)
+                            for c in ev.grounding_checks
+                            for i in c.get("grounded_chunk_ids") or []  # type: ignore[union-attr]
+                        }
+                    ),
+                    # Whether block mode would have answered with the no-basis refusal.
+                    "would_refuse": all(d == "insufficient" for d in decisions) and not other,
+                },
+            )
         return body
+
+    def _drop_ungrounded(
+        self,
+        ev: Evidence,
+        excerpts: list[JsonValue],
+        citations: list[dict[str, JsonValue]],
+        cited: tuple[str, ...],
+    ) -> tuple[list[JsonValue], list[dict[str, JsonValue]]]:
+        """flag/shadow: when place/teacher/service evidence carries the answer, knowledge
+        hits the grounding check rejected are not shown as excerpts or fallback citations.
+
+        Only what the model cited or what passed the grounding check stays. Answer text and
+        model citations are unchanged; off mode (no grounding check) is unaffected.
+        """
+        if self.grounding == "off" or not ev.grounding_checks:
+            return excerpts, citations
+        if not (ev.services or ev.places or ev.teachers):
+            return excerpts, citations
+        grounded = {
+            str(i)
+            for c in ev.grounding_checks
+            for i in c.get("grounded_chunk_ids") or []  # type: ignore[union-attr]
+        }
+        keep_sources = set(cited) | {
+            str(h.get("source_id")) for h in ev.hits if str(h.get("chunk_id")) in grounded
+        }
+        excerpts = [
+            e
+            for e in excerpts
+            if isinstance(e, dict)
+            and (str(e.get("chunk_id")) in grounded or str(e.get("source_id")) in set(cited))
+        ]
+        citations = [
+            c
+            for c in citations
+            if str(c.get("id")) not in ev.knowledge_sources or str(c.get("id")) in keep_sources
+        ]
+        return excerpts, citations
+
+    def _trace(self, kind: str, record: dict[str, JsonValue]) -> None:
+        logger.info("%s %s", kind, json.dumps(record, ensure_ascii=False, sort_keys=True))
+        if self.trace is not None:
+            self.trace(kind, record)
+
+    async def drain(self) -> None:
+        """Wait for background shadow evaluations (tests, eval scripts, shutdown)."""
+        while self._background:
+            await asyncio.gather(*tuple(self._background), return_exceptions=True)
 
     async def run(
         self, question: str, context: ConversationContext, emit: Emit | None = None
@@ -567,7 +821,121 @@ class AgentRunner:
             {"steps": [{"step": s.step, "tool": s.tool, "label": s.label} for s in plan.steps]},
         )
         steps = await self._run_plan(plan, ev)
+        return await self._with_jev(question, view, context, ev, plan, steps)
+
+    # -- optional Jev plugin (CAMPUSPILOT_JEV) -------------------------------------------
+
+    def _local_grounding(self, ev: Evidence) -> str:
+        decisions = [str(c.get("decision")) for c in ev.grounding_checks]
+        if any(d == "grounded" for d in decisions):
+            return "grounded"
+        if decisions and all(d == "insufficient" for d in decisions):
+            return "insufficient"
+        return "unassessed"
+
+    def _apply_rerank(self, ev: Evidence, kept: tuple[str, ...]) -> None:
+        """Keep only `kept` knowledge chunks, in that order, everywhere evidence is read."""
+        order = {cid: i for i, cid in enumerate(kept)}
+
+        def rerank(rows: Any) -> list[Any]:
+            rows = [r for r in rows or [] if isinstance(r, dict) and r.get("chunk_id") in order]
+            return sorted(rows, key=lambda r: order[str(r.get("chunk_id"))])
+
+        ev.hits = rerank(ev.hits)
+        for entry in ev.results:
+            result = entry.get("result")
+            if entry.get("tool") == "search_knowledge" and isinstance(result, dict):
+                hits = rerank(result.get("hits"))
+                entry["result"] = {
+                    **result,
+                    "hits": hits,
+                    "answer": "\n".join(str(h.get("text")) for h in hits[:3]),
+                    "result_status": "success" if hits else "empty",
+                }
+        ev.allowed = set()
+        for entry in ev.results:
+            _collect_ids(entry.get("result"), ev.allowed)
+        sources = {str(h.get("source_id")) for h in ev.hits}
+        for source_id in ev.knowledge_sources - sources:
+            ev.citations.pop(source_id, None)
+        ev.knowledge_sources &= sources
+
+    async def _with_jev(
+        self,
+        question: str,
+        view: Understanding,
+        context: ConversationContext,
+        ev: Evidence,
+        plan: Plan,
+        steps: list[StepRecord],
+    ) -> dict[str, JsonValue]:
+        """Hook between _run_plan and _answer. Every Jev fault falls back to the plain flow."""
+        jev = self.jev
+        candidates = jev.resolve(ev.hits) if jev is not None and jev.mode != "off" else ()
+        if jev is None or not candidates:
+            return await self._compose(question, view, context, ev, plan, steps)
+        turn = jev.turn()
+        local = self._local_grounding(ev)
+        if jev.mode == "shadow":
+            # Background: recorded only, never changes or delays the response.
+            other = bool(ev.services or ev.places or ev.teachers or ev.checklist)
+            task = asyncio.create_task(turn.assess(question, candidates, local))
+            self._background.add(task)
+
+            def done(t: asyncio.Task[Any]) -> None:
+                self._background.discard(t)
+                if not t.cancelled() and t.exception() is None:
+                    self._trace("jev", {**t.result().record("shadow"), "other_evidence": other})
+
+            task.add_done_callback(done)
+            return await self._compose(question, view, context, ev, plan, steps)
+        decision = await JevSufficiencyPolicy(turn, local).decide(question, candidates)
+        assessment = await turn.assess(question, candidates, local)  # cached: one request
+        other = bool(ev.services or ev.places or ev.teachers or ev.checklist)
+        if assessment.usable and not other and decision in {"insufficient", "clarify"}:
+            refuse = decision == "insufficient"
+            body = self._response(
+                answer=NO_BASIS_ANSWER if refuse else JEV_CLARIFY_ANSWER,
+                status="empty" if refuse else "needs_clarification",
+                view=view,
+                plan=plan,
+                steps=steps,
+                ev=ev,
+                mode="agent_jev",
+                show_sources=False,
+            )
+            self._trace(
+                "jev",
+                {
+                    **assessment.record("on", "refuse" if refuse else "clarify"),
+                    "other_evidence": other,
+                },
+            )
+            return body
+        applied = "none"
+        if assessment.usable and not assessment.ranked_ids:
+            self._apply_rerank(ev, ())  # every chunk rank 0: none may be cited
+            applied = "drop_all"
+        elif assessment.usable and assessment.ranked_ids:
+            kept = await JevReranker(turn, local).rank(question, candidates, len(candidates))
+            if kept != assessment.original_ids:
+                self._apply_rerank(ev, kept)
+                applied = "rerank"
+        body = await self._compose(question, view, context, ev, plan, steps)
+        self._trace("jev", {**assessment.record("on", applied), "other_evidence": other})
+        return body
+
+    async def _compose(
+        self,
+        question: str,
+        view: Understanding,
+        context: ConversationContext,
+        ev: Evidence,
+        plan: Plan,
+        steps: list[StepRecord],
+    ) -> dict[str, JsonValue]:
         await ev.notify("composing", {"label": "组织答案并核对引用"})
+        ev.question, ev.answering = question, True
         reply, failure, _ = await self._answer(question, view, context, ev)
         if reply is not None:
             # Checklist item keys (e.g. "limit-3") are local UI keys, not evidence; models
@@ -603,9 +971,14 @@ class AgentRunner:
                     ev=ev,
                     cited=reply.source_ids,
                 )
+        summary = self._summary(ev)
         return self._response(
-            answer=self._summary(ev),
-            status="limited" if ev.results else "empty",
+            answer=summary,
+            status=(
+                "limited"
+                if ev.results and (self.grounding != "block" or summary != NO_BASIS_ANSWER)
+                else "empty"
+            ),
             view=view,
             plan=plan,
             steps=steps,
