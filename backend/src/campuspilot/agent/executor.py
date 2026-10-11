@@ -425,7 +425,10 @@ class AgentRunner:
                     }
         elif name == "make_checklist" and result.get("status") == "success":
             ev.checklist = result
-        for row in result.get("evidence") or []:
+        # search_place/search_service return "evidence"; list_places returns the same
+        # records under "sources". Both are non-knowledge citations.
+        evidence_rows = [*(result.get("evidence") or []), *(result.get("sources") or [])]
+        for row in evidence_rows if name != "search_knowledge" else result.get("evidence") or []:
             if isinstance(row, dict) and row.get("evidence_id"):
                 ev.citations.setdefault(
                     str(row["evidence_id"]),

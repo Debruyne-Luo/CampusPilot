@@ -130,3 +130,39 @@ def test_on_mode_withholds_in_loop_search_when_every_chunk_is_rank_zero(tmp_path
     (payload,) = knowledge_payload(model)
     assert payload["hits"] == [] and out["jev"]["applied"] == "withhold"
     assert out["excerpts"] == [] and MAIL.source_id not in [c["id"] for c in out["citations"]]
+
+
+def test_withheld_knowledge_keeps_list_places_citations(tmp_path: Path) -> None:
+    """Root cause of empty citations for 学校快递点在哪 (on mode): the model's list_places
+    call returns its evidence under "sources", which was never registered as citations;
+    withholding the knowledge search then left nothing to cite."""
+    model = FakeLLM(
+        PLACE,
+        Completion(
+            tool_calls=(
+                ToolCall(call_id="p", name="list_places", arguments='{"query":"图书馆"}'),
+                ToolCall(call_id="k", name="search_knowledge", arguments='{"query":"图书馆"}'),
+            )
+        ),
+        say({"answer": "资料里有图书馆地点。", "source_ids": [], "status": "success"}),
+    )
+    fake = FakeJev(sufficient=0.03, mode="clarify")
+    out = run_jev(jev_runner(OFF_TOPIC, model, fake, "on", tmp_path), "东区图书馆在哪")
+    assert out["jev"]["applied"] == "withhold"
+    assert out["result_status"] != "needs_clarification" and out["answer_mode"] != "agent_jev"
+    assert out["citations"] and all(c["id"] != MAIL.source_id for c in out["citations"])
+    assert out["excerpts"] == []
+
+
+def test_list_places_sources_become_citations(tmp_path: Path) -> None:
+    from campuspilot.agent.executor import Evidence
+
+    agent = jev_runner(OFF_TOPIC, FakeLLM(), FakeJev(), "on", tmp_path)
+    ev = Evidence()
+    agent._absorb(
+        "list_places",
+        {"places": [], "sources": [{"evidence_id": "cdut:evidence:x", "source_reference": "图"}]},
+        ev,
+    )
+    assert ev.citations["cdut:evidence:x"]["title"] == "图"
+    assert "cdut:evidence:x" not in ev.knowledge_sources
