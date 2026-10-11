@@ -66,3 +66,20 @@ def verify_answer(
     if premise_evidence and missing_premise(answer, premise_evidence):
         return "required_premise_missing"
     return None
+
+
+AMOUNT = re.compile(r"(\d[\d,]*(?:\.\d+)?)\s*元")
+
+
+def _amounts(text: str) -> set[str]:
+    out = set()
+    for raw in AMOUNT.findall(text):
+        value = raw.replace(",", "")
+        out.add(value[:-3] if value.endswith(".00") else value)
+    return out
+
+
+def ocr_example_amount(answer: str, ocr_text: str, other_text: str) -> bool:
+    """Amounts found only in OCR'd example screenshots (2020-2021) must not reach the answer."""
+    from_ocr = _amounts(answer) & _amounts(ocr_text)
+    return bool(from_ocr - _amounts(other_text))

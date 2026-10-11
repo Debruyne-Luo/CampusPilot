@@ -70,6 +70,8 @@ class RagChunk(Contract):
     enabled: bool = True
     # Source flagged as possibly out of date: down-weighted and cited with a warning.
     stale: bool = False
+    # Text recognised from an official image (screenshot); cited with "图片识别，请以原文为准".
+    ocr: bool = False
 
     @model_validator(mode="after")
     def approved_content(self) -> Self:
@@ -118,8 +120,9 @@ class KnowledgeSnapshot(Contract):
 def snapshot_body(body: dict[str, Any]) -> dict[str, Any]:
     """Hash body; optional fields at their default are omitted so older versions keep IDs."""
     for chunk in body["chunks"]:
-        if chunk.get("stale") is False:
-            del chunk["stale"]
+        for flag in ("stale", "ocr"):
+            if chunk.get(flag) is False:
+                del chunk[flag]
     return body
 
 
@@ -209,7 +212,7 @@ class SnapshotStore:
         self.root = root
         # Optional in-repo approved candidate (e.g. "approved-20261011") replacing bootstrap.json
         # when no live pointer is published; snapshot.json + vectors.sqlite in that directory.
-        if bundled and not re.fullmatch(r"approved-\d{8}", bundled):
+        if bundled and not re.fullmatch(r"approved-\d{8}[a-z]?", bundled):
             raise ValueError("Invalid bundled knowledge name")
         self.bundled = bundled
         self.retrieval_mode = retrieval_mode

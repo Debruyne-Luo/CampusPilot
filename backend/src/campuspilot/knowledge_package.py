@@ -18,6 +18,15 @@ from typing import Any
 from campuspilot.rag import KnowledgeSnapshot, RagChunk, RagSource, canonical, digest, make_snapshot
 
 PACKAGE_FILES = ("sources.json", "chunks.jsonl", "teachers_merged.json", "teacher_conflicts.json")
+TEACHER_FILES = ("teachers_merged.json", "teacher_conflicts.json")
+UNREADABLE = re.compile(r"[^，。；;\n]*\[无法识别\][^，。；;\n]*[，。；;]?")
+
+
+def drop_unreadable(text: str) -> str:
+    """OCR placeholders are never surfaced: the clause holding one is removed entirely."""
+    return re.sub(r"\n{3,}", "\n\n", UNREADABLE.sub("", text)).strip()
+
+
 TEMPORAL = {"current": "current", "historical": "historical", "superseded": "superseded"}
 STALE_STATUSES = {"expired", "possibly_stale"}
 PHONE = re.compile(r"(?<![\w/.-])(?:1[3-9]\d{9}|0\d{2,3}-?\d{7,8}|\d{8})(?![\w/.-])")
@@ -104,7 +113,9 @@ def resolve_conflicts(conflicts: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def build(
     package: Path, base: KnowledgeSnapshot, approval: dict[str, Any]
 ) -> tuple[KnowledgeSnapshot, dict[str, bytes], dict[str, Any]]:
-    files = {name: _read(package, name) for name in PACKAGE_FILES}
+    """Teacher files are optional (the WeChat package has none)."""
+    names = [n for n in PACKAGE_FILES if n not in TEACHER_FILES or (package / n).exists()]
+    files = {name: _read(package, name) for name in names}
     approval_id, reviewer = approval["approval_id"], approval["reviewer"]
     approved_at = date.fromisoformat(approval["approved_at"])
     raw_sources = json.loads(files["sources.json"])
@@ -124,7 +135,7 @@ def build(
         )
         for s in raw_sources
     ]
-    roster = teacher_roster(json.loads(files["teachers_merged.json"]))
+    roster = teacher_roster(json.loads(files.get("teachers_merged.json", b"[]")))
     teacher_by_chunk = {t["chunk_id"]: t for t in roster}
     for c in raw_chunks:
         if c["chunk_id"] in teacher_by_chunk:
@@ -144,6 +155,9 @@ def build(
             text, kind = teacher_text(teacher_by_chunk[c["chunk_id"]]), "fact"
         elif digest(text.encode()) != c["text_sha256"]:
             raise ValueError("Package chunk hash mismatch")
+        ocr = bool(c.get("ocr")) or kind == "official_image_ocr"
+        if ocr:
+            text = drop_unreadable(text)
         stale = bool(
             c.get("stale_source")
             or source.get("stale")
@@ -167,20 +181,22 @@ def build(
                 approval_id=approval_id,
                 audiences=tuple(audiences(source.get("applicability") or "")),
                 stale=stale,
+                ocr=ocr,
                 **review,
             )
         )
     snapshot = make_snapshot(
         (*base.sources, *sources),
         (*base.chunks, *chunks),
-        digest(b"".join(digest(files[n]).encode() for n in PACKAGE_FILES)),
+        digest(b"".join(digest(files[n]).encode() for n in names)),
     )
-    conflicts = resolve_conflicts(json.loads(files["teacher_conflicts.json"]))
-    raw = {f"package/{n}": files[n] for n in PACKAGE_FILES}
-    raw["package/teachers_roster.json"] = canonical(roster)
-    raw["package/teacher_conflicts_resolved.json"] = canonical(conflicts)
+    conflicts = resolve_conflicts(json.loads(files.get("teacher_conflicts.json", b"[]")))
+    raw = {f"package/{n}": files[n] for n in names}
+    if roster:
+        raw["package/teachers_roster.json"] = canonical(roster)
+        raw["package/teacher_conflicts_resolved.json"] = canonical(conflicts)
     raw["APPROVAL_RECORD.json"] = canonical(
-        {**approval, "file_sha256": {n: digest(files[n]) for n in PACKAGE_FILES}}
+        {**approval, "file_sha256": {n: digest(files[n]) for n in names}}
     )
     report = {
         "sources": len(sources),
@@ -189,6 +205,7 @@ def build(
         "stale_chunks": stale_ids,
         "teachers": len(roster),
         "conflicts": len(conflicts),
+        "ocr_chunks": sum(c.ocr for c in chunks),
         "base_version": base.version,
         "version": snapshot.version,
     }
