@@ -51,7 +51,11 @@ def make_plan(view: Understanding, question: str) -> Plan:
         ]
         map_action = "show_place"
     elif view.intent == "找人":
-        raw = [("search_teacher", "查找老师", {"query": _query(slots.destination, question)}, None)]
+        who = _query(slots.destination, question)
+        raw = [
+            ("search_teacher", "查找老师", {"query": who}, None),
+            ("find_teacher", "查教师名录", {"query": who[:40]}, None),
+        ]
         map_action = "show_place"
     elif view.intent in {"找地点", "路线"}:
         raw = [("search_place", "查找地点", {"query": _query(slots.destination, question)}, None)]

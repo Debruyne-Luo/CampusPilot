@@ -7,6 +7,7 @@ imported lazily to avoid import cycles with campuspilot.directory.
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from campuspilot.tools.base import Tool, ToolError, ToolRegistry, tool_schema
@@ -60,9 +61,14 @@ def agent_registry(
     store: KnowledgeStore,
     snapshots: SnapshotStore | None = None,
     embedder: CloudflareEmbedder | None = None,
+    roster: Path | None = None,
 ) -> ToolRegistry:
-    """default_registry plus make_checklist: the agent loop's tool whitelist."""
+    """Agent whitelist: default_registry + make_checklist (+ find_teacher given a roster)."""
     from campuspilot.tools.checklist import ChecklistTool
+    from campuspilot.tools.teachers import FindTeacherTool
 
     base = default_registry(repository, store, snapshots, embedder)
-    return ToolRegistry((*base.tools, ChecklistTool(repository)))
+    extra: list[Tool] = [ChecklistTool(repository)]
+    if roster is not None and (finder := FindTeacherTool.load(roster)) is not None:
+        extra.append(finder)
+    return ToolRegistry((*base.tools, *extra))

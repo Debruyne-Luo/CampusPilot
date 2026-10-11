@@ -48,6 +48,8 @@ class Settings:
     embedding_model: str = "@cf/baai/bge-m3"
     embedding_timeout: float = 2.5
     agent_loop: bool = False
+    # In-repo approved knowledge bundle used instead of bootstrap.json (e.g. approved-20261011).
+    knowledge_bundle: str = ""
 
     @property
     def embeddings_configured(self) -> bool:
@@ -74,4 +76,5 @@ class Settings:
             embedding_model=env.get("CAMPUSPILOT_EMBEDDING_MODEL", "@cf/baai/bge-m3"),
             embedding_timeout=float(env.get("CAMPUSPILOT_EMBEDDING_TIMEOUT", "2.5")),
             agent_loop=env.get("CAMPUSPILOT_AGENT_LOOP", "off") == "on",
+            knowledge_bundle=env.get("CAMPUSPILOT_KNOWLEDGE_BUNDLE", ""),
         )

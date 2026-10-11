@@ -16,6 +16,7 @@ from campuspilot.knowledge_release import (
     import_approved_archive,
     preview,
     publish,
+    read_candidate,
     rollback,
     sidecar_template,
     write_candidate,
@@ -53,6 +54,11 @@ def main() -> None:
     embed.add_argument("--candidate", type=Path, required=True)
     bootstrap = sub.add_parser("embed-bootstrap", help="index for the bootstrap snapshot")
     bootstrap.add_argument("--store", type=Path, required=True)
+    package = sub.add_parser("import-package", help="reviewed package dir -> candidate")
+    package.add_argument("--package", type=Path, required=True)
+    package.add_argument("--base", type=Path, required=True, help="base candidate dir or JSON")
+    package.add_argument("--approval", type=Path, required=True, help="approval record JSON")
+    package.add_argument("--output", type=Path, required=True)
     back = sub.add_parser("rollback")
     back.add_argument("--store", type=Path, required=True)
     back.add_argument("--version", required=True)
@@ -65,6 +71,25 @@ def main() -> None:
             result: object = {
                 "candidate_version": snapshot.version,
                 "chunks": len(snapshot.chunks),
+                "published": False,
+            }
+        elif args.command == "import-package":
+            from campuspilot.knowledge_package import build
+
+            approval = json.loads(args.approval.read_bytes())
+            if approval.get("status") != "approved_by_product_owner":
+                raise ValueError("Missing approval record")
+            base = (
+                KnowledgeSnapshot.model_validate_json(args.base.read_bytes())
+                if args.base.is_file()
+                else read_candidate(args.base)
+            )
+            snapshot, files, report = build(args.package, base, approval)
+            write_candidate(args.output, snapshot, files, report["excluded"])
+            result = {
+                **report,
+                "excluded": len(report["excluded"]),
+                "stale_chunks": len(report["stale_chunks"]),
                 "published": False,
             }
         elif args.command == "export-dify":

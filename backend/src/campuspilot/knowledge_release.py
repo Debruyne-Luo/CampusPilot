@@ -259,6 +259,8 @@ def publish(candidate: Path, root: Path, expected_current: str | None) -> str:
         if current_version(root) != expected_current:
             raise ValueError("Published knowledge drifted; preview again")
         snapshot = read_candidate(candidate)
+        if snapshot.pending:
+            raise ValueError("Pending knowledge cannot be published; review and approve first")
         reference = root / "current.json"
         if not reference.exists():
             reference = root / "bootstrap.json"

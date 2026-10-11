@@ -70,6 +70,7 @@ def create_web_app(
     embedder: CloudflareEmbedder | None = None,
     embedding_model: str = "@cf/baai/bge-m3",
     agent_loop: bool = False,
+    knowledge_bundle: str = "",
 ) -> FastAPI:
     # Directory tools keep their own service credential, never exposed to the browser.
     repository = DirectoryRepository.load(data_dir)
@@ -81,6 +82,7 @@ def create_web_app(
         retrieval_mode=parse_retrieval_mode(retrieval_mode),
         embedder=embedder,
         embedding_model=embedding_model,
+        bundled=knowledge_bundle,
     )
     runtime = ChatRuntime(
         repository,
@@ -117,7 +119,13 @@ def create_web_app(
         embedder=embedder if retrieval_mode != "lexical" else None,
         agent=(
             AgentRunner(
-                agent_registry(repository, knowledge, snapshots, embedder),
+                agent_registry(
+                    repository,
+                    knowledge,
+                    snapshots,
+                    embedder,
+                    roster=data_dir / "teachers_roster.json",
+                ),
                 repository,
                 model if isinstance(model, ToolCallingModel) else None,
             )

@@ -29,14 +29,23 @@ def main() -> None:
         "--cases", type=Path, default=ROOT / "evaluation/runtime-migration/cases.jsonl"
     )
     parser.add_argument("--store", type=Path, default=ROOT / "data/cdut/rag")
+    parser.add_argument(
+        "--snapshot-dir", type=Path, help="candidate dir with snapshot.json + vectors.sqlite"
+    )
     parser.add_argument("--k", type=int, default=5)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     settings = Settings.from_env()
-    snapshot = KnowledgeSnapshot.model_validate_json((args.store / "bootstrap.json").read_bytes())
-    index = VectorIndex.load(
-        args.store / ("bootstrap." + INDEX_NAME), snapshot, settings.embedding_model
-    )
+    if args.snapshot_dir:
+        snapshot_path, index_path = (
+            args.snapshot_dir / "snapshot.json",
+            args.snapshot_dir / INDEX_NAME,
+        )
+    else:
+        snapshot_path = args.store / "bootstrap.json"
+        index_path = args.store / ("bootstrap." + INDEX_NAME)
+    snapshot = KnowledgeSnapshot.model_validate_json(snapshot_path.read_bytes())
+    index = VectorIndex.load(index_path, snapshot, settings.embedding_model)
     embedder = CloudflareEmbedder(
         settings.cf_account_id, settings.cf_api_token, model=settings.embedding_model, timeout=30
     )

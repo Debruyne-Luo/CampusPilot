@@ -8,7 +8,7 @@ import re
 import sqlite3
 from datetime import date
 from pathlib import Path
-from typing import TYPE_CHECKING, Annotated, Literal, Protocol, Self
+from typing import TYPE_CHECKING, Annotated, Any, Literal, Protocol, Self
 
 from pydantic import Field, model_validator
 
@@ -32,15 +32,20 @@ class RagSource(Contract):
     applicability: str
     temporal_status: Literal["unknown", "historical", "superseded", "current"] = "unknown"
     content_scope: str = "curated_paraphrase_not_full_text"
-    verification_status: Literal["verified", "official_document"]
+    # "pending" exists only for candidate snapshots awaiting review; publish() refuses them.
+    verification_status: Literal["verified", "official_document", "pending"]
     reviewer: str
-    verified_at: date
+    verified_at: date | None
 
     @model_validator(mode="after")
     def source_scope(self) -> Self:
         official_url(self.url, wechat=True)
-        if not all((self.source_id, self.title, self.publisher, self.reviewer)):
+        if not all((self.source_id, self.title, self.publisher)):
             raise ValueError("Incomplete source provenance")
+        if self.verification_status != "pending" and not (self.reviewer and self.verified_at):
+            raise ValueError("Incomplete source provenance")
+        if self.verification_status == "pending" and (self.reviewer or self.verified_at):
+            raise ValueError("Pending sources cannot carry a review")
         return self
 
 
@@ -54,21 +59,28 @@ class RagChunk(Contract):
     aliases: str = ""
     kind: Literal["fact", "historical", "index_only", "deprecated", "limitation"] = "fact"
     text_sha256: str
-    verification_status: Literal["verified", "official_document"]
+    verification_status: Literal["verified", "official_document", "pending"]
     reviewer: str
-    verified_at: date
+    verified_at: date | None
     approval_id: str
     audiences: tuple[str, ...] = ("all",)
     academic_year: str | None = None
     valid_from: date | None = None
     valid_until: date | None = None
     enabled: bool = True
+    # Source flagged as possibly out of date: down-weighted and cited with a warning.
+    stale: bool = False
 
     @model_validator(mode="after")
     def approved_content(self) -> Self:
         if digest(self.text.encode()) != self.text_sha256:
             raise ValueError("Changed body requires renewed review")
-        if not all((self.chunk_id, self.locator, self.reviewer, self.approval_id)):
+        if not all((self.chunk_id, self.locator, self.approval_id)):
+            raise ValueError("Incomplete chunk review")
+        pending = self.verification_status == "pending"
+        if pending and (self.reviewer or self.verified_at):
+            raise ValueError("Pending chunks cannot carry a review")
+        if not pending and not (self.reviewer and self.verified_at):
             raise ValueError("Incomplete chunk review")
         if self.valid_from and self.valid_until and self.valid_from > self.valid_until:
             raise ValueError("Reversed applicability dates")
@@ -91,10 +103,24 @@ class KnowledgeSnapshot(Contract):
             raise ValueError("Duplicate stable evidence ID")
         if len(self.chunks) > 10_000 or any(c.source_id not in ids for c in self.chunks):
             raise ValueError("Invalid snapshot references or size")
-        body = self.model_dump(mode="json", exclude={"version"})
+        body = snapshot_body(self.model_dump(mode="json", exclude={"version"}))
         if self.version != "kb-" + digest(canonical(body))[:16]:
             raise ValueError("Snapshot version does not match content")
         return self
+
+    @property
+    def pending(self) -> bool:
+        return any(s.verification_status == "pending" for s in self.sources) or any(
+            c.verification_status == "pending" for c in self.chunks
+        )
+
+
+def snapshot_body(body: dict[str, Any]) -> dict[str, Any]:
+    """Hash body; optional fields at their default are omitted so older versions keep IDs."""
+    for chunk in body["chunks"]:
+        if chunk.get("stale") is False:
+            del chunk["stale"]
+    return body
 
 
 def make_snapshot(
@@ -106,8 +132,9 @@ def make_snapshot(
         "sources": [s.model_dump(mode="json") for s in sorted(sources, key=lambda s: s.source_id)],
         "chunks": [c.model_dump(mode="json") for c in sorted(chunks, key=lambda c: c.chunk_id)],
     }
+    hashed = snapshot_body(json.loads(canonical(body)))
     return KnowledgeSnapshot.model_validate_json(
-        canonical({**body, "version": "kb-" + digest(canonical(body))[:16]})
+        canonical({**body, "version": "kb-" + digest(canonical(hashed))[:16]})
     )
 
 
@@ -177,8 +204,14 @@ class SnapshotStore:
         retrieval_mode: str = "lexical",
         embedder: QueryEmbedder | None = None,
         embedding_model: str = "@cf/baai/bge-m3",
+        bundled: str = "",
     ) -> None:
         self.root = root
+        # Optional in-repo approved candidate (e.g. "approved-20261011") replacing bootstrap.json
+        # when no live pointer is published; snapshot.json + vectors.sqlite in that directory.
+        if bundled and not re.fullmatch(r"approved-\d{8}", bundled):
+            raise ValueError("Invalid bundled knowledge name")
+        self.bundled = bundled
         self.retrieval_mode = retrieval_mode
         self.embedder = embedder
         self.embedding_model = embedding_model
@@ -199,6 +232,12 @@ class SnapshotStore:
             path = self.root / "versions" / version / "snapshot.json"
             index_path = path.parent / INDEX_NAME
             key = version + ":" + raw["sha256"]
+        elif self.bundled:
+            path = self.root / self.bundled / "snapshot.json"
+            index_path = self.root / self.bundled / INDEX_NAME
+            if not path.exists():
+                raise ValueError("Bundled knowledge snapshot missing")
+            key = digest(path.read_bytes())
         else:
             path = self.root / "bootstrap.json"
             index_path = self.root / ("bootstrap." + INDEX_NAME)
@@ -211,6 +250,8 @@ class SnapshotStore:
         if len(data) > 20_000_000 or (pointer.exists() and digest(data) != raw["sha256"]):
             raise ValueError("Knowledge snapshot checksum mismatch")
         snapshot = KnowledgeSnapshot.model_validate_json(data)
+        if snapshot.pending:
+            raise ValueError("Pending knowledge cannot be served")
         if pointer.exists() and snapshot.version != version:
             raise ValueError("Knowledge pointer version mismatch")
         index = None

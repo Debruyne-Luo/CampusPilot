@@ -20,6 +20,19 @@ RRF_K = 60
 QueryVector = Callable[[str], Sequence[float] | None]
 
 
+STALE_WEIGHT = 0.5
+
+
+def downweight_stale(hits: Sequence[RetrievalHit]) -> tuple[RetrievalHit, ...]:
+    """Possibly-outdated chunks keep their place in the candidate set at half weight."""
+    if not any(h.chunk.stale for h in hits):
+        return tuple(hits)
+    weighted = [
+        h.model_copy(update={"score": h.score * STALE_WEIGHT}) if h.chunk.stale else h for h in hits
+    ]
+    return tuple(sorted(weighted, key=lambda h: (-h.score, h.chunk.chunk_id)))
+
+
 def rrf(rankings: Sequence[Sequence[RetrievalHit]], k: int = RRF_K) -> list[RetrievalHit]:
     """Reciprocal Rank Fusion; the fused score replaces the per-retriever score."""
     scores: dict[str, float] = {}
@@ -63,6 +76,15 @@ class HybridRetriever:
             return None
 
     def search(
+        self,
+        query: str,
+        filters: RetrievalFilters,
+        top_k: int = 12,
+        query_vector: Sequence[float] | None = None,
+    ) -> tuple[RetrievalHit, ...]:
+        return downweight_stale(self._search(query, filters, top_k, query_vector))
+
+    def _search(
         self,
         query: str,
         filters: RetrievalFilters,

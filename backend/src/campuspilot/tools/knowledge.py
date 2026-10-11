@@ -72,6 +72,7 @@ class HybridKnowledgeTool:
                 "url": h.source.url,
                 "publisher": h.source.publisher,
                 "applicability": h.source.applicability,
+                "stale": h.chunk.stale,
                 "score": round(h.score, 6),
             }
             for h in hits
