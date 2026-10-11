@@ -60,26 +60,40 @@ test("guide is code-built (no model files) and Three.js is only loaded lazily", 
   assert.doesNotMatch(frame, /AMap\.Buildings/);
 });
 
-test("statue guide model: glossy teal sauropod with cap, animated, about 6k triangles", async () => {
+test("statue guide model: one smooth glossy skin, cap, spots, animated, under 28k triangles", async () => {
   const THREE = await import("../backend/src/campuspilot/web_assets/vendor/three.module.min.js");
   const { buildDino, poseDino } = await import("../backend/src/campuspilot/web_assets/dino3d.mjs");
   const d = buildDino(THREE);
-  let tris = 0, phong = 0;
+  let tris = 0, standard = 0;
   const colors = new Set();
   d.group.traverse((o) => {
     if (!o.geometry) return;
     tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
-    if (o.material.isMeshPhongMaterial) { phong++; assert.notEqual(o.material.flatShading, true); }
-    colors.add(o.material.color.getHex());
+    if (o.material.isMeshStandardMaterial) standard++;
+    if (!o.material.vertexColors) colors.add(o.material.color.getHex());
   });
-  assert.ok(tris < 6100, `triangles ${tris}`); assert.ok(phong > 10);
-  for (const c of [0x6fc2bd, 0x15181c, 0xf2c230, 0x8c3f22, 0x1f3550]) assert.ok(colors.has(c), c.toString(16));
-  // Long neck: the head sits high above the body.
-  const top = new THREE.Vector3(); d.group.updateMatrixWorld(true); d.head.getWorldPosition(top);
-  assert.ok(top.z > 7, `head z ${top.z}`); assert.equal(d.legs.length, 4);
+  assert.ok(tris < 28000, `triangles ${tris}`); assert.ok(standard > 10);
+  assert.ok(d.skin.material.vertexColors && d.skin.material.roughness < 0.45);
+  for (const c of [0x1d1c20, 0xf0b13f, 0x7c3a22, 0x24324f, 0x6b331d]) assert.ok(colors.has(c), c.toString(16));
+  // The skin is one closed surface: every edge is shared by exactly two triangles.
+  const idx = d.skin.geometry.index.array, edges = new Map();
+  for (let i = 0; i < idx.length; i += 3) for (let k = 0; k < 3; k++) {
+    const a = idx[i + k], b = idx[i + ((k + 1) % 3)], key = a < b ? a + "," + b : b + "," + a;
+    edges.set(key, (edges.get(key) || 0) + 1);
+  }
+  const open = [...edges.values()].filter((n) => n !== 2).length;
+  assert.ok(open < edges.size * 0.002, `open edges ${open}`);
+  // Head is large (≈36% of height) and sits on a short neck.
+  d.skin.geometry.computeBoundingBox();
+  assert.ok(d.skin.geometry.boundingBox.max.z > 9.8 && d.skin.geometry.boundingBox.min.z > -0.2);
+  assert.equal(d.legs.length, 4);
+  const before = d.skin.geometry.attributes.position.array.slice();
   poseDino(d, Math.PI / 2, true, 0.05);
-  assert.ok(d.legL.rotation.y > 0.4 && d.legR.rotation.y < -0.4 && d.legs[3].rotation.y > 0.4 && d.body.position.z >= 0);
-  assert.equal(d.eyes[0].scale.z, 0.12); // blinking at t % 3.2 < 0.12
+  assert.ok(d.legL.rotation.y > 0.4 && d.legR.rotation.y < -0.4 && d.legs[3].rotation.y > 0.4);
+  const after = d.skin.geometry.attributes.position.array;
+  let moved = 0; for (let i = 0; i < after.length; i++) if (Math.abs(after[i] - before[i]) > 1e-3) moved++;
+  assert.ok(moved > 1000, "walk pose bends the skin");
+  assert.equal(d.eyes[0].scale.y, 0.12); // blinking at t % 3.2 < 0.12
   poseDino(d, 0, false, 1);
-  assert.equal(d.legL.rotation.y, 0); assert.equal(d.eyes[0].scale.z, 1);
+  assert.equal(d.legL.rotation.y, 0); assert.equal(d.eyes[0].scale.y, 1);
 });
