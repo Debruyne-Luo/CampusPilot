@@ -2,7 +2,7 @@
 // a schematic SVG of recorded points. Personal positions stay in the browser: they are
 // only posted to the same-origin map frame for AMap.Walking, never to /api.
 import { h } from "./dom.mjs";
-import { hasPosition, projector, visiblePlaces } from "./places.mjs";
+import { glyphFor, hasPosition, projector, visiblePlaces } from "./places.mjs";
 
 const NS = "http://www.w3.org/2000/svg";
 const svgEl = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
@@ -10,7 +10,7 @@ const svgEl = (tag, attrs) => { const e = document.createElementNS(NS, tag); for
 export function createMap({ frame, fallback, status, onSelect, onOrigin = () => {}, onPoi = () => {} }) {
   const generation = Math.floor(Math.random() * 1e9);
   let mode = "loading", places = [], filter = "all", selected = null, routeSeq = 0, pendingRoute = null;
-  let extra = new Set(), searchSeq = 0, pendingSearch = null;
+  let extra = new Set(), searchSeq = 0, pendingSearch = null, fit = true;
   const send = (data) => frame.contentWindow?.postMessage({ type: "campuspilot-map", ...data, frame_generation: generation }, location.origin);
   window.sendToMap = send; // guidance.js (classic script) talks to the frame through this global
 
@@ -31,8 +31,9 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     fallback.replaceChildren(svg);
   }
   function push() {
-    if (mode === "amap") send({ action: "places", places: visible(), selected_place_id: selected });
+    if (mode === "amap") send({ action: "places", places: visible().map((p) => ({ place_id: p.place_id, name: p.name, category: p.category, tags: p.tags || [], position: p.position, glyph: glyphFor(p) })), selected_place_id: selected, fit });
     else if (mode === "fallback") drawFallback();
+    fit = true;
   }
   window.addEventListener("message", (event) => {
     if (event.origin !== location.origin || event.source !== frame.contentWindow || event.data?.type !== "campuspilot-map") return;
@@ -74,7 +75,7 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
       const known = extra.has(place.place_id) || place.hotspot === true;
       selected = place.place_id; extra.add(place.place_id);
       if (mode === "amap" && hasPosition(place)) {
-        if (!known) push(); // draw it first; "center" then highlights the new marker
+        if (!known) { fit = false; push(); } // draw it first; "center" then highlights the new marker
         send({ action: "center", place_id: place.place_id, position: place.position });
       } else push();
     },
@@ -91,6 +92,8 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     },
     /** Next map click (or marker) becomes the route origin; answered through onOrigin. */
     pickOrigin() { if (mode !== "amap") return false; routeSeq += 1; send({ action: "route-pick", request_id: routeSeq }); return true; },
+    /** Use the map point under the on-screen crosshair (frame pixels) as the origin. */
+    pickAt(x, y) { if (mode === "amap") send({ action: "route-pick-point", request_id: routeSeq, x, y }); },
     cancelPick() { routeSeq += 1; send({ action: "route-clear", request_id: routeSeq }); },
     heading(rotation) { if (mode === "amap") send({ action: "heading", ...rotation, arrow: rotation.arrow, rotation: rotation.map }); },
     centerOn(position) { if (mode === "amap" && position) send({ action: "center", place_id: null, position }); },
@@ -98,8 +101,4 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     insets(bottom) { if (mode === "amap") send({ action: "route-insets", bottom }); },
     get routeId() { return routeSeq; },
   };
-}
-
-export function legend() {
-  return h("p", { class: "map-legend" }, "地点为建筑参考点，需现场核实入口。");
 }
