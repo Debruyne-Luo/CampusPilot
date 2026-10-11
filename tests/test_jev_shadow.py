@@ -125,11 +125,21 @@ def test_unknown_price_and_repository_credentials_fail_before_external_calls(
         monkeypatch.delenv(name, raising=False)
     with pytest.raises(ValueError):
         price("SYNTHETIC")
+    # The key file must live inside the repository to exercise the "outside" guard;
+    # pytest's tmp_path is normally outside it, so create the file explicitly in the repo.
+    repo = Path(__file__).resolve().parents[1]
+    inside = repo / ".synthetic-key-test.txt"
+    inside.write_text(KEY, encoding="utf-8")
+    try:
+        monkeypatch.setenv("SYNTHETIC_KEY_FILE", str(inside))
+        with pytest.raises(ValueError, match="outside"):
+            secret("SYNTHETIC")
+    finally:
+        inside.unlink()
     file = tmp_path / "key.txt"
     file.write_text(KEY, encoding="utf-8")
     monkeypatch.setenv("SYNTHETIC_KEY_FILE", str(file))
-    with pytest.raises(ValueError, match="outside"):
-        secret("SYNTHETIC")
+    assert secret("SYNTHETIC") == KEY
     monkeypatch.delenv("SYNTHETIC_KEY_FILE")
     monkeypatch.setenv("SYNTHETIC_API_KEY", KEY)
     assert secret("SYNTHETIC") == KEY
