@@ -34,6 +34,7 @@ from campuspilot.knowledge import KnowledgeStore
 from campuspilot.llm.chat_model import ProductionModel, ToolCallingModel
 from campuspilot.llm.embedding import CloudflareEmbedder
 from campuspilot.rag import SnapshotStore
+from campuspilot.retrieval.grounding import GroundingMode
 from campuspilot.tools import agent_registry
 
 
@@ -85,6 +86,7 @@ def create_web_app(
     embedder: CloudflareEmbedder | None = None,
     embedding_model: str = "@cf/baai/bge-m3",
     agent_loop: bool = False,
+    grounding: GroundingMode = "flag",
     knowledge_bundle: str = "",
     asset_version: str = "",
 ) -> FastAPI:
@@ -144,9 +146,11 @@ def create_web_app(
                     snapshots,
                     embedder,
                     roster=data_dir / "teachers_roster.json",
+                    grounding=grounding,
                 ),
                 repository,
                 model if isinstance(model, ToolCallingModel) else None,
+                grounding=grounding,
             )
             if agent_loop and runtime_mode == "phase2"
             else None

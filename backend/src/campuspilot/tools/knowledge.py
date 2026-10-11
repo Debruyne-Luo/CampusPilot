@@ -10,6 +10,7 @@ from campuspilot.contracts import Contract
 from campuspilot.knowledge import KnowledgeQuery, KnowledgeStore, campus_today
 from campuspilot.llm.embedding import CloudflareEmbedder, EmbeddingUnavailable
 from campuspilot.rag import RetrievalFilters, SnapshotStore
+from campuspilot.retrieval.grounding import POLICY_VERSION, GroundingMode, assess
 
 
 class KnowledgeSearchTool:
@@ -44,9 +45,15 @@ class HybridKnowledgeTool:
     )
     params_model: type[BaseModel] = SnapshotQuery
 
-    def __init__(self, snapshots: SnapshotStore, embedder: CloudflareEmbedder | None) -> None:
+    def __init__(
+        self,
+        snapshots: SnapshotStore,
+        embedder: CloudflareEmbedder | None,
+        grounding: GroundingMode = "flag",
+    ) -> None:
         self._snapshots = snapshots
         self._embedder = embedder
+        self.grounding = grounding
 
     def run(self, params: Any) -> dict[str, JsonValue]:
         retriever = self._snapshots.acquire()
@@ -61,24 +68,27 @@ class HybridKnowledgeTool:
         filters = RetrievalFilters(
             today=campus_today(), audience=params.audience, academic_year=params.academic_year
         )
-        hits = retriever.search(params.query, filters, params.top_k, query_vector=vector)
+        searched = retriever.search_channels(
+            params.query, filters, params.top_k, query_vector=vector
+        )
+        hits = searched.hits
         rows: list[JsonValue] = [
             {
                 "chunk_id": h.chunk.chunk_id,
                 "source_id": h.source.source_id,
                 "title": h.chunk.title,
                 "text": h.chunk.text,
-                "source_title": h.source.title,
                 "url": h.source.url,
+                "source_title": h.source.title,
                 "publisher": h.source.publisher,
-                "applicability": h.source.applicability,
+                "temporal_status": h.source.temporal_status,
                 "stale": h.chunk.stale,
                 "ocr": h.chunk.ocr,
                 "score": round(h.score, 6),
             }
             for h in hits
         ]
-        return {
+        result: dict[str, JsonValue] = {
             "result_status": "success" if hits else "empty",
             "answer": "\n".join(h.chunk.text for h in hits[:3]),
             "hits": rows,
@@ -86,3 +96,20 @@ class HybridKnowledgeTool:
             "retrieval_mode": retriever.mode,
             "degraded": retriever.degraded,
         }
+        if self.grounding == "off":
+            return result
+        grounding = assess(params.query, searched, len(hits))
+        grounded = grounding.grounded_ids  # every hit when unassessed (no query vector)
+        for row, h in zip(rows, hits, strict=True):
+            assert isinstance(row, dict)
+            row["grounded"] = h.chunk.chunk_id in grounded
+        if self.grounding == "block":
+            result["answer"] = "\n".join(
+                [h.chunk.text for h in hits if h.chunk.chunk_id in grounded][:3]
+            )
+        result["grounding"] = {
+            "policy": POLICY_VERSION,
+            "mode": self.grounding,
+            "decision": grounding.decision if hits else "insufficient",
+        }
+        return result

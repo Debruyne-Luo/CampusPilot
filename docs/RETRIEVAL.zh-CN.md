@@ -44,3 +44,38 @@ uv run python scripts/knowledge_release.py embed-bootstrap --store data/cdut/rag
   3. 加权 RRF：`RRF_K=10`，权重（词法 1.0，向量 1.25）。
 - 复现：`uv run python evaluation/eval_colloquial.py --cases <file>`；开发集网格搜索：`uv run python evaluation/tune_dev.py`。报告见 `evaluation/reports/`。
 - 检索层不做拒答：向量相似度阈值 0.35–0.55 在开发集上无法区分库外问题，拒答依赖下游 agent 无答案判定。
+
+## 本地"无依据"拒答策略（2026-10-11，rag/03-local-refusal）
+
+实现 `rag.DecisionPolicy`：`retrieval/grounding.py`（`LocalGroundingPolicy` / `assess`），纯本地、确定性，不调用模型。
+
+- 片段判定为 grounded：查询向量余弦相似度 ≥ 0.60；或 ≥ 0.52 且 BM25 与向量两路排名都 ≤ 3（两路一致）。
+- 展示的前 4 条里没有 grounded 片段 → `insufficient`。没有查询向量（lexical 模式或嵌入服务故障）→ `unassessed`，保持旧行为。
+- 查询词覆盖率、RRF 融合分记录为信号但不参与判定：开发集上二者在相似度 + 两路一致之外没有额外区分度。
+- `search_knowledge` 每条 hit 带 `grounded`，结果带 `grounding.decision`；判为 `insufficient` 时片段不交给模型、不进入可引用集合。
+- Agent：模型返回 `empty` 或最终回答为"已发布资料中没有足够依据回答"时，不再回退展示 citations / excerpts；降级摘要 `_summary` 只用 grounded 片段，没有就给出无依据提示（`result_status=empty`）。
+
+### 运行模式 `CAMPUSPILOT_GROUNDING=off|flag|block`（默认 `flag`）
+
+测试集误拒 8.6% 偏高，决定先**只标记不拦截**：
+
+- `off`：不计算 grounding，行为与 rag/02-tuning 完全一致。
+- `flag`（默认）：计算并记录决定（日志 `grounding mode=… decision=…`、响应元数据 `grounding_check`：`mode` / `policy` / `decisions` / `grounded_chunk_ids` / `would_refuse`），但交给模型的工具结果、答案、citations、excerpts、`_summary` 与 `off` 相同。唯一例外：`result_status=empty`（如模型自己判定无依据）时不展示回退 citations / excerpts。
+- `block`：上文全部拦截行为（片段不交给模型、`_summary` 只用 grounded 片段、响应带 `grounding: "insufficient"`）。
+
+阈值只在开发集上选：`evaluation/dev-colloquial-20261011`（112 可答 + 6 拒答）+ `evaluation/refusal-20261011/dev.jsonl`（25 拒答）。
+选择规则：误拒率 ≤ 2% 的前提下拒答召回最高（扫描见 `evaluation/reports/refusal-dev.json`）。
+测试集只跑一次：`evaluation/colloquial-heldout-20261011`（99 题，只测不调）+ `evaluation/refusal-20261011/test.jsonl`（25 拒答）。
+
+| 集合 | 指标 | 之前（仅零命中拒答） | 之后 |
+|---|---|---|---|
+| dev | 拒答召回 | 0/31 | 16/31（51.6%） |
+| dev | 可答误拒 | 0/112 | 2/112（1.8%） |
+| test | 拒答召回 | 0/31 | 15/31（48.4%） |
+| test | 可答误拒 | 0/93 | 8/93（8.6%） |
+
+检索排序未改变：hybrid dev R@5 0.9643 / MRR@20 0.8163，test R@5 0.8925 / MRR@20 0.8178，与 rag/02-tuning 报告一致。
+
+已知局限：测试集误拒明显高于开发集，多为错别字（"辅道员""转专页""心里中心"）和长口语句，向量相似度偏低；"借了 X 但问 Y"类对抗问题（如"校园卡能在校外超市刷吗"）检索信号无法区分，需要后续相关性/充分性判断。
+
+`evaluation/refusal-20261011/` 的 50 题由 agent（Grok Bot）于 2026-10-11 撰写，模拟成理学生提问，非真实学生数据，未经人工复核（`label_status: authored_unreviewed`）。

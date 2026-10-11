@@ -57,6 +57,7 @@ def build_app(settings: Settings) -> FastAPI:
         embedder=embedder_from(settings) if mode == "phase2" else None,
         embedding_model=settings.embedding_model,
         agent_loop=settings.agent_loop,
+        grounding=settings.grounding,
         knowledge_bundle=settings.knowledge_bundle,
         asset_version=settings.asset_version,
     )

@@ -18,6 +18,7 @@ if TYPE_CHECKING:
     from campuspilot.knowledge import KnowledgeStore
     from campuspilot.llm.embedding import CloudflareEmbedder
     from campuspilot.rag import SnapshotStore
+    from campuspilot.retrieval.grounding import GroundingMode
 
 __all__ = [
     "ReadOnlyPermissionPolicy",
@@ -36,6 +37,7 @@ def default_registry(
     store: KnowledgeStore,
     snapshots: SnapshotStore | None = None,
     embedder: CloudflareEmbedder | None = None,
+    grounding: GroundingMode = "flag",
 ) -> ToolRegistry:
     """search_knowledge uses hybrid snapshot retrieval when a snapshot store is given."""
     from campuspilot.tools.directory import directory_agent_tools
@@ -43,7 +45,7 @@ def default_registry(
     from campuspilot.tools.places import PlaceCardsTool
 
     knowledge: Tool = (
-        HybridKnowledgeTool(snapshots, embedder)
+        HybridKnowledgeTool(snapshots, embedder, grounding)
         if snapshots is not None
         else KnowledgeSearchTool(store)
     )
@@ -62,12 +64,13 @@ def agent_registry(
     snapshots: SnapshotStore | None = None,
     embedder: CloudflareEmbedder | None = None,
     roster: Path | None = None,
+    grounding: GroundingMode = "flag",
 ) -> ToolRegistry:
     """Agent whitelist: default_registry + make_checklist (+ find_teacher given a roster)."""
     from campuspilot.tools.checklist import ChecklistTool
     from campuspilot.tools.teachers import FindTeacherTool
 
-    base = default_registry(repository, store, snapshots, embedder)
+    base = default_registry(repository, store, snapshots, embedder, grounding)
     extra: list[Tool] = [ChecklistTool(repository)]
     if roster is not None and (finder := FindTeacherTool.load(roster)) is not None:
         extra.append(finder)
