@@ -55,6 +55,14 @@ uv run python scripts/knowledge_release.py embed-bootstrap --store data/cdut/rag
 - `search_knowledge` 每条 hit 带 `grounded`，结果带 `grounding.decision`；判为 `insufficient` 时片段不交给模型、不进入可引用集合。
 - Agent：模型返回 `empty` 或最终回答为"已发布资料中没有足够依据回答"时，不再回退展示 citations / excerpts；降级摘要 `_summary` 只用 grounded 片段，没有就给出无依据提示（`result_status=empty`）。
 
+### 运行模式 `CAMPUSPILOT_GROUNDING=off|flag|block`（默认 `flag`）
+
+测试集误拒 8.6% 偏高，决定先**只标记不拦截**：
+
+- `off`：不计算 grounding，行为与 rag/02-tuning 完全一致。
+- `flag`（默认）：计算并记录决定（日志 `grounding mode=… decision=…`、响应元数据 `grounding_check`：`mode` / `policy` / `decisions` / `grounded_chunk_ids` / `would_refuse`），但交给模型的工具结果、答案、citations、excerpts、`_summary` 与 `off` 相同。唯一例外：`result_status=empty`（如模型自己判定无依据）时不展示回退 citations / excerpts。
+- `block`：上文全部拦截行为（片段不交给模型、`_summary` 只用 grounded 片段、响应带 `grounding: "insufficient"`）。
+
 阈值只在开发集上选：`evaluation/dev-colloquial-20261011`（112 可答 + 6 拒答）+ `evaluation/refusal-20261011/dev.jsonl`（25 拒答）。
 选择规则：误拒率 ≤ 2% 的前提下拒答召回最高（扫描见 `evaluation/reports/refusal-dev.json`）。
 测试集只跑一次：`evaluation/colloquial-heldout-20261011`（99 题，只测不调）+ `evaluation/refusal-20261011/test.jsonl`（25 拒答）。

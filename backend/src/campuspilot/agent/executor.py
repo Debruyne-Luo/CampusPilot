@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from typing import Any
@@ -26,6 +27,7 @@ from campuspilot.dify import ChatUnavailable
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.llm.chat_model import GroundedAnswer, ToolCallingModel
 from campuspilot.presentation import place_card, service_card
+from campuspilot.retrieval.grounding import GroundingMode
 from campuspilot.tools.base import ToolError, ToolRegistry
 
 MAX_TOOL_ROUNDS = 3
@@ -36,6 +38,7 @@ CHITCHAT_ANSWER = (
     "你好！我可以帮你查校园办事流程和材料、找老师办公室和地点、规划校内步行路线，"
     "或检索学校官方资料。请直接描述你要办的事。"
 )
+logger = logging.getLogger(__name__)
 NO_BASIS_ANSWER = "已发布资料中没有足够依据回答，请补充事项或查看官方资料。"
 IDENTITY_QUESTION = "请问你是本科生、研究生还是教职工？不同身份的办理方式可能不同。"
 
@@ -85,6 +88,8 @@ class Evidence:
     # search_knowledge grounding decisions ("grounded" / "insufficient" / "unassessed").
     grounding: list[str] = field(default_factory=list)
     knowledge_sources: set[str] = field(default_factory=set)
+    # Per-search grounding records (policy, decision, grounded chunk ids) for the trace.
+    grounding_checks: list[dict[str, JsonValue]] = field(default_factory=list)
     emit: Emit | None = None
 
     async def notify(self, event: str, data: dict[str, JsonValue]) -> None:
@@ -135,6 +140,23 @@ def _collect_ids(value: Any, into: set[str]) -> None:
             _collect_ids(item, into)
 
 
+def _split_grounding(result: dict[str, Any]) -> tuple[dict[str, Any], dict[str, JsonValue]]:
+    """Flag mode: strip grounding fields so the model sees the pre-grounding payload."""
+    grounding = result.get("grounding")
+    record: dict[str, JsonValue] = dict(grounding) if isinstance(grounding, dict) else {}
+    hits = result.get("hits") or []
+    record["grounded_chunk_ids"] = [
+        str(h.get("chunk_id")) for h in hits if isinstance(h, dict) and h.get("grounded")
+    ]
+    clean_hits = [
+        {k: v for k, v in h.items() if k != "grounded"} if isinstance(h, dict) else h for h in hits
+    ]
+    clean = {k: v for k, v in result.items() if k != "grounding"}
+    if "hits" in result:
+        clean["hits"] = clean_hits
+    return clean, record
+
+
 def _apply_grounding(name: str, result: dict[str, Any]) -> dict[str, Any]:
     """A knowledge search the grounding policy judged insufficient carries no evidence.
 
@@ -156,7 +178,9 @@ class AgentRunner:
         repository: DirectoryRepository,
         model: ToolCallingModel | None,
         max_tool_rounds: int = MAX_TOOL_ROUNDS,
+        grounding: GroundingMode = "flag",
     ) -> None:
+        self.grounding = grounding
         self.registry = registry
         self.repository = repository
         self.model = model
@@ -231,7 +255,28 @@ class AgentRunner:
         except ToolError as exc:
             await ev.notify("tool_end", {"tool": name, "label": label, "status": exc.code})
             return exc.code
-        result = _apply_grounding(name, result)
+        meta: Any = result.get("grounding")
+        if name == "search_knowledge" and isinstance(meta, dict):
+            if self.grounding == "block":
+                record: dict[str, JsonValue] = dict(meta)
+                hits: Any = result.get("hits") or []
+                record["grounded_chunk_ids"] = [
+                    str(h.get("chunk_id"))
+                    for h in hits
+                    if isinstance(h, dict) and h.get("grounded")
+                ]
+                result = _apply_grounding(name, result)
+            else:
+                result, record = _split_grounding(result)
+            if not result.get("hits"):
+                record["decision"] = "insufficient"
+            ev.grounding_checks.append(record)
+            logger.info(
+                "grounding mode=%s decision=%s grounded=%d",
+                self.grounding,
+                record.get("decision"),
+                len(record.get("grounded_chunk_ids") or []),  # type: ignore[arg-type]
+            )
         status = str(result.get("status") or result.get("result_status") or "success")
         await ev.notify("tool_end", {"tool": name, "label": label, "status": status})
         ev.results.append({"tool": name, "result": result})
@@ -268,9 +313,10 @@ class AgentRunner:
         elif name == "search_knowledge":
             grounding = result.get("grounding")
             decision = grounding.get("decision") if isinstance(grounding, dict) else None
-            if not result.get("hits"):
-                decision = "insufficient"
-            ev.grounding.append(str(decision or "unassessed"))
+            if self.grounding == "block":
+                if not result.get("hits"):
+                    decision = "insufficient"
+                ev.grounding.append(str(decision or "unassessed"))
             for row in result.get("hits") or []:
                 if isinstance(row, dict):
                     ev.hits.append(row)
@@ -454,8 +500,12 @@ class AgentRunner:
             )
         return actions[:6]
 
+    def _shown_hits(self, ev: Evidence) -> list[dict[str, JsonValue]]:
+        """Hits eligible for summary/excerpts: grounding-filtered only in block mode."""
+        return ev.grounded_hits() if self.grounding == "block" else ev.hits
+
     def _summary(self, ev: Evidence) -> str:
-        lines = [f"{h.get('title')}：{h.get('text')}" for h in ev.grounded_hits()[:3]]
+        lines = [f"{h.get('title')}：{h.get('text')}" for h in self._shown_hits(ev)[:3]]
         for service in list(ev.services.values())[:1]:
             lines.insert(
                 0, f"{service.name}：" + "；".join(s.instruction for s in service.steps[:2])
@@ -489,10 +539,17 @@ class AgentRunner:
                 "chunk_id": h.get("chunk_id"),
                 "source_url": h.get("url"),
             }
-            for h in ev.grounded_hits()[:4]
+            for h in self._shown_hits(ev)[:4]
         ]
         citations = [ev.citations[c] for c in cited if c in ev.citations]
-        if status == "empty" or answer == NO_BASIS_ANSWER:
+        if self.grounding != "block":
+            # off / flag: pre-grounding behaviour (fallback to every citation), except that
+            # an "empty" answer (e.g. the model found no basis) shows no unrelated sources.
+            if status == "empty":
+                excerpts, citations = [], []
+            elif not citations:
+                citations = list(ev.citations.values())[:6]
+        elif status == "empty" or answer == NO_BASIS_ANSWER:
             # An honest refusal shows no excerpts or citations of chunks it did not use.
             excerpts, citations = [], []
         elif not citations and status == "limited":
@@ -528,8 +585,25 @@ class AgentRunner:
         }
         if degraded:
             body["degraded_reason"] = degraded
-        if ev.no_grounding():
+        if self.grounding == "block" and ev.no_grounding():
             body["grounding"] = "insufficient"
+        if self.grounding != "off" and ev.grounding_checks:
+            decisions = [str(c.get("decision")) for c in ev.grounding_checks]
+            other = bool(ev.services or ev.places or ev.teachers or ev.checklist)
+            body["grounding_check"] = {
+                "mode": self.grounding,
+                "policy": ev.grounding_checks[0].get("policy"),
+                "decisions": list(decisions),
+                "grounded_chunk_ids": sorted(  # type: ignore[dict-item]
+                    {
+                        str(i)
+                        for c in ev.grounding_checks
+                        for i in c.get("grounded_chunk_ids") or []  # type: ignore[union-attr]
+                    }
+                ),
+                # Whether block mode would have answered with the no-basis refusal.
+                "would_refuse": all(d == "insufficient" for d in decisions) and not other,
+            }
         return body
 
     async def run(
@@ -653,7 +727,11 @@ class AgentRunner:
         summary = self._summary(ev)
         return self._response(
             answer=summary,
-            status="limited" if ev.results and summary != NO_BASIS_ANSWER else "empty",
+            status=(
+                "limited"
+                if ev.results and (self.grounding != "block" or summary != NO_BASIS_ANSWER)
+                else "empty"
+            ),
             view=view,
             plan=plan,
             steps=steps,

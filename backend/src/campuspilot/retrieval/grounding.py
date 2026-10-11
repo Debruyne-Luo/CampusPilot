@@ -32,6 +32,16 @@ AGREE_RANK = 3
 SHOWN = 4  # matches the search_knowledge default top_k
 
 Decision = Literal["grounded", "insufficient", "unassessed"]
+# off: not computed. flag: computed and recorded only (answers, citations, summary unchanged).
+# block: insufficient searches are withheld from the model, excerpts and citations.
+GroundingMode = Literal["off", "flag", "block"]
+GROUNDING_MODES: frozenset[str] = frozenset({"off", "flag", "block"})
+
+
+def parse_grounding_mode(value: str) -> GroundingMode:
+    if value not in GROUNDING_MODES:
+        raise ValueError("Invalid grounding mode")
+    return value  # type: ignore[return-value]
 
 
 @dataclass(frozen=True)
