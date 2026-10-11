@@ -146,6 +146,7 @@ body.guiding .route-note,body.guiding .place-card{display:none}
 body.guiding.arrived .place-card:not([hidden]){display:flex}
 .dino-demo{position:absolute;left:14px;top:64px;z-index:var(--map-ui-z)}
 body[data-guide] .heading-toggle{display:none}
+body.demo .guidance-box p[role="status"]{display:none}
 .sheet-handle{display:none}
 .safe-probe{position:fixed;left:0;bottom:0;width:0;height:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none}
 .map-dock{display:contents}

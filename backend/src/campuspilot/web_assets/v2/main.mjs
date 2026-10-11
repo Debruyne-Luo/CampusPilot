@@ -145,7 +145,7 @@ const params = new URLSearchParams(location.search);
 let demo = params.get("demo") === "1" || !navigator.geolocation || !window.isSecureContext, guideTarget = null;
 const demoSpeed = Number(params.get("speed")) || undefined;
 function setDemo(on) {
-  demo = on; $("dino-demo").setAttribute("aria-pressed", String(on)); $("dino-demo").classList.toggle("active", on);
+  demo = on; document.body.classList.toggle("demo", on); $("dino-demo").setAttribute("aria-pressed", String(on)); $("dino-demo").classList.toggle("active", on);
   map.dinoMode(on, demoSpeed);
 }
 $("dino-demo").addEventListener("click", () => setDemo(!demo));
