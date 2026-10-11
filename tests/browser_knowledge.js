@@ -1,8 +1,8 @@
 async (page) => {
-  if (page.url() === 'about:blank') await page.goto('http://127.0.0.1:8767/');
+  if (page.url() === 'about:blank') await page.goto('http://127.0.0.1:8767/classic');
   const check = (ok, message) => {if (!ok) throw new Error(message);};
   await page.setViewportSize({width: 1366, height: 900});
-  await page.goto('http://127.0.0.1:8767');
+  await page.goto('http://127.0.0.1:8767/classic');
   await page.locator('[data-search-mode="knowledge"]').click();
   await page.getByRole('button', {name: '开始查询'}).click();
   await page.waitForFunction(() => document.querySelectorAll('#knowledge-results .knowledge-card').length === 6);

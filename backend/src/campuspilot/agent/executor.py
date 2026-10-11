@@ -221,6 +221,8 @@ class AgentRunner:
                         "title": row.get("source_title"),
                         "url": row.get("url"),
                         "publisher": row.get("publisher"),
+                        "audience": row.get("applicability"),
+                        "date": row.get("published_at") or row.get("updated_at"),
                     }
         elif name == "make_checklist" and result.get("status") == "success":
             ev.checklist = result
@@ -233,6 +235,13 @@ class AgentRunner:
                         "title": row.get("source_reference"),
                         "url": row.get("source_url"),
                         "publisher": row.get("publisher"),
+                        "audience": row.get("applicability"),
+                        "date": row.get("source_published_at")
+                        or row.get("source_updated_at")
+                        or row.get("retrieved_at"),
+                        "date_kind": "published"
+                        if row.get("source_published_at") or row.get("source_updated_at")
+                        else "retrieved",
                     },
                 )
 

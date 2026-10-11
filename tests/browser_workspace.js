@@ -4,7 +4,7 @@ async (page) => {
   const check=(ok,label)=>{if(!ok) throw new Error(label);};
   const errors=[]; const onError=error=>errors.push(error.name); page.on('pageerror',onError);
   await page.setViewportSize({width:390,height:844});
-  await page.goto('http://127.0.0.1:8767/');
+  await page.goto('http://127.0.0.1:8767/classic');
   await page.waitForFunction(()=>mapState === 'ready');
   const frame=page.frames().find(f=>f.url().endsWith('/map-view'));
   const mode=name=>page.locator(`.mobile-modes [data-workspace="${name}"]`);

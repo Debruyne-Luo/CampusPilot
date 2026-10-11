@@ -1,7 +1,7 @@
 // Run with playwright-cli run-code --filename tests/browser_routes.js against the local map server.
 // Real provider routes use public campus points. All injected business replies are SYNTHETIC.
 async (page) => {
-  if (page.url() === 'about:blank') await page.goto('http://127.0.0.1:8767/');
+  if (page.url() === 'about:blank') await page.goto('http://127.0.0.1:8767/classic');
   const check = (value, label) => { if (!value) throw new Error(label); };
   const search = async (q) => {
     await page.getByRole('button', {name: '找地点', exact: true}).click();

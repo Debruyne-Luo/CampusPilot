@@ -533,3 +533,21 @@ def test_sse_guards_match_chat() -> None:
         r = client.post("/api/chat/stream", json={"message": "我的密码是123456"}, headers=HEADERS)
         final = sse(r.text)[-1][1]
         assert final["result_status"] == "needs_clarification" and model.calls == []
+
+
+def test_v2_shell_classic_ui_and_module_assets() -> None:
+    from campuspilot.web import create_web_app
+    from fastapi.testclient import TestClient
+
+    with TestClient(create_web_app(data_dir=DATA)) as client:
+        shell = client.get("/").text
+        assert 'type="module" src="/assets/v2/main.mjs"' in shell and 'id="map-frame"' in shell
+        assert "script-src 'self';" in client.get("/").headers["content-security-policy"]
+        classic = client.get("/classic")
+        assert classic.status_code == 200 and "/assets/app.js" in classic.text
+        assert classic.headers["cache-control"] == "no-cache"
+        for name in ("main.mjs", "sse.mjs", "render.mjs", "vendor/motion-mini.mjs"):
+            asset = client.get("/assets/v2/" + name)
+            assert asset.status_code == 200 and "javascript" in asset.headers["content-type"]
+            assert "innerHTML" not in asset.text and "eval(" not in asset.text
+        assert "MIT License" in client.get("/assets/v2/vendor/MOTION-LICENSE.md").text

@@ -5,7 +5,7 @@ async(page)=>{
  const check=(ok,label)=>{if(!ok) throw new Error(label);};
  let release; const gate=new Promise(resolve=>{release=resolve;});
  await page.route('**/loader.js',async route=>{await gate;await route.continue();});
- await page.goto('http://127.0.0.1:8767/');
+ await page.goto('http://127.0.0.1:8767/classic');
  const search=async q=>{await page.locator('[data-search-mode="places"]').click();await page.locator('#place-query').fill(q);await page.getByRole('button',{name:'开始查询'}).click();};
  await search('SYNTHETIC pending'); await search('攻坚楼');
  await page.locator('#map-discovery-status').filter({hasText:'等待地图后搜索高德地点…'}).waitFor();

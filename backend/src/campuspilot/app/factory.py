@@ -173,7 +173,9 @@ def _register_shell(app: FastAPI, state: WebState) -> None:
         response.headers["Permissions-Policy"] = "geolocation=(self)"
         if request.url.path.startswith(("/api/", "/_AMapService/")):
             response.headers["Cache-Control"] = "no-store"
-        elif request.url.path in {"/", "/map-view"} or request.url.path.startswith("/assets/"):
+        elif request.url.path in {"/", "/classic", "/map-view"} or request.url.path.startswith(
+            "/assets/"
+        ):
             # The front end ships unversioned filenames. Revalidate every time so a release
             # cannot leave a phone running the previous app.js; unchanged files still answer 304.
             response.headers["Cache-Control"] = "no-cache"
@@ -181,6 +183,11 @@ def _register_shell(app: FastAPI, state: WebState) -> None:
 
     @app.get("/", include_in_schema=False)
     def index() -> FileResponse:
+        return FileResponse(ASSETS / "v2" / "index.html")
+
+    @app.get("/classic", include_in_schema=False)
+    def classic() -> FileResponse:
+        """Previous UI, kept so the existing browser journeys keep running against it."""
         return FileResponse(ASSETS / "index.html")
 
     @app.get("/map-view", include_in_schema=False)
