@@ -1,0 +1,11 @@
+{
+  "name": "理小龙 CDUTdino · 成都理工大学校园办事助手",
+  "short_name": "理小龙",
+  "description": "CDUTdino：问办事流程、找老师和地点，并步行带你去。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f6f8",
+  "theme_color": "#f5f6f8",
+  "lang": "zh-CN",
+  "icons": [{ "src": "/assets/v2/dino.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

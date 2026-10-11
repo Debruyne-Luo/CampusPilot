@@ -160,7 +160,7 @@ function showStatus(data) {
 }
 function message(text, role) {
   const node = element("article", undefined, "message " + role);
-  node.append(element("div", role === "user" ? "你" : "CampusPilot", "message-label"));
+  node.append(element("div", role === "user" ? "你" : "理小龙", "message-label"));
   const body = element("div", undefined, "message-body");
   if (role === "assistant") {
     // Render the small prose subset we request, without interpreting HTML or URLs.

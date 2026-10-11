@@ -33,3 +33,20 @@ export function projector(places, width, height, pad = 40) {
   const ox = (width - (x1 - x0) * s) / 2, oy = (height - (y1 - y0) * s) / 2;
   return (pos) => (pos ? { x: ox + (pos.longitude - x0) * s, y: height - (oy + (pos.latitude - y0) * s) } : null);
 }
+/**
+ * Places drawn on the map. "全部" keeps it uncluttered: hotspot places plus places the
+ * current answer (or a search) referenced and the selected one. A category chip shows
+ * every place of that category.
+ */
+export function visiblePlaces(places, filter = "all", extraIds = new Set(), selected = null) {
+  if (filter !== "all") return places.filter((p) => matchesFilter(p, filter));
+  return places.filter((p) => p.hotspot === true || extraIds.has(p.place_id) || p.place_id === selected);
+}
+const fold = (s) => String(s || "").toLowerCase().replace(/\s+/g, "");
+/** Local search over names and aliases: exact > prefix > substring; at most `limit`. */
+export function searchPlaces(places, query, limit = 8) {
+  const q = fold(query);
+  if (!q) return [];
+  const score = (p) => Math.min(...[p.name, ...(p.aliases || [])].map((n) => { const f = fold(n); return f === q ? 0 : f.startsWith(q) ? 1 : f.includes(q) ? 2 : 9; }));
+  return places.map((p, i) => [score(p), i, p]).filter(([s]) => s < 9).sort((a, b) => a[0] - b[0] || a[1] - b[1]).slice(0, limit).map(([, , p]) => p);
+}

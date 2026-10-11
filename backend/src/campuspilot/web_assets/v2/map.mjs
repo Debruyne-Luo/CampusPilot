@@ -2,18 +2,19 @@
 // a schematic SVG of recorded points. Personal positions stay in the browser: they are
 // only posted to the same-origin map frame for AMap.Walking, never to /api.
 import { h } from "./dom.mjs";
-import { hasPosition, matchesFilter, projector } from "./places.mjs";
+import { hasPosition, projector, visiblePlaces } from "./places.mjs";
 
 const NS = "http://www.w3.org/2000/svg";
 const svgEl = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
 
-export function createMap({ frame, fallback, status, onSelect }) {
+export function createMap({ frame, fallback, status, onSelect, onOrigin = () => {}, onPoi = () => {} }) {
   const generation = Math.floor(Math.random() * 1e9);
   let mode = "loading", places = [], filter = "all", selected = null, routeSeq = 0, pendingRoute = null;
+  let extra = new Set(), searchSeq = 0, pendingSearch = null;
   const send = (data) => frame.contentWindow?.postMessage({ type: "campuspilot-map", ...data, frame_generation: generation }, location.origin);
   window.sendToMap = send; // guidance.js (classic script) talks to the frame through this global
 
-  const visible = () => places.filter((p) => matchesFilter(p, filter));
+  const visible = () => visiblePlaces(places, filter, extra, selected);
   function drawFallback() {
     const W = 1000, H = 700, list = visible(), project = projector(places, W, H, 70);
     const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, class: "schematic", role: "img", "aria-label": "校园地点示意图（未接入高德地图）" });
@@ -41,6 +42,9 @@ export function createMap({ frame, fallback, status, onSelect }) {
     else if (d.action === "ready") { mode = "amap"; status(""); push(); }
     else if (d.action === "failed") useFallback("底图加载失败，显示示意图");
     else if (d.action === "select") { const p = places.find((x) => x.place_id === d.place_id); if (p) onSelect(p); }
+    else if (d.action === "route-origin" && d.request_id === routeSeq) onOrigin(d.position, d.name);
+    else if (d.action === "poi-selection" && d.place) onPoi(d.place);
+    else if (d.action === "place-search-result" && pendingSearch && d.request_id === searchSeq) { pendingSearch(d.status === "success" ? d.places : []); pendingSearch = null; }
     else if (d.action === "route-result" && pendingRoute && d.request_id === routeSeq) { pendingRoute(d); pendingRoute = null; }
     else if (d.action === "guidance-position") window.Guidance?.receive(d);
   });
@@ -58,24 +62,40 @@ export function createMap({ frame, fallback, status, onSelect }) {
       } catch { useFallback("地图配置读取失败，显示示意图"); }
     },
     setFilter(id) { filter = id; push(); },
+    /** Places referenced by the current answer or a search are drawn in addition to hotspots. */
+    reveal(ids) { for (const id of ids) extra.add(id); push(); },
+    /** AMap POI search near campus (frame-side); resolves [] when the map is unavailable. */
+    searchPoi(query) {
+      if (mode !== "amap") return Promise.resolve([]);
+      if (pendingSearch) pendingSearch([]);
+      return new Promise((resolve) => { searchSeq += 1; pendingSearch = resolve; send({ action: "place-search", request_id: searchSeq, query }); setTimeout(() => { if (pendingSearch === resolve) { pendingSearch = null; resolve([]); } }, 8000); });
+    },
     focus(place) {
-      selected = place.place_id;
-      if (mode === "amap" && hasPosition(place)) send({ action: "center", place_id: place.place_id, position: place.position });
-      else push();
+      const known = extra.has(place.place_id) || place.hotspot === true;
+      selected = place.place_id; extra.add(place.place_id);
+      if (mode === "amap" && hasPosition(place)) {
+        if (!known) push(); // draw it first; "center" then highlights the new marker
+        send({ action: "center", place_id: place.place_id, position: place.position });
+      } else push();
     },
     get ready() { return mode === "amap"; },
-    /** Walking route from the browser's own position (asked only on click). */
-    route(place) {
+    /** Walking route from an explicit origin (GPS or user-chosen) to a place or a POI/point. */
+    route(target, origin) {
       return new Promise((resolve) => {
-        if (mode !== "amap") { selected = place.place_id; push(); return resolve({ status: "unavailable", message: "步行路线需要高德地图；已在示意图上标出目的地" }); }
-        if (!navigator.geolocation) return resolve({ status: "error", message: "当前浏览器无法定位" });
-        navigator.geolocation.getCurrentPosition((fix) => {
-          const origin = { longitude: fix.coords.longitude, latitude: fix.coords.latitude, coordinate_system: "WGS84" };
-          routeSeq += 1; pendingRoute = resolve;
-          send({ action: "route-request", request_id: routeSeq, origin, destination_place_id: place.place_id });
-        }, () => resolve({ status: "error", message: "定位未允许，可在地图上查看目的地" }), { enableHighAccuracy: true, timeout: 10000 });
+        if (mode !== "amap") { if (target.place_id) { selected = target.place_id; push(); } return resolve({ status: "unavailable", message: "步行路线需要高德地图；已在示意图上标出目的地" }); }
+        if (!origin) return resolve({ status: "need_origin" });
+        routeSeq += 1; pendingRoute = resolve;
+        send({ action: "route-request", request_id: routeSeq, origin,
+          ...(target.place_id ? { destination_place_id: target.place_id } : { destination_position: target.position }) });
       });
     },
+    /** Next map click (or marker) becomes the route origin; answered through onOrigin. */
+    pickOrigin() { if (mode !== "amap") return false; routeSeq += 1; send({ action: "route-pick", request_id: routeSeq }); return true; },
+    cancelPick() { routeSeq += 1; send({ action: "route-clear", request_id: routeSeq }); },
+    heading(rotation) { if (mode === "amap") send({ action: "heading", ...rotation, arrow: rotation.arrow, rotation: rotation.map }); },
+    centerOn(position) { if (mode === "amap" && position) send({ action: "center", place_id: null, position }); },
+    northUp() { if (mode === "amap") send({ action: "north-up" }); },
+    insets(bottom) { if (mode === "amap") send({ action: "route-insets", bottom }); },
     get routeId() { return routeSeq; },
   };
 }

@@ -21,7 +21,7 @@ HEADERS = {"Origin": "http://testserver", "X-CampusPilot-Request": "1"}
 
 def test_unconfigured_ui_catalogue_and_no_mock_answer() -> None:
     with TestClient(create_web_app(data_dir=DATA)) as client:
-        assert "CampusPilot" in client.get("/").text
+        assert "理小龙" in client.get("/").text and "CDUTdino" in client.get("/").text
         script = client.get("/assets/app.js")
         assert script.status_code == 200 and "innerHTML" not in script.text
         assert "frame-ancestors 'none'" in script.headers["Content-Security-Policy"]

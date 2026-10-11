@@ -122,7 +122,7 @@ def create_web_app(
         tool_gateway=bool(public_origin),
         repository=repository,
     )
-    app.title = "CampusPilot 校园办事与地图"
+    app.title = "理小龙 CDUTdino 校园办事与地图"
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=hosts)
     state = WebState(
         repository=repository,
@@ -182,7 +182,9 @@ def _register_shell(app: FastAPI, state: WebState, version: str = "") -> None:
         map_view = request.url.path == "/map-view"
         script_policy = (
             "script-src 'self' 'unsafe-inline' 'unsafe-eval' "
-            "https://webapi.amap.com https://jsapi-service.amap.com https://mapplugin.amap.com; "
+            "https://webapi.amap.com https://jsapi-service.amap.com https://mapplugin.amap.com "
+            # Map-frame POI (hotspot) clicks resolve through a JSONP call on vdata.amap.com.
+            "https://vdata.amap.com; "
             if map_view
             else "script-src 'self'; "
         )

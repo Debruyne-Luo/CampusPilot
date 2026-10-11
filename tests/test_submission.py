@@ -54,14 +54,47 @@ def workflow_node(name: str) -> Any:
 
 def test_public_candidates_unknowns_and_authenticated_shared_queries() -> None:
     repo = DirectoryRepository.load(DATA)
-    assert len(repo.search_place("")) == 40
-    positions = [p.position for p in repo.search_place("") if p.position is not None]
-    assert len(positions) == 32
-    assert all(p.verification_status == "needs_review" for p in positions)
-    assert all(place_card(p)["navigation_url"] is None for p in repo.search_place(""))
+    places = repo.search_place("")
+    assert len(places) == 41
+    positions = [p.position for p in places if p.position is not None]
+    assert len(positions) == 41
+    # 2026-10-11: nine provider points confirmed on site by the user; the rest stay candidates.
+    confirmed = {
+        p.place_id for p in places if p.position and p.position.verification_status == "confirmed"
+    }
+    assert confirmed == {
+        "cdut:place:" + k
+        for k in (
+            "east-e1a",
+            "east-e1b",
+            "east-e2a",
+            "east-e2b",
+            "east-e2c",
+            "yifu",
+            "earth-sciences",
+            "card-centre",
+            "tourism",
+            "water-library",
+        )
+    }
+    for p in places:
+        assert p.position is not None
+        if p.place_id in confirmed:
+            assert p.position.source_kind == "onsite_confirmation" and p.position.reviewer == "宇豪"
+            assert str(place_card(p)["navigation_url"]).startswith(
+                "https://uri.amap.com/navigation?"
+            )
+        else:
+            assert p.position.verification_status == "needs_review"
+            assert place_card(p)["navigation_url"] is None
+    assert {p.place_id for p in places if p.hotspot} >= {
+        "cdut:place:water-library",
+        "cdut:place:card-centre",
+        "cdut:place:hospital",
+    }
     # User-provided same-building association uses the ecological college provider point.
     assert repo.search_place("网安楼")[0].position is not None
-    assert repo.search_place("校园一卡通中心")[0].position is None
+    assert repo.search_place("校园一卡通中心")[0].position is not None
     assert repo.search_place("珙桐食堂")[0].name == "珙桐餐厅"
     assert all(p.category == "library" for p in repo.search_place("", "library"))
     teacher = repo.search_teacher("王洪辉")[0]

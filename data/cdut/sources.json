@@ -591,5 +591,21 @@
     "limitations": [
       "不是学校官方资料；店铺现状以现场为准。"
     ]
+  },
+  {
+    "evidence_id": "cdut:evidence:user-onsite-20261011",
+    "source_id": "cdut:source:user-campus-life",
+    "source_reference": "宇豪实地核对的校园地点高德分享链接（2026-10-11）",
+    "source_url": null,
+    "publisher": "项目用户",
+    "source_authority": "user_supplement",
+    "version": "2026-10-11",
+    "locator": "本次需求：东区E1A/E1B/E2A/E2B/E2C、逸夫楼、地球与行星科学学院、校园一卡通中心（计划财务处）、地理与规划学院、水上图书馆的高德分享点",
+    "applicability": "校园地点建筑参考坐标的现场核对；不作为学校办理政策、费用、营业时间依据。",
+    "retrieved_at": "2026-10-11",
+    "access_method": "user_message",
+    "limitations": [
+      "坐标为高德建筑参考点，入口与室内位置以现场为准。"
+    ]
   }
 ]
