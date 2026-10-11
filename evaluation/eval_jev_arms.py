@@ -13,8 +13,9 @@ Metrics per arm and per case file:
                       (precision) and share of cases with >=1 gold excerpt (hit rate);
                       refusal cases: share with no excerpts and no citations
   latency_ms          p50 / p95 per turn (wall clock, includes model and Jev calls)
-  cost_usd            Jev spend per question from the EvaluationBudget ledger (generation
-                      model spend is not metered here)
+  cost_usd            Jev spend per question from the run's own OnlineBudget ledger, hard
+                      capped by --max-usd across all arms (generation model spend is not
+                      metered here)
   jev_unknown_rate    turns whose Jev status is not "ok" (unknown / unsure / timeout / ...)
 
 Safety: the default ``--jev fake`` uses an offline stand-in that always answers ``unknown``
@@ -39,7 +40,7 @@ from typing import Any
 from campuspilot.agent.executor import NO_BASIS_ANSWER, AgentRunner
 from campuspilot.chat_runtime import ConversationContext
 from campuspilot.directory.repository import DirectoryRepository
-from campuspilot.evaluation_budget import EvaluationBudget
+from campuspilot.evaluation_budget import OnlineBudget
 from campuspilot.jev_plugin import JevMode, JevPlugin
 from campuspilot.jev_shadow import ShadowResult
 from campuspilot.knowledge import KnowledgeStore
@@ -96,9 +97,10 @@ class OfflineJev:
         )
 
 
-def load_cases(paths: list[Path], limit: int | None) -> list[dict[str, Any]]:
+def load_cases(paths: list[Path], limits: list[int] | None) -> list[dict[str, Any]]:
     out = []
-    for path in paths:
+    for n, path in enumerate(paths):
+        limit = None if not limits else limits[min(n, len(limits) - 1)]
         rows = [json.loads(x) for x in path.read_text(encoding="utf-8").splitlines() if x.strip()]
         for i, c in enumerate(rows[:limit]):
             out.append(
@@ -139,6 +141,7 @@ def summarize(rows: list[dict[str, Any]], spend: Decimal) -> dict[str, Any]:
     gold_shown = [c for r in answered for c in r["excerpt_ids"] if c in r["gold"]]
     jev = [r["jev_status"] for r in rows if r["jev_status"] is not None]
     lat = [r["latency_ms"] for r in rows]
+    jlat = [r["jev_latency_ms"] for r in rows if r["jev_latency_ms"]]
     return {
         "n": len(rows),
         "refusal_recall": ratio(sum(r["refused"] for r in ref), len(ref)),
@@ -152,6 +155,8 @@ def summarize(rows: list[dict[str, Any]], spend: Decimal) -> dict[str, Any]:
         ),
         "latency_ms_p50": pct(lat, 0.5),
         "latency_ms_p95": pct(lat, 0.95),
+        "jev_latency_ms_p50": pct(jlat, 0.5),
+        "jev_latency_ms_p95": pct(jlat, 0.95),
         "jev_cost_usd_per_question": str(spend / len(rows)) if rows else None,
         "jev_calls": len(jev),
         "jev_unknown_rate": ratio(sum(s != "ok" for s in jev), len(jev)) if jev else None,
@@ -160,7 +165,12 @@ def summarize(rows: list[dict[str, Any]], spend: Decimal) -> dict[str, Any]:
 
 
 async def run_arm(
-    name: str, cases: list[dict[str, Any]], args: argparse.Namespace, model: Any, client: Any
+    name: str,
+    cases: list[dict[str, Any]],
+    args: argparse.Namespace,
+    model: Any,
+    client: Any,
+    budget: OnlineBudget,
 ) -> dict[str, Any]:
     grounding, jev_mode = ARMS[name]
     emb = CachedEmbedder(args.embedding_cache, args.embedding_model)
@@ -179,19 +189,32 @@ async def run_arm(
         roster=DATA / "teachers_roster.json",
         grounding=grounding,
     )
-    ledger = Path(tempfile.mkdtemp(prefix=f"jev-eval-{name}-"))
-    budget = EvaluationBudget(ledger, "phase2")
+    before = Decimal(str(budget.report()["charged_usd"]))
     plugin = JevPlugin(client, budget, jev_mode, snapshots) if jev_mode != "off" else None
-    agent = AgentRunner(registry, repo, model, grounding=grounding, jev=plugin)
+    records: dict[str, Any] = {}
+    agent = AgentRunner(
+        registry,
+        repo,
+        model,
+        grounding=grounding,
+        jev=plugin,
+        trace=lambda kind, record: records.__setitem__(kind, record),
+    )
     rows = []
     for c in cases:
+        records.clear()
         started = time.perf_counter()
         body = await agent.run(c["question"], ConversationContext())
-        jev = body.get("jev") if isinstance(body.get("jev"), dict) else None
+        latency = (time.perf_counter() - started) * 1000  # shadow Jev runs after this
+        await agent.drain()
+        jev = records.get("jev")
         rows.append(
             {
                 **c,
-                "latency_ms": (time.perf_counter() - started) * 1000,
+                "latency_ms": latency,
+                "jev_latency_ms": jev.get("latency_ms") if jev else None,
+                "jev_reason": jev.get("reason") if jev else None,
+                "would_refuse_local": (records.get("grounding_check") or {}).get("would_refuse"),
                 "refused": refused(body),
                 "result_status": body.get("result_status"),
                 "excerpt_ids": [e.get("chunk_id") for e in body.get("excerpts") or []],
@@ -201,7 +224,7 @@ async def run_arm(
                 "jev_applied": jev.get("applied") if jev else None,
             }
         )
-    spend = Decimal(str(budget.report()["charged_usd"]))
+    spend = Decimal(str(budget.report()["charged_usd"])) - before
     files = sorted({r["file"] for r in rows})
     return {
         "grounding": grounding,
@@ -216,7 +239,11 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     p.add_argument("--cases", type=Path, nargs="+", default=DEFAULT_CASES)
     p.add_argument("--arms", nargs="+", choices=sorted(ARMS), default=sorted(ARMS))
-    p.add_argument("--limit", type=int, help="first N cases per file (smoke runs)")
+    p.add_argument(
+        "--limit", type=int, nargs="+", help="first N cases per file (one value or one per file)"
+    )
+    p.add_argument("--max-usd", default="0.50", help="hard Jev spend cap for the whole run")
+    p.add_argument("--ledger-dir", type=Path, help="budget ledger dir (default: new temp dir)")
     p.add_argument("--jev", choices=("fake", "live"), default="fake")
     p.add_argument("--i-understand-this-is-paid", action="store_true")
     p.add_argument(
@@ -245,13 +272,19 @@ def main() -> None:
         model = generation_model()
     cases = load_cases(a.cases, a.limit)
 
+    ledger = a.ledger_dir or Path(tempfile.mkdtemp(prefix="jev-eval-"))
+    budget = OnlineBudget(ledger, Decimal(a.max_usd), 1000)
+
     async def all_arms() -> dict[str, Any]:
-        return {name: await run_arm(name, cases, a, model, client) for name in a.arms}
+        return {name: await run_arm(name, cases, a, model, client, budget) for name in a.arms}
 
     arms = asyncio.run(all_arms())
     report = {
         "jev_client": a.jev,
         "generation_model": a.model,
+        "max_usd": a.max_usd,
+        "jev_spend_usd_total": str(budget.report()["charged_usd"]),
+        "jev_calls_total": budget.report()["calls"],
         "case_files": [
             str(c.relative_to(ROOT)) if c.is_relative_to(ROOT) else str(c) for c in a.cases
         ],

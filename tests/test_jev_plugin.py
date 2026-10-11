@@ -10,7 +10,12 @@ import httpx
 import pytest
 from campuspilot.agent.executor import JEV_CLARIFY_ANSWER, NO_BASIS_ANSWER, AgentRunner
 from campuspilot.config import Settings
-from campuspilot.evaluation_budget import BudgetExhausted, EvaluationBudget, TokenPrice
+from campuspilot.evaluation_budget import (
+    BudgetExhausted,
+    EvaluationBudget,
+    SpendBudget,
+    TokenPrice,
+)
 from campuspilot.jev_plugin import (
     JevPlugin,
     JevReranker,
@@ -67,7 +72,7 @@ class FakeJev:
         candidates: tuple[RetrievalHit, ...],
         *,
         public_fixture: bool,
-        budget: EvaluationBudget,
+        budget: SpendBudget,
         rule_summary: str = "",
         online: bool = False,
     ) -> ShadowResult:
@@ -101,9 +106,20 @@ def runner(
 
 
 def run(agent: AgentRunner, question: str = QUESTION) -> Any:
-    from campuspilot.chat_runtime import ConversationContext
+    """One turn; trace records (logs only, never in the response) merged in for asserts."""
+    from campuspilot.chat_runtime import ConversationContext as Context
 
-    return asyncio.run(agent.run(question, ConversationContext()))
+    records: dict[str, Any] = {}
+    agent.trace = lambda kind, record: records.__setitem__(kind, record)
+
+    async def turn() -> Any:
+        body = await agent.run(question, Context())
+        await agent.drain()
+        return body
+
+    body = asyncio.run(turn())
+    assert "grounding_check" not in body and "jev" not in body  # never sent to the frontend
+    return {**body, **records}
 
 
 def without_jev(out: dict[str, Any]) -> dict[str, Any]:
@@ -290,3 +306,49 @@ def test_online_path_returns_scores_and_keeps_privacy_guard(tmp_path: Path) -> N
         )
     )
     assert private.status == "unknown" and len(sent) == 1
+
+
+def test_shadow_runs_in_background_and_does_not_delay_the_answer(tmp_path: Path) -> None:
+    fake = FakeJev(delay=0.5, sufficient=0.05)
+    agent = runner(OFF_TOPIC, answering_model(), fake, "shadow", tmp_path)
+    records: list[tuple[str, Any]] = []
+    agent.trace = lambda kind, record: records.append((kind, record))
+
+    async def turn() -> tuple[Any, float, list[Any]]:
+        from campuspilot.chat_runtime import ConversationContext as Context
+
+        started = asyncio.get_running_loop().time()
+        body = await agent.run(QUESTION, Context())
+        elapsed = asyncio.get_running_loop().time() - started
+        before = [k for k, _ in records if k == "jev"]
+        await agent.drain()
+        return body, elapsed, before
+
+    body, elapsed, before = asyncio.run(turn())
+    assert elapsed < 0.4 and before == [] and "jev" not in body
+    assert [r["mode"] for k, r in records if k == "jev"] == ["shadow"]
+
+
+def test_online_budget_is_separate_and_enforces_caps(tmp_path: Path) -> None:
+    from campuspilot.evaluation_budget import OnlineBudget
+
+    budget = OnlineBudget(tmp_path, Decimal("0.01"), 2, today="20261011")
+    first = budget.reserve(Decimal("0.004"), "jev")
+    budget.settle(first, Decimal("0.001"))
+    second = budget.reserve(Decimal("0.004"), "jev")
+    budget.settle(second, None)  # unknown usage stays charged at the maximum
+    assert budget.report()["charged_usd"] == "0.005" and budget.report()["calls"] == 2
+    with pytest.raises(BudgetExhausted):
+        budget.reserve(Decimal("0.001"), "jev")  # call cap
+    with pytest.raises(BudgetExhausted):
+        OnlineBudget(tmp_path, Decimal("0.005"), 10, today="20261011").reserve(
+            Decimal("0.001"), "jev"
+        )  # dollar cap
+    assert not (tmp_path / "phase2").exists()  # the $5 eval ledger is untouched
+    assert (tmp_path / "online" / "budget-20261011.json").exists()
+    assert OnlineBudget(tmp_path, Decimal("1"), 2, today="20261012").report()["calls"] == 0
+
+
+def test_settings_online_budget_defaults() -> None:
+    s = Settings.from_env({"CAMPUSPILOT_JEV_DAILY_USD": "0.5"})
+    assert s.jev_daily_usd == "0.5" and s.jev_daily_calls == 2000

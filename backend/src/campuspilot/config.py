@@ -56,6 +56,9 @@ class Settings:
     # Credentials: CAMPUSPILOT_JEV_API_KEY or CAMPUSPILOT_JEV_KEY_FILE (migration_config).
     jev: JevMode = "off"
     jev_budget_dir: str = ""
+    # Online Jev spend caps per UTC day (separate from the $5 evaluation ledger).
+    jev_daily_usd: str = "1"
+    jev_daily_calls: int = 2000
     # In-repo approved knowledge bundle used instead of bootstrap.json (e.g. approved-20261011).
     knowledge_bundle: str = ""
     # "auto" serves the v2 UI under /assets/v-<content hash>/ with immutable caching.
@@ -89,6 +92,8 @@ class Settings:
             grounding=parse_grounding_mode(env.get("CAMPUSPILOT_GROUNDING", "flag")),
             jev=parse_jev_mode(env.get("CAMPUSPILOT_JEV", "off")),
             jev_budget_dir=env.get("CAMPUSPILOT_JEV_BUDGET_DIR", ""),
+            jev_daily_usd=env.get("CAMPUSPILOT_JEV_DAILY_USD", "1"),
+            jev_daily_calls=int(env.get("CAMPUSPILOT_JEV_DAILY_CALLS", "2000")),
             knowledge_bundle=env.get("CAMPUSPILOT_KNOWLEDGE_BUNDLE", ""),
             asset_version=env.get("CAMPUSPILOT_ASSET_VERSION", ""),
         )

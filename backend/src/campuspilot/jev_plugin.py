@@ -24,7 +24,7 @@ from typing import Literal, Protocol
 
 from pydantic import JsonValue
 
-from campuspilot.evaluation_budget import BudgetExhausted, EvaluationBudget
+from campuspilot.evaluation_budget import BudgetExhausted, OnlineBudget, SpendBudget
 from campuspilot.jev_shadow import ShadowResult
 from campuspilot.rag import RetrievalHit, SnapshotStore
 
@@ -63,7 +63,7 @@ class JevDecider(Protocol):
         candidates: tuple[RetrievalHit, ...],
         *,
         public_fixture: bool,
-        budget: EvaluationBudget,
+        budget: SpendBudget,
         rule_summary: str = "",
         online: bool = False,
     ) -> ShadowResult: ...
@@ -165,7 +165,7 @@ def combine(result: ShadowResult, local: str, original: tuple[str, ...]) -> JevA
 @dataclass
 class JevPlugin:
     client: JevDecider
-    budget: EvaluationBudget
+    budget: SpendBudget
     mode: JevMode = "shadow"
     snapshots: SnapshotStore | None = None
 
@@ -274,20 +274,28 @@ class JevSufficiencyPolicy:
 
 
 def build_plugin(
-    mode: JevMode, budget_dir: str, snapshots: SnapshotStore | None
+    mode: JevMode,
+    budget_dir: str,
+    snapshots: SnapshotStore | None,
+    daily_usd: str = "1",
+    daily_calls: int = 2000,
 ) -> JevPlugin | None:
-    """Production wiring: key/price/model from CAMPUSPILOT_JEV_* (see migration_config)."""
+    """Production wiring: key/price/model from CAMPUSPILOT_JEV_* (see migration_config).
+
+    Online spend uses its own per-day OnlineBudget, never the $5 evaluation ledger.
+    """
     if mode == "off":
         return None
     if not budget_dir:
         raise ValueError("CAMPUSPILOT_JEV_BUDGET_DIR is required when CAMPUSPILOT_JEV is on")
+    from decimal import Decimal
     from pathlib import Path
 
     from campuspilot.migration_config import shadow_client
 
     return JevPlugin(
         client=shadow_client(),
-        budget=EvaluationBudget(Path(budget_dir), "phase2"),
+        budget=OnlineBudget(Path(budget_dir), Decimal(daily_usd), daily_calls),
         mode=mode,
         snapshots=snapshots,
     )

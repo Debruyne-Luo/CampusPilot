@@ -2,7 +2,8 @@
 
 Online calls (``online=True``) keep every fixture safeguard: private-looking input is never
 sent, passages and question are redacted, injection-looking passages are dropped, answers are
-strictly validated, spend goes through EvaluationBudget, and any fault returns ``unknown``.
+strictly validated, spend goes through a SpendBudget (online: OnlineBudget), and any
+fault returns ``unknown``.
 """
 
 from __future__ import annotations
@@ -20,7 +21,7 @@ import httpx
 from campuspilot.chat_model import bounded_json
 from campuspilot.chat_runtime import public_input
 from campuspilot.dify import ChatUnavailable
-from campuspilot.evaluation_budget import EvaluationBudget, TokenPrice
+from campuspilot.evaluation_budget import SpendBudget, TokenPrice
 from campuspilot.rag import RetrievalHit, canonical
 
 OPENROUTER_ENDPOINT = "https://openrouter.ai/api/alpha/decisions"
@@ -83,7 +84,7 @@ class JevShadowClient:
         candidates: tuple[RetrievalHit, ...],
         *,
         public_fixture: bool,
-        budget: EvaluationBudget,
+        budget: SpendBudget,
         rule_summary: str = "",
         online: bool = False,
     ) -> ShadowResult:

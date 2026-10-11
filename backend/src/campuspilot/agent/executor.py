@@ -182,9 +182,14 @@ class AgentRunner:
         max_tool_rounds: int = MAX_TOOL_ROUNDS,
         grounding: GroundingMode = "flag",
         jev: JevPlugin | None = None,
+        trace: Callable[[str, dict[str, JsonValue]], None] | None = None,
     ) -> None:
         self.grounding = grounding
         self.jev = jev
+        # Decision records (grounding_check, jev) go to logs and this optional sink only;
+        # they are never part of the response sent to the frontend.
+        self.trace = trace
+        self._background: set[asyncio.Task[Any]] = set()
         self.registry = registry
         self.repository = repository
         self.model = model
@@ -597,21 +602,34 @@ class AgentRunner:
         if self.grounding != "off" and ev.grounding_checks:
             decisions = [str(c.get("decision")) for c in ev.grounding_checks]
             other = bool(ev.services or ev.places or ev.teachers or ev.checklist)
-            body["grounding_check"] = {
-                "mode": self.grounding,
-                "policy": ev.grounding_checks[0].get("policy"),
-                "decisions": list(decisions),
-                "grounded_chunk_ids": sorted(  # type: ignore[dict-item]
-                    {
-                        str(i)
-                        for c in ev.grounding_checks
-                        for i in c.get("grounded_chunk_ids") or []  # type: ignore[union-attr]
-                    }
-                ),
-                # Whether block mode would have answered with the no-basis refusal.
-                "would_refuse": all(d == "insufficient" for d in decisions) and not other,
-            }
+            self._trace(
+                "grounding_check",
+                {
+                    "mode": self.grounding,
+                    "policy": ev.grounding_checks[0].get("policy"),
+                    "decisions": list(decisions),
+                    "grounded_chunk_ids": sorted(  # type: ignore[dict-item]
+                        {
+                            str(i)
+                            for c in ev.grounding_checks
+                            for i in c.get("grounded_chunk_ids") or []  # type: ignore[union-attr]
+                        }
+                    ),
+                    # Whether block mode would have answered with the no-basis refusal.
+                    "would_refuse": all(d == "insufficient" for d in decisions) and not other,
+                },
+            )
         return body
+
+    def _trace(self, kind: str, record: dict[str, JsonValue]) -> None:
+        logger.info("%s %s", kind, json.dumps(record, ensure_ascii=False, sort_keys=True))
+        if self.trace is not None:
+            self.trace(kind, record)
+
+    async def drain(self) -> None:
+        """Wait for background shadow evaluations (tests, eval scripts, shutdown)."""
+        while self._background:
+            await asyncio.gather(*tuple(self._background), return_exceptions=True)
 
     async def run(
         self, question: str, context: ConversationContext, emit: Emit | None = None
@@ -751,15 +769,17 @@ class AgentRunner:
         turn = jev.turn()
         local = self._local_grounding(ev)
         if jev.mode == "shadow":
-            # Runs alongside the answer; recorded only, never changes the response.
+            # Background: recorded only, never changes or delays the response.
             task = asyncio.create_task(turn.assess(question, candidates, local))
-            try:
-                body = await self._compose(question, view, context, ev, plan, steps)
-            except BaseException:
-                task.cancel()
-                raise
-            body["jev"] = (await task).record("shadow")
-            return body
+            self._background.add(task)
+
+            def done(t: asyncio.Task[Any]) -> None:
+                self._background.discard(t)
+                if not t.cancelled() and t.exception() is None:
+                    self._trace("jev", t.result().record("shadow"))
+
+            task.add_done_callback(done)
+            return await self._compose(question, view, context, ev, plan, steps)
         decision = await JevSufficiencyPolicy(turn, local).decide(question, candidates)
         assessment = await turn.assess(question, candidates, local)  # cached: one request
         other = bool(ev.services or ev.places or ev.teachers or ev.checklist)
@@ -775,7 +795,7 @@ class AgentRunner:
                 mode="agent_jev",
                 show_sources=False,
             )
-            body["jev"] = assessment.record("on", "refuse" if refuse else "clarify")
+            self._trace("jev", assessment.record("on", "refuse" if refuse else "clarify"))
             return body
         applied = "none"
         if assessment.usable and assessment.ranked_ids:
@@ -784,7 +804,7 @@ class AgentRunner:
                 self._apply_rerank(ev, kept)
                 applied = "rerank"
         body = await self._compose(question, view, context, ev, plan, steps)
-        body["jev"] = assessment.record("on", applied)
+        self._trace("jev", assessment.record("on", applied))
         return body
 
     async def _compose(

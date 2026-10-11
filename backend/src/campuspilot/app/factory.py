@@ -90,6 +90,8 @@ def create_web_app(
     grounding: GroundingMode = "flag",
     jev: JevMode = "off",
     jev_budget_dir: str = "",
+    jev_daily_usd: str = "1",
+    jev_daily_calls: int = 2000,
     knowledge_bundle: str = "",
     asset_version: str = "",
 ) -> FastAPI:
@@ -154,7 +156,7 @@ def create_web_app(
                 repository,
                 model if isinstance(model, ToolCallingModel) else None,
                 grounding=grounding,
-                jev=build_plugin(jev, jev_budget_dir, snapshots),
+                jev=build_plugin(jev, jev_budget_dir, snapshots, jev_daily_usd, jev_daily_calls),
             )
             if agent_loop and runtime_mode == "phase2"
             else None

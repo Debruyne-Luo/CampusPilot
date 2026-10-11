@@ -19,7 +19,6 @@ from typing import Any
 import httpx
 import pytest
 from campuspilot.agent.executor import NO_BASIS_ANSWER, AgentRunner
-from campuspilot.chat_runtime import ConversationContext
 from campuspilot.config import Settings
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.knowledge import KnowledgeStore
@@ -83,7 +82,20 @@ def runner(vector: list[float], model: Any, grounding: GroundingMode = "block") 
 
 
 def run(agent: AgentRunner, question: str) -> Any:
-    return asyncio.run(agent.run(question, ConversationContext()))
+    """One turn; trace records (logs only, never in the response) merged in for asserts."""
+    from campuspilot.chat_runtime import ConversationContext as Context
+
+    records: dict[str, Any] = {}
+    agent.trace = lambda kind, record: records.__setitem__(kind, record)
+
+    async def turn() -> Any:
+        body = await agent.run(question, Context())
+        await agent.drain()
+        return body
+
+    body = asyncio.run(turn())
+    assert "grounding_check" not in body and "jev" not in body  # never sent to the frontend
+    return {**body, **records}
 
 
 def hit(chunk_id: str) -> RetrievalHit:
