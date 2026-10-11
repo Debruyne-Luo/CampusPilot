@@ -17,11 +17,17 @@ export function planCard(state) {
   return h("section", { class: "card plan", "aria-label": "执行计划" }, h("h4", {}, "执行计划"), list);
 }
 
+/** Cited sources: the deduped citation cards (same as 引用来源 N 条); else unique source ids. */
+export function citedCount(body) {
+  if (Array.isArray(body?.citations)) return body.citations.length;
+  return Array.isArray(body?.source_ids) ? new Set(body.source_ids).size : 0;
+}
+
 function conclusion(body) {
   const status = body.result_status || "success";
   const ok = status === "success";
   return h("section", { class: `card answer ${status}` },
-    h("span", { class: `badge ${ok ? "ok" : "warn"}` }, ok ? `✓ ${STATUS.success}${body.source_ids?.length ? ` · ${body.source_ids.length} 处` : ""}` : STATUS[status] || status),
+    h("span", { class: `badge ${ok ? "ok" : "warn"}` }, ok ? `✓ ${STATUS.success}${citedCount(body) ? ` · ${citedCount(body)} 处` : ""}` : STATUS[status] || status),
     h("p", { class: "conclusion" }, body.answer || ""),
     body.degraded_reason ? h("p", { class: "fineprint" }, "模型答案未通过校验，以下为已收录资料。") : null);
 }
