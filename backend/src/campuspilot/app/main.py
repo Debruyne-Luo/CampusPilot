@@ -58,6 +58,10 @@ def build_app(settings: Settings) -> FastAPI:
         embedding_model=settings.embedding_model,
         agent_loop=settings.agent_loop,
         grounding=settings.grounding,
+        jev=settings.jev,
+        jev_budget_dir=settings.jev_budget_dir,
+        jev_daily_usd=settings.jev_daily_usd,
+        jev_daily_calls=settings.jev_daily_calls,
         knowledge_bundle=settings.knowledge_bundle,
         asset_version=settings.asset_version,
     )

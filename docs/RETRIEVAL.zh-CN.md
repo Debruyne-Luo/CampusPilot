@@ -79,3 +79,29 @@ uv run python scripts/knowledge_release.py embed-bootstrap --store data/cdut/rag
 已知局限：测试集误拒明显高于开发集，多为错别字（"辅道员""转专页""心里中心"）和长口语句，向量相似度偏低；"借了 X 但问 Y"类对抗问题（如"校园卡能在校外超市刷吗"）检索信号无法区分，需要后续相关性/充分性判断。
 
 `evaluation/refusal-20261011/` 的 50 题由 agent（Grok Bot）于 2026-10-11 撰写，模拟成理学生提问，非真实学生数据，未经人工复核（`label_status: authored_unreviewed`）。
+
+## 可选 Jev 插件（2026-10-11，rag/04-jev-plugin）
+
+进程内插件（不走 MCP）：`backend/src/campuspilot/jev_plugin.py`，复用 `jev_shadow.JevShadowClient`
+（OpenRouter `alpha/decisions`、`typesafe/jev-1.13`、3 秒超时、脱敏、注入过滤、严格校验、`EvaluationBudget`）。
+
+- 配置 `CAMPUSPILOT_JEV=off|shadow|on`，默认 `off`。启用时需要 `CAMPUSPILOT_JEV_API_KEY` 或 `CAMPUSPILOT_JEV_KEY_FILE`（仓库外绝对路径）、`CAMPUSPILOT_JEV_INPUT_USD_PER_MILLION` / `CAMPUSPILOT_JEV_OUTPUT_USD_PER_MILLION`、`CAMPUSPILOT_JEV_BUDGET_DIR`（$5 / 1000 次账本），可选 `CAMPUSPILOT_JEV_MODEL`。
+- 挂点：`_run_plan` 之后、`_answer` 之前，每轮一次请求，`JevReranker`（`rag.Reranker`，按 rank_i 0–2 期望分排序，< 0.5 视为 rank 0 丢弃）与 `JevSufficiencyPolicy`（`rag.DecisionPolicy`）共用结果。
+- 判定：`sufficient` 概率 ≥ 0.7 → sufficient；否则 answer_mode=clarify → clarify；≤ 0.3 → insufficient，但本地 grounding 为 grounded 且 Jev 自己仍保留了片段时视为分歧 → unknown。
+- `shadow`：与回答并行请求，只记录（日志 + 响应 `jev` 元数据），不改回答。`on`：重排/丢弃片段；insufficient → 无依据拒答，clarify → 请用户补充条件，均不展示引用；有办事/地点/老师等非知识库证据时不拒答。
+- 超时、错误、预算耗尽、unsure/unknown 一律 fail-open，走原流程。
+- `public_fixture` 限制只对 `online=True` 的在线路径放开；`public_input` 隐私检查、脱敏和注入过滤保留。
+- 四组对比评测：`evaluation/eval_jev_arms.py`（A 当前 / B 本地 block / C Jev shadow / D Jev on）。默认 `--jev fake` 离线；`--jev live` 需加 `--i-understand-this-is-paid`。尚未对真实 API 运行。
+
+### Jev 四组对比与校准（dev，2026-10-11）
+
+全量 dev（dev-colloquial 118 + refusal dev 25 = 143 题；可答 112 / 拒答 31），生成模型 deepseek-flash（thinking 关闭），未用留出测试集。汇总：`evaluation/reports/jev-arms-dev-20261011.json`。
+
+| 组 | 拒答召回 | 误拒 | 引用精度 | 延迟 p50/p95 (ms) | Jev unsure |
+|---|---|---|---|---|---|
+| A 当前 | 4/31 | 1/112 | 0.295 | 3079 / 4022 | – |
+| B 本地 block | 11/31 | 3/112 | 0.404 | 2957 / 4220 | – |
+| C Jev shadow | 3/31 | 0/112 | 0.293 | 3134 / 4058 | 101/119 |
+| D Jev on | 8/31 | 1/112 | 0.306 | 3360 / 4101 | 100/119 |
+
+校准（`evaluation/calibrate_jev.py`，离线、基于 C 组记录的原始 Jev 输出，不再调用 API）：去掉逐片段置信度门槛、`sufficient_at` 0.7→0.6 后，模拟 on 组拒答召回 8/31 → 15/31，误拒 2/112（1.8%），unsure 84.9% → 47.9%。新默认值写入 `jev_plugin.Calibration`。这是 dev 内选参，需在留出集上复核。
