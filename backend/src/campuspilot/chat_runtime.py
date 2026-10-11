@@ -9,6 +9,7 @@ from typing import Literal, cast
 
 from pydantic import JsonValue
 
+from campuspilot.agent.verify import missing_premise, unsafe_text, unsupported_numbers
 from campuspilot.chat_model import ChatTurn, ProductionModel
 from campuspilot.dify import ChatUnavailable
 from campuspilot.directory.assist import AssistInput, AssistResponse, assist
@@ -16,8 +17,9 @@ from campuspilot.directory.lookup import ServiceKey
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.knowledge import KnowledgeQuery, KnowledgeStore, campus_today
 from campuspilot.presentation import AnswerEnvelope, guide_answer, resolve_cards
-from campuspilot.rag import RetrievalFilters, RetrievalHit, SnapshotStore, terms
+from campuspilot.rag import RetrievalFilters, RetrievalHit, SnapshotStore
 from campuspilot.retrieval import campus_answer
+from campuspilot.retrieval.bm25 import terms
 
 Mode = Literal["legacy", "phase1", "phase2"]
 EMPTY_CARDS: dict[str, JsonValue] = {"services": [], "teachers": [], "places": []}
@@ -539,21 +541,12 @@ class ChatRuntime:
             result.status == "success" and not result.source_ids
         ):
             raise ChatUnavailable("invalid_response")
-        if re.search(
-            r"https?://|\d{1,3}\.\d{4,}|"
-            r"(?:经度|纬度|坐标)\D{0,12}[-+]?\d|"
-            r"[-+]?\d{1,3}\.\d+\s*[,，]\s*[-+]?\d{1,3}\.\d+",
-            result.answer,
-        ):
+        if unsafe_text(result.answer) or unsupported_numbers(result.answer, prepared.evidence):
             raise ChatUnavailable("invalid_response")
-        for number in re.findall(r"\d{3,}(?:[-.]\d+)*", result.answer):
-            if number not in prepared.evidence:
-                raise ChatUnavailable("invalid_response")
         # A short generated service answer must retain this source's critical prerequisite.
         local_answer = str((prepared.response or {}).get("answer", ""))
-        if prepared.route == "service" and "大于20" in local_answer:
-            if not re.search(r"(?:余额|账户).{0,20}(?:大于|超过|>)\s*20", result.answer):
-                raise ChatUnavailable("required_premise_missing")
+        if prepared.route == "service" and missing_premise(result.answer, local_answer):
+            raise ChatUnavailable("required_premise_missing")
         return {
             **(prepared.response or EMPTY_CARDS),
             "answer": result.answer,

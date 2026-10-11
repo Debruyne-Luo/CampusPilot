@@ -3,7 +3,7 @@ async(page)=>{
   const context=await page.context().browser().newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,
     userAgent:'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36'});
   try {
-    const mobile=await context.newPage();await mobile.goto('http://127.0.0.1:8767/');
+    const mobile=await context.newPage();await mobile.goto('http://127.0.0.1:8767/classic');
     await mobile.waitForFunction(()=>mapState==='ready');
     const frame=mobile.frames().find(f=>f.url().endsWith('/map-view'));
     await frame.waitForFunction(()=>placeRecords.size===20);

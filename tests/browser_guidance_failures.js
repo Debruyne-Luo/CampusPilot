@@ -5,7 +5,7 @@ async (page) => {
   const errors=[], onError=error=>errors.push(error.name);
   page.on('pageerror',onError);
   await page.setViewportSize({width:390,height:844});
-  await page.goto('http://127.0.0.1:8767/');
+  await page.goto('http://127.0.0.1:8767/classic');
   await page.waitForFunction(()=>mapState === 'ready');
   await page.locator('#place-query').fill('珙桐');
   await page.getByRole('button',{name:'开始查询',exact:true}).click();

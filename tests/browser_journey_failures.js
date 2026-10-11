@@ -1,6 +1,6 @@
 // Additional local browser checks. Business responses and failure injections are SYNTHETIC.
 async (page) => {
-  if (page.url() === 'about:blank') await page.goto('http://127.0.0.1:8767/');
+  if (page.url() === 'about:blank') await page.goto('http://127.0.0.1:8767/classic');
   const check = (condition, message) => {if (!condition) throw new Error(message);};
   let calls = 0;
   let releaseLoader;

@@ -128,8 +128,9 @@ const Guidance = typeof document === "undefined" ? null : (() => {
     const slot=document.querySelector('.guidance-slot'); if (!slot) return;
     slot.replaceChildren();
     const active=!!context;
-    $('journey-card').classList.toggle('guiding',active);
-    $('journey-title').textContent=active ? '步行引导' : '步行参考路线';
+    // Classic UI has #journey-card/#journey-title; the v2 UI only provides .guidance-slot.
+    document.getElementById('journey-card')?.classList.toggle('guiding',active);
+    const title=document.getElementById('journey-title'); if (title) title.textContent=active ? '步行引导' : '步行参考路线';
     document.querySelector('.start-guidance')?.toggleAttribute('hidden',active);
     document.querySelector('.route-guidance-note')?.toggleAttribute('hidden',active);
     if (!active) return;
@@ -150,7 +151,7 @@ const Guidance = typeof document === "undefined" ? null : (() => {
       box.append(button('暂停引导',() => pause('步行引导已暂停。')),follow);
       if (rawPosition && progress?.status === 'off_route') box.append(button('从当前位置重新规划',replan));
     }
-    const end=button('结束引导',stop), exit=button('退出路线',() => Journey.exitRoute());
+    const end=button('结束引导',stop), exit=button('退出路线',() => (typeof Journey !== 'undefined' ? Journey.exitRoute() : stop()));
     end.classList.add('guidance-end-button'); exit.classList.add('guidance-exit-button');
     box.append(end,exit); slot.append(box);
   }
@@ -158,3 +159,5 @@ const Guidance = typeof document === "undefined" ? null : (() => {
   window.addEventListener('pagehide',stop);
   return {start,stop,pause,receive,render,active:() => !!context};
 })();
+// Top-level const is not a window property; ES modules (v2 UI) reach it through window.
+if (Guidance) window.Guidance = Guidance;

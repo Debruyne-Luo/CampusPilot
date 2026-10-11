@@ -63,7 +63,9 @@ def test_seed_sources_remain_unreviewed() -> None:
         assert source.source_authority in {
             "official_department",
             "official_college",
-            "official_university", "map_provider", "user_supplement",
+            "official_university",
+            "map_provider",
+            "user_supplement",
         }
         assert source.verification_status == "needs_review"
         assert source.reviewer is None and source.verified_at is None
