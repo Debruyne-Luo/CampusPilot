@@ -9,6 +9,7 @@ from pathlib import Path
 from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse
 
+from campuspilot.agent.executor import AgentRunner
 from campuspilot.chat_runtime import ChatRuntime, ConversationContext, Mode
 from campuspilot.dify import DifyClient
 from campuspilot.directory.repository import DirectoryRepository
@@ -96,6 +97,7 @@ class WebState:
     amap_security_code: str
     budget: ChatBudget
     embedder: CloudflareEmbedder | None = None
+    agent: AgentRunner | None = None
     map_window: SlidingWindow = field(default_factory=lambda: SlidingWindow(60, 120))
     sessions: dict[str, BrowserSession] = field(default_factory=dict)
 

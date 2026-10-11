@@ -48,6 +48,13 @@ class ToolRegistry:
         self._tools = {t.name: t for t in tools}
 
     @property
+    def tools(self) -> tuple[Tool, ...]:
+        return tuple(self._tools.values())
+
+    def has(self, name: str) -> bool:
+        return name in self._tools
+
+    @property
     def names(self) -> tuple[str, ...]:
         return tuple(self._tools)
 

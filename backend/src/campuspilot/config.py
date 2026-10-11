@@ -47,6 +47,7 @@ class Settings:
     cf_api_token: str = field(default="", repr=False)
     embedding_model: str = "@cf/baai/bge-m3"
     embedding_timeout: float = 2.5
+    agent_loop: bool = False
 
     @property
     def embeddings_configured(self) -> bool:
@@ -72,4 +73,5 @@ class Settings:
             cf_api_token=env.get("CF_API_TOKEN", ""),
             embedding_model=env.get("CAMPUSPILOT_EMBEDDING_MODEL", "@cf/baai/bge-m3"),
             embedding_timeout=float(env.get("CAMPUSPILOT_EMBEDDING_TIMEOUT", "2.5")),
+            agent_loop=env.get("CAMPUSPILOT_AGENT_LOOP", "off") == "on",
         )

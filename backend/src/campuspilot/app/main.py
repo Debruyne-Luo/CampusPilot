@@ -56,6 +56,7 @@ def build_app(settings: Settings) -> FastAPI:
         retrieval_mode=settings.retrieval_mode,
         embedder=embedder_from(settings) if mode == "phase2" else None,
         embedding_model=settings.embedding_model,
+        agent_loop=settings.agent_loop,
     )
 
 

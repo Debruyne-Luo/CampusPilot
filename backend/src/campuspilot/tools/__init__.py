@@ -24,6 +24,7 @@ __all__ = [
     "ToolError",
     "ToolExecutor",
     "ToolRegistry",
+    "agent_registry",
     "default_registry",
     "tool_schema",
 ]
@@ -45,4 +46,23 @@ def default_registry(
         if snapshots is not None
         else KnowledgeSearchTool(store)
     )
-    return ToolRegistry((*directory_agent_tools(repository), knowledge, PlaceCardsTool(repository)))
+    return ToolRegistry(
+        (
+            *directory_agent_tools(repository),
+            knowledge,
+            PlaceCardsTool(repository),
+        )
+    )
+
+
+def agent_registry(
+    repository: DirectoryRepository,
+    store: KnowledgeStore,
+    snapshots: SnapshotStore | None = None,
+    embedder: CloudflareEmbedder | None = None,
+) -> ToolRegistry:
+    """default_registry plus make_checklist: the agent loop's tool whitelist."""
+    from campuspilot.tools.checklist import ChecklistTool
+
+    base = default_registry(repository, store, snapshots, embedder)
+    return ToolRegistry((*base.tools, ChecklistTool(repository)))

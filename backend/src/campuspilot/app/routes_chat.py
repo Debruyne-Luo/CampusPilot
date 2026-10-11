@@ -1,10 +1,12 @@
 """POST /api/chat: backend runtime (phase1/phase2), local answers, then Dify."""
 
+import asyncio
 import json
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
+from campuspilot.agent.executor import AgentRunner
 from campuspilot.app.state import NOTICE, BrowserSession, WebState
 from campuspilot.app.validation import ChatInput
 from campuspilot.chat_runtime import PreparedQuery, public_input
@@ -37,6 +39,8 @@ def register(app: FastAPI, state: WebState) -> None:
             if state.embedder is not None and state.runtime_mode == "phase2":
                 # Fill the query-vector cache off the sync path; failure means BM25-only.
                 await state.embedder.prefetch(query_text)
+            if state.agent is not None:
+                return await _agent_turn(state, request, session, body, state.agent)
             prepared = state.runtime.prepare(query_text, session.context, request.state.request_id)
             query_text = prepared.query
             if prepared.route != "legacy_knowledge":
@@ -65,6 +69,49 @@ async def _runtime_turn(
         response = await state.runtime.generate(prepared, session.context.history)
     except ChatUnavailable as exc:
         response = state.runtime.limited(prepared, exc.code)
+    finally:
+        session.busy = False
+        if use_model:
+            state.budget.release()
+    answer_text = response.get("answer")
+    if isinstance(answer_text, str) and public_input(body.message):
+        session.context.remember(body.message, answer_text)
+    return JSONResponse({**response, "request_id": request.state.request_id, "notice": NOTICE})
+
+
+AGENT_TIMEOUT_SECONDS = 45
+
+
+async def _agent_turn(
+    state: WebState,
+    request: Request,
+    session: BrowserSession,
+    body: ChatInput,
+    agent: AgentRunner,
+) -> JSONResponse:
+    """CAMPUSPILOT_AGENT_LOOP=on: same session/global limits as the rule runtime."""
+    if session.turns_exhausted:
+        return state.problem(request, "session_limit", SESSION_LIMIT_LOCAL, 429)
+    use_model = agent.model is not None
+    if use_model and not state.budget.try_acquire():
+        return state.problem(request, "global_limit", GLOBAL_LIMIT, 429)
+    session.attempts += 1
+    session.busy = True
+    question = body.message.strip()
+    try:
+        async with asyncio.timeout(AGENT_TIMEOUT_SECONDS):
+            response = await agent.run(question, session.context)
+    except TimeoutError:
+        response = {
+            "services": [],
+            "teachers": [],
+            "places": [],
+            "answer": "回答超时，请稍后重试或换个问法。",
+            "result_status": "limited",
+            "degraded_reason": "agent_timeout",
+            "answer_mode": "agent",
+            "excerpts": [],
+        }
     finally:
         session.busy = False
         if use_model:

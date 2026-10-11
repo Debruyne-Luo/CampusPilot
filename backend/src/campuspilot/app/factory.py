@@ -12,6 +12,7 @@ from starlette.middleware.base import RequestResponseEndpoint
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.responses import Response
 
+from campuspilot.agent.executor import AgentRunner
 from campuspilot.api import create_app
 from campuspilot.app import amap, routes_chat, routes_data
 from campuspilot.app.state import (
@@ -28,9 +29,10 @@ from campuspilot.config import parse_retrieval_mode
 from campuspilot.dify import DifyClient
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.knowledge import KnowledgeStore
-from campuspilot.llm.chat_model import ProductionModel
+from campuspilot.llm.chat_model import ProductionModel, ToolCallingModel
 from campuspilot.llm.embedding import CloudflareEmbedder
 from campuspilot.rag import SnapshotStore
+from campuspilot.tools import agent_registry
 
 
 def _allowed_hosts(public_origin: str | None, api_token: str | None) -> list[str]:
@@ -67,21 +69,23 @@ def create_web_app(
     retrieval_mode: str = "hybrid",
     embedder: CloudflareEmbedder | None = None,
     embedding_model: str = "@cf/baai/bge-m3",
+    agent_loop: bool = False,
 ) -> FastAPI:
     # Directory tools keep their own service credential, never exposed to the browser.
     repository = DirectoryRepository.load(data_dir)
     knowledge = KnowledgeStore.load(data_dir / "knowledge.json")
     if runtime_mode not in {"legacy", "phase1", "phase2"}:
         raise ValueError("Invalid backend runtime mode")
+    snapshots = SnapshotStore(
+        data_dir / "rag",
+        retrieval_mode=parse_retrieval_mode(retrieval_mode),
+        embedder=embedder,
+        embedding_model=embedding_model,
+    )
     runtime = ChatRuntime(
         repository,
         knowledge,
-        SnapshotStore(
-            data_dir / "rag",
-            retrieval_mode=parse_retrieval_mode(retrieval_mode),
-            embedder=embedder,
-            embedding_model=embedding_model,
-        ),
+        snapshots,
         mode=runtime_mode,
         model=model,
         approved_direct_rules=approved_direct_rules,
@@ -111,6 +115,15 @@ def create_web_app(
         amap_security_code=amap_security_code,
         budget=budget,
         embedder=embedder if retrieval_mode != "lexical" else None,
+        agent=(
+            AgentRunner(
+                agent_registry(repository, knowledge, snapshots, embedder),
+                repository,
+                model if isinstance(model, ToolCallingModel) else None,
+            )
+            if agent_loop and runtime_mode == "phase2"
+            else None
+        ),
     )
     _register_shell(app, state)
     routes_chat.register(app, state)

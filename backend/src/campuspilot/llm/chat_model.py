@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 from dataclasses import dataclass, field
-from typing import Annotated, Literal, Protocol
+from typing import Annotated, Literal, Protocol, runtime_checkable
 from urllib.parse import urlsplit
 
 import httpx
@@ -100,6 +100,14 @@ class ChatCompletionsModel:
         if not 0 < self.timeout_seconds <= 60 or not 1 <= self.max_output_tokens <= 4000:
             raise ValueError("Invalid model budget")
 
+    async def complete(
+        self,
+        messages: list[dict[str, object]],
+        tools: list[dict[str, object]] | None = None,
+        json_mode: bool = False,
+    ) -> Completion:
+        return await complete(self, messages, tools, json_mode)
+
     async def generate(
         self, question: str, evidence: str, history: tuple[ChatTurn, ...]
     ) -> ModelReply:
@@ -156,3 +164,90 @@ class ChatCompletionsModel:
             raise ChatUnavailable("upstream_timeout") from None
         except (httpx.HTTPError, ValueError, KeyError, TypeError, IndexError):
             raise ChatUnavailable("invalid_response") from None
+
+
+class ToolCall(Contract):
+    call_id: Annotated[str, Field(min_length=1, max_length=200)]
+    name: Annotated[str, Field(min_length=1, max_length=64)]
+    arguments: Annotated[str, Field(max_length=8000)] = "{}"
+
+
+class Completion(Contract):
+    content: Annotated[str, Field(max_length=16000)] | None = None
+    tool_calls: tuple[ToolCall, ...] = Field(default=(), max_length=8)
+    input_tokens: int = Field(default=0, ge=0)
+    output_tokens: int = Field(default=0, ge=0)
+
+
+@runtime_checkable
+class ToolCallingModel(Protocol):
+    """Low-level chat completion with optional OpenAI-style function calling."""
+
+    async def complete(
+        self,
+        messages: list[dict[str, object]],
+        tools: list[dict[str, object]] | None = None,
+        json_mode: bool = False,
+    ) -> Completion: ...
+
+
+async def complete(
+    model: ChatCompletionsModel,
+    messages: list[dict[str, object]],
+    tools: list[dict[str, object]] | None = None,
+    json_mode: bool = False,
+) -> Completion:
+    """OpenAI-compatible /chat/completions call with bounded body, timeout and parsing."""
+    payload: dict[str, object] = {
+        "model": model.model,
+        "messages": messages,
+        "temperature": 0,
+        "max_tokens": model.max_output_tokens,
+        "stream": False,
+    }
+    if tools:
+        payload["tools"] = tools
+        payload["tool_choice"] = "auto"
+    if json_mode:
+        payload["response_format"] = {"type": "json_object"}
+    if len(json.dumps(messages, ensure_ascii=False)) > 60_000:
+        raise ChatUnavailable("invalid_request")
+    try:
+        async with asyncio.timeout(model.timeout_seconds):
+            async with httpx.AsyncClient(
+                timeout=httpx.Timeout(model.timeout_seconds, connect=4),
+                transport=model.transport,
+                follow_redirects=False,
+            ) as client:
+                raw = await bounded_json(
+                    client,
+                    "POST",
+                    model.base_url.rstrip("/") + "/chat/completions",
+                    headers={"Authorization": "Bearer " + model.api_key},
+                    payload=payload,
+                )
+        if not isinstance(raw, dict):
+            raise ValueError
+        choices = raw["choices"]
+        if len(choices) != 1:
+            raise ValueError
+        message = choices[0]["message"]
+        calls = tuple(
+            ToolCall(
+                call_id=str(call["id"]),
+                name=str(call["function"]["name"]),
+                arguments=str(call["function"].get("arguments") or "{}"),
+            )
+            for call in (message.get("tool_calls") or [])
+        )
+        usage = raw.get("usage") or {}
+        return Completion(
+            content=message.get("content"),
+            tool_calls=calls,
+            input_tokens=int(usage.get("prompt_tokens", 0) or 0),
+            output_tokens=int(usage.get("completion_tokens", 0) or 0),
+        )
+    except (httpx.TimeoutException, TimeoutError):
+        raise ChatUnavailable("upstream_timeout") from None
+    except (httpx.HTTPError, ValueError, KeyError, TypeError, IndexError):
+        raise ChatUnavailable("invalid_response") from None
