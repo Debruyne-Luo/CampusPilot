@@ -7,7 +7,7 @@ import { glyphFor, hasPosition, projector, visiblePlaces } from "./places.mjs";
 const NS = "http://www.w3.org/2000/svg";
 const svgEl = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
 
-export function createMap({ frame, fallback, status, onSelect, onOrigin = () => {}, onPoi = () => {} }) {
+export function createMap({ frame, fallback, status, onSelect, onOrigin = () => {}, onPoi = () => {}, onArrive = () => {}, onGuide = () => {} }) {
   const generation = Math.floor(Math.random() * 1e9);
   let mode = "loading", places = [], filter = "all", selected = null, routeSeq = 0, pendingRoute = null;
   let extra = new Set(), searchSeq = 0, pendingSearch = null, fit = true;
@@ -48,6 +48,8 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     else if (d.action === "place-search-result" && pendingSearch && d.request_id === searchSeq) { pendingSearch(d.status === "success" ? d.places : []); pendingSearch = null; }
     else if (d.action === "route-result" && pendingRoute && d.request_id === routeSeq) { pendingRoute(d); pendingRoute = null; }
     else if (d.action === "guidance-position") window.Guidance?.receive(d);
+    else if (d.action === "dino-arrived") onArrive();
+    else if (d.action === "dino-ready") onGuide(d.kind);
   });
   let config = null;
   function useFallback(message) { mode = "fallback"; frame.hidden = true; fallback.hidden = false; status(message); push(); }
@@ -95,7 +97,11 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     /** Use the map point under the on-screen crosshair (frame pixels) as the origin. */
     pickAt(x, y) { if (mode === "amap") send({ action: "route-pick-point", request_id: routeSeq, x, y }); },
     cancelPick() { routeSeq += 1; send({ action: "route-clear", request_id: routeSeq }); },
-    heading(rotation) { if (mode === "amap") send({ action: "heading", ...rotation, arrow: rotation.arrow, rotation: rotation.map }); },
+    heading(rotation) { if (mode === "amap") send({ action: "heading", ...rotation, arrow: rotation.arrow, rotation: rotation.map, heading_value: rotation.value }); },
+    /** Start the 理小龙 guide on the current route: demo walks by itself, else follows GPS. */
+    dino(demo, speed, guide) { if (mode === "amap") send({ action: "dino-start", demo, speed, guide }); },
+    dinoStop() { if (mode === "amap") send({ action: "dino-stop" }); },
+    dinoMode(demo, speed) { if (mode === "amap") send({ action: "dino-mode", demo, speed }); },
     centerOn(position) { if (mode === "amap" && position) send({ action: "center", place_id: null, position }); },
     northUp() { if (mode === "amap") send({ action: "north-up" }); },
     insets(bottom) { if (mode === "amap") send({ action: "route-insets", bottom }); },

@@ -143,6 +143,9 @@ body.guiding .locate-button,body.picking-origin .locate-button{display:none}
 .guidance-slot .guidance-box p{margin:2px 0;font-size:var(--text-s)}
 .guidance-slot .journey-button{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:5px 12px;margin:6px 6px 0 0;font-size:var(--text-s);cursor:pointer}
 body.guiding .route-note,body.guiding .place-card{display:none}
+body.guiding.arrived .place-card:not([hidden]){display:flex}
+.dino-demo{position:absolute;left:14px;top:64px;z-index:var(--map-ui-z)}
+body[data-guide] .heading-toggle{display:none}
 .sheet-handle{display:none}
 .safe-probe{position:fixed;left:0;bottom:0;width:0;height:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none}
 .map-dock{display:contents}
@@ -168,6 +171,7 @@ body.picking-origin .place-card,body.picking-origin .route-note{display:none}
   .map-search input,.locate-button,.heading-toggle,.mapwrap .card{box-shadow:none}
   body.guiding .map-search{display:none}
   body.guiding .heading-toggle{top:calc(10px + env(safe-area-inset-top))}
+  .dino-demo{left:10px;top:calc(10px + env(safe-area-inset-top))}
   /* Map overlays always sit above the visible part of the sheet. */
   .locate-button{right:10px;bottom:calc(var(--sheet-visible,64px) + 10px)}
   .map-dock{display:flex;flex-direction:column;gap:8px;position:absolute;left:10px;right:10px;bottom:calc(var(--sheet-visible,64px) + 10px);z-index:var(--map-ui-z);pointer-events:none}
