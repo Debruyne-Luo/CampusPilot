@@ -301,7 +301,10 @@ async def run_arm(
         model,
         grounding=grounding,
         jev=plugin,
-        trace=lambda kind, record: records.__setitem__(kind, record),
+        trace=lambda kind, record: (
+            records.setdefault(kind + "_all", []).append(record),
+            records.__setitem__(kind, record),
+        ),
     )
     rows = []
     recorder: UsageRecorder | None = getattr(model, "transport", None)  # type: ignore[assignment]
@@ -329,6 +332,7 @@ async def run_arm(
                 if isinstance(recorder, UsageRecorder)
                 else None,
                 "jev_record": jev,
+                "jev_records": records.get("jev_all") or [],
                 "jev_status": jev.get("status") if jev else None,
                 "jev_decision": jev.get("decision") if jev else None,
                 "jev_applied": jev.get("applied") if jev else None,

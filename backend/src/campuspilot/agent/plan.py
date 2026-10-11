@@ -7,6 +7,7 @@ that depend on earlier results (e.g. the service_id for make_checklist) are mark
 
 from __future__ import annotations
 
+import re
 from typing import Annotated
 
 from pydantic import Field, JsonValue
@@ -35,6 +36,18 @@ def _query(text: str | None, question: str) -> str:
     return value or question[:120]
 
 
+# A place question that asks about an attribute of the place (hours, rules, fees, contact,
+# booking...) also needs the official documents, not only the map record.
+PLACE_ATTRIBUTE = re.compile(
+    r"几点|时间|开门|关门|开放|闭馆|开馆|营业|作息|规定|政策|制度|要求|收费|多少钱|价格|费用"
+    r"|电话|联系|预约|预定|能不能|可不可以|可以|允许|需要|要带|怎么办|流程|规则"
+)
+
+
+def asks_place_attribute(question: str) -> bool:
+    return bool(PLACE_ATTRIBUTE.search(question))
+
+
 def make_plan(view: Understanding, question: str) -> Plan:
     slots = view.slots
     audience = slots.identity if slots.identity != "unknown" else "all"
@@ -59,6 +72,8 @@ def make_plan(view: Understanding, question: str) -> Plan:
         map_action = "show_place"
     elif view.intent in {"找地点", "路线"}:
         raw = [("search_place", "查找地点", {"query": _query(slots.destination, question)}, None)]
+        if asks_place_attribute(question):
+            raw.append(("search_knowledge", "检索官方资料", knowledge_args, None))
         map_action = "plan_route" if view.intent == "路线" else "show_place"
     elif view.intent == "政策问答":
         raw = [("search_knowledge", "检索官方资料", knowledge_args, None)]
