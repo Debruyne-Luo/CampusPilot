@@ -18,6 +18,13 @@ Metrics per arm and per case file:
                       metered here)
   jev_unknown_rate    turns whose Jev status is not "ok" (unknown / unsure / timeout / ...)
 
+Generation-model usage: with ``--model env`` every chat-completions response's ``usage`` is
+recorded per turn (prompt / completion / prompt_cache_hit / prompt_cache_miss / reasoning
+tokens) through a recording httpx transport, and priced with ``--gen-price`` (USD per 1M:
+cache-hit input, cache-miss input, output; defaults: DeepSeek deepseek-flash off-peak list
+price checked 2026-10-11 at api-docs.deepseek.com/quick_start/pricing). Calls inside DeepSeek's
+peak windows (01-04, 06-10 UTC Mon-Fri) are charged at 2x, as documented there.
+
 Safety: the default ``--jev fake`` uses an offline stand-in that always answers ``unknown``
 (arms C/D then equal A: a wiring smoke test only). ``--jev live`` calls OpenRouter with the
 configured CAMPUSPILOT_JEV_* key and prices and spends real money within the $5 / 1000-call
@@ -33,10 +40,13 @@ import hashlib
 import json
 import tempfile
 import time
+from dataclasses import replace
+from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
+import httpx
 from campuspilot.agent.executor import NO_BASIS_ANSWER, AgentRunner
 from campuspilot.chat_runtime import ConversationContext
 from campuspilot.directory.repository import DirectoryRepository
@@ -80,6 +90,85 @@ class CachedEmbedder:
 
     async def prefetch(self, text: str) -> None:
         return None
+
+
+class UsageRecorder(httpx.AsyncBaseTransport):
+    """Wraps the real transport; copies each response's `usage` object (no content)."""
+
+    def __init__(self, thinking: str = "") -> None:
+        self.inner = httpx.AsyncHTTPTransport()
+        self.calls: list[dict[str, Any]] = []
+        self.thinking = thinking
+
+    async def handle_async_request(self, request: httpx.Request) -> httpx.Response:
+        if self.thinking and request.method == "POST":
+            # DeepSeek: deepseek-flash defaults to thinking mode; the retired deepseek-chat
+            # alias was the non-thinking mode. Eval-only switch, production client unchanged.
+            payload = json.loads(await request.aread())
+            payload["thinking"] = {"type": self.thinking}
+            headers = {k: v for k, v in request.headers.items() if k.lower() != "content-length"}
+            request = httpx.Request(
+                request.method,
+                request.url,
+                headers=headers,
+                json=payload,
+                extensions=request.extensions,
+            )
+        response = await self.inner.handle_async_request(request)
+        body = await response.aread()
+        usage: Any = None
+        try:
+            usage = json.loads(body).get("usage")
+        except ValueError, AttributeError:
+            pass
+        now = datetime.now(UTC)
+        self.calls.append(
+            {
+                "status": response.status_code,
+                "usage": usage if isinstance(usage, dict) else None,
+                "peak": now.weekday() < 5 and (1 <= now.hour < 4 or 6 <= now.hour < 10),
+            }
+        )
+        # `body` is already decoded: drop encoding/length headers so it is not decoded twice.
+        headers = {
+            k: v
+            for k, v in response.headers.items()
+            if k.lower() not in {"content-encoding", "content-length", "transfer-encoding"}
+        }
+        return httpx.Response(response.status_code, headers=headers, content=body, request=request)
+
+    async def aclose(self) -> None:
+        await self.inner.aclose()
+
+
+def usage_of(calls: list[dict[str, Any]], price: tuple[Decimal, Decimal, Decimal]) -> dict:
+    hit_p, miss_p, out_p = price
+    tot = {k: 0 for k in ("prompt", "completion", "cache_hit", "cache_miss", "reasoning")}
+    cost = Decimal(0)
+    unknown = 0
+    for c in calls:
+        u = c["usage"]
+        if not u:
+            unknown += 1
+            continue
+        prompt, completion = int(u.get("prompt_tokens") or 0), int(u.get("completion_tokens") or 0)
+        hit = int(u.get("prompt_cache_hit_tokens") or 0)
+        miss = int(u.get("prompt_cache_miss_tokens") or (prompt - hit))
+        details = u.get("completion_tokens_details") or {}
+        tot["prompt"] += prompt
+        tot["completion"] += completion
+        tot["cache_hit"] += hit
+        tot["cache_miss"] += miss
+        tot["reasoning"] += int(details.get("reasoning_tokens") or 0)
+        factor = 2 if c["peak"] else 1
+        cost += factor * (hit * hit_p + miss * miss_p + completion * out_p) / 1_000_000
+    return {
+        **tot,
+        "calls": len(calls),
+        "calls_without_usage": unknown,
+        "http_errors": sum(c["status"] >= 400 for c in calls),
+        "cost_usd": str(cost),
+    }
 
 
 class OfflineJev:
@@ -140,6 +229,15 @@ def summarize(rows: list[dict[str, Any]], spend: Decimal) -> dict[str, Any]:
     shown = [c for r in answered for c in r["excerpt_ids"]]
     gold_shown = [c for r in answered for c in r["excerpt_ids"] if c in r["gold"]]
     jev = [r["jev_status"] for r in rows if r["jev_status"] is not None]
+    gen = [r["gen_usage"] for r in rows if r.get("gen_usage")]
+    gen_total: dict[str, Any] = {}
+    for g in gen:
+        for k, v in g.items():
+            gen_total[k] = (
+                str(Decimal(gen_total.get(k, "0")) + Decimal(v))
+                if k == "cost_usd"
+                else gen_total.get(k, 0) + v
+            )
     lat = [r["latency_ms"] for r in rows]
     jlat = [r["jev_latency_ms"] for r in rows if r["jev_latency_ms"]]
     return {
@@ -161,6 +259,11 @@ def summarize(rows: list[dict[str, Any]], spend: Decimal) -> dict[str, Any]:
         "jev_calls": len(jev),
         "jev_unknown_rate": ratio(sum(s != "ok" for s in jev), len(jev)) if jev else None,
         "jev_unsure_rate": ratio(sum(s == "unsure" for s in jev), len(jev)) if jev else None,
+        "generation_usage": gen_total or None,
+        "generation_cost_usd_per_question": str(Decimal(gen_total["cost_usd"]) / len(rows))
+        if gen_total and rows
+        else None,
+        "degraded": ratio(sum(bool(r.get("degraded_reason")) for r in rows), len(rows)),
     }
 
 
@@ -201,8 +304,10 @@ async def run_arm(
         trace=lambda kind, record: records.__setitem__(kind, record),
     )
     rows = []
+    recorder: UsageRecorder | None = getattr(model, "transport", None)  # type: ignore[assignment]
     for c in cases:
         records.clear()
+        mark = len(recorder.calls) if isinstance(recorder, UsageRecorder) else 0
         started = time.perf_counter()
         body = await agent.run(c["question"], ConversationContext())
         latency = (time.perf_counter() - started) * 1000  # shadow Jev runs after this
@@ -219,6 +324,11 @@ async def run_arm(
                 "result_status": body.get("result_status"),
                 "excerpt_ids": [e.get("chunk_id") for e in body.get("excerpts") or []],
                 "citations": [x.get("id") for x in body.get("citations") or []],
+                "degraded_reason": body.get("degraded_reason"),
+                "gen_usage": usage_of(recorder.calls[mark:], args.gen_price_decimal)
+                if isinstance(recorder, UsageRecorder)
+                else None,
+                "jev_record": jev,
                 "jev_status": jev.get("status") if jev else None,
                 "jev_decision": jev.get("decision") if jev else None,
                 "jev_applied": jev.get("applied") if jev else None,
@@ -255,6 +365,19 @@ def main() -> None:
     p.add_argument("--embedding-cache", type=Path, default=ROOT / ".cache/eval-embeddings.json")
     p.add_argument("--embedding-model", default="@cf/baai/bge-m3")
     p.add_argument("--knowledge-bundle", default="approved-20261011b")
+    p.add_argument(
+        "--gen-price",
+        nargs=3,
+        default=["0.003", "0.15", "0.6"],
+        metavar=("HIT", "MISS", "OUT"),
+        help="generation USD per 1M tokens: cache-hit input, cache-miss input, output",
+    )
+    p.add_argument(
+        "--gen-thinking",
+        choices=("disabled", "enabled", ""),
+        default="disabled",
+        help='DeepSeek "thinking" request field ("" = provider default)',
+    )
     p.add_argument("--output", type=Path)
     a = p.parse_args()
     if a.jev == "live":
@@ -270,6 +393,9 @@ def main() -> None:
         from campuspilot.migration_config import generation_model
 
         model = generation_model()
+        if model is not None:
+            model = replace(model, transport=UsageRecorder(a.gen_thinking))
+    a.gen_price_decimal = tuple(Decimal(x) for x in a.gen_price)
     cases = load_cases(a.cases, a.limit)
 
     ledger = a.ledger_dir or Path(tempfile.mkdtemp(prefix="jev-eval-"))
@@ -281,7 +407,9 @@ def main() -> None:
     arms = asyncio.run(all_arms())
     report = {
         "jev_client": a.jev,
-        "generation_model": a.model,
+        "generation_model": getattr(model, "model", None) if model is not None else "none",
+        "generation_price_usd_per_million": a.gen_price,
+        "generation_thinking": a.gen_thinking or "provider_default",
         "max_usd": a.max_usd,
         "jev_spend_usd_total": str(budget.report()["charged_usd"]),
         "jev_calls_total": budget.report()["calls"],

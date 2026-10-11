@@ -770,13 +770,14 @@ class AgentRunner:
         local = self._local_grounding(ev)
         if jev.mode == "shadow":
             # Background: recorded only, never changes or delays the response.
+            other = bool(ev.services or ev.places or ev.teachers or ev.checklist)
             task = asyncio.create_task(turn.assess(question, candidates, local))
             self._background.add(task)
 
             def done(t: asyncio.Task[Any]) -> None:
                 self._background.discard(t)
                 if not t.cancelled() and t.exception() is None:
-                    self._trace("jev", t.result().record("shadow"))
+                    self._trace("jev", {**t.result().record("shadow"), "other_evidence": other})
 
             task.add_done_callback(done)
             return await self._compose(question, view, context, ev, plan, steps)
@@ -795,7 +796,13 @@ class AgentRunner:
                 mode="agent_jev",
                 show_sources=False,
             )
-            self._trace("jev", assessment.record("on", "refuse" if refuse else "clarify"))
+            self._trace(
+                "jev",
+                {
+                    **assessment.record("on", "refuse" if refuse else "clarify"),
+                    "other_evidence": other,
+                },
+            )
             return body
         applied = "none"
         if assessment.usable and assessment.ranked_ids:
@@ -804,7 +811,7 @@ class AgentRunner:
                 self._apply_rerank(ev, kept)
                 applied = "rerank"
         body = await self._compose(question, view, context, ev, plan, steps)
-        self._trace("jev", assessment.record("on", applied))
+        self._trace("jev", {**assessment.record("on", applied), "other_evidence": other})
         return body
 
     async def _compose(

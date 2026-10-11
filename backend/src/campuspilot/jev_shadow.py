@@ -60,6 +60,9 @@ class ShadowResult:
     # Per-chunk expected relevance 0..2 (rank_i score) for every passage sent, in sent order.
     chunk_scores: tuple[tuple[str, float], ...] = ()
     sufficient_probability: float | None = None
+    # Validated raw answers (no text): answer_mode distribution/confidence, noul values and
+    # per-passage rank probabilities/confidence, for calibration and the plugin's own rule.
+    raw: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -211,6 +214,7 @@ class JevShadowClient:
             if not clean and sufficient >= 0.7:
                 raise ValueError
             scores = []
+            ranks: list[dict[str, Any]] = []
             for i in range(len(clean)):
                 answer = answers[f"rank_{i}"]
                 if answer["type"] != "score" or set(answer["probabilities"]) != {"0", "1", "2"}:
@@ -226,6 +230,14 @@ class JevShadowClient:
                     raise ValueError
                 uncertain = uncertain or unit(answer["confidence"]) < 0.75
                 scores.append((score, mapping[f"P{i}"]))
+                ranks.append(
+                    {
+                        "chunk_id": mapping[f"P{i}"],
+                        "score": score,
+                        "confidence": unit(answer["confidence"]),
+                        "probabilities": probs,
+                    }
+                )
             usage = raw["usage"]
             input_tokens, output_tokens = usage["input_tokens"], usage["output_tokens"]
             if any(type(v) is not int or v < 0 for v in (input_tokens, output_tokens)):
@@ -254,6 +266,14 @@ class JevShadowClient:
                 choice_probabilities=probabilities,
                 chunk_scores=tuple((cid, score) for score, cid in scores),
                 sufficient_probability=sufficient,
+                raw={
+                    "mode": mode,
+                    "mode_probabilities": probabilities,
+                    "mode_confidence": unit(choice["confidence"]),
+                    "search_needed": need,
+                    "sufficient": sufficient,
+                    "ranks": ranks,
+                },
             )
         except (ChatUnavailable, httpx.HTTPError, TimeoutError, ValueError, KeyError, TypeError):
             budget.settle(reservation, None)

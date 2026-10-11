@@ -17,10 +17,11 @@ policy (results are cached per turn).
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 from collections.abc import Sequence
 from dataclasses import dataclass, field, replace
-from typing import Literal, Protocol
+from typing import Any, Literal, Protocol
 
 from pydantic import JsonValue
 
@@ -43,6 +44,35 @@ LOCAL_RULE = (
 )
 
 Decision = Literal["sufficient", "insufficient", "clarify", "unknown"]
+
+
+@dataclass(frozen=True)
+class Calibration:
+    """The plugin's own certainty rule and thresholds, applied to the client's raw answers.
+
+    Calibrated on dev 2026-10-11 (evaluation/reports/jev-arms-dev-20261011.json): the
+    answer-mode rule stays (confidence < 0.75 or margin < 0.15 -> unsure), the per-rank
+    confidence gate is off (JevShadowClient's own rule used 0.75), sufficient_at 0.7 -> 0.6.
+    In-sample on dev only; confirm on held-out data before relying on it.
+    """
+
+    mode_confidence: float = 0.75
+    mode_margin: float = 0.15
+    rank_confidence: float = 0.0
+    drop_below: float = DROP_BELOW
+    sufficient_at: float = 0.6
+    insufficient_at: float = INSUFFICIENT_AT
+
+    def unsure(self, raw: dict[str, Any]) -> bool:
+        ordered = sorted(raw["mode_probabilities"].values(), reverse=True)
+        return (
+            raw["mode_confidence"] < self.mode_confidence
+            or ordered[0] - ordered[1] < self.mode_margin
+            or any(r["confidence"] < self.rank_confidence for r in raw["ranks"])
+        )
+
+
+DEFAULT_CALIBRATION = Calibration()
 
 
 def parse_jev_mode(value: str) -> JevMode:
@@ -84,6 +114,7 @@ class JevAssessment:
     input_tokens: int = 0
     output_tokens: int = 0
     reason: str = ""
+    raw: dict[str, Any] = field(default_factory=dict)
 
     @property
     def usable(self) -> bool:
@@ -106,17 +137,28 @@ class JevAssessment:
             "input_tokens": self.input_tokens,
             "output_tokens": self.output_tokens,
             "reason": self.reason,
+            "raw": json.loads(json.dumps(self.raw)),
         }
 
 
-def combine(result: ShadowResult, local: str, original: tuple[str, ...]) -> JevAssessment:
+def combine(
+    result: ShadowResult,
+    local: str,
+    original: tuple[str, ...],
+    cal: Calibration = DEFAULT_CALIBRATION,
+) -> JevAssessment:
     """Map one validated Jev result plus the local grounding decision to a turn decision."""
+    status, answer_mode = result.status, result.answer_mode
+    if result.raw and status in {"ok", "unsure"}:
+        status = "unsure" if cal.unsure(result.raw) else "ok"
+        answer_mode = "unknown" if status == "unsure" else str(result.raw["mode"])
     base = JevAssessment(
-        status=result.status,
+        status=status,
         decision="unknown",
         local=local,
         original_ids=original,
-        answer_mode=result.answer_mode,
+        raw=result.raw,
+        answer_mode=answer_mode,
         sufficient_probability=result.sufficient_probability,
         scores=result.chunk_scores,
         latency_ms=result.latency_ms,
@@ -124,7 +166,7 @@ def combine(result: ShadowResult, local: str, original: tuple[str, ...]) -> JevA
         output_tokens=result.output_tokens,
         reason=result.reason,
     )
-    if result.status != "ok":
+    if status != "ok":
         return base
     scored = dict(result.chunk_scores)
     # Unscored candidates were withheld as injection-looking; they are not kept either.
@@ -133,7 +175,7 @@ def combine(result: ShadowResult, local: str, original: tuple[str, ...]) -> JevA
         for cid, _ in sorted(
             ((c, scored[c]) for c in original if c in scored), key=lambda p: (-p[1], p[0])
         )
-        if scored[cid] >= DROP_BELOW
+        if scored[cid] >= cal.drop_below
     )
     dropped = tuple(c for c in original if c not in ranked)
     p = result.sufficient_probability
@@ -141,11 +183,11 @@ def combine(result: ShadowResult, local: str, original: tuple[str, ...]) -> JevA
     reason = ""
     if p is None:
         reason = "no_sufficiency"
-    elif p >= SUFFICIENT_AT:
+    elif p >= cal.sufficient_at:
         decision = "sufficient"
-    elif result.answer_mode == "clarify":
+    elif answer_mode == "clarify":
         decision = "clarify"
-    elif p <= INSUFFICIENT_AT:
+    elif p <= cal.insufficient_at:
         if local == "grounded" and ranked:
             # Local similarity and Jev's own ranking both find support: disagree, fail open.
             reason = "local_grounding_disagrees"
@@ -168,6 +210,7 @@ class JevPlugin:
     budget: SpendBudget
     mode: JevMode = "shadow"
     snapshots: SnapshotStore | None = None
+    calibration: Calibration = DEFAULT_CALIBRATION
 
     def resolve(self, rows: Sequence[dict[str, JsonValue]]) -> tuple[RetrievalHit, ...]:
         """Tool hit rows -> RetrievalHit from the current approved snapshot (unknown ids drop)."""
@@ -222,7 +265,7 @@ class JevTurn:
                     budget=self.plugin.budget,
                     rule_summary=LOCAL_RULE,
                 )
-            assessment = combine(result, local, original)
+            assessment = combine(result, local, original, self.plugin.calibration)
         except BudgetExhausted:
             assessment = JevAssessment("budget", "unknown", local, original, reason="budget")
         except TimeoutError:

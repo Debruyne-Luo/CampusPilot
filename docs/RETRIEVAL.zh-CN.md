@@ -92,3 +92,16 @@ uv run python scripts/knowledge_release.py embed-bootstrap --store data/cdut/rag
 - 超时、错误、预算耗尽、unsure/unknown 一律 fail-open，走原流程。
 - `public_fixture` 限制只对 `online=True` 的在线路径放开；`public_input` 隐私检查、脱敏和注入过滤保留。
 - 四组对比评测：`evaluation/eval_jev_arms.py`（A 当前 / B 本地 block / C Jev shadow / D Jev on）。默认 `--jev fake` 离线；`--jev live` 需加 `--i-understand-this-is-paid`。尚未对真实 API 运行。
+
+### Jev 四组对比与校准（dev，2026-10-11）
+
+全量 dev（dev-colloquial 118 + refusal dev 25 = 143 题；可答 112 / 拒答 31），生成模型 deepseek-flash（thinking 关闭），未用留出测试集。汇总：`evaluation/reports/jev-arms-dev-20261011.json`。
+
+| 组 | 拒答召回 | 误拒 | 引用精度 | 延迟 p50/p95 (ms) | Jev unsure |
+|---|---|---|---|---|---|
+| A 当前 | 4/31 | 1/112 | 0.295 | 3079 / 4022 | – |
+| B 本地 block | 11/31 | 3/112 | 0.404 | 2957 / 4220 | – |
+| C Jev shadow | 3/31 | 0/112 | 0.293 | 3134 / 4058 | 101/119 |
+| D Jev on | 8/31 | 1/112 | 0.306 | 3360 / 4101 | 100/119 |
+
+校准（`evaluation/calibrate_jev.py`，离线、基于 C 组记录的原始 Jev 输出，不再调用 API）：去掉逐片段置信度门槛、`sufficient_at` 0.7→0.6 后，模拟 on 组拒答召回 8/31 → 15/31，误拒 2/112（1.8%），unsure 84.9% → 47.9%。新默认值写入 `jev_plugin.Calibration`。这是 dev 内选参，需在留出集上复核。

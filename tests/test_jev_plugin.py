@@ -352,3 +352,29 @@ def test_online_budget_is_separate_and_enforces_caps(tmp_path: Path) -> None:
 def test_settings_online_budget_defaults() -> None:
     s = Settings.from_env({"CAMPUSPILOT_JEV_DAILY_USD": "0.5"})
     assert s.jev_daily_usd == "0.5" and s.jev_daily_calls == 2000
+
+
+def test_calibration_recomputes_unsure_from_raw_answers() -> None:
+    from campuspilot.jev_plugin import Calibration
+
+    raw = {
+        "mode": "generate",
+        "mode_probabilities": {"direct": 0.3, "generate": 0.6, "clarify": 0.1},
+        "mode_confidence": 0.6,
+        "search_needed": 0.5,
+        "sufficient": 0.1,
+        "ranks": [{"chunk_id": "a", "score": 0.1, "confidence": 0.65, "probabilities": {}}],
+    }
+    unsure = result(
+        status="unsure",
+        answer_mode="unknown",
+        chunk_scores=(("a", 0.1),),
+        sufficient_probability=0.1,
+        raw=raw,
+    )
+    assert combine(unsure, "insufficient", ("a",)).status == "unsure"  # default rule
+    loose = Calibration(mode_confidence=0.5, mode_margin=0.1, rank_confidence=0.6)
+    a = combine(unsure, "insufficient", ("a",), loose)
+    assert a.status == "ok" and a.decision == "insufficient" and a.answer_mode == "generate"
+    recorded: Any = a.record("on")["raw"]
+    assert recorded["mode_confidence"] == 0.6
