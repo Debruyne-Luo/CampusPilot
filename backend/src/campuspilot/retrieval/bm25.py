@@ -13,6 +13,55 @@ from collections import Counter
 from campuspilot.rag import KnowledgeSnapshot, RagChunk, RagSource, RetrievalFilters, RetrievalHit
 
 GENERIC = ("请问", "如何", "怎么", "什么", "哪里", "你好", "谢谢", "是否")
+# Colloquial -> official wording appended to the query (never replaces it). Built only from
+# failures on the dev set (evaluation/dev-colloquial-20261011), never from the test set.
+SYNONYMS: tuple[tuple[str, str], ...] = (
+    ("饭卡", "校园卡"),
+    ("一卡通", "校园卡"),
+    ("寝室", "宿舍 公寓"),
+    ("宿舍", "公寓"),
+    ("挂科", "不及格 补考 重修"),
+    ("四六级", "四、六级 大学英语"),
+    ("四级", "大学英语四、六级"),
+    ("六级", "大学英语四、六级"),
+    ("cet", "大学英语四、六级"),
+    ("国励", "国家励志奖学金"),
+    ("国奖", "国家奖学金"),
+    ("勤工俭学", "勤工助学"),
+    ("助管", "勤工助学 研究生助管"),
+    ("医保", "医疗保险 参保"),
+    ("报销", "报销比例 医疗保险"),
+    ("看病", "校医院 门诊"),
+    ("心理", "心理咨询"),
+    ("体测", "体质健康"),
+    ("毕业证", "学历证书 学位证书"),
+    ("没电", "购电 欠费断电"),
+    ("电费", "购电 欠费断电"),
+    ("断电", "购电"),
+    ("报到", "报到时间 新生"),
+    ("火车北站", "公交 地铁 路线"),
+    ("东客站", "公交 地铁 路线"),
+    ("机场", "公交 地铁 路线"),
+    ("户口", "户口迁移证 户籍"),
+    ("团员", "团组织关系 团员档案"),
+    ("档案", "档案 寄送 地址"),
+    ("军训服", "军训服装费"),
+    ("知网", "数据库 校外 WebVPN"),
+    ("在家", "校外"),
+    ("当兵", "服兵役"),
+    ("退役", "服兵役 退役士兵"),
+    ("贫困", "家庭经济困难"),
+    ("困难认定", "家庭经济困难学生认定"),
+    ("贷款", "助学贷款"),
+    ("考研", "继续升学"),
+    ("缓交", "学费缓交"),
+    ("几台", "设备数量"),
+    ("outlook", "客户端 POP3"),
+    ("收信", "客户端 POP3"),
+    ("关门", "开馆时间"),
+    ("几点开", "开放时间"),
+    ("续借", "续借 到期"),
+)
 TITLE_WEIGHT = 3.4
 K1 = 1.2
 B = 0.75
@@ -27,8 +76,14 @@ def terms(text: str) -> Counter[str]:
     return result
 
 
+def expand(query: str) -> str:
+    folded = query.casefold()
+    extra = [official for colloquial, official in SYNONYMS if colloquial in folded]
+    return query if not extra else query + " " + " ".join(extra)
+
+
 def query_terms(query: str) -> Counter[str]:
-    tokens = terms(query)
+    tokens = terms(expand(query))
     for generic in GENERIC:
         for token in terms(generic):
             tokens.pop(token, None)
@@ -39,9 +94,15 @@ def eligible(chunk: RagChunk, source: RagSource, filters: RetrievalFilters) -> b
     if not chunk.enabled:
         return False
     expired = bool(chunk.valid_until and chunk.valid_until < filters.today)
+    # A reviewed chunk flagged `stale` (factual content whose source is only marked historical
+    # because its notice date passed) stays a candidate and is down-weighted at ranking time
+    # instead of being dropped. Historical/deprecated chunks, superseded sources and chunks past
+    # `valid_until` remain hard-filtered.
+    stale_fact = chunk.stale and chunk.kind not in {"historical", "deprecated"}
     historical = (
         chunk.kind in {"historical", "deprecated"}
-        or source.temporal_status in {"historical", "superseded"}
+        or source.temporal_status == "superseded"
+        or (source.temporal_status == "historical" and not stale_fact)
         or expired
     )
     if historical and not filters.historical:

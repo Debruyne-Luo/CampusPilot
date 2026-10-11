@@ -33,3 +33,14 @@ uv run python scripts/knowledge_release.py embed-bootstrap --store data/cdut/rag
 - BM25 比旧 TF-IDF 的 MRR 从 0.866 提高到 0.941，召回不变。
 - 在这套题上，向量和混合检索**都没有超过 BM25**。原因是题目大多直接沿用片段标题和关键词，词面重合度很高，BM25 已接近上限（Recall@5 = 0.98）。这套题测不出语义检索在同义改写、口语化问法上的优势。
 - 没有调参；保留集只用于报告结果。要证明混合检索的价值，需要另建一套"口语化 / 同义改写"题，并由人工独立标注。
+
+## 口语化检索调参（2026-10-11，rag/02-tuning）
+
+- 测试集：`/workspace/cp-knowledge/eval-colloquial-20261011.jsonl`（99 题，6 题拒答；与仓库 `evaluation/colloquial-heldout-20261011` 同题）。只用于最终测量一次，未参与调参。
+- 开发集：`evaluation/dev-colloquial-20261011/cases.jsonl`（118 题 = 50 道依据知识库条目标题手写的口语问法 + 6 道库外拒答题 + `evaluation/colloquial-20261011` 64 题；按规范化文本去掉与测试集重复的 2 题），由 `build_dev.py` 生成。
+- 改动：
+  1. `stale=true` 的事实类条目，即使来源 `temporal_status=historical`，也保留为候选并降权（`STALE_WEIGHT=0.85`）；`historical/deprecated` 类条目、`superseded` 来源、超过 `valid_until` 的条目仍硬过滤。`excluded_from_retrieval` 条目在导入时即被丢弃，不进入快照与向量索引（新增回归测试）。
+  2. BM25 查询加口语→官方用语扩展（`bm25.SYNONYMS`，只追加不替换）。
+  3. 加权 RRF：`RRF_K=10`，权重（词法 1.0，向量 1.25）。
+- 复现：`uv run python evaluation/eval_colloquial.py --cases <file>`；开发集网格搜索：`uv run python evaluation/tune_dev.py`。报告见 `evaluation/reports/`。
+- 检索层不做拒答：向量相似度阈值 0.35–0.55 在开发集上无法区分库外问题，拒答依赖下游 agent 无答案判定。

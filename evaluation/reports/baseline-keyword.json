@@ -1,0 +1,3974 @@
+{
+  "cases_file": "evaluation/runtime-migration/cases.jsonl",
+  "knowledge_version": "kb-f08fa4fd8b583700",
+  "n": 120,
+  "n_refusal": 64,
+  "unknown_gold_ids": [],
+  "vector_backend": "sqlite-vec",
+  "results": {
+    "lexical": {
+      "recall@1": 0.9107,
+      "recall@3": 0.9821,
+      "recall@5": 0.9821,
+      "hit@1": 0.9107,
+      "hit@5": 0.9821,
+      "mrr@20": 0.9405,
+      "miss@20": 1,
+      "answerable_empty": 0,
+      "refusal_correct": "1/64"
+    },
+    "vector": {
+      "recall@1": 0.8036,
+      "recall@3": 0.9821,
+      "recall@5": 0.9821,
+      "hit@1": 0.8036,
+      "hit@5": 0.9821,
+      "mrr@20": 0.8899,
+      "miss@20": 1,
+      "answerable_empty": 0,
+      "refusal_correct": "2/64"
+    },
+    "hybrid": {
+      "recall@1": 0.7857,
+      "recall@3": 0.9821,
+      "recall@5": 0.9821,
+      "hit@1": 0.7857,
+      "hit@5": 0.9821,
+      "mrr@20": 0.881,
+      "miss@20": 1,
+      "answerable_empty": 0,
+      "refusal_correct": "1/64"
+    }
+  },
+  "per_case": [
+    {
+      "id": "cp-001",
+      "question": "网安楼在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:wx:beisen:03"
+        ],
+        "n_hits": 2
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:xscoffices:04",
+          "cdut:candidate-office:10",
+          "cdut:chunk:lyzn2023:bs01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:xscoffices:04",
+          "cdut:candidate-office:10"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-002",
+      "question": "东区图书馆在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:libfaq:02",
+          "cdut:chunk:libfaq:03"
+        ],
+        "n_hits": 10
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libfresh:01",
+          "cdut:chunk:libfaq:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libfaq:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-003",
+      "question": "东区教学楼在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyzn2023:bs07",
+          "cdut:chunk:lyzn2023:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs06",
+          "cdut:chunk:lyzn2023:bs01",
+          "cdut:candidate-office:05"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs01",
+          "cdut:chunk:lyzn2023:bs06",
+          "cdut:chunk:lyzn2023:bs08"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-004",
+      "question": "行政楼在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:xscoffices:05",
+          "cdut:chunk:xscoffices:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs01",
+          "cdut:candidate-office:08",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:08",
+          "cdut:chunk:xscoffices:01",
+          "cdut:candidate-office:10"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-005",
+      "question": "校园一卡通中心在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:lyzn2023:bs07",
+          "cdut:chunk:lyzn2023:bs03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyzn2023:bs07"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:lyzn2023:bs07",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-006",
+      "question": "财务处在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyfwdorm:bs02",
+          "cdut:chunk:lyfwdorm:bs07"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:08",
+          "cdut:candidate-office:01",
+          "cdut:candidate-office:07"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:01",
+          "cdut:chunk:aaooffices:03",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-007",
+      "question": "校医院在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:xjgl2019:13",
+          "cdut:chunk:medins2026:bs01"
+        ],
+        "n_hits": 14
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:hospoverview:bs01",
+          "cdut:candidate-office:08",
+          "cdut:chunk:lyfwdorm:bs02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:hospoverview:bs01",
+          "cdut:chunk:hospoverview:bs02",
+          "cdut:chunk:lyfwdorm:bs01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-008",
+      "question": "保卫处在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyfwdorm:bs06",
+          "cdut:chunk:wx:beisen:03"
+        ],
+        "n_hits": 4
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:12",
+          "cdut:candidate-office:08",
+          "cdut:candidate-office:07"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:12",
+          "cdut:chunk:card2024:03",
+          "cdut:candidate-office:08"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-009",
+      "question": "芙蓉食堂在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyzn2023:bs01",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 7
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs01",
+          "cdut:chunk:lyzn2023:bs05",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 16
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs01",
+          "cdut:chunk:lyzn2023:bs05",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 18
+      }
+    },
+    {
+      "id": "cp-010",
+      "question": "银杏餐厅在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyzn2023:bs02",
+          "cdut:chunk:lyzn2023:bs05"
+        ],
+        "n_hits": 7
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs02"
+        ],
+        "n_hits": 1
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs02",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyzn2023:bs05"
+        ],
+        "n_hits": 7
+      }
+    },
+    {
+      "id": "cp-011",
+      "question": "珙桐餐厅在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyzn2023:bs02",
+          "cdut:chunk:lyfwdorm:bs08"
+        ],
+        "n_hits": 6
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs04",
+          "cdut:chunk:lyzn2023:bs02"
+        ],
+        "n_hits": 2
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs02",
+          "cdut:chunk:lyzn2023:bs04",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 6
+      }
+    },
+    {
+      "id": "cp-012",
+      "question": "香樟餐厅在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyzn2023:bs02",
+          "cdut:chunk:lyzn2023:bs05"
+        ],
+        "n_hits": 6
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs02",
+          "cdut:chunk:lyzn2023:bs04"
+        ],
+        "n_hits": 2
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs02",
+          "cdut:chunk:lyzn2023:bs04",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 6
+      }
+    },
+    {
+      "id": "cp-013",
+      "question": "体育学院在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyfwdorm:bs03",
+          "cdut:chunk:lyfwdorm:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:04",
+          "cdut:candidate-office:02",
+          "cdut:candidate-office:10"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs01",
+          "cdut:candidate-office:04",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-014",
+      "question": "地球科学学院在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyfwdorm:bs03",
+          "cdut:chunk:teacher:张澎"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:张澎",
+          "cdut:chunk:teacher:杨锐",
+          "cdut:chunk:aaooffices:04"
+        ],
+        "n_hits": 19
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:张澎",
+          "cdut:chunk:teacher:杨锐",
+          "cdut:chunk:teacher:王洪辉"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-015",
+      "question": "能源学院在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyfwdorm:bs03",
+          "cdut:chunk:lyfwdorm:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:jobtour2026autumn2:01",
+          "cdut:chunk:lyfwdorm:bs08",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 6
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs01",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:wx:jobtour2026autumn2:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-016",
+      "question": "环境与土木工程学院在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:transfer2026:bs01",
+          "cdut:chunk:mee2025grant:bs06"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:aaooffices:04",
+          "cdut:candidate-office:02",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs01",
+          "cdut:chunk:lyzn2023:bs06",
+          "cdut:chunk:wx:jobtour2026autumn2:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-017",
+      "question": "外国语学院在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:cet2026h1:bs03",
+          "cdut:chunk:lyfwdorm:bs03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs09",
+          "cdut:chunk:lyfwdorm:bs02",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs09",
+          "cdut:chunk:lyfwdorm:bs01",
+          "cdut:chunk:xjgl2019:04"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-018",
+      "question": "材料与化学化工学院在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyfwdorm:bs03",
+          "cdut:chunk:xjgl2019:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:aaooffices:04",
+          "cdut:candidate-office:03",
+          "cdut:chunk:aaooffices:05"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:邱士林",
+          "cdut:chunk:aaooffices:04",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-019",
+      "question": "逸夫楼在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:wx:beisen:03"
+        ],
+        "n_hits": 2
+      },
+      "vector": {
+        "rank": null,
+        "top3": [],
+        "n_hits": 0
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:wx:beisen:03"
+        ],
+        "n_hits": 2
+      }
+    },
+    {
+      "id": "cp-020",
+      "question": "旅游与城乡规划学院在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyfwdorm:bs03",
+          "cdut:chunk:lyfwdorm:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs01",
+          "cdut:chunk:aaooffices:04",
+          "cdut:chunk:lyfwdorm:bs02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs01",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:aaooffices:04"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-021",
+      "question": "王洪辉老师办公室在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:王洪辉",
+          "cdut:chunk:card2024:03",
+          "cdut:candidate-office:09"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:王洪辉",
+          "cdut:chunk:teacher:王忠桃",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:王洪辉",
+          "cdut:chunk:lyzn2023:bs06",
+          "cdut:chunk:lyzn2023:bs01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-022",
+      "question": "王洪辉老师公开教师主页在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:王洪辉",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:teacher:胡亨琪"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:王洪辉",
+          "cdut:chunk:teacher:王忠桃",
+          "cdut:chunk:teacher:赵鹏飙"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:王洪辉",
+          "cdut:chunk:teacher:杨锐",
+          "cdut:chunk:teacher:李红军"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-023",
+      "question": "蔡彪老师办公室在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:candidate-office:09",
+          "cdut:chunk:xscoffices:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:蔡彪",
+          "cdut:chunk:teacher:邱士林",
+          "cdut:candidate-office:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:蔡彪",
+          "cdut:chunk:lyzn2023:bs06",
+          "cdut:chunk:lyzn2023:bs01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-024",
+      "question": "蔡彪老师公开教师主页在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:蔡彪",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:teacher:胡亨琪"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:蔡彪",
+          "cdut:chunk:teacher:肖鹏",
+          "cdut:chunk:teacher:王洪辉"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:蔡彪",
+          "cdut:chunk:teacher:杨锐",
+          "cdut:chunk:teacher:范鹏"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-025",
+      "question": "汤影老师办公室在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:candidate-office:09",
+          "cdut:chunk:xscoffices:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:汤影",
+          "cdut:chunk:lyzn2023:bs01",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:汤影",
+          "cdut:chunk:lyzn2023:bs06",
+          "cdut:chunk:lyzn2023:bs01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-026",
+      "question": "汤影老师公开教师主页在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:汤影",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:teacher:胡亨琪"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:汤影",
+          "cdut:chunk:teacher:谭炜",
+          "cdut:chunk:teacher:王洪辉"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:汤影",
+          "cdut:chunk:teacher:谭炜",
+          "cdut:chunk:teacher:罗耀华"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-027",
+      "question": "姚光乐老师办公室在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:姚光乐",
+          "cdut:chunk:card2024:03",
+          "cdut:candidate-office:09"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:姚光乐",
+          "cdut:chunk:teacher:赵鹏飙",
+          "cdut:chunk:teacher:王洪辉"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:姚光乐",
+          "cdut:chunk:lyzn2023:bs06",
+          "cdut:chunk:lyzn2023:bs01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-028",
+      "question": "姚光乐老师公开教师主页在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:姚光乐",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:teacher:胡亨琪"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:姚光乐",
+          "cdut:chunk:teacher:黄光鑫",
+          "cdut:chunk:teacher:赵鹏飙"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:姚光乐",
+          "cdut:chunk:teacher:罗耀华",
+          "cdut:chunk:teacher:杨锐"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-029",
+      "question": "胡艳梅老师办公室在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:胡艳梅",
+          "cdut:chunk:card2024:03",
+          "cdut:candidate-office:09"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:胡艳梅",
+          "cdut:chunk:teacher:胡亨琪",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:胡艳梅",
+          "cdut:chunk:lyzn2023:bs06",
+          "cdut:chunk:lyzn2023:bs01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-030",
+      "question": "胡艳梅老师公开教师主页在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:胡艳梅",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:teacher:胡亨琪"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:胡艳梅",
+          "cdut:chunk:teacher:胡亨琪",
+          "cdut:chunk:teacher:何素兰"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:胡艳梅",
+          "cdut:chunk:teacher:胡亨琪",
+          "cdut:chunk:teacher:何素兰"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-031",
+      "question": "校园卡怎么挂失？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 18
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-032",
+      "question": "校园卡遗失了怎么挂失？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:xjgl2019:16",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:xjgl2019:16"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-033",
+      "question": "挂失校园卡有什么官方入口？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-034",
+      "question": "校园卡挂失需要先有20元余额吗？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:netfaq2023:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-035",
+      "question": "我在学校外面能挂失校园卡吗？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:xjgl2019:16",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-036",
+      "question": "校园卡在哪补办，怎么做？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-037",
+      "question": "校园卡补办需要哪些材料？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-038",
+      "question": "校园卡补办多少钱？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-039",
+      "question": "校园卡补卡后余额多久回来？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:libfaq:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-040",
+      "question": "补卡机器现在在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:teacher:汤影",
+          "cdut:chunk:teacher:姚光乐"
+        ],
+        "n_hits": 8
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyfwdorm:bs08",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyfwdorm:bs08",
+          "cdut:chunk:teacher:汤影"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-041",
+      "question": "在读证明怎么办？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:xjgl2019:16",
+          "cdut:chunk:wx:feeinvoice:ocr01"
+        ],
+        "n_hits": 10
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:xjgl2019:16",
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:xjgl2019:15"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:xjgl2019:16",
+          "cdut:chunk:xjgl2019:13"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-042",
+      "question": "研究生在读证明怎么办？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:zzzc:bs02",
+          "cdut:chunk:lyfwdorm:bs04",
+          "cdut:chunk:libfaq:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs04",
+          "cdut:chunk:aaooffices:02",
+          "cdut:chunk:lyfwdorm:bs03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs04",
+          "cdut:chunk:zzzc:bs02",
+          "cdut:chunk:lyfwdorm:bs03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-043",
+      "question": "那要准备什么？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:beisen:02",
+          "cdut:chunk:wx:fresh2026fee:01",
+          "cdut:chunk:cistwork2025:bs01"
+        ],
+        "n_hits": 3
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs03",
+          "cdut:chunk:lyzn2023:bs09",
+          "cdut:chunk:wx:beisen:05"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs03",
+          "cdut:chunk:wx:beisen:02",
+          "cdut:chunk:lyzn2023:bs09"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-044",
+      "question": "本科生在读证明怎么办？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:xjgl2019:16",
+          "cdut:chunk:xscoffices:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:xjgl2019:16",
+          "cdut:chunk:xjgl2019:15"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:xjgl2019:16",
+          "cdut:chunk:lyfwdorm:bs03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-045",
+      "question": "我是本科",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:xscoffices:01",
+          "cdut:chunk:libfaq:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:xscoffices:01",
+          "cdut:chunk:xjgl2019:10",
+          "cdut:chunk:proofindex:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:xscoffices:01",
+          "cdut:chunk:xscoffices:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-046",
+      "question": "学费电子票据怎么查？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-047",
+      "question": "2026-2027学年学费电子票据怎么查？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-048",
+      "question": "2025-2026学年学费票据怎么查？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:fee20262027:01",
+          "cdut:chunk:clubaudit2024:bs01",
+          "cdut:chunk:wx:fee20262027:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:fee20262027:01",
+          "cdut:chunk:wx:fresh2026fee:ocr01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-049",
+      "question": "那2026-2027学年呢？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:jobfair2027autumn:01",
+          "cdut:chunk:select20262027:bs01",
+          "cdut:chunk:select20262027:bs02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:jobfair2027autumn:01",
+          "cdut:chunk:xjgl2019:05",
+          "cdut:chunk:xjgl2019:12"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:jobfair2027autumn:01",
+          "cdut:chunk:select20262027:bs01",
+          "cdut:chunk:select20262027:bs02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-050",
+      "question": "2026-2027学年电子票据缴费后多久能查？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-051",
+      "question": "70周年校庆美术作品征集与展览有哪些已收录资料？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:beisen:01",
+          "cdut:chunk:wx:tworgs2026:02",
+          "cdut:chunk:zzzc:bs02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:jobfair2027autumn:02",
+          "cdut:chunk:aaooffices:05",
+          "cdut:chunk:xjgl2019:16"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:11",
+          "cdut:candidate-office:03",
+          "cdut:candidate-office:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-052",
+      "question": "2026年寒假网络信息服务安排有哪些已收录资料？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:voucher2026:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libwinter2026:01",
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:winter2026:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:libwinter2026:01",
+          "cdut:chunk:voucher2026:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-053",
+      "question": "校园网故障与校外资源访问有哪些已收录资料？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libservices:01",
+          "cdut:chunk:netfaq2023:03",
+          "cdut:chunk:netfaq2023:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:netfaq2023:03",
+          "cdut:chunk:libfaq:02",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:netfaq2023:03",
+          "cdut:chunk:libfaq:02",
+          "cdut:chunk:netfaq2023:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-054",
+      "question": "学校正版软件与MATLAB使用入口有哪些已收录资料？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:repair:02",
+          "cdut:chunk:wx:beisen:01",
+          "cdut:chunk:teacher:李军"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:03",
+          "cdut:chunk:aaooffices:05",
+          "cdut:chunk:portalmanual:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:libfaq:02",
+          "cdut:chunk:repair:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-055",
+      "question": "新生借书与图书馆入馆指引有哪些已收录资料？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libfresh:01",
+          "cdut:chunk:libfaq:02",
+          "cdut:chunk:libfaq:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libfresh:01",
+          "cdut:chunk:libfaq:03",
+          "cdut:chunk:libhours:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libfresh:01",
+          "cdut:chunk:libfaq:03",
+          "cdut:chunk:libfaq:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-056",
+      "question": "研究生成绩单与在读证明自助申请有哪些已收录资料？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:zzzc:bs02",
+          "cdut:chunk:libprint:bs01",
+          "cdut:candidate-office:05"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:lyfwdorm:bs03",
+          "cdut:chunk:zzzc:bs01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:lyfwdorm:bs03",
+          "cdut:chunk:zzzc:bs02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-057",
+      "question": "现在帮我缴学费",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:fee20262027:03",
+          "cdut:chunk:xjgl2019:02",
+          "cdut:chunk:zzzc:bs01"
+        ],
+        "n_hits": 11
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:lyfwdorm:bs07"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:zzzc:bs01",
+          "cdut:chunk:wx:fresh2026fee:03",
+          "cdut:chunk:wx:fresh2026fee:ocr01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-058",
+      "question": "综合科在哪里？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:11",
+          "cdut:candidate-office:01",
+          "cdut:chunk:xscoffices:05"
+        ],
+        "n_hits": 18
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:01",
+          "cdut:candidate-office:11",
+          "cdut:chunk:aaooffices:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:01",
+          "cdut:candidate-office:11",
+          "cdut:chunk:aaooffices:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-059",
+      "question": "胡艳梅和蔡彪老师的办公室在哪？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:胡艳梅",
+          "cdut:candidate-office:09",
+          "cdut:chunk:xscoffices:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:胡艳梅",
+          "cdut:chunk:teacher:蔡彪",
+          "cdut:chunk:teacher:胡亨琪"
+        ],
+        "n_hits": 4
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:teacher:胡艳梅",
+          "cdut:chunk:teacher:蔡彪",
+          "cdut:candidate-office:09"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-060",
+      "question": "2026寒假图书馆安排能当今天开放时间吗？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libwinter2026:01",
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libfaq:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libwinter2026:01",
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:winter2026:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:libwinter2026:01",
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libfaq:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-061",
+      "question": "教务处综合科在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:01",
+          "cdut:chunk:aaooffices:03",
+          "cdut:candidate-office:11"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:01",
+          "cdut:chunk:aaooffices:03",
+          "cdut:candidate-office:11"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:01",
+          "cdut:chunk:aaooffices:03",
+          "cdut:candidate-office:11"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-062",
+      "question": "教务处质量建设与智慧教学科在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:02"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:02",
+          "cdut:chunk:aaooffices:04",
+          "cdut:candidate-office:04"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:02",
+          "cdut:chunk:aaooffices:04",
+          "cdut:candidate-office:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:02",
+          "cdut:chunk:aaooffices:04",
+          "cdut:candidate-office:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-063",
+      "question": "教务处教材建设科在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:03"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:03",
+          "cdut:chunk:aaooffices:05",
+          "cdut:candidate-office:05"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:03",
+          "cdut:chunk:aaooffices:05",
+          "cdut:candidate-office:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:03",
+          "cdut:chunk:aaooffices:05",
+          "cdut:candidate-office:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-064",
+      "question": "教务处实践教学科在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:04"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:04",
+          "cdut:chunk:aaooffices:06",
+          "cdut:candidate-office:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:04",
+          "cdut:chunk:aaooffices:06",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:04",
+          "cdut:chunk:aaooffices:06",
+          "cdut:candidate-office:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-065",
+      "question": "教务处教学事务中心在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:05"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:05",
+          "cdut:chunk:aaooffices:01",
+          "cdut:candidate-office:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:05",
+          "cdut:chunk:aaooffices:01",
+          "cdut:candidate-office:04"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:05",
+          "cdut:chunk:aaooffices:01",
+          "cdut:candidate-office:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-066",
+      "question": "教务处学籍管理科在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:06"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:06",
+          "cdut:chunk:aaooffices:02",
+          "cdut:candidate-office:08"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:06",
+          "cdut:chunk:aaooffices:02",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:06",
+          "cdut:chunk:aaooffices:02",
+          "cdut:candidate-office:08"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-067",
+      "question": "学生处思想政治教育科在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:07"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:07",
+          "cdut:chunk:xscoffices:03",
+          "cdut:candidate-office:11"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:07",
+          "cdut:chunk:xscoffices:03",
+          "cdut:candidate-office:08"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:07",
+          "cdut:chunk:xscoffices:03",
+          "cdut:candidate-office:08"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-068",
+      "question": "学生处学生管理科在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:08"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:08",
+          "cdut:chunk:xscoffices:01",
+          "cdut:candidate-office:09"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:08",
+          "cdut:chunk:xscoffices:01",
+          "cdut:candidate-office:07"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:08",
+          "cdut:chunk:xscoffices:01",
+          "cdut:candidate-office:09"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-069",
+      "question": "学生处学生资助管理中心办公室在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:09"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:09",
+          "cdut:chunk:xscoffices:02",
+          "cdut:chunk:zzzc:bs02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:09",
+          "cdut:chunk:xscoffices:02",
+          "cdut:candidate-office:08"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:09",
+          "cdut:chunk:xscoffices:02",
+          "cdut:candidate-office:08"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-070",
+      "question": "学生处学生网络文化建设中心（易班发展中心）在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:10"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:10",
+          "cdut:chunk:xscoffices:04",
+          "cdut:candidate-office:09"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:10",
+          "cdut:chunk:xscoffices:04",
+          "cdut:candidate-office:07"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:10",
+          "cdut:chunk:xscoffices:04",
+          "cdut:candidate-office:08"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-071",
+      "question": "学生处综合科在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:11"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:11",
+          "cdut:chunk:xscoffices:05",
+          "cdut:candidate-office:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:11",
+          "cdut:chunk:xscoffices:05",
+          "cdut:candidate-office:08"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:11",
+          "cdut:chunk:xscoffices:05",
+          "cdut:candidate-office:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-072",
+      "question": "后勤保障部楼寓服务中心在哪里、有什么职责及核对限制？",
+      "gold": [
+        "cdut:candidate-office:12"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:12",
+          "cdut:chunk:lyfwdorm:bs02",
+          "cdut:chunk:lyfwdorm:bs07"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:12",
+          "cdut:chunk:lyfwdorm:bs02",
+          "cdut:chunk:lyzn2023:bs01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:candidate-office:12",
+          "cdut:chunk:lyfwdorm:bs02",
+          "cdut:chunk:lyfwdorm:bs01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-073",
+      "question": "教务处教学事务中心负责哪些事务？",
+      "gold": [
+        "cdut:chunk:aaooffices:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:aaooffices:01",
+          "cdut:candidate-office:05",
+          "cdut:chunk:aaooffices:05"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:05",
+          "cdut:chunk:aaooffices:01",
+          "cdut:chunk:aaooffices:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:05",
+          "cdut:chunk:aaooffices:01",
+          "cdut:chunk:aaooffices:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-074",
+      "question": "教务处学籍管理科负责什么？",
+      "gold": [
+        "cdut:chunk:aaooffices:02"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:aaooffices:02",
+          "cdut:candidate-office:06",
+          "cdut:chunk:xscoffices:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:aaooffices:02",
+          "cdut:candidate-office:06",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:aaooffices:02",
+          "cdut:candidate-office:06",
+          "cdut:chunk:xscoffices:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-075",
+      "question": "教务处综合科有哪些职责？",
+      "gold": [
+        "cdut:chunk:aaooffices:03"
+      ],
+      "lexical": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:01",
+          "cdut:chunk:aaooffices:03",
+          "cdut:candidate-office:11"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:01",
+          "cdut:chunk:aaooffices:03",
+          "cdut:candidate-office:11"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:01",
+          "cdut:chunk:aaooffices:03",
+          "cdut:candidate-office:11"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-076",
+      "question": "质量建设与智慧教学科负责什么？",
+      "gold": [
+        "cdut:chunk:aaooffices:04"
+      ],
+      "lexical": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:02",
+          "cdut:chunk:aaooffices:04",
+          "cdut:chunk:aaooffices:06"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:02",
+          "cdut:chunk:aaooffices:04",
+          "cdut:candidate-office:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:02",
+          "cdut:chunk:aaooffices:04",
+          "cdut:chunk:aaooffices:06"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-077",
+      "question": "教材建设科负责哪些教材事务？",
+      "gold": [
+        "cdut:chunk:aaooffices:05"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:aaooffices:05",
+          "cdut:candidate-office:03",
+          "cdut:chunk:aaooffices:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:03",
+          "cdut:chunk:aaooffices:05",
+          "cdut:chunk:aaooffices:04"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:03",
+          "cdut:chunk:aaooffices:05",
+          "cdut:chunk:aaooffices:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-078",
+      "question": "实践教学科负责哪些实践教学事务？",
+      "gold": [
+        "cdut:chunk:aaooffices:06"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:aaooffices:06",
+          "cdut:candidate-office:04",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:aaooffices:06",
+          "cdut:candidate-office:04",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:aaooffices:06",
+          "cdut:candidate-office:04",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-079",
+      "question": "校园卡小程序怎样绑定？",
+      "gold": [
+        "cdut:chunk:card2024:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:netfaq2023:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-080",
+      "question": "校园卡挂失之后怎样解挂？",
+      "gold": [
+        "cdut:chunk:card2024:02"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-081",
+      "question": "校园卡补办费用与地点的资料有哪些限制？",
+      "gold": [
+        "cdut:chunk:card2024:03"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:card2024:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:card2024:02",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-082",
+      "question": "历史上的2018年成绩复核申请表说明什么？",
+      "gold": [
+        "cdut:chunk:gradeform2018:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:gradeform2018:01",
+          "cdut:chunk:xjgl2019:07",
+          "cdut:chunk:gradesindex:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:gradeform2018:01",
+          "cdut:chunk:gradesindex:01",
+          "cdut:chunk:xjgl2019:16"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:gradeform2018:01",
+          "cdut:chunk:gradesindex:01",
+          "cdut:chunk:xjgl2019:16"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-083",
+      "question": "期末课程成绩复核指南在哪里查看？",
+      "gold": [
+        "cdut:chunk:gradesindex:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:gradesindex:01",
+          "cdut:chunk:xjgl2019:07",
+          "cdut:chunk:xjgl2019:06"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:gradesindex:01",
+          "cdut:chunk:xjgl2019:07",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:gradesindex:01",
+          "cdut:chunk:xjgl2019:07",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-084",
+      "question": "统一身份认证账号怎样激活？",
+      "gold": [
+        "cdut:chunk:identity2021:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:identity2021:02",
+          "cdut:chunk:wx:fresh2026fee:ocr02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:identity2021:02",
+          "cdut:chunk:mail2022:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:identity2021:02",
+          "cdut:chunk:mail2022:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-085",
+      "question": "统一身份认证怎样通过绑定方式找回密码？",
+      "gold": [
+        "cdut:chunk:identity2021:02"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:identity2021:02",
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:wx:fresh2026fee:ocr02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:identity2021:02",
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:netfaq2023:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:identity2021:02",
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-086",
+      "question": "统一身份认证安全手机换了怎么办？",
+      "gold": [
+        "cdut:chunk:identity2021:03"
+      ],
+      "lexical": {
+        "rank": 3,
+        "top3": [
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:identity2021:02",
+          "cdut:chunk:identity2021:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:identity2021:03",
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:identity2021:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:identity2021:03",
+          "cdut:chunk:identity2021:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-087",
+      "question": "图书馆馆藏怎样查找、续借和预约？",
+      "gold": [
+        "cdut:chunk:libfaq:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfaq:01",
+          "cdut:chunk:libfaq:02",
+          "cdut:chunk:libfaq:03"
+        ],
+        "n_hits": 8
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfaq:01",
+          "cdut:chunk:libfresh:01",
+          "cdut:chunk:libhours:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfaq:01",
+          "cdut:chunk:libfresh:01",
+          "cdut:chunk:libfaq:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-088",
+      "question": "在图书馆馆外怎样使用数据库？",
+      "gold": [
+        "cdut:chunk:libfaq:02"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfaq:02",
+          "cdut:chunk:libservices:01",
+          "cdut:chunk:libfaq:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfaq:02",
+          "cdut:chunk:libfaq:01",
+          "cdut:chunk:libprint:bs01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfaq:02",
+          "cdut:chunk:libservices:01",
+          "cdut:chunk:libfaq:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-089",
+      "question": "图书馆借阅数量怎么规定？",
+      "gold": [
+        "cdut:chunk:libfaq:03"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfaq:03",
+          "cdut:chunk:libfaq:01",
+          "cdut:chunk:libfaq:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfaq:03",
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libfaq:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfaq:03",
+          "cdut:chunk:libfaq:01",
+          "cdut:chunk:libhours:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-090",
+      "question": "新生第一次借书有哪些步骤？",
+      "gold": [
+        "cdut:chunk:libfresh:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfresh:01",
+          "cdut:chunk:wx:fresh2026fee:01",
+          "cdut:chunk:wx:beisen:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfresh:01",
+          "cdut:chunk:libfaq:03",
+          "cdut:chunk:xjgl2019:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libfresh:01",
+          "cdut:chunk:xjgl2019:03",
+          "cdut:chunk:mail2022:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-091",
+      "question": "图书馆常规开馆时间是什么？",
+      "gold": [
+        "cdut:chunk:libhours:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libfaq:01",
+          "cdut:chunk:libfaq:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libfaq:03",
+          "cdut:chunk:libfaq:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libfaq:01",
+          "cdut:chunk:libfaq:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-092",
+      "question": "图书馆有哪些服务项目和咨询渠道？",
+      "gold": [
+        "cdut:chunk:libservices:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libservices:01",
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libprint:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libservices:01",
+          "cdut:chunk:libfaq:01",
+          "cdut:chunk:libhours:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libservices:01",
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libfaq:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-093",
+      "question": "历史上的2026寒假图书馆开放安排是什么？",
+      "gold": [
+        "cdut:chunk:libwinter2026:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libwinter2026:01",
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:libfaq:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libwinter2026:01",
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:winter2026:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:libwinter2026:01",
+          "cdut:chunk:libhours:01",
+          "cdut:chunk:winter2026:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-094",
+      "question": "学生邮箱激活入口在哪里？",
+      "gold": [
+        "cdut:chunk:mail2022:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:netfaq2023:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:identity2021:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-095",
+      "question": "学生邮箱激活有哪些步骤？",
+      "gold": [
+        "cdut:chunk:mail2022:02"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:wx:beisen:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:identity2021:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:identity2021:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-096",
+      "question": "历史学生邮箱客户端配置资料说明什么？",
+      "gold": [
+        "cdut:chunk:mail2022:03"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:mail2022:03",
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:mail2022:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:mail2022:03",
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:mail2022:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:mail2022:03",
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:mail2022:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-097",
+      "question": "校园网怎样进行实名认证？",
+      "gold": [
+        "cdut:chunk:netfaq2023:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:netfaq2023:01",
+          "cdut:chunk:netfaq2023:03",
+          "cdut:chunk:libprint:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:netfaq2023:01",
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:netfaq2023:01",
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:netfaq2023:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-098",
+      "question": "历史2023年校园网联网设备数量有什么限制？",
+      "gold": [
+        "cdut:chunk:netfaq2023:02"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:netfaq2023:02",
+          "cdut:chunk:netfaq2023:01",
+          "cdut:chunk:netfaq2023:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:netfaq2023:02",
+          "cdut:chunk:netfaq2023:03",
+          "cdut:chunk:netfaq2023:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:netfaq2023:02",
+          "cdut:chunk:netfaq2023:01",
+          "cdut:chunk:netfaq2023:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-099",
+      "question": "校园网络故障怎样求助？",
+      "gold": [
+        "cdut:chunk:netfaq2023:03"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:netfaq2023:03",
+          "cdut:chunk:netfaq2023:01",
+          "cdut:chunk:libfresh:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:netfaq2023:03",
+          "cdut:chunk:lyzn2023:bs07",
+          "cdut:chunk:lyfwdorm:bs06"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:netfaq2023:03",
+          "cdut:chunk:lyzn2023:bs07",
+          "cdut:chunk:netfaq2023:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-100",
+      "question": "历史2020年砚湖易办PC操作演示在哪里？",
+      "gold": [
+        "cdut:chunk:portal2020:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:portal2020:01",
+          "cdut:chunk:winter2026:03",
+          "cdut:chunk:portalmanual:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:portal2020:01",
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:winter2026:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:portal2020:01",
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:winter2026:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-101",
+      "question": "砚湖易办官方手册入口在哪里？",
+      "gold": [
+        "cdut:chunk:portalmanual:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:identity2021:03",
+          "cdut:chunk:card2024:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:card2024:01",
+          "cdut:candidate-office:10"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:lyfwdorm:bs08"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-102",
+      "question": "本科生电子证明官方指南在哪里？",
+      "gold": [
+        "cdut:chunk:proofindex:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:wx:feeinvoice:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:candidate-office:06"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-103",
+      "question": "宿舍楼宇零星维修有哪些报修渠道？",
+      "gold": [
+        "cdut:chunk:repair:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:repair:01",
+          "cdut:chunk:lyfwdorm:bs06",
+          "cdut:candidate-office:12"
+        ],
+        "n_hits": 18
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:repair:01",
+          "cdut:chunk:lyfwdorm:bs06",
+          "cdut:candidate-office:12"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:repair:01",
+          "cdut:chunk:lyfwdorm:bs06",
+          "cdut:candidate-office:12"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-104",
+      "question": "宿舍维修报修需要哪些信息？",
+      "gold": [
+        "cdut:chunk:repair:02"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:repair:02",
+          "cdut:chunk:repair:01",
+          "cdut:chunk:lyfwdorm:bs06"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:repair:02",
+          "cdut:chunk:lyfwdorm:bs06",
+          "cdut:chunk:lyfwdorm:bs01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:repair:02",
+          "cdut:chunk:lyfwdorm:bs06",
+          "cdut:chunk:repair:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-105",
+      "question": "零星维修受理时间和咨询方式是什么？",
+      "gold": [
+        "cdut:chunk:repair:03"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:repair:03",
+          "cdut:chunk:repair:01",
+          "cdut:chunk:lyfwdorm:bs06"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 3,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs06",
+          "cdut:chunk:repair:01",
+          "cdut:chunk:repair:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs06",
+          "cdut:chunk:repair:03",
+          "cdut:chunk:repair:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-106",
+      "question": "历史Hillstone旧VPN是否已经停止服务？",
+      "gold": [
+        "cdut:chunk:retiredvpn2018:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:retiredvpn2018:01",
+          "cdut:chunk:winter2026:02",
+          "cdut:chunk:winter2026:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:retiredvpn2018:01",
+          "cdut:chunk:sslvpn2020:01",
+          "cdut:chunk:winter2026:01"
+        ],
+        "n_hits": 11
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:retiredvpn2018:01",
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:winter2026:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-107",
+      "question": "历史2020年旧版客户端SSLVPN说明什么？",
+      "gold": [
+        "cdut:chunk:sslvpn2020:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:sslvpn2020:01",
+          "cdut:chunk:winter2026:02",
+          "cdut:chunk:retiredvpn2018:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:sslvpn2020:01",
+          "cdut:chunk:winter2026:02",
+          "cdut:chunk:retiredvpn2018:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:sslvpn2020:01",
+          "cdut:chunk:winter2026:02",
+          "cdut:chunk:retiredvpn2018:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-108",
+      "question": "电子凭证平台使用手册入口在哪里？",
+      "gold": [
+        "cdut:chunk:voucher2026:01"
+      ],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:wx:beisen:05",
+          "cdut:chunk:wx:beisen:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:portalmanual:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:proofindex:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-109",
+      "question": "历史2026年寒假WebVPN入口是什么？",
+      "gold": [
+        "cdut:chunk:winter2026:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:winter2026:02",
+          "cdut:chunk:portalmanual:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:winter2026:02",
+          "cdut:chunk:retiredvpn2018:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:winter2026:02",
+          "cdut:chunk:libwinter2026:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-110",
+      "question": "历史2026年寒假SSLVPN安排说明什么？",
+      "gold": [
+        "cdut:chunk:winter2026:02"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:winter2026:02",
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:libwinter2026:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:winter2026:02",
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:libwinter2026:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:winter2026:02",
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:libwinter2026:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-111",
+      "question": "历史2026年寒假砚湖易办入口在哪里？",
+      "gold": [
+        "cdut:chunk:winter2026:03"
+      ],
+      "lexical": {
+        "rank": 3,
+        "top3": [
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:winter2026:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:winter2026:03",
+          "cdut:chunk:winter2026:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 3,
+        "top3": [
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:winter2026:01",
+          "cdut:chunk:winter2026:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-112",
+      "question": "学生处学生管理科负责哪些工作？",
+      "gold": [
+        "cdut:chunk:xscoffices:01"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:xscoffices:01",
+          "cdut:candidate-office:08",
+          "cdut:chunk:aaooffices:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:08",
+          "cdut:chunk:xscoffices:01",
+          "cdut:chunk:xscoffices:05"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:08",
+          "cdut:chunk:xscoffices:01",
+          "cdut:chunk:xscoffices:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-113",
+      "question": "学生资助管理中心办公室负责什么？",
+      "gold": [
+        "cdut:chunk:xscoffices:02"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:xscoffices:02",
+          "cdut:candidate-office:09",
+          "cdut:chunk:zzzc:bs02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:09",
+          "cdut:chunk:xscoffices:02",
+          "cdut:candidate-office:08"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:09",
+          "cdut:chunk:xscoffices:02",
+          "cdut:chunk:lyzn2023:bs01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-114",
+      "question": "学生处思想政治教育科负责什么？",
+      "gold": [
+        "cdut:chunk:xscoffices:03"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:xscoffices:03",
+          "cdut:candidate-office:07",
+          "cdut:chunk:xscoffices:05"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:07",
+          "cdut:chunk:xscoffices:03",
+          "cdut:chunk:xscoffices:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:07",
+          "cdut:chunk:xscoffices:03",
+          "cdut:chunk:xscoffices:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-115",
+      "question": "学生网络文化建设中心和易班发展中心负责什么？",
+      "gold": [
+        "cdut:chunk:xscoffices:04"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:xscoffices:04",
+          "cdut:candidate-office:10",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:xscoffices:04",
+          "cdut:candidate-office:10",
+          "cdut:chunk:xscoffices:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:xscoffices:04",
+          "cdut:candidate-office:10",
+          "cdut:chunk:xscoffices:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-116",
+      "question": "学生处综合科负责什么？",
+      "gold": [
+        "cdut:chunk:xscoffices:05"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:xscoffices:05",
+          "cdut:candidate-office:11",
+          "cdut:chunk:aaooffices:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:11",
+          "cdut:chunk:xscoffices:05",
+          "cdut:candidate-office:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:candidate-office:11",
+          "cdut:chunk:xscoffices:05",
+          "cdut:candidate-office:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-117",
+      "question": "现在还能用Hillstone旧VPN吗？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [],
+        "n_hits": 0
+      },
+      "vector": {
+        "rank": null,
+        "top3": [],
+        "n_hits": 0
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [],
+        "n_hits": 0
+      }
+    },
+    {
+      "id": "cp-118",
+      "question": "本科生电子证明能照研究生自助机操作吗？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:libfaq:03",
+          "cdut:chunk:lyfwdorm:bs03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:wx:feeinvoice:ocr01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:proofindex:01",
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:wx:feeinvoice:ocr01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-119",
+      "question": "教务处综合科和学生处综合科是否同一办公室？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:aaooffices:03",
+          "cdut:candidate-office:01",
+          "cdut:chunk:xscoffices:05"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:11",
+          "cdut:candidate-office:01",
+          "cdut:chunk:aaooffices:03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:aaooffices:03",
+          "cdut:candidate-office:01",
+          "cdut:candidate-office:11"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "cp-120",
+      "question": "楼寓服务中心的资料能自动变成导航点吗？",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:12",
+          "cdut:chunk:lyfwdorm:bs07",
+          "cdut:chunk:lyfwdorm:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:repair:02",
+          "cdut:candidate-office:12",
+          "cdut:chunk:lyfwdorm:bs01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:12",
+          "cdut:chunk:lyfwdorm:bs01",
+          "cdut:chunk:lyfwdorm:bs06"
+        ],
+        "n_hits": 20
+      }
+    }
+  ]
+}
