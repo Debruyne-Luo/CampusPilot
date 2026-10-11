@@ -126,6 +126,14 @@ def candidate_snapshot(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Candi
     current = json.loads((data / "places.json").read_bytes())
     for record in current:
         record["notes"].append("SYNTHETIC TEST COPY; NOT A REVIEW OR PRODUCTION UPDATE")
+        # This legacy helper only ships unreviewed candidates; present on-site confirmed
+        # points to it as candidates so the copy stays a valid candidate increment.
+        if record["position"] and record["position"]["verification_status"] == "confirmed":
+            record["position"].update(
+                verification_status="needs_review", source_kind="map_provider"
+            )
+            record["position"].pop("confirmed_at", None)
+            record["position"].pop("reviewer", None)
     incoming = json.dumps(current, ensure_ascii=False).encode()
     for record in current:
         record["position"] = None

@@ -31,7 +31,7 @@ async function init(config) {
       document.head.append(script);
     }), "地图组件加载超时");
     await timed(window.AMapLoader.load({key: config.key, version: "2.0"}), "地图组件加载超时");
-    map = new AMap.Map("map-view", {center: CAMPUS_CENTER, zoom: CAMPUS_ZOOM, viewMode: "2D", isHotspot:true});
+    map = new AMap.Map("map-view", {center: CAMPUS_CENTER, zoom: CAMPUS_ZOOM, viewMode: "2D", isHotspot:true, rotateEnable:true});
     await timed(new Promise((resolve) => map.on("complete", resolve)), "地图图像加载超时");
     map.on("click", (event) => {
       if (!event.lnglat) return;
@@ -151,6 +151,10 @@ window.addEventListener("message", (event) => {
     if (routeLayers.length) fitRoute();
     else if (markers.length) fitMarkers();
     else map.setZoomAndCenter(CAMPUS_ZOOM, CAMPUS_CENTER);
+  } else if (data.action === "heading" && map && navigationId !== null) {
+    applyHeading(data);
+  } else if (data.action === "north-up" && map) {
+    map.setRotation(0);
   } else if (data.action === "resize" && map) {
     window.dispatchEvent(new Event("resize"));
   }
@@ -182,7 +186,9 @@ async function convertPosition(origin) {
 async function planWalking(data) {
   const id = data.request_id;
   try {
-    const destination = placeRecords.get(data.destination_place_id);
+    // A recorded place by ID, or an AMap POI / map point chosen by the user (GCJ02 only).
+    const destination = data.destination_place_id ? placeRecords.get(data.destination_place_id)
+      : (validPosition(data.destination_position) ? {position: data.destination_position} : null);
     if (!destination || !validPosition(destination.position)) throw new Error("destination");
     const origin = await convertPosition(data.origin);
     if (id !== routeId) return;
@@ -198,10 +204,10 @@ async function planWalking(data) {
     if (id !== routeId) return;
     const path = route.steps?.flatMap((step) => step.path || []);
     if (!path?.length || !Number.isFinite(route.distance) || !Number.isFinite(route.time)) throw new Error("invalid route");
-    const line = new AMap.Polyline({path, isOutline: true, outlineColor: "#fff", borderWeight: 2, strokeWeight: 6, strokeColor: "#347451", strokeOpacity: 1, zIndex: 150, lineJoin: "round"});
+    const line = new AMap.Polyline({path, isOutline: true, outlineColor: "#fff", borderWeight: 2, strokeWeight: 6, strokeColor: "#347451", strokeOpacity: 1, zIndex: 150, lineJoin: "round", bubble: true});
     const endpoint = (position, text) => {
       const content = document.createElement("span"); content.className = "route-marker"; content.textContent = text;
-      return new AMap.Marker({position, content, anchor: "center", zIndex: 200});
+      return new AMap.Marker({position, content, anchor: "center", zIndex: 200, bubble: true});
     };
     routeLayers = [line, endpoint(path[0], "起"), endpoint(path[path.length - 1], "终")];
     map.add(routeLayers); fitRoute();
@@ -238,6 +244,15 @@ async function searchPlaces(data) {
   } catch {if (id === discoveryId) notify("place-search-result", {request_id:id,status:"error",places:[]});}
 }
 async function selectHotspot(event) {
+  if (pickingOrigin && event.lnglat) {
+    // A POI label swallows the plain map click; use the label as the picked origin.
+    const position = {longitude:event.lnglat.lng, latitude:event.lnglat.lat, coordinate_system:"GCJ02"};
+    if (validPosition(position)) {
+      pickingOrigin = false; map.setDefaultCursor("default");
+      notify("route-origin", {request_id:routeId, position, name:typeof event.name === "string" ? event.name.slice(0,60) : undefined});
+    }
+    return;
+  }
   if (!/^[A-Za-z0-9]{8,32}$/.test(event.id || "") || pickingOrigin || pickingDestination) return;
   const id = discoveryId, selection = ++hotspotSequence;
   try {
@@ -249,8 +264,18 @@ async function selectHotspot(event) {
     if (id === discoveryId && selection === hotspotSequence) notify("poi-selection", {request_id:id,place:serialisePoi(value)});
   } catch {if (id === discoveryId && selection === hotspotSequence) notify("poi-selection", {request_id:id,place:null});}
 }
+let arrowAngle = 0, hasHeading = false;
+function applyHeading(data) {
+  // arrow: screen rotation of the user arrow; rotation: AMap clockwise map rotation.
+  if (!Number.isFinite(data.arrow) || !Number.isFinite(data.rotation)) return;
+  arrowAngle = data.arrow; hasHeading = true;
+  const dot = locationLayer?.getContent?.();
+  if (dot instanceof Element) {dot.style.setProperty("--arrow", arrowAngle + "deg"); dot.classList.add("has-heading");}
+  if (map && Math.abs(((map.getRotation() - data.rotation + 540) % 360) - 180) > 2) map.setRotation(data.rotation, true);
+}
 function clearLocation() {
-  navigationId = null; locationSequence++;
+  navigationId = null; locationSequence++; hasHeading = false;
+  if (map && map.getRotation()) map.setRotation(0);
   if (map && locationLayer) map.remove(locationLayer);
   locationLayer = null;
 }
@@ -270,6 +295,8 @@ async function updateLocation(data) {
     if (id !== navigationId || sequence !== locationSequence || data.request_id !== routeId) return;
     if (!locationLayer) {
       const dot = document.createElement("span"); dot.className = "guidance-location"; dot.setAttribute("aria-label","我的位置");
+      const arrow = document.createElement("i"); arrow.className = "guidance-arrow"; arrow.setAttribute("aria-hidden","true"); dot.append(arrow);
+      dot.style.setProperty("--arrow", arrowAngle + "deg"); dot.classList.toggle("has-heading", hasHeading);
       locationLayer = new AMap.Marker({position:[position.longitude,position.latitude],content:dot,anchor:"center",zIndex:300});
       map.add(locationLayer);
     } else locationLayer.setPosition([position.longitude,position.latitude]);

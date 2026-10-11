@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f5f6f8"><title>CampusPilot · 成都理工大学校园行动助手</title>
+  <meta name="theme-color" content="#f5f6f8"><meta name="color-scheme" content="light"><title>理小龙 CDUTdino</title>
+  <link rel="icon" href="/assets/v2/dino.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/assets/v2/dino.svg"><link rel="manifest" href="/assets/v2/manifest.webmanifest">
   <link rel="stylesheet" href="/assets/v2/app.css">
   <script src="/assets/guidance.js" defer></script>
   <script type="module" src="/assets/v2/main.mjs"></script>
@@ -11,17 +12,17 @@
 <a class="skip" href="#question">跳到提问框</a>
 <div class="app">
   <section class="chat" aria-label="事务助手">
-    <button id="sheet-handle" class="sheet-handle" type="button" aria-label="展开或收起对话面板"></button>
+    <button id="sheet-handle" class="sheet-handle" type="button" aria-label="展开或收起对话面板" aria-expanded="true"></button>
     <header>
-      <span class="brand-mark" aria-hidden="true">C</span>
-      <div><b>CampusPilot</b><small>成都理工大学 · 校园行动助手</small></div>
+      <img class="brand-mark" src="/assets/v2/dino.svg" alt="" width="34" height="34">
+      <div class="brand"><b>理小龙</b><small>CDUTdino</small></div>
       <span id="status" class="status" role="status">正在连接…</span>
       <button id="new-chat" class="text-button" type="button">新对话</button>
     </header>
     <div id="thread" class="thread" role="log" aria-live="polite" aria-label="对话记录">
       <section id="empty" class="empty">
-        <h1>少翻几篇通知，少跑一趟冤枉路。</h1>
-        <p>说出你要办的事：我会先列出计划、查官方依据，再给你清单和去哪办。</p>
+        <h1>我是理小龙，少翻几篇通知，少跑一趟冤枉路。</h1>
+        <p>说出你要办的事：我先列计划、查官方依据，再给你清单和去哪办，还能带你走过去。</p>
         <div class="chips" aria-label="试试这些问题">
           <button type="button" class="chip" data-question="校园卡丢了怎么补办？">校园卡丢了怎么补办？</button>
           <button type="button" class="chip" data-question="王洪辉老师的办公室在哪？">王洪辉老师的办公室在哪？</button>
@@ -36,14 +37,19 @@
       <textarea id="question" rows="1" maxlength="2000" placeholder="问问补卡、找老师、去哪办…"></textarea>
       <button id="send" type="submit" disabled><span id="send-label">发送</span></button>
     </form>
-    <p class="fineprint footnote">资料来自学校公开页面，需人工复核；不要输入密码、证件号或个人位置。</p>
   </section>
   <section class="mapwrap" aria-label="校园地图">
     <iframe id="map-frame" class="map-view" src="/map-view" title="高德地图视图" sandbox="allow-scripts allow-same-origin"></iframe>
     <div id="map-fallback" class="map-fallback" hidden></div>
+    <div class="map-search" role="search">
+      <label class="sr-only" for="map-search">搜索地点</label>
+      <input id="map-search" type="search" placeholder="搜索地点、食堂、学院…" autocomplete="off" enterkeyhint="search">
+      <ul id="search-results" class="search-results" role="listbox" aria-label="搜索结果" hidden></ul>
+    </div>
     <div id="filters" class="filters" role="toolbar" aria-label="地点分类"></div>
     <p id="map-status" class="map-status" role="status" hidden></p>
-    <p id="unlocated" class="unverified"></p>
+    <div class="origin-bar"><span id="origin-label">未设置起点</span><button id="origin-button" class="text-button" type="button">选择起点</button></div>
+    <button id="heading-toggle" class="heading-toggle chip" type="button" aria-pressed="false" hidden>🧭 北朝上</button>
     <div id="place-card" class="place-card card" aria-live="polite" hidden></div>
     <div id="route-note" class="route-note card" role="status" hidden></div>
     <div class="guidance-slot" aria-live="polite"></div>

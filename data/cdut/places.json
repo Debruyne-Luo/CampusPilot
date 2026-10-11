@@ -11,6 +11,7 @@
     "campus": "成都校区",
     "category": "office",
     "address_detail": "生态环境学院所在楼栋；与网安楼为同一栋楼（用户补充）。",
+    "hotspot": false,
     "position": {
       "longitude": 104.148825,
       "latitude": 30.676325,
@@ -74,6 +75,7 @@
     "campus": "成都校区",
     "category": "library",
     "address_detail": null,
+    "hotspot": true,
     "position": {
       "longitude": 104.151472,
       "latitude": 30.676143,
@@ -122,6 +124,70 @@
     ]
   },
   {
+    "place_id": "cdut:place:water-library",
+    "name": "水上图书馆",
+    "aliases": [
+      "成都理工大学二仙桥校区水上图书馆",
+      "水上图"
+    ],
+    "campus": "成都校区",
+    "category": "library",
+    "address_detail": "二仙桥东三路1号",
+    "hotspot": true,
+    "position": {
+      "longitude": 104.141706,
+      "latitude": 30.673802,
+      "coordinate_system": "GCJ02",
+      "source_kind": "onsite_confirmation",
+      "source_url": "https://surl.amap.com/1AD58bK617dpl",
+      "retrieved_at": "2026-10-11",
+      "verification_status": "confirmed",
+      "confirmed_at": "2026-10-11",
+      "reviewer": "宇豪",
+      "note": "宇豪实地核对 2026-10-11：高德地点「成都理工大学二仙桥校区水上图书馆」（B001C8NPR9）。坐标对应建筑参考点，入口以现场为准。"
+    },
+    "field_evidence": [
+      {
+        "field_path": "name",
+        "evidence_ids": [
+          "cdut:evidence:user-onsite-20261011"
+        ],
+        "note": "地点名称、地址按宇豪实地核对的高德分享点采用；分类为项目整理。"
+      },
+      {
+        "field_path": "aliases",
+        "evidence_ids": [
+          "cdut:evidence:user-onsite-20261011"
+        ],
+        "note": "地点名称、地址按宇豪实地核对的高德分享点采用；分类为项目整理。"
+      },
+      {
+        "field_path": "campus",
+        "evidence_ids": [
+          "cdut:evidence:user-onsite-20261011"
+        ],
+        "note": "地点名称、地址按宇豪实地核对的高德分享点采用；分类为项目整理。"
+      },
+      {
+        "field_path": "category",
+        "evidence_ids": [
+          "cdut:evidence:user-onsite-20261011"
+        ],
+        "note": "地点名称、地址按宇豪实地核对的高德分享点采用；分类为项目整理。"
+      },
+      {
+        "field_path": "address_detail",
+        "evidence_ids": [
+          "cdut:evidence:user-onsite-20261011"
+        ],
+        "note": "地点名称、地址按宇豪实地核对的高德分享点采用；分类为项目整理。"
+      }
+    ],
+    "notes": [
+      "2026-10-11 由用户补充并实地核对；开放时间以图书馆公告为准。"
+    ]
+  },
+  {
     "place_id": "cdut:place:east-teaching",
     "name": "东区教学楼",
     "aliases": [
@@ -131,6 +197,7 @@
     "campus": "成都校区",
     "category": "teaching",
     "address_detail": "E1A、E1B、E2A、E2B、E2C五个分区；本点为E1A参考点。",
+    "hotspot": true,
     "position": {
       "longitude": 104.150587,
       "latitude": 30.67794,
@@ -190,6 +257,7 @@
     "campus": "成都校区",
     "category": "office",
     "address_detail": null,
+    "hotspot": true,
     "position": {
       "longitude": 104.142175,
       "latitude": 30.674775,
@@ -240,11 +308,26 @@
   {
     "place_id": "cdut:place:card-centre",
     "name": "校园一卡通中心",
-    "aliases": [],
+    "aliases": [
+      "一卡通中心",
+      "计划财务处楼"
+    ],
     "campus": "成都校区",
     "category": "service",
     "address_detail": null,
-    "position": null,
+    "hotspot": true,
+    "position": {
+      "longitude": 104.143615,
+      "latitude": 30.676644,
+      "coordinate_system": "GCJ02",
+      "source_kind": "onsite_confirmation",
+      "source_url": "https://surl.amap.com/1A5NdSTkQ0U3",
+      "retrieved_at": "2026-10-11",
+      "verification_status": "confirmed",
+      "confirmed_at": "2026-10-11",
+      "reviewer": "宇豪",
+      "note": "宇豪实地核对 2026-10-11：高德地点「成都理工大学二仙桥校区计划财务处」（B0FFFDK67D）。坐标对应建筑参考点，入口以现场为准。"
+    },
     "field_evidence": [
       {
         "field_path": "name",
@@ -283,9 +366,9 @@
       }
     ],
     "notes": [
-      "公开资料候选，当前名称、具体建筑和位置尚待复核。",
-      "未录入坐标，不提供精确地图点位或导航；院系条目不是教师办公室。",
-      "官方平面图图例把“财务处、校园一卡通中心”标为同一编号建筑；这是同楼线索，不是房间号或已确认点位，不能据此生成坐标或导航。"
+      "公开资料候选，当前名称尚待复核；位置已于 2026-10-11 由宇豪实地核对。",
+      "坐标为高德建筑参考点（2026-10-11 宇豪实地核对），入口以现场为准；院系条目不是教师办公室。",
+      "官方平面图图例把“财务处、校园一卡通中心”标为同一编号建筑；2026-10-11 宇豪实地核对该楼高德点位（计划财务处 B0FFFDK67D），不表示房间号。"
     ]
   },
   {
@@ -298,6 +381,7 @@
     "campus": "成都校区",
     "category": "office",
     "address_detail": "官方学校平面图将财务处、校园一卡通中心标为同一编号建筑。",
+    "hotspot": false,
     "position": {
       "longitude": 104.143618,
       "latitude": 30.676646,
@@ -359,6 +443,7 @@
     "campus": "成都校区",
     "category": "service",
     "address_detail": null,
+    "hotspot": true,
     "position": {
       "longitude": 104.142586,
       "latitude": 30.676868,
@@ -413,6 +498,7 @@
     "campus": "成都校区",
     "category": "office",
     "address_detail": null,
+    "hotspot": false,
     "position": {
       "longitude": 104.142897,
       "latitude": 30.676368,
@@ -467,6 +553,7 @@
     "campus": "成都校区",
     "category": "dining",
     "address_detail": null,
+    "hotspot": true,
     "position": {
       "longitude": 104.140524,
       "latitude": 30.674444,
@@ -521,6 +608,7 @@
     "campus": "成都校区",
     "category": "dining",
     "address_detail": null,
+    "hotspot": true,
     "position": {
       "longitude": 104.143811,
       "latitude": 30.670203,
@@ -577,6 +665,7 @@
     "campus": "成都校区",
     "category": "dining",
     "address_detail": "校园卡自助服务区所在食堂；进入后按现场指示找到补卡设备。",
+    "hotspot": true,
     "position": {
       "longitude": 104.149025,
       "latitude": 30.672625,
@@ -641,6 +730,7 @@
     "campus": "成都校区",
     "category": "dining",
     "address_detail": "校园卡自助服务区所在食堂；进入后按现场指示找到补卡设备。",
+    "hotspot": true,
     "position": {
       "longitude": 104.154625,
       "latitude": 30.676964,
@@ -703,6 +793,7 @@
     "campus": "成都校区",
     "category": "office",
     "address_detail": null,
+    "hotspot": false,
     "position": {
       "longitude": 104.139965,
       "latitude": 30.672791,
@@ -753,11 +844,25 @@
   {
     "place_id": "cdut:place:earth-sciences",
     "name": "地球科学学院",
-    "aliases": [],
+    "aliases": [
+      "地球与行星科学学院"
+    ],
     "campus": "成都校区",
     "category": "office",
     "address_detail": null,
-    "position": null,
+    "hotspot": false,
+    "position": {
+      "longitude": 104.141126,
+      "latitude": 30.673276,
+      "coordinate_system": "GCJ02",
+      "source_kind": "onsite_confirmation",
+      "source_url": "https://surl.amap.com/1zUIb7VQ103wO",
+      "retrieved_at": "2026-10-11",
+      "verification_status": "confirmed",
+      "confirmed_at": "2026-10-11",
+      "reviewer": "宇豪",
+      "note": "宇豪实地核对 2026-10-11：高德地点「成都理工大学二仙桥校区地球与行星科学学院」（B0LB9ZX114）。坐标对应建筑参考点，入口以现场为准。"
+    },
     "field_evidence": [
       {
         "field_path": "name",
@@ -789,8 +894,8 @@
       }
     ],
     "notes": [
-      "公开资料候选，当前名称、具体建筑和位置尚待复核。",
-      "未录入坐标，不提供精确地图点位或导航；院系条目不是教师办公室。"
+      "公开资料候选，当前名称尚待复核；位置已于 2026-10-11 由宇豪实地核对。",
+      "坐标为高德建筑参考点（2026-10-11 宇豪实地核对），入口以现场为准；院系条目不是教师办公室。"
     ]
   },
   {
@@ -800,6 +905,7 @@
     "campus": "成都校区",
     "category": "office",
     "address_detail": null,
+    "hotspot": false,
     "position": {
       "longitude": 104.144316,
       "latitude": 30.673864,
@@ -854,6 +960,7 @@
     "campus": "成都校区",
     "category": "office",
     "address_detail": null,
+    "hotspot": false,
     "position": {
       "longitude": 104.143771,
       "latitude": 30.675057,
@@ -908,6 +1015,7 @@
     "campus": "成都校区",
     "category": "office",
     "address_detail": null,
+    "hotspot": false,
     "position": {
       "longitude": 104.143426,
       "latitude": 30.675862,
@@ -962,6 +1070,7 @@
     "campus": "成都校区",
     "category": "office",
     "address_detail": null,
+    "hotspot": false,
     "position": {
       "longitude": 104.143572,
       "latitude": 30.673488,
@@ -1016,7 +1125,19 @@
     "campus": "成都校区",
     "category": "teaching",
     "address_detail": null,
-    "position": null,
+    "hotspot": true,
+    "position": {
+      "longitude": 104.145069,
+      "latitude": 30.675024,
+      "coordinate_system": "GCJ02",
+      "source_kind": "onsite_confirmation",
+      "source_url": "https://surl.amap.com/1A3Vmvu61ae0e",
+      "retrieved_at": "2026-10-11",
+      "verification_status": "confirmed",
+      "confirmed_at": "2026-10-11",
+      "reviewer": "宇豪",
+      "note": "宇豪实地核对 2026-10-11：高德地点「成都理工大学二仙桥校区逸夫楼」（B001C8NVX0）。坐标对应建筑参考点，入口以现场为准。"
+    },
     "field_evidence": [
       {
         "field_path": "name",
@@ -1048,18 +1169,32 @@
       }
     ],
     "notes": [
-      "公开资料候选，当前名称、具体建筑和位置尚待复核。",
-      "未录入坐标，不提供精确地图点位或导航；院系条目不是教师办公室。"
+      "公开资料候选，当前名称尚待复核；位置已于 2026-10-11 由宇豪实地核对。",
+      "坐标为高德建筑参考点（2026-10-11 宇豪实地核对），入口以现场为准；院系条目不是教师办公室。"
     ]
   },
   {
     "place_id": "cdut:place:tourism",
     "name": "旅游与城乡规划学院",
-    "aliases": [],
+    "aliases": [
+      "地理与规划学院"
+    ],
     "campus": "成都校区",
     "category": "office",
     "address_detail": null,
-    "position": null,
+    "hotspot": false,
+    "position": {
+      "longitude": 104.144427,
+      "latitude": 30.675951,
+      "coordinate_system": "GCJ02",
+      "source_kind": "onsite_confirmation",
+      "source_url": "https://surl.amap.com/1AndkpYaF7no",
+      "retrieved_at": "2026-10-11",
+      "verification_status": "confirmed",
+      "confirmed_at": "2026-10-11",
+      "reviewer": "宇豪",
+      "note": "宇豪实地核对 2026-10-11：高德地点「成都理工大学二仙桥校区地理与规划学院」（B0FFG0YLRL）。坐标对应建筑参考点，入口以现场为准。"
+    },
     "field_evidence": [
       {
         "field_path": "name",
@@ -1091,8 +1226,8 @@
       }
     ],
     "notes": [
-      "公开资料候选，当前名称、具体建筑和位置尚待复核。",
-      "未录入坐标，不提供精确地图点位或导航；院系条目不是教师办公室。"
+      "公开资料候选，当前名称尚待复核；位置已于 2026-10-11 由宇豪实地核对。",
+      "坐标为高德建筑参考点（2026-10-11 宇豪实地核对），入口以现场为准；院系条目不是教师办公室。"
     ]
   },
   {
@@ -1101,7 +1236,8 @@
     "aliases": [
       "E1A",
       "E1A区",
-      "东教E1A"
+      "东教E1A",
+      "东区第一教学楼A栋"
     ],
     "campus": "成都校区",
     "category": "teaching",
@@ -1110,15 +1246,18 @@
       "east-teaching"
     ],
     "address_detail": "E1A分区；教室号例如E1A101表示对应分区的101教室。",
+    "hotspot": false,
     "position": {
-      "longitude": 104.150587,
-      "latitude": 30.67794,
+      "longitude": 104.150975,
+      "latitude": 30.677905,
       "coordinate_system": "GCJ02",
-      "source_kind": "map_provider",
-      "source_url": "https://ditu.amap.com/place/B0J2GZCSTD",
-      "retrieved_at": "2026-10-09",
-      "verification_status": "needs_review",
-      "note": "高德地点：成都理工大学二仙桥校区东区第一教学楼(E1A)。建筑/店铺参考点，未确认入口、室内位置或当前营业状态。"
+      "source_kind": "onsite_confirmation",
+      "source_url": "https://surl.amap.com/1zOHyvOe5dsy",
+      "retrieved_at": "2026-10-11",
+      "verification_status": "confirmed",
+      "confirmed_at": "2026-10-11",
+      "reviewer": "宇豪",
+      "note": "宇豪实地核对 2026-10-11：高德地点「成都理工大学二仙桥校区东区第一教学楼A栋」（B0FFH2E7UW）。坐标对应建筑参考点，入口以现场为准。"
     },
     "field_evidence": [
       {
@@ -1165,7 +1304,8 @@
       }
     ],
     "notes": [
-      "分区名称已收录；室内房间与入口未独立定位。"
+      "分区名称已收录；室内房间与入口未独立定位。",
+      "2026-10-11 宇豪实地核对高德地点坐标；坐标对应建筑参考点，入口以现场为准。"
     ]
   },
   {
@@ -1183,7 +1323,19 @@
       "east-teaching"
     ],
     "address_detail": "E1B分区；教室号例如E1B101表示对应分区的101教室。",
-    "position": null,
+    "hotspot": false,
+    "position": {
+      "longitude": 104.15104,
+      "latitude": 30.678303,
+      "coordinate_system": "GCJ02",
+      "source_kind": "onsite_confirmation",
+      "source_url": "https://surl.amap.com/1zPPBgACb3A3",
+      "retrieved_at": "2026-10-11",
+      "verification_status": "confirmed",
+      "confirmed_at": "2026-10-11",
+      "reviewer": "宇豪",
+      "note": "宇豪实地核对 2026-10-11：高德地点「成都理工大学二仙桥校区东区第一教学楼B栋(E1B)」（B0FFHBAMFM）。坐标对应建筑参考点，入口以现场为准。"
+    },
     "field_evidence": [
       {
         "field_path": "name",
@@ -1229,7 +1381,7 @@
       }
     ],
     "notes": [
-      "分区名称由用户补充；独立入口与地图坐标尚未确认，不借用其他分区坐标。",
+      "2026-10-11 宇豪实地核对高德地点坐标；坐标对应建筑参考点，入口以现场为准。",
       "教室号只用于匹配分区，不表示室内精确位置。"
     ]
   },
@@ -1248,7 +1400,19 @@
       "east-teaching"
     ],
     "address_detail": "E2A分区；教室号例如E2A101表示对应分区的101教室。",
-    "position": null,
+    "hotspot": false,
+    "position": {
+      "longitude": 104.15141,
+      "latitude": 30.677771,
+      "coordinate_system": "GCJ02",
+      "source_kind": "onsite_confirmation",
+      "source_url": "https://surl.amap.com/1zYwQbnE1z78h",
+      "retrieved_at": "2026-10-11",
+      "verification_status": "confirmed",
+      "confirmed_at": "2026-10-11",
+      "reviewer": "宇豪",
+      "note": "宇豪实地核对 2026-10-11：高德地点「成都理工大学二仙桥校区东区第二教学楼(E2A)」（B0FFIPSEDX）。坐标对应建筑参考点，入口以现场为准。"
+    },
     "field_evidence": [
       {
         "field_path": "name",
@@ -1294,7 +1458,7 @@
       }
     ],
     "notes": [
-      "分区名称由用户补充；独立入口与地图坐标尚未确认，不借用其他分区坐标。",
+      "2026-10-11 宇豪实地核对高德地点坐标；坐标对应建筑参考点，入口以现场为准。",
       "教室号只用于匹配分区，不表示室内精确位置。"
     ]
   },
@@ -1313,7 +1477,19 @@
       "east-teaching"
     ],
     "address_detail": "E2B分区；教室号例如E2B101表示对应分区的101教室。",
-    "position": null,
+    "hotspot": false,
+    "position": {
+      "longitude": 104.151925,
+      "latitude": 30.677267,
+      "coordinate_system": "GCJ02",
+      "source_kind": "onsite_confirmation",
+      "source_url": "https://surl.amap.com/1zLGQ1Sec6v7",
+      "retrieved_at": "2026-10-11",
+      "verification_status": "confirmed",
+      "confirmed_at": "2026-10-11",
+      "reviewer": "宇豪",
+      "note": "宇豪实地核对 2026-10-11：高德地点「成都理工大学二仙桥校区东区第二教学楼B栋(E2B)」（B0J2GZD0IM）。坐标对应建筑参考点，入口以现场为准。"
+    },
     "field_evidence": [
       {
         "field_path": "name",
@@ -1359,7 +1535,7 @@
       }
     ],
     "notes": [
-      "分区名称由用户补充；独立入口与地图坐标尚未确认，不借用其他分区坐标。",
+      "2026-10-11 宇豪实地核对高德地点坐标；坐标对应建筑参考点，入口以现场为准。",
       "教室号只用于匹配分区，不表示室内精确位置。"
     ]
   },
@@ -1378,7 +1554,19 @@
       "east-teaching"
     ],
     "address_detail": "E2C分区；教室号例如E2C101表示对应分区的101教室。",
-    "position": null,
+    "hotspot": false,
+    "position": {
+      "longitude": 104.151635,
+      "latitude": 30.678109,
+      "coordinate_system": "GCJ02",
+      "source_kind": "onsite_confirmation",
+      "source_url": "https://surl.amap.com/1zAUBJpIA91j",
+      "retrieved_at": "2026-10-11",
+      "verification_status": "confirmed",
+      "confirmed_at": "2026-10-11",
+      "reviewer": "宇豪",
+      "note": "宇豪实地核对 2026-10-11：高德地点「成都理工大学二仙桥校区东区第二教学楼C栋(E2C)」（B0FFHBAK0I）。坐标对应建筑参考点，入口以现场为准。"
+    },
     "field_evidence": [
       {
         "field_path": "name",
@@ -1424,7 +1612,7 @@
       }
     ],
     "notes": [
-      "分区名称由用户补充；独立入口与地图坐标尚未确认，不借用其他分区坐标。",
+      "2026-10-11 宇豪实地核对高德地点坐标；坐标对应建筑参考点，入口以现场为准。",
       "教室号只用于匹配分区，不表示室内精确位置。"
     ]
   },
@@ -1444,6 +1632,7 @@
       "pizza"
     ],
     "address_detail": "成都理工大学芙蓉餐厅1-11号",
+    "hotspot": false,
     "position": {
       "longitude": 104.140455,
       "latitude": 30.67442,
@@ -1517,6 +1706,7 @@
       "fast-food"
     ],
     "address_detail": "二仙桥东二路11号",
+    "hotspot": false,
     "position": {
       "longitude": 104.140228,
       "latitude": 30.674132,
@@ -1591,6 +1781,7 @@
       "sandwich"
     ],
     "address_detail": "二仙桥东三路1号成都理工大学芙蓉餐厅1-8号",
+    "hotspot": false,
     "position": {
       "longitude": 104.140524,
       "latitude": 30.674444,
@@ -1665,6 +1856,7 @@
       "fast-food"
     ],
     "address_detail": "成都理工大学珙桐园一楼",
+    "hotspot": false,
     "position": {
       "longitude": 104.149449,
       "latitude": 30.67227,
@@ -1738,6 +1930,7 @@
       "rice"
     ],
     "address_detail": "成都理工大学二仙桥校区珙桐园",
+    "hotspot": false,
     "position": {
       "longitude": 104.14893,
       "latitude": 30.672586,
@@ -1810,6 +2003,7 @@
       "dongyuan"
     ],
     "address_detail": "民智巷与民兴路交叉口南100米",
+    "hotspot": true,
     "position": {
       "longitude": 104.153779,
       "latitude": 30.682326,
@@ -1882,6 +2076,7 @@
       "dongyuan"
     ],
     "address_detail": "民兴路888号",
+    "hotspot": false,
     "position": {
       "longitude": 104.151829,
       "latitude": 30.681786,
@@ -1956,6 +2151,7 @@
       "dongyuan"
     ],
     "address_detail": "二仙桥街道理工东苑左转快递服务中心菜鸟驿站",
+    "hotspot": true,
     "position": {
       "longitude": 104.153014,
       "latitude": 30.683422,
@@ -2030,6 +2226,7 @@
       "dongyuan"
     ],
     "address_detail": "民兴路理工东苑-西区",
+    "hotspot": true,
     "position": {
       "longitude": 104.152044,
       "latitude": 30.683981,
@@ -2104,6 +2301,7 @@
       "dongyuan"
     ],
     "address_detail": "二仙桥街道民兴路788号顺丰速运(理工东苑店)",
+    "hotspot": true,
     "position": {
       "longitude": 104.152358,
       "latitude": 30.683704,
@@ -2177,6 +2375,7 @@
       "hotpot"
     ],
     "address_detail": "明智巷80号",
+    "hotspot": false,
     "position": {
       "longitude": 104.152835,
       "latitude": 30.681507,
@@ -2250,6 +2449,7 @@
       "rice"
     ],
     "address_detail": "理工东苑西区6号门旁",
+    "hotspot": false,
     "position": {
       "longitude": 104.153131,
       "latitude": 30.681997,
@@ -2323,6 +2523,7 @@
       "breakfast"
     ],
     "address_detail": "理工东苑西区6号门旁",
+    "hotspot": false,
     "position": {
       "longitude": 104.153163,
       "latitude": 30.682161,
@@ -2396,6 +2597,7 @@
       "barbecue"
     ],
     "address_detail": "民兴路理工东苑24-23号",
+    "hotspot": false,
     "position": {
       "longitude": 104.153552,
       "latitude": 30.682851,
@@ -2471,6 +2673,7 @@
       "drink"
     ],
     "address_detail": "理工东苑17-7店铺",
+    "hotspot": false,
     "position": {
       "longitude": 104.153256,
       "latitude": 30.681079,

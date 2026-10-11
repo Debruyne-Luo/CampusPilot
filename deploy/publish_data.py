@@ -32,10 +32,16 @@ def verify_data(client):
     base = "http://127.0.0.1:8766"
     served = client.get(base + "/api/places").json()
     places = served["places"]
-    if len(places) != 40:
+    if len(places) != 41:
         raise RuntimeError("data_place_count_failed")
     located = [p for p in places if p.get("position")]
-    if len(located) != 32 or any(p.get("navigation_url") for p in places):
+    confirmed = {
+        p["place_id"] for p in located if p["position"]["verification_status"] == "confirmed"
+    }
+    # 2026-10-11: ten on-site confirmed points; only those may offer navigation.
+    if len(located) != 41 or len(confirmed) != 10 or any(
+        bool(p.get("navigation_url")) != (p["place_id"] in confirmed) for p in places
+    ):
         raise RuntimeError("data_position_state_failed")
     expected = {
         "cdut:place:card-centre": "\\u540c\\u4e00\\u7f16\\u53f7\\u5efa\\u7b51",

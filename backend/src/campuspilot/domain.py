@@ -19,7 +19,14 @@ class DirectoryRecord(Contract):
 
     @model_validator(mode="after")
     def provenance_coverage(self) -> Self:
-        metadata = {"synthetic", "verification_status", "field_evidence", "notes", "position"}
+        metadata = {
+            "synthetic",
+            "verification_status",
+            "field_evidence",
+            "notes",
+            "position",
+            "hotspot",
+        }
         data = self.model_dump(mode="json", exclude=metadata)
         paths: dict[str, JsonValue] = {}
 
@@ -149,6 +156,8 @@ class CampusPlace(DirectoryRecord):
     category: Literal["teaching", "office", "library", "dining", "service", "sports", "gate"]
     address_detail: Text | None = None
     tags: tuple[Text, ...] | None = None
+    # Drawn on the map by default; other places appear when searched, filtered or cited.
+    hotspot: bool = False
     position: MapPosition | None = None
 
 

@@ -18,7 +18,14 @@ def test_classroom_code_resolves_only_its_wing(query: str) -> None:
     repo = DirectoryRepository.load(DATA)
     places = repo.match_places_in_question(query)
     assert [p.place_id for p in places] == ["cdut:place:east-e2a"]
-    assert places[0].position is None  # Never reuse E1A as the destination of E2A.
+    # E2A has its own on-site confirmed point; never reuse E1A as the destination of E2A.
+    e1a = repo.match_places_in_question("E1A")[0]
+    assert places[0].position is not None and e1a.position is not None
+    assert "B0FFIPSEDX" in places[0].position.note
+    assert (places[0].position.longitude, places[0].position.latitude) != (
+        e1a.position.longitude,
+        e1a.position.latitude,
+    )
 
 
 def test_food_and_parcels_are_direct_grounded_queries_without_dify() -> None:

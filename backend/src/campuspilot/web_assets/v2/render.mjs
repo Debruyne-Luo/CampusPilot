@@ -1,6 +1,7 @@
 // Structured answer cards built from the /api/chat response contract.
 import { h } from "./dom.mjs";
 import { hasPosition } from "./places.mjs";
+import { formatDistance, rankPlaces } from "./geo.mjs";
 
 const STATUS = { success: "已核对引用", limited: "资料摘要（未生成答案）", needs_clarification: "需要补充信息", empty: "没有找到依据" };
 
@@ -58,31 +59,45 @@ function stepsCard(services) {
     h("ol", { class: "steps" }, steps.map((s) => h("li", {}, s.instruction))));
 }
 
-export function placesCard(places, { onFocus, onGo }) {
+/**
+ * "去哪办": every place is selectable, with its own distance and 带我去. When the origin is
+ * known the list is nearest-first and the nearest is marked 推荐. `card.update(origin)`
+ * re-ranks in place when the origin changes (GPS fix or manual choice).
+ */
+export function placesCard(places, { onFocus, onGo, onFrom, origin = null }) {
   if (!places.length) return null;
-  const chips = places.slice(0, 6).map((p) => {
-    const located = hasPosition(p);
-    return h("button", { type: "button", class: `chip ${located ? "" : "unlocated"}`, "data-place-id": p.place_id,
-      onclick: () => onFocus(p), "aria-label": `${p.name}${located ? "，在地图上查看" : "，位置待核实"}` },
-      "📍 ", p.name, located ? null : h("small", {}, " 位置待核实"));
-  });
-  const target = places.find(hasPosition);
-  return h("section", { class: "card" }, h("h4", {}, "去哪办"),
-    h("div", { class: "chips" }, chips,
-      target ? h("button", { type: "button", class: "chip go", onclick: () => onGo(target) }, `带我去 ${target.name} →`) : null));
+  const list = h("ul", { class: "place-list" });
+  const card = h("section", { class: "card places-card", "aria-label": "去哪办" }, h("h4", {}, "去哪办"), list);
+  card.update = (from) => {
+    const { rows, recommended } = rankPlaces(places.slice(0, 8), from);
+    list.replaceChildren(...rows.map(({ place: p, distance }) => {
+      const located = hasPosition(p), best = recommended && p.place_id === recommended.place_id;
+      return h("li", { class: `place-row ${best ? "best" : ""}`, "data-place-id": p.place_id },
+        h("button", { type: "button", class: "place-name", onclick: () => onFocus(p), "aria-label": `${p.name}，在地图上查看` },
+          h("b", {}, p.name), best ? h("span", { class: "tag-best" }, "推荐 · 最近") : null,
+          h("small", {}, located ? (distance != null ? `约 ${formatDistance(distance)}` : "在地图上查看") : "暂无位置")),
+        located ? h("span", { class: "row-actions" },
+          onFrom ? h("button", { type: "button", class: "chip ghost", onclick: () => onFrom(p), title: `从${p.name}出发` }, "从这出发") : null,
+          h("button", { type: "button", class: "chip go", onclick: () => onGo(p) }, "带我去")) : null);
+    }));
+  };
+  card.update(origin);
+  return card;
 }
 
 function citationsCard(citations) {
   if (!citations?.length) return null;
-  return h("section", { class: "card citations" }, h("h4", {}, "引用来源"),
-    citations.slice(0, 6).map((c, i) => h("details", {},
+  const shown = citations.slice(0, 6);
+  return h("details", { class: "card citations" },
+    h("summary", {}, h("span", {}, "引用来源"), h("span", { class: "count-pill" }, `${citations.length} 条`)),
+    shown.map((c, i) => h("details", {},
       h("summary", {}, `[${i + 1}] ${c.title || c.id}`),
       h("div", { class: "cite-meta" },
         [c.publisher, c.date ? `${c.date_kind === "retrieved" ? "采集于 " : ""}${c.date}` : null, c.audience ? `适用：${c.audience}` : null].filter(Boolean).join(" · "),
         c.url ? h("a", { href: c.url, target: "_blank", rel: "noopener noreferrer" }, " 查看原文") : null))));
 }
 
-export function answerCards(body, { store, onFocus, onGo }) {
+export function answerCards(body, { store, onFocus, onGo, onFrom, origin = null }) {
   const teachers = (body.teachers || []).map((t) =>
     h("section", { class: "card" }, h("h4", {}, "老师"), h("p", { class: "conclusion" }, t.name),
       h("p", {}, [t.department, t.office].filter(Boolean).join(" · "))));
@@ -91,7 +106,7 @@ export function answerCards(body, { store, onFocus, onGo }) {
     body.checklist?.items?.some((i) => i.kind !== "step") ? checklistCard(body.checklist, store) : null,
     stepsCard(body.services || []),
     ...teachers,
-    placesCard(body.places || [], { onFocus, onGo }),
+    placesCard(body.places || [], { onFocus, onGo, onFrom, origin }),
     citationsCard(body.citations),
   ].filter(Boolean);
 }
