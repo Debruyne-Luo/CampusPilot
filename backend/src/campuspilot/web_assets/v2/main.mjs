@@ -2,7 +2,7 @@
 import { ask } from "./sse.mjs";
 import { initialPlan, reducePlan } from "./plan-state.mjs";
 import { createChecklistStore, sessionId } from "./checklist-store.mjs";
-import { FILTERS, filterList, hasPosition, searchPlaces } from "./places.mjs";
+import { FILTERS, filterList, hasPosition, searchPlaces, rankPois } from "./places.mjs";
 import { h } from "./dom.mjs";
 import { answerCards, planCard } from "./render.mjs";
 import { cardsIn, stepIn, tick } from "./motion.mjs";
@@ -28,7 +28,7 @@ const map = createMap({
   onSelect: (place) => highlight(place),
   onOrigin: (position, name) => setOrigin({ type: "map", position, label: name }),
   onPoi: (poi) => showCard({ name: poi.name, position: poi.position, poi: true }),
-  onArrive: () => { if (guideTarget) { document.body.classList.add("arrived"); showCard(guideTarget); } },
+  onArrive: () => { if (guideTarget) showArrival(guideTarget); },
   onGuide: (kind) => { document.body.dataset.guide = kind; },
 });
 
@@ -91,7 +91,7 @@ function pinIcon() {
   return svg;
 }
 function showCard(target) {
-  current = target;
+  current = target; $("place-card").classList.remove("arrival");
   const card = $("place-card"), from = routeOrigin(origin);
   const d = from && target.position ? distanceMeters(from, target.position) : null;
   const asOrigin = () => setOrigin(target.place ? { type: "place", place: target.place } : { type: "map", position: target.position, label: target.name });
@@ -104,6 +104,20 @@ function showCard(target) {
     target.position ? h("div", { class: "card-actions" },
       h("button", { type: "button", class: "chip go", onclick: () => go(target) }, "带我去"), fromBtn) : null);
   card.hidden = false;
+}
+/** Arrival: drop stale cards/notes and show only 已到达 + name + 完成 (理小龙 idles). */
+function showArrival(target) {
+  document.body.classList.add("arrived"); current = null; note();
+  const card = $("place-card");
+  card.classList.add("arrival");
+  card.replaceChildren(
+    h("div", { class: "card-head" }, h("small", { class: "arrived-label" }, "已到达"), h("strong", {}, target.name)),
+    h("div", { class: "card-actions" }, h("button", { type: "button", class: "chip go", onclick: finishArrival }, "完成")));
+  card.hidden = false;
+}
+function finishArrival() {
+  const card = $("place-card"); card.hidden = true; card.classList.remove("arrival");
+  window.Guidance?.stop(); map.dinoStop(); guideTarget = null; document.body.classList.remove("arrived");
 }
 function highlight(place) {
   map.focus(place);
@@ -170,7 +184,7 @@ function guidanceChanged(on) {
   applySheet({ type: on ? "guidance-start" : "guidance-stop" });
   $("heading-toggle").hidden = !on; $("dino-demo").hidden = !on;
   if (!on) { map.dinoStop(); guideTarget = null; document.body.classList.remove("arrived"); delete document.body.dataset.guide; }
-  if (on) { note(); $("place-card").hidden = true; } else stopHeading();
+  if (on) { note(); $("place-card").hidden = true; } else { stopHeading(); if ($("place-card").classList.contains("arrival")) { $("place-card").hidden = true; $("place-card").classList.remove("arrival"); } }
 }
 
 // ---- compass heading ------------------------------------------------------------------
@@ -334,8 +348,7 @@ async function runSearch(q) {
   results.replaceChildren(...rows, ...(rows.length ? [] : [h("li", { class: "hint" }, "正在搜索…")])); openPanel();
   const pois = await map.searchPoi(q);
   if (token !== searchToken) return;
-  const names = new Set(local.map((p) => p.name));
-  const extra = pois.filter((p) => !names.has(p.name)).slice(0, 6).map((poi) => resultRow(poi.name, poi.address || null, () => { map.centerOn(poi.position); showCard({ name: poi.name, position: poi.position, poi: true }); collapseForMap(); }));
+  const extra = rankPois(pois, local, q).slice(0, 6).map((poi) => resultRow(poi.name, poi.address || null, () => { map.centerOn(poi.position); showCard({ name: poi.name, position: poi.position, poi: true }); collapseForMap(); }));
   results.replaceChildren(...rows, ...extra);
   if (!rows.length && !extra.length) results.replaceChildren(h("li", { class: "hint" }, "没有找到"));
 }

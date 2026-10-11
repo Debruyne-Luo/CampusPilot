@@ -50,6 +50,19 @@ export function searchPlaces(places, query, limit = 8) {
   const score = (p) => Math.min(...[p.name, ...(p.aliases || [])].map((n) => { const f = fold(n); return f === q ? 0 : f.startsWith(q) ? 1 : f.includes(q) ? 2 : 9; }));
   return places.map((p, i) => [score(p), i, p]).filter(([s]) => s < 9).sort((a, b) => a[0] - b[0] || a[1] - b[1]).slice(0, limit).map(([, , p]) => p);
 }
+const TRANSIT = /公交|地铁|车站|站台|停车场|出入口|加油站|充电站/;
+/**
+ * AMap POIs shown after our own places: transit/parking POIs dropped, duplicates of our
+ * places dropped, exact name matches first, then prefix, then the rest in AMap order.
+ */
+export function rankPois(pois, local, query) {
+  const q = fold(query), ours = local.flatMap((p) => [p.name, ...(p.aliases || [])]).map(fold);
+  const rank = (n) => (n === q ? 0 : n.startsWith(q) ? 1 : 2);
+  return (pois || [])
+    .filter((p) => p && !TRANSIT.test(String(p.name || "")) && !/交通设施|公交|地铁|停车/.test(String(p.type || "")))
+    .filter((p) => { const n = fold(p.name); return !ours.some((o) => o === n || n.endsWith(o) || o.endsWith(n)); })
+    .map((p, i) => [rank(fold(p.name)), i, p]).sort((a, b) => a[0] - b[0] || a[1] - b[1]).map(([, , p]) => p);
+}
 /** Pin glyph for a place: parcel box, medical cross, campus card, bowl, book, building. */
 export function glyphFor(place) {
   const tags = place?.tags || [], name = String(place?.name || "");
