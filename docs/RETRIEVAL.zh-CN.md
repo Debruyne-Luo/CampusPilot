@@ -111,3 +111,5 @@ uv run python scripts/knowledge_release.py embed-bootstrap --store data/cdut/rag
 - 路由：找地点 / 路线问题若问的是地点的属性（几点、开放、营业、收费、电话、预约、规定等，`plan.asks_place_attribute`），计划在 `search_place` 之后加 `search_knowledge`；纯位置问题（"快递点在哪"）不变。
 - 挂点：模型在 `_answer` 工具循环里自己发起的 `search_knowledge` 也经过本地 grounding（原本就在 `_call` 中）和 Jev：`on` 丢弃 rank 0 片段、判 insufficient 时整次检索结果不交给模型（不进入可引用集合）；`shadow` 后台只记录；任何故障 fail-open。日志记录带 `phase: "answer"`。
 - 引用：`flag` / `block` 模式下，若答案有地点、老师或办事事项证据，而知识库命中未通过 grounding，则这些片段不作为 excerpts、其来源不作为兜底 citations；只保留模型引用的或通过 grounding 的。答案文本与模型引用不变；`off` 模式保持原行为。这只去掉无关的兜底引用，因此 `flag` 下也启用。
+
+dev 复测（rag/05，deepseek-flash 关思考，dev 118 + 拒答 dev 25，`evaluation/reports/jev-arms-dev-20261011-rag05.json`）：A 拒答召回 2/31、误拒 1/112；D（Jev on，现有默认）拒答召回 14/31、误拒 2/112（1.8%）。离线重新校准（A 的答案 + D 计划阶段的 Jev 原始输出）最好的点只把误拒降到 1/112、召回不变，unsure 从 50% 升到 69%；差异只有 1–2 题，且上一次 dev 校准在 held-out 上没有保持，所以默认值不变。

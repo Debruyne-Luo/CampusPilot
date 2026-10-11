@@ -7,6 +7,10 @@ sufficient probability and per-chunk rank confidences. For each candidate Calibr
 decision is insufficient / clarify and no non-knowledge evidence was found (the rule in
 AgentRunner._with_jev). Selection: highest refusal recall with false refusal <= --max-fr.
 
+With ``--baseline A.json --arm D_jev_on`` the baseline answers come from arm A and the
+Jev records from arm D's planned-phase call (``phase`` absent); in-loop (``phase: answer``)
+records change what the model sees and cannot be replayed offline, so they are ignored.
+
 The selection is in-sample on dev; confirm on a held-out set before trusting the numbers.
 """
 
@@ -75,9 +79,25 @@ def main() -> None:
     p.add_argument("report", type=Path)
     p.add_argument("--arm", default="C_jev_shadow")
     p.add_argument("--max-fr", type=float, default=0.02)
+    p.add_argument("--baseline", type=Path, help="report whose arm A supplies baseline answers")
     p.add_argument("--output", type=Path)
     a = p.parse_args()
     rows = json.loads(a.report.read_text())["arms"][a.arm]["cases"]
+    if a.baseline:
+        base = {
+            r["id"]: r for r in json.loads(a.baseline.read_text())["arms"]["A_current"]["cases"]
+        }
+        merged = []
+        for r in rows:
+            planned = [x for x in r.get("jev_records") or [] if not x.get("phase")]
+            merged.append(
+                {
+                    **r,
+                    "refused": base[r["id"]]["refused"],
+                    "jev_record": planned[0] if planned else None,
+                }
+            )
+        rows = merged
     baseline = simulate(rows, DEFAULT_CALIBRATION)
     grid = itertools.product(
         (0.0, 0.5, 0.6, 0.65, 0.7, 0.75),  # mode_confidence
