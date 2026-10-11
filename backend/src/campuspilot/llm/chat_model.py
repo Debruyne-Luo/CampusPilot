@@ -105,8 +105,9 @@ class ChatCompletionsModel:
         messages: list[dict[str, object]],
         tools: list[dict[str, object]] | None = None,
         json_mode: bool = False,
+        max_tokens: int | None = None,
     ) -> Completion:
-        return await complete(self, messages, tools, json_mode)
+        return await complete(self, messages, tools, json_mode, max_tokens)
 
     async def generate(
         self, question: str, evidence: str, history: tuple[ChatTurn, ...]
@@ -177,6 +178,7 @@ class Completion(Contract):
     tool_calls: tuple[ToolCall, ...] = Field(default=(), max_length=8)
     input_tokens: int = Field(default=0, ge=0)
     output_tokens: int = Field(default=0, ge=0)
+    finish_reason: Annotated[str, Field(max_length=40)] | None = None
 
 
 @runtime_checkable
@@ -188,6 +190,7 @@ class ToolCallingModel(Protocol):
         messages: list[dict[str, object]],
         tools: list[dict[str, object]] | None = None,
         json_mode: bool = False,
+        max_tokens: int | None = None,
     ) -> Completion: ...
 
 
@@ -196,13 +199,14 @@ async def complete(
     messages: list[dict[str, object]],
     tools: list[dict[str, object]] | None = None,
     json_mode: bool = False,
+    max_tokens: int | None = None,
 ) -> Completion:
     """OpenAI-compatible /chat/completions call with bounded body, timeout and parsing."""
     payload: dict[str, object] = {
         "model": model.model,
         "messages": messages,
         "temperature": 0,
-        "max_tokens": model.max_output_tokens,
+        "max_tokens": min(max_tokens or model.max_output_tokens, 4000),
         "stream": False,
     }
     if tools:
@@ -246,6 +250,7 @@ async def complete(
             tool_calls=calls,
             input_tokens=int(usage.get("prompt_tokens", 0) or 0),
             output_tokens=int(usage.get("completion_tokens", 0) or 0),
+            finish_reason=choices[0].get("finish_reason"),
         )
     except (httpx.TimeoutException, TimeoutError):
         raise ChatUnavailable("upstream_timeout") from None

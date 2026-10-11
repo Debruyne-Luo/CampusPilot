@@ -142,6 +142,9 @@ class DirectoryRepository:
     def find_office(self, office_id: str) -> CampusOffice | None:
         return self._offices.get(office_id)
 
+    def teachers(self) -> tuple[CampusTeacher, ...]:
+        return tuple(self._teachers[key] for key in sorted(self._teachers))
+
     def services(self) -> tuple[CampusService, ...]:
         return tuple(self._services[key] for key in sorted(self._services))
 

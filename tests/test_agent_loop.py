@@ -8,7 +8,7 @@ from typing import Any
 
 import httpx
 import pytest
-from campuspilot.agent.executor import MAX_TOOL_ROUNDS, AgentRunner
+from campuspilot.agent.executor import ANSWER_MAX_TOKENS, MAX_TOOL_ROUNDS, AgentRunner
 from campuspilot.agent.plan import make_plan
 from campuspilot.agent.understand import Slots, Understanding, understand
 from campuspilot.agent.verify import verify_answer
@@ -44,8 +44,11 @@ class FakeLLM:
         messages: list[dict[str, object]],
         tools: list[dict[str, object]] | None = None,
         json_mode: bool = False,
+        max_tokens: int | None = None,
     ) -> Completion:
-        self.calls.append({"messages": messages, "tools": tools, "json_mode": json_mode})
+        self.calls.append(
+            {"messages": messages, "tools": tools, "json_mode": json_mode, "max_tokens": max_tokens}
+        )
         if not self.script:
             raise ChatUnavailable("upstream_unavailable")
         step = self.script.pop(0)
@@ -380,3 +383,81 @@ def test_web_agent_blocks_sensitive_input_and_flag_off_keeps_rule_path() -> None
         ).json()
         assert "plan" not in body and "checklist" not in body
         assert body.get("answer_mode") != "agent"
+
+
+# --- real-model compatibility (DeepSeek smoke 2026-10-11) -------------------------------------
+
+
+def test_truncated_output_degrades_with_reason_and_answer_budget_is_raised() -> None:
+    cut = Completion(content='{"answer":"校园卡补办', finish_reason="length")
+    model = FakeLLM(understood(service="校园卡补办"), cut)
+    out = run(runner(model), "校园卡补办需要什么")
+    assert out["degraded_reason"] == "output_truncated"
+    assert model.calls[1]["max_tokens"] == ANSWER_MAX_TOKENS > 700
+
+
+def test_checklist_item_keys_are_not_counted_as_citations() -> None:
+    model = FakeLLM(
+        understood(service="校园卡补办"), answer(GOOD_CARD, [CARD_EVIDENCE[0], "limit-3", "step-4"])
+    )
+    out = run(runner(model), "校园卡补办需要什么")
+    assert out["result_status"] == "success" and out["source_ids"] == [CARD_EVIDENCE[0]]
+    only_local = FakeLLM(understood(service="校园卡补办"), answer(GOOD_CARD, ["limit-3"]))
+    assert run(runner(only_local), "校园卡补办需要什么")["degraded_reason"] == "invalid_response"
+
+
+def test_identity_clarification_only_when_data_has_variants() -> None:
+    agent = runner(FakeLLM(understood(missing=["identity"]), answer(GOOD_CARD, [CARD_EVIDENCE[0]])))
+    out = run(agent, "校园卡补办需要什么")
+    assert out["result_status"] == "success"  # one card service: asking identity is noise
+    assert agent.matching_services("在读证明怎么开") == ["cdut:service:graduate-enrollment-proof"]
+    vague = runner(FakeLLM(understood(missing=["需要办理的具体事项"])))
+    assert run(vague, "这个怎么弄")["answer_mode"] == "agent_clarify"
+
+
+def test_teacher_name_overrides_place_intent() -> None:
+    model = FakeLLM(understood("找地点", destination="王洪辉老师办公室"), answer("见卡片。", []))
+    out = run(runner(model), "王洪辉老师办公室在哪")
+    assert out["understanding"]["intent"] == "找人"
+    assert out["plan"][0] == {
+        "step": 1,
+        "tool": "search_teacher",
+        "label": "查找老师",
+        "status": "success",
+    }
+    assert out["teachers"] and out["teachers"][0]["name"] == "王洪辉"
+
+
+def test_complete_sends_max_tokens_and_reads_finish_reason() -> None:
+    seen: list[dict[str, Any]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(json.loads(request.content))
+        return httpx.Response(
+            200,
+            json={
+                "choices": [
+                    {
+                        "finish_reason": "length",
+                        "message": {"content": "{", "reasoning_content": "思考过程"},
+                    }
+                ]
+            },
+        )
+
+    model = ChatCompletionsModel(
+        "https://example.com", "synthetic", "synthetic-key", transport=httpx.MockTransport(handler)
+    )
+    result = asyncio.run(model.complete([{"role": "user", "content": "x"}], max_tokens=1500))
+    assert seen[0]["max_tokens"] == 1500 and result.finish_reason == "length"
+    assert result.content == "{"  # reasoning_content is ignored, never surfaced
+
+
+def test_business_ids_inside_id_lists_are_citable() -> None:
+    # Service steps list place_ids; citing the service-area place is a valid citation.
+    model = FakeLLM(
+        understood(service="校园卡补办"),
+        answer(GOOD_CARD, ["cdut:place:gongtong-dining", "cdut:place:finance"]),
+    )
+    out = run(runner(model), "校园卡补办需要什么")
+    assert out["result_status"] == "success"
