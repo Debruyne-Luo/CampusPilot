@@ -1,0 +1,86 @@
+"""Lexical / vector / hybrid retrieval selected by a feature flag, fused with RRF (k=60).
+
+Hard filters run inside each retriever before fusion. If the query vector is unavailable
+(provider failure or cache miss on the synchronous path), hybrid degrades to BM25-only and
+records `degraded=True` on the retriever's last-search state.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable, Sequence
+from typing import Literal
+
+from campuspilot.rag import KnowledgeSnapshot, RetrievalFilters, RetrievalHit
+from campuspilot.retrieval.bm25 import BM25Retriever
+from campuspilot.retrieval.vector import VectorIndex
+
+RetrievalMode = Literal["lexical", "vector", "hybrid"]
+RETRIEVAL_MODES: frozenset[str] = frozenset({"lexical", "vector", "hybrid"})
+RRF_K = 60
+QueryVector = Callable[[str], Sequence[float] | None]
+
+
+def rrf(rankings: Sequence[Sequence[RetrievalHit]], k: int = RRF_K) -> list[RetrievalHit]:
+    """Reciprocal Rank Fusion; the fused score replaces the per-retriever score."""
+    scores: dict[str, float] = {}
+    first: dict[str, RetrievalHit] = {}
+    for ranking in rankings:
+        for rank, hit in enumerate(ranking, start=1):
+            key = hit.chunk.chunk_id
+            scores[key] = scores.get(key, 0.0) + 1.0 / (k + rank)
+            first.setdefault(key, hit)
+    ordered = sorted(scores, key=lambda key: (-scores[key], key))
+    return [first[key].model_copy(update={"score": scores[key]}) for key in ordered]
+
+
+class HybridRetriever:
+    """Retriever protocol (`snapshot`, `search`) shared with BM25Retriever."""
+
+    def __init__(
+        self,
+        snapshot: KnowledgeSnapshot,
+        mode: RetrievalMode = "hybrid",
+        index: VectorIndex | None = None,
+        query_vector: QueryVector | None = None,
+        candidates: int = 20,
+    ) -> None:
+        if mode not in RETRIEVAL_MODES:
+            raise ValueError("Invalid retrieval mode")
+        self.snapshot = snapshot
+        self.mode: RetrievalMode = mode
+        self.lexical = BM25Retriever(snapshot)
+        self.index = index
+        self.query_vector = query_vector
+        self.candidates = candidates
+        self.degraded = False
+
+    def _vector(self, query: str) -> Sequence[float] | None:
+        if self.index is None or self.query_vector is None:
+            return None
+        try:
+            return self.query_vector(query)
+        except Exception:  # provider errors must never break retrieval
+            return None
+
+    def search(
+        self,
+        query: str,
+        filters: RetrievalFilters,
+        top_k: int = 12,
+        query_vector: Sequence[float] | None = None,
+    ) -> tuple[RetrievalHit, ...]:
+        if not 1 <= top_k <= 100:
+            raise ValueError("Invalid candidate limit")
+        self.degraded = False
+        if self.mode == "lexical":
+            return self.lexical.search(query, filters, top_k)
+        vector = query_vector if query_vector is not None else self._vector(query)
+        if vector is None or self.index is None:
+            self.degraded = True
+            return self.lexical.search(query, filters, top_k)
+        depth = max(top_k, self.candidates)
+        dense = self.index.search(vector, filters, depth)
+        if self.mode == "vector":
+            return dense[:top_k]
+        sparse = self.lexical.search(query, filters, depth)
+        return tuple(rrf([sparse, dense])[:top_k])

@@ -6,11 +6,13 @@ import json
 import os
 from pathlib import Path
 
+from campuspilot.config import Settings
 from campuspilot.dify import ChatUnavailable
 from campuspilot.dify_knowledge import DifyKnowledgeClient
 from campuspilot.knowledge_release import (
     atomic_write,
     compile_dify,
+    embed_candidate,
     import_approved_archive,
     preview,
     publish,
@@ -18,8 +20,10 @@ from campuspilot.knowledge_release import (
     sidecar_template,
     write_candidate,
 )
+from campuspilot.llm.embedding import CloudflareEmbedder, EmbeddingUnavailable
 from campuspilot.migration_config import secret
 from campuspilot.rag import KnowledgeSnapshot, canonical
+from campuspilot.retrieval.vector import INDEX_NAME, build_index
 
 
 def main() -> None:
@@ -45,6 +49,10 @@ def main() -> None:
         p.add_argument("--store", type=Path, required=True)
         if name == "publish":
             p.add_argument("--expected-current", required=True, help="version ID or none")
+    embed = sub.add_parser("embed", help="build vectors.sqlite for a candidate (Cloudflare)")
+    embed.add_argument("--candidate", type=Path, required=True)
+    bootstrap = sub.add_parser("embed-bootstrap", help="index for the bootstrap snapshot")
+    bootstrap.add_argument("--store", type=Path, required=True)
     back = sub.add_parser("rollback")
     back.add_argument("--store", type=Path, required=True)
     back.add_argument("--version", required=True)
@@ -88,6 +96,31 @@ def main() -> None:
                 exclusions,
             )
             result = {"candidate_version": snapshot.version, "published": False}
+        elif args.command in {"embed", "embed-bootstrap"}:
+            settings = Settings.from_env()
+            embedder = CloudflareEmbedder(
+                settings.cf_account_id,
+                settings.cf_api_token,
+                model=settings.embedding_model,
+                timeout=30,
+                retries=3,
+            )
+            if args.command == "embed":
+                rows = embed_candidate(
+                    args.candidate, embedder.embed, embedder.model, embedder.dimensions
+                )
+            else:
+                snapshot = KnowledgeSnapshot.model_validate_json(
+                    (args.store / "bootstrap.json").read_bytes()
+                )
+                rows = build_index(
+                    args.store / ("bootstrap." + INDEX_NAME),
+                    snapshot,
+                    embedder.embed,
+                    embedder.model,
+                    embedder.dimensions,
+                )
+            result = {"indexed_chunks": rows, "model": embedder.model, "published": False}
         elif args.command == "preview":
             result = preview(args.candidate, args.store)
         elif args.command == "publish":
@@ -105,7 +138,7 @@ def main() -> None:
             )
             result = {"rolled_back_version": version}
         print(json.dumps(result, ensure_ascii=False, indent=2))
-    except (OSError, ValueError, KeyError, TypeError, ChatUnavailable) as exc:
+    except (OSError, ValueError, KeyError, TypeError, ChatUnavailable, EmbeddingUnavailable) as exc:
         # Pydantic errors and HTTP messages can contain body/key material: never echo them.
         parser.exit(
             2, f"Knowledge operation failed ({type(exc).__name__}); live pointer unchanged.\n"

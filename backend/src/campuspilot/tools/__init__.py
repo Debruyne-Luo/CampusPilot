@@ -15,6 +15,8 @@ from campuspilot.tools.executor import ReadOnlyPermissionPolicy, ToolExecutor
 if TYPE_CHECKING:
     from campuspilot.directory.repository import DirectoryRepository
     from campuspilot.knowledge import KnowledgeStore
+    from campuspilot.llm.embedding import CloudflareEmbedder
+    from campuspilot.rag import SnapshotStore
 
 __all__ = [
     "ReadOnlyPermissionPolicy",
@@ -27,15 +29,20 @@ __all__ = [
 ]
 
 
-def default_registry(repository: DirectoryRepository, store: KnowledgeStore) -> ToolRegistry:
+def default_registry(
+    repository: DirectoryRepository,
+    store: KnowledgeStore,
+    snapshots: SnapshotStore | None = None,
+    embedder: CloudflareEmbedder | None = None,
+) -> ToolRegistry:
+    """search_knowledge uses hybrid snapshot retrieval when a snapshot store is given."""
     from campuspilot.tools.directory import directory_agent_tools
-    from campuspilot.tools.knowledge import KnowledgeSearchTool
+    from campuspilot.tools.knowledge import HybridKnowledgeTool, KnowledgeSearchTool
     from campuspilot.tools.places import PlaceCardsTool
 
-    return ToolRegistry(
-        (
-            *directory_agent_tools(repository),
-            KnowledgeSearchTool(store),
-            PlaceCardsTool(repository),
-        )
+    knowledge: Tool = (
+        HybridKnowledgeTool(snapshots, embedder)
+        if snapshots is not None
+        else KnowledgeSearchTool(store)
     )
+    return ToolRegistry((*directory_agent_tools(repository), knowledge, PlaceCardsTool(repository)))

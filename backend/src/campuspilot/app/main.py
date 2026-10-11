@@ -13,6 +13,7 @@ from campuspilot.app.factory import create_web_app
 from campuspilot.config import Settings
 from campuspilot.dify import DifyClient
 from campuspilot.llm.chat_model import ChatCompletionsModel
+from campuspilot.llm.embedding import CloudflareEmbedder
 
 
 def model_from_env() -> ChatCompletionsModel | None:
@@ -52,6 +53,21 @@ def build_app(settings: Settings) -> FastAPI:
         runtime_mode=mode,
         model=model_from_env() if mode != "legacy" else None,
         approved_direct_rules=direct_rules(settings),
+        retrieval_mode=settings.retrieval_mode,
+        embedder=embedder_from(settings) if mode == "phase2" else None,
+        embedding_model=settings.embedding_model,
+    )
+
+
+def embedder_from(settings: Settings) -> CloudflareEmbedder | None:
+    if settings.retrieval_mode == "lexical" or not settings.embeddings_configured:
+        return None
+    return CloudflareEmbedder(
+        settings.cf_account_id,
+        settings.cf_api_token,
+        model=settings.embedding_model,
+        timeout=settings.embedding_timeout,
+        retries=1,
     )
 
 

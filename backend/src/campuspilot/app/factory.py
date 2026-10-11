@@ -24,10 +24,12 @@ from campuspilot.app.state import (
     WebState,
 )
 from campuspilot.chat_runtime import ChatRuntime, Mode
+from campuspilot.config import parse_retrieval_mode
 from campuspilot.dify import DifyClient
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.llm.chat_model import ProductionModel
+from campuspilot.llm.embedding import CloudflareEmbedder
 from campuspilot.rag import SnapshotStore
 
 
@@ -62,6 +64,9 @@ def create_web_app(
     runtime_mode: Mode = "legacy",
     model: ProductionModel | None = None,
     approved_direct_rules: frozenset[str] = frozenset(),
+    retrieval_mode: str = "hybrid",
+    embedder: CloudflareEmbedder | None = None,
+    embedding_model: str = "@cf/baai/bge-m3",
 ) -> FastAPI:
     # Directory tools keep their own service credential, never exposed to the browser.
     repository = DirectoryRepository.load(data_dir)
@@ -71,7 +76,12 @@ def create_web_app(
     runtime = ChatRuntime(
         repository,
         knowledge,
-        SnapshotStore(data_dir / "rag"),
+        SnapshotStore(
+            data_dir / "rag",
+            retrieval_mode=parse_retrieval_mode(retrieval_mode),
+            embedder=embedder,
+            embedding_model=embedding_model,
+        ),
         mode=runtime_mode,
         model=model,
         approved_direct_rules=approved_direct_rules,
@@ -100,6 +110,7 @@ def create_web_app(
         amap_key=amap_key,
         amap_security_code=amap_security_code,
         budget=budget,
+        embedder=embedder if retrieval_mode != "lexical" else None,
     )
     _register_shell(app, state)
     routes_chat.register(app, state)

@@ -7,6 +7,8 @@ dependencies = ["pydantic>=2.12,<3"]
 
 [project.optional-dependencies]
 api = ["fastapi>=0.135,<1", "uvicorn>=0.34,<1", "httpx>=0.28,<1"]
+# Optional vector backend; without it retrieval falls back to pure-Python cosine.
+vector = ["sqlite-vec>=0.1.6,<0.2", "numpy>=2,<3"]
 
 [project.scripts]
 campuspilot = "campuspilot.__main__:main"
@@ -26,6 +28,8 @@ dev = [
     "httpx>=0.28,<1",
     "pyyaml>=6,<7",
     "types-pyyaml>=6,<7",
+    "sqlite-vec>=0.1.6,<0.2",
+    "numpy>=2,<3",
 ]
 
 [tool.pytest.ini_options]
@@ -46,6 +50,10 @@ exclude = [
     "^\\.playwright-cli/",
 ]
 
+[[tool.mypy.overrides]]
+module = ["sqlite_vec"]
+ignore_missing_imports = true
+
 [tool.ruff]
 target-version = "py314"
 line-length = 100
@@ -64,6 +72,7 @@ line-length = 100
 "backend/src/campuspilot/llm/*.py" = "py312"
 "backend/src/campuspilot/app/*.py" = "py312"
 "backend/src/campuspilot/config.py" = "py312"
+"backend/src/campuspilot/retrieval/*.py" = "py312"
 "backend/src/campuspilot/chat_runtime.py" = "py312"
 "backend/src/campuspilot/dify_knowledge.py" = "py312"
 "backend/src/campuspilot/evaluation_budget.py" = "py312"

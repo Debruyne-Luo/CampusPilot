@@ -16,8 +16,9 @@ from campuspilot.directory.lookup import ServiceKey
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.knowledge import KnowledgeQuery, KnowledgeStore, campus_today
 from campuspilot.presentation import AnswerEnvelope, guide_answer, resolve_cards
-from campuspilot.rag import RetrievalFilters, RetrievalHit, SnapshotStore, terms
+from campuspilot.rag import RetrievalFilters, RetrievalHit, SnapshotStore
 from campuspilot.retrieval import campus_answer
+from campuspilot.retrieval.bm25 import terms
 
 Mode = Literal["legacy", "phase1", "phase2"]
 EMPTY_CARDS: dict[str, JsonValue] = {"services": [], "teachers": [], "places": []}

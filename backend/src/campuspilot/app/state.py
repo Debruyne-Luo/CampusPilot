@@ -14,6 +14,7 @@ from campuspilot.dify import DifyClient
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.llm.chat_model import ProductionModel
+from campuspilot.llm.embedding import CloudflareEmbedder
 
 ASSETS = Path(__file__).resolve().parent.parent / "web_assets"
 COOKIE = "campuspilot_session"
@@ -94,6 +95,7 @@ class WebState:
     amap_key: str
     amap_security_code: str
     budget: ChatBudget
+    embedder: CloudflareEmbedder | None = None
     map_window: SlidingWindow = field(default_factory=lambda: SlidingWindow(60, 120))
     sessions: dict[str, BrowserSession] = field(default_factory=dict)
 

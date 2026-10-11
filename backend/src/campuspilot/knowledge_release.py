@@ -7,7 +7,7 @@ import os
 import re
 import stat
 import tempfile
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator, Sequence
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
@@ -402,3 +402,29 @@ def sidecar_template(snapshot: dict[str, Any], knowledge: KnowledgeSnapshot) -> 
         "bindings": bindings,
         "local_only_chunk_ids": [],
     }
+
+
+def embed_candidate(
+    candidate: Path,
+    embed: Callable[[Sequence[str]], list[list[float]]],
+    model: str,
+    dimensions: int,
+) -> int:
+    """Build ``vectors.sqlite`` inside a candidate and bind it through the manifest.
+
+    The index is listed in ``files_sha256``, so publish() copies it into the immutable
+    version directory together with the snapshot and the pointer switch stays atomic.
+    """
+    from campuspilot.retrieval.vector import INDEX_NAME, build_index
+
+    snapshot = read_candidate(candidate)
+    target = candidate / INDEX_NAME
+    if target.is_symlink():
+        raise ValueError("Unsafe index path")
+    count = build_index(target, snapshot, embed, model, dimensions)
+    manifest = json.loads((candidate / "manifest.json").read_bytes())
+    manifest["files_sha256"][INDEX_NAME] = digest(target.read_bytes())
+    manifest["vector_index"] = {"model": model, "dimensions": dimensions, "rows": count}
+    atomic_write(candidate / "manifest.json", canonical(manifest))
+    read_candidate(candidate)
+    return count

@@ -20,6 +20,15 @@ def parse_mode(value: str) -> Mode:
     return cast(Mode, value)
 
 
+RETRIEVAL_MODES: frozenset[str] = frozenset({"lexical", "vector", "hybrid"})
+
+
+def parse_retrieval_mode(value: str) -> str:
+    if value not in RETRIEVAL_MODES:
+        raise ValueError("Invalid retrieval mode")
+    return value
+
+
 @dataclass(frozen=True)
 class Settings:
     data_dir: Path = Path("data/cdut")
@@ -33,6 +42,15 @@ class Settings:
     amap_security_code: str = field(default="", repr=False)
     daily_chat_limit: int = 100
     direct_rules_report: str = ""
+    retrieval_mode: str = "hybrid"
+    cf_account_id: str = field(default="", repr=False)
+    cf_api_token: str = field(default="", repr=False)
+    embedding_model: str = "@cf/baai/bge-m3"
+    embedding_timeout: float = 2.5
+
+    @property
+    def embeddings_configured(self) -> bool:
+        return bool(self.cf_account_id and self.cf_api_token)
 
     @classmethod
     def from_env(cls, environ: Mapping[str, str] | None = None) -> Settings:
@@ -49,4 +67,9 @@ class Settings:
             amap_security_code=env.get("AMAP_SECURITY_JS_CODE", ""),
             daily_chat_limit=int(env.get("CAMPUSPILOT_DAILY_CHAT_LIMIT", "100")),
             direct_rules_report=env.get("CAMPUSPILOT_DIRECT_RULES_REPORT", ""),
+            retrieval_mode=parse_retrieval_mode(env.get("CAMPUSPILOT_RETRIEVAL_MODE", "hybrid")),
+            cf_account_id=env.get("CF_ACCOUNT_ID", ""),
+            cf_api_token=env.get("CF_API_TOKEN", ""),
+            embedding_model=env.get("CAMPUSPILOT_EMBEDDING_MODEL", "@cf/baai/bge-m3"),
+            embedding_timeout=float(env.get("CAMPUSPILOT_EMBEDDING_TIMEOUT", "2.5")),
         )

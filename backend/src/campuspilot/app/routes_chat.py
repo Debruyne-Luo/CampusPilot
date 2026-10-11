@@ -34,6 +34,9 @@ def register(app: FastAPI, state: WebState) -> None:
             return state.problem(request, "busy", BUSY, 409)
         query_text = body.message.strip()
         if state.runtime_mode != "legacy":
+            if state.embedder is not None and state.runtime_mode == "phase2":
+                # Fill the query-vector cache off the sync path; failure means BM25-only.
+                await state.embedder.prefetch(query_text)
             prepared = state.runtime.prepare(query_text, session.context, request.state.request_id)
             query_text = prepared.query
             if prepared.route != "legacy_knowledge":
