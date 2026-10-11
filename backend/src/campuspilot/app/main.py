@@ -58,6 +58,7 @@ def build_app(settings: Settings) -> FastAPI:
         embedding_model=settings.embedding_model,
         agent_loop=settings.agent_loop,
         knowledge_bundle=settings.knowledge_bundle,
+        asset_version=settings.asset_version,
     )
 
 

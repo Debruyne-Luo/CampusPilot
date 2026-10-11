@@ -1,12 +1,14 @@
 """Assemble the same-origin web app from its route modules."""
 
+import hashlib
+import re
 import secrets
 import time
 from pathlib import Path
 from urllib.parse import urlsplit
 
 from fastapi import FastAPI, Request
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from starlette.middleware.base import RequestResponseEndpoint
 from starlette.middleware.trustedhost import TrustedHostMiddleware
@@ -54,6 +56,19 @@ def _allowed_hosts(public_origin: str | None, api_token: str | None) -> list[str
     return [origin.hostname]
 
 
+def asset_hash(root: Path = ASSETS) -> str:
+    """Short content hash of every shipped front-end file (names + bytes)."""
+    h = hashlib.sha256()
+    for path in sorted(p for p in root.rglob("*") if p.is_file() and "__pycache__" not in p.parts):
+        h.update(path.relative_to(root).as_posix().encode() + b"\0" + path.read_bytes())
+    return h.hexdigest()[:12]
+
+
+def versioned_shell(shell: str, version: str) -> str:
+    """Point the v2 shell at the versioned prefix; relative module imports follow it."""
+    return shell.replace('"/assets/', f'"/assets/v-{version}/')
+
+
 def create_web_app(
     *,
     data_dir: Path,
@@ -71,12 +86,16 @@ def create_web_app(
     embedding_model: str = "@cf/baai/bge-m3",
     agent_loop: bool = False,
     knowledge_bundle: str = "",
+    asset_version: str = "",
 ) -> FastAPI:
     # Directory tools keep their own service credential, never exposed to the browser.
     repository = DirectoryRepository.load(data_dir)
     knowledge = KnowledgeStore.load(data_dir / "knowledge.json")
     if runtime_mode not in {"legacy", "phase1", "phase2"}:
         raise ValueError("Invalid backend runtime mode")
+    version = asset_hash() if asset_version == "auto" else asset_version
+    if version and not re.fullmatch(r"[a-z0-9]{1,32}", version):
+        raise ValueError("Invalid asset version")
     snapshots = SnapshotStore(
         data_dir / "rag",
         retrieval_mode=parse_retrieval_mode(retrieval_mode),
@@ -133,14 +152,14 @@ def create_web_app(
             else None
         ),
     )
-    _register_shell(app, state)
+    _register_shell(app, state, version)
     routes_chat.register(app, state)
     routes_data.register(app, state)
     amap.register(app, state)
     return app
 
 
-def _register_shell(app: FastAPI, state: WebState) -> None:
+def _register_shell(app: FastAPI, state: WebState, version: str = "") -> None:
     runtime_mode, dify, model, knowledge = (
         state.runtime_mode,
         state.dify,
@@ -181,6 +200,9 @@ def _register_shell(app: FastAPI, state: WebState) -> None:
         response.headers["Permissions-Policy"] = "geolocation=(self)"
         if request.url.path.startswith(("/api/", "/_AMapService/")):
             response.headers["Cache-Control"] = "no-store"
+        elif version and request.url.path.startswith(f"/assets/v-{version}/"):
+            # Content-addressed URL: a new release changes the prefix, so CDNs may keep it.
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
         elif request.url.path in {"/", "/classic", "/map-view"} or request.url.path.startswith(
             "/assets/"
         ):
@@ -189,9 +211,12 @@ def _register_shell(app: FastAPI, state: WebState) -> None:
             response.headers["Cache-Control"] = "no-cache"
         return response
 
-    @app.get("/", include_in_schema=False)
-    def index() -> FileResponse:
-        return FileResponse(ASSETS / "v2" / "index.html")
+    @app.get("/", include_in_schema=False, response_model=None)
+    def index() -> FileResponse | HTMLResponse:
+        if not version:
+            return FileResponse(ASSETS / "v2" / "index.html")
+        shell = (ASSETS / "v2" / "index.html").read_text(encoding="utf-8")
+        return HTMLResponse(versioned_shell(shell, version))
 
     @app.get("/classic", include_in_schema=False)
     def classic() -> FileResponse:
@@ -202,6 +227,8 @@ def _register_shell(app: FastAPI, state: WebState) -> None:
     def map_view_page() -> FileResponse:
         return FileResponse(ASSETS / "map-frame.html")
 
+    if version:
+        app.mount(f"/assets/v-{version}", StaticFiles(directory=ASSETS), name="assets-versioned")
     app.mount("/assets", StaticFiles(directory=ASSETS), name="assets")
 
     @app.post("/api/session")

@@ -50,6 +50,8 @@ class Settings:
     agent_loop: bool = False
     # In-repo approved knowledge bundle used instead of bootstrap.json (e.g. approved-20261011).
     knowledge_bundle: str = ""
+    # "auto" serves the v2 UI under /assets/v-<content hash>/ with immutable caching.
+    asset_version: str = ""
 
     @property
     def embeddings_configured(self) -> bool:
@@ -77,4 +79,5 @@ class Settings:
             embedding_timeout=float(env.get("CAMPUSPILOT_EMBEDDING_TIMEOUT", "2.5")),
             agent_loop=env.get("CAMPUSPILOT_AGENT_LOOP", "off") == "on",
             knowledge_bundle=env.get("CAMPUSPILOT_KNOWLEDGE_BUNDLE", ""),
+            asset_version=env.get("CAMPUSPILOT_ASSET_VERSION", ""),
         )
