@@ -1,7 +1,8 @@
 """Build the tuning (dev) set. Never reads gold labels of the colloquial test set; it only
 reads its question strings to drop exact duplicates so dev and test stay disjoint."""
 
-import json, sys
+import json
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -113,9 +114,9 @@ def norm(q):
 
 
 test = {
-    norm(json.loads(l)["question"])
-    for l in TEST.read_text(encoding="utf-8").splitlines()
-    if l.strip()
+    norm(json.loads(line)["question"])
+    for line in TEST.read_text(encoding="utf-8").splitlines()
+    if line.strip()
 }
 snap = json.loads(
     (ROOT / "data/cdut/rag/approved-20261011b/snapshot.json").read_text(encoding="utf-8")
@@ -141,10 +142,10 @@ rows += [
     }
     for i, q in enumerate(REFUSE)
 ]
-for l in (
+for line in (
     (ROOT / "evaluation/colloquial-20261011/cases.jsonl").read_text(encoding="utf-8").splitlines()
 ):
-    c = json.loads(l)
+    c = json.loads(line)
     rows.append(
         {
             "case_id": "devC-" + c["case_id"],
