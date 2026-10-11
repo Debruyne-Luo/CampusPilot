@@ -142,7 +142,8 @@ body.guiding .locate-button,body.picking-origin .locate-button{display:none}
 .guidance-slot .guidance-box h3{margin:4px 0;font-size:var(--text-l)}
 .guidance-slot .guidance-box p{margin:2px 0;font-size:var(--text-s)}
 .guidance-slot .journey-button{border:1px solid var(--line);background:var(--panel);border-radius:99px;padding:5px 12px;margin:6px 6px 0 0;font-size:var(--text-s);cursor:pointer}
-body.guiding .route-note,body.guiding .place-card{display:none}
+body.guiding .route-note,body.guiding .place-card:not(.arrival){display:none}
+.place-card.arrival .arrived-label{color:var(--accent,#2f8f6a);font-weight:600}
 body.guiding.arrived .place-card:not([hidden]){display:flex}
 .dino-demo{position:absolute;left:14px;top:64px;z-index:var(--map-ui-z)}
 body[data-guide] .heading-toggle{display:none}

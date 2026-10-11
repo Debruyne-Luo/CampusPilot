@@ -236,7 +236,7 @@ function serialisePoi(poi) {
   if (!poi?.location || !/^[A-Za-z0-9]{8,32}$/.test(poi.id || "") || typeof poi.name !== "string") return null;
   const position = {longitude:poi.location.lng,latitude:poi.location.lat,coordinate_system:"GCJ02"};
   if (!validPosition(position) || !inArea(position.longitude, position.latitude)) return null;
-  return {poi_id:poi.id,name:poi.name.slice(0,120),address:typeof poi.address === "string" ? poi.address.slice(0,300) : "",position};
+  return {poi_id:poi.id,name:poi.name.slice(0,120),address:typeof poi.address === "string" ? poi.address.slice(0,300) : "",type:typeof poi.type === "string" ? poi.type.slice(0,120) : "",position};
 }
 async function searchPlaces(data) {
   const id = data.request_id;
