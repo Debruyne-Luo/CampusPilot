@@ -102,7 +102,3 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     get routeId() { return routeSeq; },
   };
 }
-
-export function legend() {
-  return h("p", { class: "map-legend" }, "地点为建筑参考点，需现场核实入口。");
-}

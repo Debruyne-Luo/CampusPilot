@@ -8,7 +8,7 @@ import { answerCards, planCard } from "./render.mjs";
 import { cardsIn, stepIn, tick } from "./motion.mjs";
 import { createMap } from "./map.mjs";
 import { distanceMeters, formatDistance, toGcj02 } from "./geo.mjs";
-import { initialOrigin, originLabel, reduceOrigin, routeOrigin } from "./origin.mjs";
+import { initialOrigin, reduceOrigin, routeOrigin } from "./origin.mjs";
 import { dragOffset, initialSheet, reduceSheet, releaseVelocity, sheetOffset, visibleHeight } from "./sheet.mjs";
 import { createHeadingTracker, needsPermission, viewRotation } from "./heading.mjs";
 
@@ -27,14 +27,13 @@ const map = createMap({
   status: (text) => { $("map-status").textContent = text; $("map-status").hidden = !text; },
   onSelect: (place) => highlight(place),
   onOrigin: (position, name) => setOrigin({ type: "map", position, label: name }),
-  onPoi: (poi) => showCard({ name: poi.name, detail: poi.address, position: poi.position, poi: true }),
+  onPoi: (poi) => showCard({ name: poi.name, position: poi.position, poi: true }),
 });
 
 // ---- origin ---------------------------------------------------------------------------
 function setOrigin(action) {
   const before = origin; origin = reduceOrigin(origin, action);
   if (origin === before) return;
-  $("origin-label").textContent = originLabel(origin);
   document.body.classList.toggle("picking-origin", origin.picking);
   const from = routeOrigin(origin);
   for (const c of placeCards) if (c.isConnected) c.update(from); else placeCards.delete(c);
@@ -61,7 +60,7 @@ function pickOnMap() {
 // Crosshair sits in the middle of the visible map (above the sheet on phones).
 function placeCrosshair() {
   const wrap = document.querySelector(".mapwrap").getBoundingClientRect();
-  const bottom = mobile() ? sheetVisible() : 0, top = mobile() ? 130 : 110;
+  const bottom = mobile() ? sheetVisible() : 0, top = 60;
   const y = Math.round(top + (wrap.height - bottom - top) / 2), x = Math.round(wrap.width / 2);
   $("crosshair").style.transform = `translate(${x}px, ${y}px)`;
   $("crosshair").dataset.x = x; $("crosshair").dataset.y = y;
@@ -78,35 +77,39 @@ function originChooser(message) {
     if (!(await locate())) note(...originChooser("定位不可用，请换一种方式选择起点："));
   };
   return [h("span", {}, message), h("span", { class: "chooser" },
-    h("button", { type: "button", class: "chip", onclick: useGps }, "📍 我的位置"),
+    h("button", { type: "button", class: "chip", onclick: useGps }, "我的位置"),
     h("button", { type: "button", class: "chip", onclick: pickOnMap }, "在地图上点选"), select)];
 }
 
 // ---- place card on the map (our places + AMap POIs) -----------------------------------
+function pinIcon() {
+  const NS = "http://www.w3.org/2000/svg", el = (t, a) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const svg = el("svg", { viewBox: "0 0 24 24", width: 18, height: 18, "aria-hidden": "true" });
+  svg.append(el("circle", { cx: 12, cy: 12, r: 3.5, fill: "currentColor" }), el("circle", { cx: 12, cy: 12, r: 8, fill: "none", stroke: "currentColor", "stroke-width": 2 }));
+  return svg;
+}
 function showCard(target) {
   current = target;
   const card = $("place-card"), from = routeOrigin(origin);
   const d = from && target.position ? distanceMeters(from, target.position) : null;
-  const confirmed = target.position?.verification_status === "confirmed";
-  const located = !!target.position;
   const asOrigin = () => setOrigin(target.place ? { type: "place", place: target.place } : { type: "map", position: target.position, label: target.name });
-  const asDestination = () => { if (routeOrigin(origin)) go(target); else { pendingTarget = target; note(...originChooser(`终点：${target.name}。请选择起点：`)); } };
+  const fromBtn = h("button", { type: "button", class: "icon-button", "aria-label": "设为起点", title: "设为起点", onclick: asOrigin }, pinIcon());
   card.replaceChildren(
-    h("button", { type: "button", class: "card-close", "aria-label": "关闭", onclick: () => { card.hidden = true; current = null; } }, "×"),
-    h("strong", {}, target.name),
-    h("span", {}, [target.detail, d != null ? `距起点约 ${formatDistance(d)}` : null].filter(Boolean).join(" · ")),
-    located && !confirmed ? h("span", { class: "ref-note" }, target.poi ? "高德地点 · 位置仅供参考" : "位置仅供参考，入口以现场为准") : null,
-    located ? h("div", { class: "card-actions" },
-      h("button", { type: "button", class: "chip", onclick: asOrigin }, "设为起点"),
-      h("button", { type: "button", class: "chip", onclick: asDestination }, "设为终点"),
-      h("button", { type: "button", class: "chip go", onclick: () => go(target) }, "带我去")) : h("span", { class: "ref-note" }, "暂无位置"));
+    h("div", { class: "card-head" },
+      h("strong", {}, target.name),
+      d != null ? h("small", {}, formatDistance(d)) : null,
+      h("button", { type: "button", class: "card-close", "aria-label": "关闭", onclick: () => { card.hidden = true; current = null; } }, "×")),
+    target.position ? h("div", { class: "card-actions" },
+      h("button", { type: "button", class: "chip go", onclick: () => go(target) }, "带我去"), fromBtn) : null);
   card.hidden = false;
 }
 function highlight(place) {
   map.focus(place);
   document.querySelectorAll(".place-row").forEach((c) => c.classList.toggle("active", c.dataset.placeId === place.place_id));
-  showCard({ name: place.name, detail: place.campus || "", position: hasPosition(place) ? place.position : null, place });
+  showCard({ name: place.name, position: hasPosition(place) ? place.position : null, place });
 }
+
+new MutationObserver(() => document.body.classList.toggle("card-open", !$("place-card").hidden)).observe($("place-card"), { attributes: true, attributeFilter: ["hidden"] });
 
 // ---- routing + guidance ---------------------------------------------------------------
 function note(...children) {
@@ -121,7 +124,7 @@ async function go(raw) {
   if (!routeOrigin(origin)) {
     pendingTarget = target;
     note("正在获取你的位置（只在本机使用）…");
-    if (!(await locate())) note(...originChooser(`去 ${target.name}：无法定位，请选择起点`));
+    if (!(await locate())) note(...originChooser(`从哪出发去 ${target.name}？`));
     return; // a successful fix resumes the pending target through setOrigin
   }
   pendingTarget = null;
@@ -138,7 +141,6 @@ function startGuidance(target, r) {
   enableHeading(); // inside the click: iOS asks for motion permission only on a user gesture
   window.Guidance?.start({
     requestId: map.routeId, target: { name: target.name },
-    detail: target.position?.verification_status === "confirmed" ? "" : "位置仅供参考，入口以现场为准",
     replan: (gps) => { setOrigin({ type: "use-gps" }); if (gps) setOrigin({ type: "gps", position: gps }); go(target); },
     route: { geometry: r.geometry, stepEnds: r.step_ends, distance: r.distance, time: r.time, steps: r.steps },
   });
@@ -296,46 +298,50 @@ form.addEventListener("submit", (e) => { e.preventDefault(); const t = input.val
 input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); } });
 document.querySelectorAll("[data-question]").forEach((b) => b.addEventListener("click", () => submit(b.dataset.question)));
 $("new-chat").addEventListener("click", async () => { await fetch("/api/session", { method: "POST", headers: HEADERS }); location.reload(); });
-$("origin-button").addEventListener("click", () => note(...originChooser("选择起点：")));
+$("locate").addEventListener("click", async () => {
+  if (await locate()) { const p = routeOrigin(origin); if (p) map.centerOn(toGcj02(p)); }
+  else note(...originChooser("无法定位，可这样选起点："));
+});
 
-// ---- map search: our places first, then AMap POIs near campus --------------------------
-const searchBox = $("map-search"), results = $("search-results");
-let searchTimer = 0, searchToken = 0;
-function closeSearch() { results.hidden = true; results.replaceChildren(); }
+// ---- one search bar: focus shows category shortcuts + results; hidden otherwise -------
+const searchBox = $("map-search"), results = $("search-results"), panel = $("search-panel"), filters = $("filters"), clearBtn = $("filter-clear");
+let searchTimer = 0, searchToken = 0, filterId = "all";
+function openPanel() { panel.hidden = false; }
+function closeSearch() { panel.hidden = true; results.replaceChildren(); }
 function resultRow(label, sub, pick) {
-  return h("li", { role: "option" }, h("button", { type: "button", onclick: () => { closeSearch(); searchBox.blur(); pick(); } }, h("b", {}, label), sub ? h("small", {}, sub) : null));
+  return h("li", { role: "option" }, h("button", { type: "button", onclick: () => { closeSearch(); searchBox.value = ""; searchBox.blur(); pick(); } }, h("b", {}, label), sub ? h("small", {}, sub) : null));
 }
+const pickPlace = (p) => { map.reveal([p.place_id]); highlight(p); collapseForMap(); };
 async function runSearch(q) {
   const token = ++searchToken;
   const local = searchPlaces(allPlaces, q);
-  const rows = local.map((p) => resultRow(p.name, hasPosition(p) ? (p.campus || "校内地点") : "暂无位置", () => { map.reveal([p.place_id]); highlight(p); collapseForMap(); }));
-  results.replaceChildren(...rows, ...(rows.length ? [] : [h("li", { class: "hint" }, "正在搜索高德地点…")])); results.hidden = false;
+  const rows = local.map((p) => resultRow(p.name, null, () => pickPlace(p)));
+  results.replaceChildren(...rows, ...(rows.length ? [] : [h("li", { class: "hint" }, "正在搜索…")])); openPanel();
   const pois = await map.searchPoi(q);
   if (token !== searchToken) return;
   const names = new Set(local.map((p) => p.name));
-  const extra = pois.filter((p) => !names.has(p.name)).slice(0, 6).map((poi) => resultRow(poi.name, `高德 · ${poi.address || "校园周边"}`, () => { map.centerOn(poi.position); showCard({ name: poi.name, detail: poi.address, position: poi.position, poi: true }); collapseForMap(); }));
+  const extra = pois.filter((p) => !names.has(p.name)).slice(0, 6).map((poi) => resultRow(poi.name, poi.address || null, () => { map.centerOn(poi.position); showCard({ name: poi.name, position: poi.position, poi: true }); collapseForMap(); }));
   results.replaceChildren(...rows, ...extra);
-  if (!rows.length && !extra.length) results.replaceChildren(h("li", { class: "hint" }, "没有找到，可直接点地图上的地点"));
+  if (!rows.length && !extra.length) results.replaceChildren(h("li", { class: "hint" }, "没有找到"));
 }
-searchBox.addEventListener("input", () => { clearTimeout(searchTimer); const q = searchBox.value.trim(); if (!q) { searchToken++; closeSearch(); return; } searchTimer = setTimeout(() => runSearch(q), 250); });
-searchBox.addEventListener("keydown", (e) => { if (e.key === "Escape") { searchBox.value = ""; closeSearch(); } if (e.key === "Enter") { e.preventDefault(); results.querySelector("button")?.click(); } });
-document.addEventListener("click", (e) => { if (!e.target.closest(".map-search")) closeSearch(); });
-
-const filters = $("filters"), filterRow = $("filter-list");
-function showFilterList(id) {
-  const list = filterList(allPlaces, id);
-  filterRow.replaceChildren(...list.map((p) => h("button", { type: "button", class: "chip", onclick: () => { map.reveal([p.place_id]); highlight(p); collapseForMap(); } }, p.name)));
-  filterRow.hidden = !list.length; filterRow.scrollLeft = 0;
+function setFilter(id) {
+  filterId = id; map.setFilter(id);
+  filters.querySelectorAll("button").forEach((x) => { x.classList.toggle("active", x.dataset.id === id); x.setAttribute("aria-pressed", String(x.dataset.id === id)); });
+  const f = FILTERS.find((x) => x.id === id);
+  clearBtn.hidden = id === "all"; clearBtn.textContent = id === "all" ? "" : `${f.label} ×`;
+  clearBtn.setAttribute("aria-label", `清除分类：${f.label}`);
+  results.replaceChildren(...filterList(allPlaces, id).map((p) => resultRow(p.name, null, () => pickPlace(p))));
 }
 for (const f of FILTERS) {
-  const b = h("button", { type: "button", class: `chip ${f.id === "all" ? "active" : ""}`, "aria-pressed": f.id === "all" ? "true" : "false" }, f.label);
-  b.addEventListener("click", () => {
-    filters.querySelectorAll("button").forEach((x) => { x.classList.toggle("active", x === b); x.setAttribute("aria-pressed", String(x === b)); });
-    map.setFilter(f.id); showFilterList(f.id);
-    if (f.id !== "all") collapseForMap();
-  });
+  const b = h("button", { type: "button", class: `chip ${f.id === "all" ? "active" : ""}`, "data-id": f.id, "aria-pressed": f.id === "all" ? "true" : "false" }, f.label);
+  b.addEventListener("click", () => { searchBox.value = ""; searchToken++; setFilter(f.id); if (f.id === "all") closeSearch(); });
   filters.append(b);
 }
+clearBtn.addEventListener("click", () => { setFilter("all"); closeSearch(); });
+searchBox.addEventListener("focus", () => { openPanel(); if (!searchBox.value.trim()) setFilter(filterId); });
+searchBox.addEventListener("input", () => { clearTimeout(searchTimer); const q = searchBox.value.trim(); if (!q) { searchToken++; setFilter(filterId); return; } searchTimer = setTimeout(() => runSearch(q), 250); });
+searchBox.addEventListener("keydown", (e) => { if (e.key === "Escape") { searchBox.value = ""; closeSearch(); searchBox.blur(); } if (e.key === "Enter") { e.preventDefault(); results.querySelector("button")?.click(); } });
+document.addEventListener("pointerdown", (e) => { if (!e.target.closest(".map-search")) closeSearch(); });
 
 (async () => {
   try {

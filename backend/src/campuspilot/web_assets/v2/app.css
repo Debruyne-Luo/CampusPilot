@@ -89,26 +89,34 @@ summary{cursor:pointer;font-size:14px}
 .schematic .marker.selected text{font-weight:700;font-size:16px}
 .schematic .marker text{font:13px var(--font);fill:var(--ink);paint-order:stroke;stroke:var(--map);stroke-width:4px}
 .map-search{position:absolute;top:14px;left:14px;width:min(340px,calc(100% - 28px));z-index:6}
+.map-search input::-webkit-search-cancel-button{display:none}
 .map-search input{width:100%;font:inherit;font-size:var(--text-s);border:1px solid var(--line);border-radius:99px;padding:8px 14px;background:var(--panel);color:var(--ink);box-shadow:var(--shadow);outline:none}
 .map-search input:focus{border-color:var(--brand)}
-.search-results{list-style:none;margin:6px 0 0;padding:4px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);max-height:300px;overflow:auto}
+.search-panel{margin-top:6px;padding:8px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.search-panel .filters{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px}
+.search-panel .filters::-webkit-scrollbar{display:none}
+.search-panel .filters .chip{white-space:nowrap;font-size:var(--text-xs);padding:5px 10px}
+.search-results{list-style:none;margin:4px 0 0;padding:0;max-height:min(300px,45vh);overflow:auto}
+.search-results:empty{display:none}
+.filter-clear{position:absolute;right:6px;top:5px;border:0;border-radius:99px;background:var(--brand-soft);color:var(--brand);font-size:var(--text-xs);padding:4px 10px;cursor:pointer}
+.locate-button{position:absolute;right:14px;bottom:calc(var(--sheet-visible,0px) + 14px);width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--brand);display:grid;place-items:center;cursor:pointer;z-index:var(--map-ui-z);padding:0}
+body.card-open .locate-button{display:none}
+body.guiding .locate-button,body.picking-origin .locate-button{display:none}
+.card-head{display:flex;align-items:baseline;gap:8px;padding-right:24px}
+.card-head small{color:var(--muted);font-size:var(--text-xs);white-space:nowrap}
+.icon-button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--brand);display:inline-grid;place-items:center;cursor:pointer;padding:0}
 .search-results button{display:flex;flex-direction:column;align-items:flex-start;width:100%;border:0;background:none;padding:7px 10px;border-radius:10px;cursor:pointer;text-align:left}
 .search-results button:focus-visible{background:var(--brand-soft)}
 .search-results small{color:var(--muted);font-size:var(--text-xs)}
 .search-results .hint{padding:8px 10px;color:var(--muted);font-size:var(--text-xs)}
-.filters{position:absolute;top:58px;left:14px;right:14px;display:flex;gap:6px;overflow:auto}
-.filters .chip{box-shadow:var(--shadow);white-space:nowrap}
-.map-status{position:absolute;left:14px;top:140px;font-size:var(--text-xs);background:var(--panel);border:1px solid var(--line);padding:3px 10px;border-radius:99px;margin:0;color:var(--muted)}
+.map-status{position:absolute;left:14px;top:64px;font-size:var(--text-xs);background:var(--panel);border:1px solid var(--line);padding:3px 10px;border-radius:99px;margin:0;color:var(--muted)}
 .place-card{position:absolute;right:14px;bottom:14px;width:300px;max-width:calc(100% - 28px);display:flex;flex-direction:column;gap:4px;z-index:var(--map-ui-z)}
 .place-card strong{padding-right:24px}
 .place-card span{font-size:var(--text-s);color:var(--muted)}
 .place-card .ref-note{font-size:var(--text-xs);color:var(--warn)}
 .card-close{position:absolute;right:8px;top:6px;border:0;background:none;font-size:20px;line-height:1;color:var(--muted);cursor:pointer;padding:4px}
-.card-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.origin-bar{position:absolute;left:14px;top:100px;display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:3px 4px 3px 12px;font-size:var(--text-s);box-shadow:var(--shadow);z-index:var(--map-ui-z)}
-.origin-bar .text-button{padding:2px 10px;font-size:var(--text-xs)}
-body.picking-origin .origin-bar{border-color:var(--brand);color:var(--brand)}
-.heading-toggle{position:absolute;right:14px;top:100px;box-shadow:var(--shadow);z-index:var(--map-ui-z)}
+.card-actions{display:flex;align-items:center;gap:8px;margin-top:8px}
+.heading-toggle{position:absolute;right:14px;top:64px;box-shadow:var(--shadow);z-index:var(--map-ui-z)}
 .chooser{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center}
 .origin-select{font:inherit;font-size:var(--text-s);border:1px solid var(--line);border-radius:99px;padding:5px 10px;background:var(--panel);color:var(--ink);max-width:100%}
 .chip.ghost{background:transparent}
@@ -137,10 +145,6 @@ body.picking-origin .origin-bar{border-color:var(--brand);color:var(--brand)}
 body.guiding .route-note,body.guiding .place-card{display:none}
 .sheet-handle{display:none}
 .safe-probe{position:fixed;left:0;bottom:0;width:0;height:env(safe-area-inset-bottom,0px);visibility:hidden;pointer-events:none}
-.filter-list{position:absolute;top:100px;left:14px;right:14px;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;z-index:var(--map-ui-z);padding-bottom:2px}
-.filter-list::-webkit-scrollbar{display:none}
-.filter-list .chip{white-space:nowrap;font-size:var(--text-xs);padding:5px 10px;background:var(--panel)}
-.filter-list:not([hidden])~.origin-bar{top:140px}
 .map-dock{display:contents}
 .crosshair,.pick-bar{display:none}
 body.picking-origin .crosshair{display:block;position:absolute;left:0;top:0;width:0;height:0;z-index:var(--map-ui-z);pointer-events:none}
@@ -160,18 +164,12 @@ body.picking-origin .place-card,body.picking-origin .route-note{display:none}
   body.sheet-collapsed .chat header{padding-bottom:4px}
   .status{display:none}
   .map-search{top:calc(10px + env(safe-area-inset-top));left:10px;width:calc(100% - 20px)}
-  .filters{top:calc(52px + env(safe-area-inset-top));left:10px;right:10px;scrollbar-width:none}
-  .filters::-webkit-scrollbar{display:none}
-  .filter-list{top:calc(92px + env(safe-area-inset-top));left:10px;right:10px}
-  .origin-bar{top:calc(92px + env(safe-area-inset-top));left:10px;max-width:calc(100% - 20px)}
-  .filter-list:not([hidden])~.origin-bar{top:calc(130px + env(safe-area-inset-top))}
-  .heading-toggle{top:calc(92px + env(safe-area-inset-top));right:10px}
-  .map-status{top:calc(130px + env(safe-area-inset-top));left:10px}
   /* No shadows over the moving map on phones: flat borders composite cheaply. */
-  .map-search input,.filters .chip,.origin-bar,.heading-toggle,.mapwrap .card{box-shadow:none}
-  body.guiding .filters,body.guiding .origin-bar,body.guiding .map-search,body.guiding .filter-list{display:none}
+  .map-search input,.locate-button,.heading-toggle,.mapwrap .card{box-shadow:none}
+  body.guiding .map-search{display:none}
   body.guiding .heading-toggle{top:calc(10px + env(safe-area-inset-top))}
   /* Map overlays always sit above the visible part of the sheet. */
+  .locate-button{right:10px;bottom:calc(var(--sheet-visible,64px) + 10px)}
   .map-dock{display:flex;flex-direction:column;gap:8px;position:absolute;left:10px;right:10px;bottom:calc(var(--sheet-visible,64px) + 10px);z-index:var(--map-ui-z);pointer-events:none}
   .map-dock>*{pointer-events:auto}
   .map-dock .place-card,.map-dock .route-note{position:relative;left:auto;right:auto;bottom:auto;top:auto;width:auto;max-width:none}

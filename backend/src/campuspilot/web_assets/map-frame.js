@@ -13,6 +13,13 @@ let navigationId = null, locationLayer = null, followingLocation = true, locatio
 // https://ditu.amap.com/place/B001C7X6H7, retrieved 2026-10-08 (GCJ02).
 const CAMPUS_CENTER = [104.147531, 30.675012];
 const CAMPUS_ZOOM = 15;
+// Campus bounding box (all recorded places, GCJ02) widened by about 1 km. The map cannot
+// pan or zoom out beyond it, and taps / POIs / search hits / picks outside are ignored.
+const AREA = {west: 104.139965 - 0.0105, east: 104.154625 + 0.0105, south: 30.670203 - 0.009, north: 30.683981 + 0.009};
+const MIN_ZOOM = 15;
+function inArea(lng, lat) {
+  return lng >= AREA.west && lng <= AREA.east && lat >= AREA.south && lat <= AREA.north;
+}
 function notify(action, data = {}) {
   parent.postMessage({type: "campuspilot-map", action, ...data,frame_generation:frameGeneration}, location.origin);
 }
@@ -33,9 +40,15 @@ async function init(config) {
       document.head.append(script);
     }), "地图组件加载超时");
     await timed(window.AMapLoader.load({key: config.key, version: "2.0"}), "地图组件加载超时");
-    map = new AMap.Map("map-view", {center: CAMPUS_CENTER, zoom: CAMPUS_ZOOM, viewMode: "2D", isHotspot:true, rotateEnable:true,
+    map = new AMap.Map("map-view", {center: CAMPUS_CENTER, zoom: CAMPUS_ZOOM, zooms: [MIN_ZOOM, 20], viewMode: "2D", isHotspot:true, rotateEnable:true,
       // Phones: skip 3D building blocks and keep the default canvas cheap while panning.
       showBuildingBlock: !TOUCH, pitchEnable: false, WebGLParams: {preserveDrawingBuffer: false}});
+    map.setLimitBounds(new AMap.Bounds([AREA.west, AREA.south], [AREA.east, AREA.north]));
+    // Belt and braces: programmatic moves (and some SDK paths) can bypass limitBounds.
+    map.on("moveend", () => {
+      const c = map.getCenter(), lng = Math.min(AREA.east, Math.max(AREA.west, c.getLng())), lat = Math.min(AREA.north, Math.max(AREA.south, c.getLat()));
+      if (lng !== c.getLng() || lat !== c.getLat()) map.setCenter([lng, lat], true);
+    });
     markerLayer = new AMap.LabelsLayer({zooms: [3, 20], zIndex: 130, collision: false, allowCollision: true});
     map.add(markerLayer);
     await timed(new Promise((resolve) => map.on("complete", resolve)), "地图图像加载超时");
@@ -212,7 +225,7 @@ async function placeSearch() {
 function serialisePoi(poi) {
   if (!poi?.location || !/^[A-Za-z0-9]{8,32}$/.test(poi.id || "") || typeof poi.name !== "string") return null;
   const position = {longitude:poi.location.lng,latitude:poi.location.lat,coordinate_system:"GCJ02"};
-  if (!validPosition(position) || AMap.GeometryUtil.distance(CAMPUS_CENTER,[position.longitude,position.latitude]) > 2400) return null;
+  if (!validPosition(position) || !inArea(position.longitude, position.latitude)) return null;
   return {poi_id:poi.id,name:poi.name.slice(0,120),address:typeof poi.address === "string" ? poi.address.slice(0,300) : "",position};
 }
 async function searchPlaces(data) {
@@ -231,10 +244,11 @@ async function searchPlaces(data) {
 function labelPoi(event) {
   if (typeof event?.name !== "string" || !event.name.trim() || !event.lnglat) return null;
   const position = {longitude: event.lnglat.getLng(), latitude: event.lnglat.getLat(), coordinate_system: "GCJ02"};
-  if (!validPosition(position) || AMap.GeometryUtil.distance(CAMPUS_CENTER, [position.longitude, position.latitude]) > 2400) return null;
+  if (!validPosition(position) || !inArea(position.longitude, position.latitude)) return null;
   return {poi_id: String(event.id || ""), name: event.name.slice(0, 120), address: "", position};
 }
 async function selectHotspot(event) {
+  if (!event.lnglat || !inArea(event.lnglat.getLng(), event.lnglat.getLat())) return;
   if (pickingOrigin && event.lnglat) {
     // A POI label swallows the plain map click; use the label as the picked origin.
     const position = {longitude:event.lnglat.lng, latitude:event.lnglat.lat, coordinate_system:"GCJ02"};
@@ -343,6 +357,7 @@ function selectMarker(place) {
 function pickPoint(lnglat) {
   const position = {longitude: lnglat.lng ?? lnglat.getLng(), latitude: lnglat.lat ?? lnglat.getLat(), coordinate_system: "GCJ02"};
   if (!validPosition(position)) return false;
+  if (!inArea(position.longitude, position.latitude)) return pickingOrigin || pickingDestination; // silently ignored
   if (pickingOrigin) {
     pickingOrigin = false; map.setDefaultCursor("default");
     notify("route-origin", {request_id: routeId, position});
@@ -380,6 +395,7 @@ function watchTaps(el) {
 // The place API needs keywords; an OR-list of common campus words covers labelled buildings.
 const TAP_KEYWORDS = "成都理工大学|楼|馆|中心|食堂|餐厅|驿站|学院|门|超市|医院";
 async function nearestPoi(lnglat) {
+  if (!inArea(lnglat.getLng(), lnglat.getLat())) return;
   const id = discoveryId, selection = ++hotspotSequence;
   try {
     const service = await placeSearch();

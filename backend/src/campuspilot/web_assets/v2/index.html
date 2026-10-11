@@ -45,12 +45,14 @@
     <div class="map-search" role="search">
       <label class="sr-only" for="map-search">搜索地点</label>
       <input id="map-search" type="search" placeholder="搜索地点、食堂、学院…" autocomplete="off" enterkeyhint="search">
-      <ul id="search-results" class="search-results" role="listbox" aria-label="搜索结果" hidden></ul>
+      <button id="filter-clear" class="filter-clear" type="button" hidden></button>
+      <div id="search-panel" class="search-panel" hidden>
+        <div id="filters" class="filters" role="toolbar" aria-label="地点分类"></div>
+        <ul id="search-results" class="search-results" role="listbox" aria-label="搜索结果"></ul>
+      </div>
     </div>
-    <div id="filters" class="filters" role="toolbar" aria-label="地点分类"></div>
-    <div id="filter-list" class="filter-list" role="list" aria-label="该分类的地点" hidden></div>
     <p id="map-status" class="map-status" role="status" hidden></p>
-    <div class="origin-bar"><span id="origin-label">未设置起点</span><button id="origin-button" class="text-button" type="button">选择起点</button></div>
+    <button id="locate" class="locate-button" type="button" aria-label="定位到我的位置"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3" stroke="currentColor" stroke-width="2"/></svg></button>
     <button id="heading-toggle" class="heading-toggle chip" type="button" aria-pressed="false" hidden>🧭 北朝上</button>
     <div id="crosshair" class="crosshair" aria-hidden="true"></div>
     <div class="pick-bar card" role="status"><span>拖动地图把 <b>＋</b> 对准起点，或直接点地图 / 地点</span>
