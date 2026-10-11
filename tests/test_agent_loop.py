@@ -461,3 +461,75 @@ def test_business_ids_inside_id_lists_are_citable() -> None:
     )
     out = run(runner(model), "校园卡补办需要什么")
     assert out["result_status"] == "success"
+
+
+# --- P4: bare domains, colloquial aliases, SSE ---------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "text", ["登录 mail.stu.cdut.edu.cn 激活", "见 www.cdut.edu.cn", "访问 Example.COM 即可"]
+)
+def test_bare_domains_are_blocked_like_urls(text: str) -> None:
+    from campuspilot.agent.verify import unsafe_text
+
+    assert unsafe_text(text)
+
+
+def test_ordinary_text_with_dots_is_not_a_domain() -> None:
+    from campuspilot.agent.verify import unsafe_text
+
+    assert not unsafe_text("余额须大于20元。下一步：去珙桐食堂。版本2.0说明")
+    assert not unsafe_text("请发邮件到 学校邮箱，或拨打028-84078750")
+
+
+def test_colloquial_aliases_find_card_services() -> None:
+    agent = runner(None)
+    assert "cdut:service:campus-card-loss" in agent.matching_services("卡丢了咱整")
+    assert agent.service_hint("丢卡补办怎么弄") == "校园卡补办"
+
+
+def sse(text: str) -> list[tuple[str, Any]]:
+    events = []
+    for block in text.strip().split("\n\n"):
+        lines = dict(line.split(": ", 1) for line in block.splitlines())
+        events.append((lines["event"], json.loads(lines["data"])))
+    return events
+
+
+def test_sse_streams_plan_tools_and_verified_answer() -> None:
+    model = FakeLLM(understood(service="校园卡补办"), answer(GOOD_CARD, [CARD_EVIDENCE[0]]))
+    with web_client(model) as client:
+        client.post("/api/session", headers=HEADERS)
+        r = client.post("/api/chat/stream", json={"message": "校园卡补办需要什么"}, headers=HEADERS)
+        assert r.status_code == 200 and r.headers["content-type"].startswith("text/event-stream")
+        events = sse(r.text)
+    names = [e for e, _ in events]
+    assert names[0] == "start" and names[1] == "understanding" and names[2] == "plan"
+    assert names.index("tool_start") < names.index("tool_end") < names.index("composing")
+    assert names[-1] == "final" and "answer_delta" in names
+    final = events[-1][1]
+    assert final["result_status"] == "success" and final["checklist"] and final["request_id"]
+    assert "".join(d["text"] for e, d in events if e == "answer_delta") == final["answer"]
+
+
+def test_sse_guards_match_chat() -> None:
+    from campuspilot.web import create_web_app
+    from fastapi.testclient import TestClient
+
+    with TestClient(create_web_app(data_dir=DATA, runtime_mode="phase2")) as client:
+        client.post("/api/session", headers=HEADERS)
+        r = client.post("/api/chat/stream", json={"message": "你好"}, headers=HEADERS)
+        assert r.status_code == 404 and r.json()["error_code"] == "stream_unavailable"
+    spent = FakeLLM(understood("闲聊"))
+    with web_client(spent, daily=1) as client:
+        assert client.post("/api/chat/stream", json={"message": "x"}).status_code in {401, 403}
+        client.post("/api/session", headers=HEADERS)
+        client.post("/api/chat/stream", json={"message": "你好"}, headers=HEADERS)
+        r = client.post("/api/chat/stream", json={"message": "图书馆"}, headers=HEADERS)
+        assert r.status_code == 429 and r.json()["error_code"] == "global_limit"
+    model = FakeLLM()
+    with web_client(model) as client:
+        client.post("/api/session", headers=HEADERS)
+        r = client.post("/api/chat/stream", json={"message": "我的密码是123456"}, headers=HEADERS)
+        final = sse(r.text)[-1][1]
+        assert final["result_status"] == "needs_clarification" and model.calls == []

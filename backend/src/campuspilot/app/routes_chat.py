@@ -2,9 +2,11 @@
 
 import asyncio
 import json
+from collections.abc import AsyncIterator
 
 from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
+from pydantic import JsonValue
 
 from campuspilot.agent.executor import AgentRunner
 from campuspilot.app.state import NOTICE, BrowserSession, WebState
@@ -26,6 +28,7 @@ UPSTREAM_MESSAGES = {
     "upstream_timeout": "AI 回答超时，远端可能仍在处理；请开启新对话，不自动重试。",
 }
 UPSTREAM_DEFAULT = "AI 服务暂不可用，请开启新对话后重试。"
+STREAM_UNAVAILABLE = "流式回答未启用，请使用普通对话。"
 
 
 def register(app: FastAPI, state: WebState) -> None:
@@ -49,6 +52,71 @@ def register(app: FastAPI, state: WebState) -> None:
         if local is not None:
             return local
         return await _dify_turn(state, request, session, body, query_text)
+
+    @app.post("/api/chat/stream", response_model=None)
+    async def chat_stream(body: ChatInput, request: Request) -> StreamingResponse | JSONResponse:
+        """SSE agent turn: understanding, plan, tool_start/tool_end, composing, answer_delta,
+        final. Same session, origin, busy and budget guards as /api/chat. Without the agent
+        loop it answers 404 stream_unavailable and the browser falls back to /api/chat."""
+        session = state.session_for(request)
+        if session.busy:
+            return state.problem(request, "busy", BUSY, 409)
+        agent = state.agent
+        if agent is None or state.runtime_mode != "phase2":
+            return state.problem(request, "stream_unavailable", STREAM_UNAVAILABLE, 404)
+        if session.turns_exhausted:
+            return state.problem(request, "session_limit", SESSION_LIMIT_LOCAL, 429)
+        use_model = agent.model is not None
+        if use_model and not state.budget.try_acquire():
+            return state.problem(request, "global_limit", GLOBAL_LIMIT, 429)
+        session.attempts += 1
+        session.busy = True
+        queue: asyncio.Queue[tuple[str, JsonValue] | None] = asyncio.Queue()
+        question = body.message.strip()
+        request_id = request.state.request_id
+
+        async def emit(event: str, data: dict[str, JsonValue]) -> None:
+            await queue.put((event, data))
+
+        async def work() -> None:
+            try:
+                if state.embedder is not None:
+                    await state.embedder.prefetch(question)
+                async with asyncio.timeout(AGENT_TIMEOUT_SECONDS):
+                    response = await agent.run(question, session.context, emit)
+            except TimeoutError:
+                response = timeout_response()
+            except Exception:
+                response = {**timeout_response(), "answer": UPSTREAM_DEFAULT}
+                response["degraded_reason"] = "agent_error"
+            finally:
+                session.busy = False
+                if use_model:
+                    state.budget.release()
+            answer_text = response.get("answer")
+            if isinstance(answer_text, str):
+                if public_input(body.message):
+                    session.context.remember(body.message, answer_text)
+                # Deltas are emitted only after verification; nothing unverified is shown.
+                for i in range(0, len(answer_text), 24):
+                    await queue.put(("answer_delta", {"text": answer_text[i : i + 24]}))
+            await queue.put(("final", {**response, "request_id": request_id, "notice": NOTICE}))
+            await queue.put(None)
+
+        task = asyncio.create_task(work())
+
+        async def events() -> AsyncIterator[str]:
+            yield f"event: start\ndata: {json.dumps({'request_id': request_id})}\n\n"
+            while (item := await queue.get()) is not None:
+                event, data = item
+                yield f"event: {event}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
+            await task
+
+        return StreamingResponse(
+            events(),
+            media_type="text/event-stream",
+            headers={"Cache-Control": "no-store", "X-Accel-Buffering": "no"},
+        )
 
 
 async def _runtime_turn(
@@ -82,6 +150,19 @@ async def _runtime_turn(
 AGENT_TIMEOUT_SECONDS = 45
 
 
+def timeout_response() -> dict[str, JsonValue]:
+    return {
+        "services": [],
+        "teachers": [],
+        "places": [],
+        "answer": "回答超时，请稍后重试或换个问法。",
+        "result_status": "limited",
+        "degraded_reason": "agent_timeout",
+        "answer_mode": "agent",
+        "excerpts": [],
+    }
+
+
 async def _agent_turn(
     state: WebState,
     request: Request,
@@ -102,16 +183,7 @@ async def _agent_turn(
         async with asyncio.timeout(AGENT_TIMEOUT_SECONDS):
             response = await agent.run(question, session.context)
     except TimeoutError:
-        response = {
-            "services": [],
-            "teachers": [],
-            "places": [],
-            "answer": "回答超时，请稍后重试或换个问法。",
-            "result_status": "limited",
-            "degraded_reason": "agent_timeout",
-            "answer_mode": "agent",
-            "excerpts": [],
-        }
+        response = timeout_response()
     finally:
         session.busy = False
         if use_model:

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -52,6 +53,18 @@ class StepRecord(Contract):
     status: str
 
 
+Emit = Callable[[str, dict[str, JsonValue]], Awaitable[None]]
+TOOL_LABELS = {
+    "search_service": "查找办事事项",
+    "make_checklist": "生成办理清单",
+    "search_knowledge": "检索官方资料",
+    "search_teacher": "查找老师",
+    "search_place": "查找地点",
+    "list_places": "列出地点",
+    "find_office": "查找办公室",
+}
+
+
 @dataclass
 class Evidence:
     results: list[dict[str, JsonValue]] = field(default_factory=list)
@@ -62,6 +75,11 @@ class Evidence:
     hits: list[dict[str, JsonValue]] = field(default_factory=list)
     checklist: dict[str, JsonValue] | None = None
     citations: dict[str, dict[str, JsonValue]] = field(default_factory=dict)
+    emit: Emit | None = None
+
+    async def notify(self, event: str, data: dict[str, JsonValue]) -> None:
+        if self.emit is not None:
+            await self.emit(event, data)
 
     def text(self) -> str:
         return json.dumps(self.results, ensure_ascii=False)
@@ -131,11 +149,17 @@ class AgentRunner:
 
     def service_hint(self, question: str) -> str | None:
         """Best service name for a free-text question (alias match, then bigram overlap)."""
+        exact = [
+            (len(n), service.name)
+            for service in self.repository.services()
+            for n in (service.name, *service.aliases)
+            if n in question
+        ]
+        if exact:
+            return max(exact)[1]  # longest alias wins: 丢卡补办 over 丢卡
         best, best_score = None, 0.0
         for service in self.repository.services():
             names = (service.name, *service.aliases)
-            if any(n in question for n in names):
-                return service.name
             for name in names:
                 grams = {name[i : i + 2] for i in range(len(name) - 1)}
                 if not grams:
@@ -148,14 +172,19 @@ class AgentRunner:
     # -- tools --------------------------------------------------------------------------
 
     async def _call(self, name: str, args: dict[str, JsonValue], ev: Evidence) -> str:
+        label = TOOL_LABELS.get(name, name)
+        await ev.notify("tool_start", {"tool": name, "label": label})
         try:
             result = await asyncio.to_thread(self.registry.call, name, args)
         except ToolError as exc:
+            await ev.notify("tool_end", {"tool": name, "label": label, "status": exc.code})
             return exc.code
+        status = str(result.get("status") or result.get("result_status") or "success")
+        await ev.notify("tool_end", {"tool": name, "label": label, "status": status})
         ev.results.append({"tool": name, "result": result})
         _collect_ids(result, ev.allowed)
         self._absorb(name, result, ev)
-        return str(result.get("status") or result.get("result_status") or "success")
+        return status
 
     def _absorb(self, name: str, result: dict[str, Any], ev: Evidence) -> None:
         if name == "search_service":
@@ -399,8 +428,11 @@ class AgentRunner:
             body["degraded_reason"] = degraded
         return body
 
-    async def run(self, question: str, context: ConversationContext) -> dict[str, JsonValue]:
-        ev = Evidence()
+    async def run(
+        self, question: str, context: ConversationContext, emit: Emit | None = None
+    ) -> dict[str, JsonValue]:
+        """One turn. `emit` (optional) receives understanding/plan/tool_start/tool_end events."""
+        ev = Evidence(emit=emit)
         if not public_input(question):
             return self._response(
                 answer=PRIVATE_ANSWER,
@@ -425,6 +457,14 @@ class AgentRunner:
         if view.slots.academic_year:
             context.academic_year = view.slots.academic_year
         view = view.model_copy(update={"missing": self.needed(view, question)})
+        await ev.notify(
+            "understanding",
+            {
+                "intent": view.intent,
+                "slots": view.slots.model_dump(mode="json"),
+                "missing": list(view.missing),
+            },
+        )
         if view.missing:
             return self._response(
                 answer=view.clarify_question or IDENTITY_QUESTION,
@@ -460,7 +500,12 @@ class AgentRunner:
                     update={"slots": view.slots.model_copy(update={"service": hint})}
                 )
         plan = make_plan(view, question)
+        await ev.notify(
+            "plan",
+            {"steps": [{"step": s.step, "tool": s.tool, "label": s.label} for s in plan.steps]},
+        )
         steps = await self._run_plan(plan, ev)
+        await ev.notify("composing", {"label": "组织答案并核对引用"})
         reply, failure, _ = await self._answer(question, view, context, ev)
         if reply is not None:
             # Checklist item keys (e.g. "limit-3") are local UI keys, not evidence; models

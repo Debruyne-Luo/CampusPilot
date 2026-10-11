@@ -4,7 +4,11 @@
     "name": "校园卡挂失",
     "aliases": [
       "一卡通挂失",
-      "校园卡丢失"
+      "校园卡丢失",
+      "卡丢了",
+      "丢卡",
+      "校园卡丢了",
+      "饭卡丢了"
     ],
     "department": "网络与信息化处",
     "office_id": "cdut:office:network-information",
@@ -414,7 +418,11 @@
       "一卡通补办",
       "校园卡补卡",
       "饭卡补办",
-      "饭卡补卡"
+      "饭卡补卡",
+      "卡丢了补卡",
+      "丢卡补办",
+      "校园卡丢了补办",
+      "补校园卡"
     ],
     "department": "网络与信息化处",
     "office_id": "cdut:office:network-information",

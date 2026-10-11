@@ -14,13 +14,20 @@ UNSAFE_TEXT = re.compile(
     r"(?:经度|纬度|坐标)\D{0,12}[-+]?\d|"
     r"[-+]?\d{1,3}\.\d+\s*[,，]\s*[-+]?\d{1,3}\.\d+"
 )
+# Bare domains (mail.stu.cdut.edu.cn, www.example.com) are links too; links are rendered
+# from citations by the program, never typed by the model.
+BARE_DOMAIN = re.compile(
+    r"(?<![\w@.-])(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+"
+    r"(?:cn|com|net|org|edu|gov|io|top|info|xyz|me|cc)(?![\w.-]*[a-z0-9])",
+    re.IGNORECASE,
+)
 NUMBER = re.compile(r"\d{3,}(?:[-.]\d+)*")
 BALANCE_PREMISE = re.compile(r"(?:余额|账户).{0,20}(?:大于|超过|>)\s*20")
 
 
 def unsafe_text(answer: str) -> bool:
     """URLs and coordinates are rendered by the program, never written by the model."""
-    return bool(UNSAFE_TEXT.search(answer))
+    return bool(UNSAFE_TEXT.search(answer) or BARE_DOMAIN.search(answer))
 
 
 def unsupported_numbers(answer: str, evidence: str) -> list[str]:
