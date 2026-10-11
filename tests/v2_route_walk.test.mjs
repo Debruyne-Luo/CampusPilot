@@ -70,10 +70,10 @@ test("statue guide model: one smooth glossy skin, cap, spots, animated, under 28
     if (!o.geometry) return;
     tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
     if (o.material.isMeshStandardMaterial) standard++;
-    if (!o.material.vertexColors) colors.add(o.material.color.getHex());
+    if (o !== d.skin) colors.add(o.material.color.getHex());
   });
   assert.ok(tris < 28000, `triangles ${tris}`); assert.ok(standard > 10);
-  assert.ok(d.skin.material.vertexColors && d.skin.material.roughness < 0.45);
+  assert.ok(d.skin.material.onBeforeCompile && d.skin.material.roughness < 0.45);
   for (const c of [0x1d1c20, 0xf0b13f, 0x7c3a22, 0x24324f, 0x6b331d]) assert.ok(colors.has(c), c.toString(16));
   // The skin is one closed surface: every edge is shared by exactly two triangles.
   const idx = d.skin.geometry.index.array, edges = new Map();

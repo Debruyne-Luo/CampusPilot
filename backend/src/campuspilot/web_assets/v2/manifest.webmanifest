@@ -7,5 +7,22 @@
   "background_color": "#f5f6f8",
   "theme_color": "#f5f6f8",
   "lang": "zh-CN",
-  "icons": [{ "src": "/assets/v2/dino.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+  "icons": [
+    {
+      "src": "/assets/v2/dino.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/v2/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/v2/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
