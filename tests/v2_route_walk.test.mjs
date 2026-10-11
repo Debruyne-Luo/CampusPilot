@@ -59,3 +59,23 @@ test("guide is code-built (no model files) and Three.js is only loaded lazily", 
   assert.doesNotMatch(shell + frame, /<script[^>]+three/);
   assert.doesNotMatch(frame, /AMap\.Buildings/);
 });
+
+test("chibi guide model: original parts, toon-shaded, animated, under 5k triangles", async () => {
+  const THREE = await import("../backend/src/campuspilot/web_assets/vendor/three.module.min.js");
+  const { buildDino, poseDino } = await import("../backend/src/campuspilot/web_assets/dino3d.mjs");
+  const d = buildDino(THREE);
+  let tris = 0, toon = 0;
+  d.group.traverse((o) => {
+    if (!o.geometry) return;
+    tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3;
+    if (o.material.isMeshToonMaterial) { toon++; assert.notEqual(o.material.flatShading, true); }
+  });
+  assert.ok(tris < 5000, `triangles ${tris}`); assert.ok(toon > 10);
+  // Big head: its centre sits above 60% of the 10-unit height and spans about 4 units.
+  assert.ok(d.head.position.z > 6.5);
+  poseDino(d, Math.PI / 2, true, 0.05);
+  assert.ok(d.legL.rotation.y > 0.5 && d.legR.rotation.y < -0.5 && d.body.position.z >= 0);
+  assert.equal(d.eyes[0].scale.z, 0.12); // blinking at t % 3.2 < 0.12
+  poseDino(d, 0, false, 1);
+  assert.equal(d.legL.rotation.y, 0); assert.equal(d.eyes[0].scale.z, 1);
+});
