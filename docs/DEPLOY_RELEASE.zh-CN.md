@@ -1,5 +1,9 @@
 # 整包发布（release 布局）
 
+2026-10-12 已只读核对生产使用 release 布局，当前版本为 `r-0f1805acf68e`。
+完整提交、知识包和实际配置见 [线上基线](LIVE_BASELINE.zh-CN.md)。下面保留发布操作说明；
+不要因为早期 PR 的“未执行”描述而在现有服务器上重复初始化。
+
 `deploy/publish_release.py` + `deploy/_release.py` 取代按文件增量发布（`publish_*.py`、`update_routes.py`、`update_map_layout.py` 仍保留，旧测试仍覆盖它们，但新版本请用整包发布）。
 
 ## 包内容
@@ -18,7 +22,7 @@
 ```
 安装流程：校验 manifest 与每个文件 sha256 → 解包到 `.staging` 后 rename → 切换 `current` → `systemctl restart campuspilot` → 健康检查（带公网 Host 头请求 `/`、`/api/catalog`、`/api/map-config`，最多 30 秒）→ 失败则切回上一版本并再次重启，报 `health_check_failed_rolled_back`，失败的树保留以便排查。首次运行时若 `current` 是普通目录（旧布局），先移到 `releases/legacy-<时间>` 作为回滚目标。
 
-## 一次性准备（按顺序，root；本 PR 未执行）
+## 一次性准备（新环境；现有服务器先核对）
 1. `bash deploy/vps/01-swapfile.sh` — 1 GB swap，swappiness=10（1 GB 内存跑 uvicorn + 向量检索需要缓冲）。
 2. `bash deploy/vps/02-venv-and-deps.sh`（要 sqlite-vec/numpy 加 `--vector`）— 建 `/opt/campuspilot/venv`。
 3. 把 `deploy/vps/03-env.example` 中的变量合并进 `/etc/campuspilot/campuspilot.env`（0600）：phase2、agent loop on、DeepSeek（`https://api.deepseek.com` / `deepseek-flash` / key）、CF_ACCOUNT_ID/CF_API_TOKEN、AMAP 两个 key、`CAMPUSPILOT_RETRIEVAL_MODE=hybrid`、`CAMPUSPILOT_KNOWLEDGE_BUNDLE=approved-20261011b`、`CAMPUSPILOT_ASSET_VERSION=auto`。`PUBLIC_ORIGIN`、`CAMPUSPILOT_API_TOKEN` 保持现值。
@@ -37,4 +41,4 @@ python deploy/publish_release.py --bundle approved-20261011b --output dist/relea
 ## CDN / 缓存
 - `CAMPUSPILOT_ASSET_VERSION=auto`：v2 页面引用 `/assets/v-<web_assets 内容哈希>/...`，应用与 Caddy 都给 `public, max-age=31536000, immutable`；ES 模块相对 import 自动跟随版本前缀。新发布内容变化 → 前缀变化，无需清 CDN。
 - 未加版本的 `/assets/*`（含 /classic 旧界面）`max-age=0, must-revalidate`；`/`、`/classic`、`/map-view` `no-cache`；`/api/*` `no-store`。
-- 注意：整站目前有 basic_auth，Cloudflare 默认不缓存带 Authorization 的请求；要让 CDN 真正缓存静态资源，需把 `/assets/v-*` 放到 basic_auth 之外（资源无敏感内容）或在 Cloudflare 配缓存规则。是否放开请决定。
+- 历史部署使用过整站 basic_auth。2026-10-12 已确认 Pages 入口可直接访问，具体边缘鉴权/缓存配置本次未导出；不得从旧描述推断当前入口仍要求口令。若调整 CDN，应先检查当前缓存与源站配置。
