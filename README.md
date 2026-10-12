@@ -1,162 +1,81 @@
-# CampusPilot
+# CampusPilot · 理小龙 CDUTdino
 
-CampusPilot is a campus task-completion Agent for students and staff. Its first pilot is
-**Chengdu University of Technology (成都理工大学)**. It helps users find the verified procedure,
-responsible service, required information, location, route, official source, and next action.
+面向成都理工大学的校园事务助手：查询官方资料、办理步骤、老师和地点，结合高德地图提供步行参考路线与前台引导。当前范围为公开信息与只读辅助，不代办学校业务。
 
-## Current status
+## 当前线上基线
 
-**2026-10-11：本分支收录完整项目代码及后端迁移实现，离线验证通过，尚未上线。** 两阶段后端路由、
-HTTPS 模型直连、不可变知识发布、轻量词法 RAG 和 OpenRouter Jev 影子评测已实现。
-默认仍为 legacy；Dify 当前发布基线、真实模型/付费评测及独立 QA 未完成时，
-发布门槛保持关闭。配置、维护命令和具体状态见
-[迁移交付与验收](docs/RUNTIME_MIGRATION.zh-CN.md)、
-[ADR 0005](docs/adr/0005-backend-runtime-and-knowledge-publication.md)。
+**2026-10-12 已只读核对线上发布包、进程配置及仓库内容。后续整理以此版本为准。**
 
-**2026-10-08: 提交版持续交付记录。**
-主线是需求 → 官方资料/步骤 → 地点 → 站内步行参考路线。FastAPI/原生网页与 Dify/Amap
-已通过真实联通与上线检查。现有4项事务、20条地点目录（14个高德坐标候选）、5位教师，
-新增6条官方知识资料及时间/人群筛选。地图与事务助手分为两种空间，高德热点、周边搜索
-和地图目的地扩展目录覆盖；网页前台步行引导支持持续定位/进度与偏航重规划。
-室内、后台导航和校园真机步行尚未验收；网安楼及当前补卡设备准确位置继续补齐。详见
-[提交版交付状态与设计](docs/SUBMISSION_STATUS.zh-CN.md)、
-[部署与回滚](docs/SUBMISSION_DEPLOY.zh-CN.md)、[ADR 0004](docs/adr/0004-submission-web-map-and-dify.md)。
-
-Core Framework Skeleton and Phase 1 local directory are merged into main.
-Muse reports a 22/22 golden eval baseline on Python 3.14.7 at `554d7cb1`; see
-[the QA handoff](OPS.md#review-and-release-workflow) for evidence and remaining review boundaries.
-The synthetic demo stays separate from the public inventory, all `needs_review`.
-The demo/CLI remain offline; the web adapter can call Dify Cloud. No university actions run.
-Python 3.14.7, uv, Protocol, Pydantic 2, pytest, mypy strict and Ruff are approved in
-[ADR 0003](docs/adr/0003-python-skeleton-toolchain.md).
-
-**CONFIRMED:** v1 provides public-information and read-only task assistance through one primary
-Agent with modular Skills in a modular monolith. Model providers are replaceable. Evidence,
-execution records, and permission boundaries are explicit parts of the architecture.
-
-Authenticated personal-data access and real write actions are **DEFERRED**. The submission version
-uses Dify Cloud, Python/FastAPI, plain HTML/CSS/JS, Amap and in-memory sessions under ADR 0004.
-Domestic campus-network, physical walking and independent QA checks remain outstanding.
-
-## Start here
-
-| Document | Read it for |
+| 项目 | 当前值 |
 | --- | --- |
-| [Product](docs/PRODUCT.md) | Users, pilot, v1 scope, source authority, success criteria |
-| [Architecture](docs/ARCHITECTURE.md) | Approved boundaries, decision statuses, next-task plan |
-| [API and domain contracts](docs/API_CONTRACT.md) | Framework-independent integration proposals |
-| [Skills](docs/SKILLS.md) | Skill, registry, Tool, execution, and risk responsibilities |
-| [中文开发协作手册](docs/DEVELOPMENT_GUIDE.zh-CN.md) | Module ownership, phases, handoffs, collaboration |
-| [Engineering rules](AGENTS.md) | Durable instructions for coding agents |
-| [DeepSeek Harness 交接](docs/DEEPSEEK_HANDOFF.zh-CN.md) | Current local workspace, delivered features, evidence and continuation notes |
-| [Operations and QA](OPS.md) | Muse's Independent QA, DataOps, Security Validation / Release Gate responsibilities |
-| [Security](docs/SECURITY.md) | Trust boundaries and current requirements versus future controls |
-| [官方知识资料](docs/KNOWLEDGE.zh-CN.md) | Source adoption, date filters, import/export and WeChat attribution |
-| [后端问答迁移](docs/RUNTIME_MIGRATION.zh-CN.md) | Two-stage runtime, immutable releases, private configuration and acceptance gates |
-| [网页步行引导](docs/WEB_GUIDANCE.zh-CN.md) | Two workspaces, dynamic places, foreground location and limitations |
-| [比赛展示思路](docs/DEMO_STRATEGY.zh-CN.md) | Proposed audience, pain points and reproducible demo |
-| [Approved decisions](docs/adr/README.md) | Human-approved ADRs |
+| 网站 | <https://cdutdino.pages.dev/> |
+| 已部署代码 | `31ed5bb0264d927c7918046b66b2947c013e8205` |
+| 发布包 | `r-0f1805acf68e`，120 个文件哈希全部一致 |
+| 前端资源版本 | `a44289c47acf` |
+| 知识库 | `approved-20261011b` / `kb-f08fa4fd8b583700` |
+| 运行模式 | `phase2`，Agent loop `on`，检索 `hybrid` |
+| 生成 / 嵌入模型 | `deepseek-flash` / `@cf/baai/bge-m3` |
+| 证据判断 | grounding `flag`（只标记），Jev `off` |
 
-## Team and workflow
+完整记录、配置来源、文件清单和待验边界见 **[线上基线](docs/LIVE_BASELINE.zh-CN.md)**。
+这是一份部署事实记录，不等同于独立 QA 或产品验收通过。
 
-The human Product Owner / Tech Lead owns product decisions, architecture and fact approval,
-and final Review / Merge. Codex is the primary implementation engineer; its selected development
-model is independent of the deployed application's Dify model. The human
-teammate owns Frontend & Product Experience, including UI/UX and map interaction.
-Muse owns Independent QA + DataOps + Security Validation / Release Gate, with Agent Red Team
-work later. ChatGPT supports architecture, research, planning,
-evaluation design, and review. See the [responsibility matrix](docs/DEVELOPMENT_GUIDE.zh-CN.md).
+GitHub `main` 是唯一长期主线，已通过 [PR #5](https://github.com/Debruyne-Luo/CampusPilot/pull/5)
+纳入当前线上代码。标签 `v0.1.0` 固定实际部署提交；后续说明与评测报告可以领先于部署。
+临时 `feat/`、`fix/` 等分支在 PR 合入后清理，流程及历史分支记录见
+[仓库维护](docs/REPOSITORY_WORKFLOW.zh-CN.md)。本次整理不改变线上运行代码与数据。
 
-GitHub is the single source of truth. Work proceeds through Issue → Codex / teammate
-implementation on a short-lived branch → PR → Muse independent QA / source verification
-(for real data) → Codex fixes → Muse regression → Tech Lead final review → Merge.
-Muse locks the Tested Commit SHA and reports PASS / FAIL with blocking / non-blocking findings.
-Agents never merge themselves. Templates live in [.github](.github/); [CODEOWNERS](.github/CODEOWNERS) is a
-placeholder until real reviewer identities are confirmed.
+用户于 2026-10-12 反馈手机地图使用正常，截图中的问题出现在电脑端。此前地图坐标修改仍单独保留在
+`fix/map-coordinate-acceptance-20261012` 工作区，未提交、未上线，不属于此基线；电脑端问题待单独复现。
 
-Muse may precollect official public sources in a browser before feature development; candidates
-remain `needs_review`. After Tech Lead source approval, Codex structures the formal data, Muse
-rechecks it against official sources in the PR, and the Tech Lead decides whether it is `verified`.
-Muse cannot write candidates to `data/cdut` without explicit Tech Lead authorization or independently
-mark them `verified`. See [OPS](OPS.md) for QA, data, and production-code boundaries.
+## 代码入口
 
-## Run and verify
+| 目录 / 文件 | 职责 |
+| --- | --- |
+| `backend/src/campuspilot/app/` | FastAPI 应用装配、聊天/数据接口、高德代理 |
+| `backend/src/campuspilot/config.py` | 运行配置；代码默认值与线上显式配置不同 |
+| `backend/src/campuspilot/agent/` | 理解、计划、只读工具执行和答案校验；保留旧 skeleton |
+| `backend/src/campuspilot/tools/`、`directory/` | 校园事务、教师、地点与清单工具、结构化目录 |
+| `backend/src/campuspilot/llm/`、`retrieval/` | 模型/嵌入适配与关键词、向量、混合检索 |
+| `backend/src/campuspilot/web_assets/v2/` | 当前网页；地图 iframe 与引导脚本在 `web_assets/` 根目录 |
+| `data/cdut/` | 结构化校园目录、知识资料与审核来源 |
+| `data/cdut/rag/approved-20261011b/` | 当前线上知识快照和向量索引 |
+| `deploy/publish_release.py`、`deploy/_release.py` | 整包打包、文件校验、切换与回滚 |
+| `scripts/` | 知识维护、导入导出、评测及基线核对 |
+| `tests/`、`evaluation/` | 自动测试、评测集和报告；报告结论仅适用于其测试版本 |
+| `integrations/dify/` | 历史 Dify 接入材料；不代表当前在线问答仍走 Dify |
 
-The optional [CampusPilot web + Dify pilot](docs/WEB_DIFY_SETUP.zh-CN.md) adds a local
-browser UI, public service cards, and a server-side Dify adapter. Run
-`uv run --locked --extra api python -m campuspilot.web` and open <http://127.0.0.1:8766>.
-Without a Dify app credential, service guides work and AI chat is explicitly disabled.
-For real chat, use `--prompt-key` after publishing the Chatflow. The fake harness is not
-part of this path. Set `DIFY_STRUCTURED_ANSWERS=1` only for the new structured candidate workflow.
-Production deployment and Dify-to-directory live callbacks remain outstanding.
+旧 CLI、classic 网页和增量部署脚本保留作兼容与历史参考，不因整理而删除。新发布使用整包流程。
 
-An optional local Dify directory API pilot is available; see
-[API setup](docs/DIFY_API_SETUP.zh-CN.md) and [data preparation](docs/DATA_PREPARATION.zh-CN.md).
-Use `uv sync --locked --extra api` for its checks. It has not been deployed or connected to
-Dify Cloud. The submission architecture is confirmed in ADR 0004; the CLI stays independent.
+## 本地运行与检查
 
-Run from the repository root with uv installed. Initial environment setup downloads locked
-packages; the installed demo and checks can then run offline.
+Python 固定为 3.14.7。先在仓库根目录执行（Windows 的 uv 如不在 PATH，可用 `%USERPROFILE%\.local\bin\uv.exe`）：
 
 ```powershell
-uv sync --locked --extra api
-uv run --offline --locked --extra api python -m campuspilot demo
-uv run --offline --locked --extra api campuspilot demo
-uv run --offline --locked --extra api campuspilot search-service "校园卡挂失"
-uv run --offline --locked --extra api campuspilot search-service "缴费票据" --academic-year 2026-2027
-uv run --offline --locked --extra api campuspilot find-office cdut:office:graduate-school
+uv sync --locked --extra api --extra vector
+uv run --offline --locked python scripts/check_live_baseline.py
+uv run --offline --locked --extra api python -m campuspilot.web
+```
+
+网页默认监听 <http://127.0.0.1:8766>。最后一条命令保留代码的 `legacy` 默认；它不等价于线上 `phase2`。
+未配置模型和高德凭据时，不能验证真实问答或高德地图。按线上基线复现时，使用
+[基线中的运行配置](docs/LIVE_BASELINE.zh-CN.md#运行配置)，从仓库外安全配置凭据，不把生产环境文件复制进仓库。
+
+```powershell
 uv run --offline --locked --extra api pytest -q
 uv run --offline --locked --extra api mypy
 uv run --offline --locked --extra api ruff check
-uv run --offline --locked --extra api ruff format --check
+node --test tests/*.test.js tests/*.test.mjs
 ```
 
-On Windows, if uv is not on PATH after installation, invoke it as
-`& "$env:USERPROFILE\.local\bin\uv.exe"` in place of `uv`.
-Python is pinned to 3.14.7; no fallback to another minor version is supported.
+离线合成演示独立保留：`uv run --offline --locked python -m campuspilot demo`。
+开发检查不能替代真实模型评测、手机/电脑浏览器检查或校园实地步行验收。
 
-For CLI-only use, omit `--extra api`; full development/type checks above include the optional API.
+## 文档导航
 
-The JSON demo contains three synthetic results, source references, a session snapshot and
-12 ordered events. It is not campus guidance or navigation. Running the CLI again starts a
-fresh in-memory application. The session API preserves completed/failed run history within
-one process; it does not resume a partially executed run or survive restart.
-
-## Source layout and limitations
-
-`backend/src/campuspilot/` contains contracts, Protocol interfaces, Skills, mock Tools,
-permission-checked execution, memory state, fake orchestration and the CLI.
-`tests/test_skeleton.py` checks contracts, rejection paths, failures, isolation and offline
-repeatability. The core is synchronous and intended for sequential local use. Step limits
-and cooperative cancellation are supported; hard timeouts, parallel execution, durable
-recovery, authentication and real approval execution are not implemented.
-
-## Phase 1 structured campus data
-
-Issue #2 adds a separate offline public directory for three approved CDUT matters. See the
-[source inventory and review limitations](data/cdut/README.md). All records are `needs_review`,
-including official sources; the data is not verified current campus guidance.
-
-`domain.py` contains shared service/department models; `contracts.py` owns public Tool results.
-`directory/` contains a read-only JSON repository and two Tools that depend on these core contracts.
-`evidence.py` contains shared SyntheticEvidence / SourceEvidence / FieldEvidence contracts.
-The `search-service` and `find-office` commands call the permission-checked ToolExecutor directly,
-without the fake model or harness. Results include field provenance, limitations and trace IDs.
-An office result may identify a department while its physical location remains unknown.
-
-Search matches names and aliases using trimmed, case-insensitive substrings and returns all
-candidates in ID order. `--academic-year` excludes records scoped to another year; omitting it
-returns records with their explicit applicability, never an implicit claim of current validity.
-`find-office` accepts exact IDs returned by service lookup. Missing matches return `empty`.
-
-The default data path is `data/cdut` relative to the working directory. When running elsewhere,
-pass `--data-dir D:/Projects/CampusPilot/data/cdut` (adjust for your checkout). The data is a
-reviewable checkout snapshot, not bundled into the Python wheel. CLI JSON uses UTF-8.
-Missing/malformed datasets fail with exit code 2; they never select synthetic data instead.
-Real and synthetic Tools are assembled in separate executors with distinct payload/Evidence types.
-Each Tool's declared output schema is checked by the executor. No real route
-Tool is registered. Demo/session behavior remains synthetic and deterministic.
-
-No dependencies or production integrations were added. Next handoff: **archive the Muse golden eval
-baseline and browser Source Review for the three Phase 1 records**, including missing office
-fields and current validity of the 2023 trial rules. Passing tests does not approve `verified` status.
+- [线上版本与待验边界](docs/LIVE_BASELINE.zh-CN.md)：判断现在运行什么的首要入口。
+- [整包部署与回滚](docs/DEPLOY_RELEASE.zh-CN.md)：当前发布方式。
+- [Agent](docs/AGENT.zh-CN.md)、[检索](docs/RETRIEVAL.zh-CN.md)：核心实现和开关。
+- [产品范围](docs/PRODUCT.md)、[架构与决策](docs/ARCHITECTURE.md)、[ADR](docs/adr/README.md)：范围、历史决策和待决事项。
+- [工程规则](AGENTS.md)、[QA 与协作](OPS.md)：权限边界和独立验证要求。
+- [历史迁移交付](docs/RUNTIME_MIGRATION.zh-CN.md)、[历史提交版记录](docs/SUBMISSION_STATUS.zh-CN.md)：保留当时证据，不作为当前部署清单。

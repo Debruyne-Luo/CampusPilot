@@ -4,10 +4,12 @@
 later it also owns Agent Red Team work. The Tech Lead retains fact approval and final Review / Merge.
 GitHub Issues, PRs, and repository documents are the project record.
 
-The local Python Skeleton implements mock-tool permissions, synthetic evidence, an
-in-memory journal and developer tests. It has no deployment, monitoring, backup or release
-pipeline. Skeleton and Phase 1 implementation PRs are merged. Future operational procedures
-below are not claims of production controls; run commands are in [README](README.md).
+Current deployment facts are recorded in [the live baseline](docs/LIVE_BASELINE.zh-CN.md).
+The 2026-10-12 audit matched the live release's 120 files to source commit `31ed5bb`;
+the service uses phase2, the Agent loop and hybrid retrieval. Release packaging and rollback
+are implemented in [the release workflow](docs/DEPLOY_RELEASE.zh-CN.md).
+The earlier synthetic Skeleton remains as a separate offline path. Historical QA below does
+not establish acceptance of the full deployed application; run commands are in [README](README.md).
 
 ## Responsibilities
 

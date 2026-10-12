@@ -1,11 +1,17 @@
 # CampusPilot 后端问答迁移交付
 
+> 2026-10-12 状态更正：实际线上已运行 `31ed5bb` / `r-0f1805acf68e`，phase2、Agent loop on、
+> hybrid，详情及核对证据见 [线上基线](LIVE_BASELINE.zh-CN.md)。下文保存早期迁移交付时的记录，
+> 包括当时“尚未上线”“没有付费推理”的状态，不能用作当前部署结论。独立验收仍须另行完成。
+
+## 历史交付记录
+
 2026-10-11：**代码和离线验证交付，尚未上线，迁移验收未完成。**
 批准范围见 [ADR 0005](adr/0005-backend-runtime-and-knowledge-publication.md)。
 检查命令、证据与限制见 [离线验证记录](RUNTIME_MIGRATION_VALIDATION.zh-CN.md)。
 此前的工作区改动随完整项目纳入 GitHub 代码分支；没有付费推理或远端部署。
 
-## 当前证据与待完成项
+## 当时证据与待完成项
 
 | 项目 | 状态与证据 |
 | --- | --- |

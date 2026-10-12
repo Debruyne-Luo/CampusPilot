@@ -61,6 +61,16 @@ Read the relevant contracts and accepted [ADRs](docs/adr/README.md) before chang
 
 ## Current repository stage
 
+2026-10-12 user direction: organize the repository around the currently deployed version.
+The live source is `31ed5bb0264d927c7918046b66b2947c013e8205`, release `r-0f1805acf68e`.
+Read [the live baseline](docs/LIVE_BASELINE.zh-CN.md) before inferring deployment state from
+older plans. Runtime code, data and dependencies must retain this baseline during this cleanup.
+The earlier coordinate-conversion fix is isolated in another worktree and is not deployed.
+The user reports mobile maps work; investigate the desktop issue separately before applying
+a shared map change. Do not interpret this feedback as full device or navigation acceptance.
+
+### Historical implementation stages
+
 The approved Python Core Framework Skeleton uses synthetic mocks and in-memory state.
 Issue #2 adds the approved three-service CDUT JSON inventory and isolated source-backed queries;
 all real records remain needs_review. See data/cdut/README.md for source and review limitations.

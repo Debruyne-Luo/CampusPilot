@@ -1,5 +1,17 @@
 # Architecture and decision register
 
+## Observed deployment (2026-10-12)
+
+For current runtime facts, use [the live baseline](LIVE_BASELINE.zh-CN.md): source `31ed5bb`,
+release `r-0f1805acf68e`, phase2 with Agent loop on and hybrid retrieval, DeepSeek generation,
+approved-20261011b knowledge, grounding flag and Jev off. The current interface is web_assets/v2;
+the classic interface remains available. These observations do not amend historical ADRs or
+imply independent QA acceptance. Code defaults (legacy / Agent off) differ from live settings.
+
+## Historical stage descriptions (2026-10-08 to 2026-10-10)
+
+The following paragraphs preserve the state at those dates, not the current deployment.
+
 2026-10-10 direction is CONFIRMED in [ADR 0005](adr/0005-backend-runtime-and-knowledge-publication.md):
 move routing, model generation and RAG to the Python backend in two releases. Dify retains
 document authoring and explicit snapshot export. OpenRouter Jev is an offline shadow evaluator;
