@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "status": "PENDING",
+  "reviewer": "",
+  "environment": "",
+  "tested_at": "",
+  "tested_files_sha256": {},
+  "golden_sha256": "",
+  "model_configuration": {"base_url": "", "model": ""},
+  "baseline_sha256": "",
+  "answers_sha256": "",
+  "performance_sha256": "",
+  "shadow_sha256": "",
+  "case_reviews": {},
+  "case_review_fields": ["pass", "critical_fact_error", "required_premise_missing", "unsupported_assertion", "note"],
+  "baseline_case_pass": {},
+  "approved_direct_rules": [],
+  "boundary_checks": {
+    "dify_disconnected": "PENDING", "model_timeout": "PENDING", "jev_timeout": "PENDING",
+    "publication_interrupted": "PENDING", "rollback": "PENDING", "historical_misuse": "PENDING",
+    "ambiguity": "PENDING", "context_pollution": "PENDING", "session_isolation": "PENDING",
+    "unknown_citation": "PENDING", "cards": "PENDING", "teacher": "PENDING",
+    "maps": "PENDING", "mobile": "PENDING", "permissions": "PENDING"
+  },
+  "dify_network_blocked": false,
+  "notice": "Copy outside the repository. Developer diagnostics are not independent acceptance."
+}

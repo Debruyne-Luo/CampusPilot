@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="理小龙">
+  <title>理小龙 CDUTdino</title>
+  <rect width="64" height="64" rx="16" fill="#e6f5f3"/>
+  <path d="M21 64c1-8 3-12 5-15h12c2 3 4 7 5 15z" fill="#5fb3ad"/>
+  <path d="M28 64c0-6 1-10 2-13h4c1 3 2 7 2 13z" fill="#fdf0d2"/>
+  <ellipse cx="32" cy="35" rx="17" ry="16" fill="#7cc4be"/>
+  <ellipse cx="32" cy="42.5" rx="14.5" ry="8.5" fill="#86cbc5"/>
+  <path d="M19 41.5c6 3.5 20 3.5 26 0" fill="none" stroke="#5fb3ad" stroke-width="1.6" stroke-linecap="round"/>
+  <path d="M23 45.5q9 6.5 18 0" fill="none" stroke="#2f6965" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="28.5" cy="39.5" r="1" fill="#3f8f8a"/><circle cx="35.5" cy="39.5" r="1" fill="#3f8f8a"/>
+  <path d="M19.5 31.5c2.5-4.5 8-5 10.5-1.5-2.5 3.5-8 4-10.5 1.5z" fill="#fff"/>
+  <path d="M44.5 31.5c-2.5-4.5-8-5-10.5-1.5 2.5 3.5 8 4 10.5 1.5z" fill="#fff"/>
+  <ellipse cx="26.3" cy="31.4" rx="3" ry="2.6" fill="#17191f"/><ellipse cx="37.7" cy="31.4" rx="3" ry="2.6" fill="#17191f"/>
+  <circle cx="27.3" cy="30.4" r=".9" fill="#fff"/><circle cx="38.7" cy="30.4" r=".9" fill="#fff"/>
+  <path d="M22 17.5h20v6c-6 2-14 2-20 0z" fill="#1d1c20"/>
+  <path d="M32 7l21 6.5L32 20 11 13.5z" fill="#2a292e"/>
+  <path d="M32 13.5h17.5v9" fill="none" stroke="#f0b13f" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="32" cy="13.5" r="1.4" fill="#f0b13f"/>
+  <path d="M48 22h3l1 7h-5z" fill="#f0b13f"/>
+</svg>

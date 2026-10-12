@@ -1,11 +1,38 @@
 # Architecture and decision register
 
+2026-10-10 direction is CONFIRMED in [ADR 0005](adr/0005-backend-runtime-and-knowledge-publication.md):
+move routing, model generation and RAG to the Python backend in two releases. Dify retains
+document authoring and explicit snapshot export. OpenRouter Jev is an offline shadow evaluator;
+it has no online decision authority. Local implementation does not mean production migration
+acceptance. The default remains legacy; see [migration gates](RUNTIME_MIGRATION.zh-CN.md).
+
+Latest map/mobile increment: two frontend workspaces share one conversation and query state.
+`map-discovery.js` adds bounded provider POIs without mutating the official directory;
+`guidance.js` matches transient location fixes to real Walking geometry, independently of
+chat. Foreground GPS is explicit, paused on visibility/mode changes and cleared on route
+replacement/exit. SDK additions are only around/detail; routing still uses Amap, not a new
+campus graph. See [web guidance boundary](WEB_GUIDANCE.zh-CN.md).
+
+Current 2026-10-08 increment: Python additionally serves a bounded local official-notice/guide
+retriever from `data/cdut/knowledge.json`. It filters applicability and dates before rendering
+source-backed cards, and handles supported notice/guide questions before Dify. This path is
+deterministic retrieval, not new semantic RAG or a second Agent. Existing Dify keyword RAG
+and structured directory routes are preserved. See [knowledge delivery](KNOWLEDGE.zh-CN.md).
+Official-document adoption follows the user's current policy in PRODUCT; the older per-item
+fact approval workflow below is historical and no longer a gate for clear official sources.
+
 This is the canonical architecture status document. Product scope and source authority live in
 [PRODUCT](PRODUCT.md); domain/interface proposals in [API_CONTRACT](API_CONTRACT.md); module
 handoffs and development phases in the [Chinese guide](DEVELOPMENT_GUIDE.zh-CN.md).
 The approved Python Skeleton is implemented locally with deterministic synthetic mocks;
 the Skeleton and Phase 1 implementation PRs are merged. QA handoff status is recorded in
-[OPS](../OPS.md#review-and-release-workflow). No production integration is implemented.
+[OPS](../OPS.md#review-and-release-workflow). The 2026-10-07 submission increment is approved in
+[ADR 0004](adr/0004-submission-web-map-and-dify.md). Local web, Dify adapter and map support are
+implemented. The Amap base map is verified locally, and the human-approved free sslip.io
+public hostname is recorded in ADR 0004. Public HTTPS health and independent authentication
+gates are verified. Live Dify preview callbacks pass for both core queries; the published
+application API and VPS chat adapter still need end-to-end validation. Authenticated visitor
+access, confirmed map points and domestic networks remain unverified.
 
 ## Decision labels
 
@@ -91,13 +118,14 @@ a policy explanation can use Retrieval; a route uses GIS. One task may combine t
 
 | Item | Status | Boundary / reconsideration trigger |
 | --- | --- | --- |
-| Agent runtime: custom loop, LangGraph, or lightweight alternative | OPEN | Later ADR based on actual orchestration/recovery requirements; no preferred implementation is approved |
+| Submission orchestration | CONFIRMED | Two releases move chat/RAG to Python; Dify owns authoring and explicit knowledge export; ADR 0005 supersedes the runtime part of ADR 0004. Legacy remains deployed until stage gates pass |
+| Jev integration | CONFIRMED | OpenRouter typed decisions on fixed public fixtures; shadow only, never online routing or tool authority |
 | Skeleton language and tools | CONFIRMED | Python 3.14, uv, Protocol, Pydantic 2, pytest, mypy strict, Ruff and CLI; [ADR 0003](adr/0003-python-skeleton-toolchain.md) |
-| Backend Web framework / HTTP transport | OPEN | Not needed for the local Skeleton |
-| Frontend technology | OPEN | Frontend owner and Tech Lead decide before UI scaffolding |
+| Backend Web framework / HTTP transport | CONFIRMED | FastAPI/Uvicorn shared backend for web and tools; ADR 0004 |
+| Frontend technology | CONFIRMED | Existing plain HTML/CSS/JS responsive web; ADR 0004 |
 | Specific LLM provider/model | OPEN | Evaluate capability, quality, permitted data handling, latency, cost |
-| Specific database/persistence engine | OPEN | Decide before durable state or data-store implementation |
-| Specific GIS/map provider | OPEN | Decide from licensed data coverage and routing requirements |
+| Submission persistence | CONFIRMED | JSON directory and in-memory sessions; no database, restart resets conversations |
+| Specific GIS/map provider | CONFIRMED | Amap base map, embedded one-shot walking reference routes over provider candidates, and separately gated external navigation; ADR 0004 |
 | MCP | DEFERRED | An actual integration must justify the protocol |
 | Embeddings / vector database | DEFERRED | Representative retrieval evaluation must justify them |
 | Redis | DEFERRED | Demonstrated shared coordination or caching requirement |
@@ -109,12 +137,21 @@ a policy explanation can use Retrieval; a route uses GIS. One task may combine t
 
 ## Remaining OPEN requirements
 
+The 2026-10-03 Dify evaluation draft is historical. ADR 0005 confirms backend orchestration
+and retains directory, permission, session and card boundaries. The generation provider/model
+remains OPEN; vector infrastructure and live Jev policy are DEFERRED. Published baseline export,
+live performance and independent QA remain gates in [migration delivery](RUNTIME_MIGRATION.zh-CN.md).
+The broader requirements below remain open where accepted ADRs have not bounded them.
+
 1. Exact first services, corpus, authoritative source inventory, campus/site coverage, languages,
    and measurable acceptance thresholds; broad capability areas are already confirmed.
 2. Institutional source owners, refresh intervals, detailed conflict handling and verification criteria;
    Muse performs source review and the Tech Lead retains final fact / `verified` approval.
 3. API transport, domain field/enumeration details, error model, and session/concurrency/recovery behavior.
 4. User/session isolation, personal-input and location handling, retention/deletion, and logging access.
+   The approved route increment bounds origins to transient browser/SDK/proxy processing: explicit
+   explicit one-shot location or foreground guidance permission, no Dify input or durable
+   coordinates, and disabled access logs. Guidance stops outside the foreground.
 5. GIS data licensing, entrances, closures, accessibility coverage, and uncertainty presentation.
 6. Performance/cost budgets, model capability requirements, and release gates.
 7. Deployment environment, hosting/residency, secrets, backups, and operational objectives.
@@ -167,10 +204,11 @@ Developer verification is not Muse QA or human acceptance.
 
 ### Remaining scope
 
-Production Agent runtime remains OPEN. There is no real LLM, RAG, database,
-GIS/AMap, YanhuyiBan, authentication, write action, multi-agent runtime, MCP or deployment.
-The synthetic-only Skeleton scope above remains the demo boundary. The separately approved
-Phase 1 implementation below adds source-backed local queries, without a production runtime.
+The synthetic Skeleton remains a separate demo and does not call production providers.
+The submission web/GIS deployment is covered by ADR 0004; backend runtime migration is now
+CONFIRMED in ADR 0005 and implemented locally. Its new generation model is OPEN and its live
+acceptance is pending. Authenticated university data, real writes, extra runtime Agents,
+MCP, a database and vector infrastructure remain outside this increment.
 
 ## Phase 1 — Structured Campus Data (Issue #2)
 

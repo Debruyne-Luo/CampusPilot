@@ -77,7 +77,17 @@ Follow the source authority hierarchy in [PRODUCT](docs/PRODUCT.md) and the
 privacy boundaries in [SECURITY](docs/SECURITY.md). Do not infer university facts or
 promote third-party information over authoritative service information.
 
-**CONFIRMED** source review and structured-data workflow:
+**CONFIRMED (2026-10-08)** current source workflow:
+
+Find official source → check issuer, scope, dates and relevant passage → adopt supported
+facts with provenance → implementation and regression checks. The user explicitly removed
+per-item approval requirements. Searchable official text is usable with its access method
+recorded; unresolved missing fields stay unknown. Escalate only material ambiguity or conflict
+that independent research cannot resolve. Official-source adoption does not assert human
+inspection, current device availability, or universal policy applicability.
+
+The following is the **historical Phase 1 workflow**, superseded for new official-source
+adoption by the current policy in [PRODUCT](docs/PRODUCT.md#source-authority-and-applicability):
 
 Muse browser collection / review of official sources → `needs_review` → Tech Lead source
 approval → Codex structured implementation → Muse browser recheck against official sources

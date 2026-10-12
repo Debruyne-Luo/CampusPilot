@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f6f8"><meta name="color-scheme" content="light"><title>理小龙 CDUTdino</title>
+  <link rel="icon" href="/assets/v2/dino.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/assets/v2/icon-180.png"><link rel="manifest" href="/assets/v2/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/v2/app.css">
+  <script src="/assets/guidance.js" defer></script>
+  <script type="module" src="/assets/v2/main.mjs"></script>
+</head>
+<body>
+<div id="safe-probe" class="safe-probe" aria-hidden="true"></div>
+<a class="skip" href="#question">跳到提问框</a>
+<div class="app">
+  <section class="chat" aria-label="事务助手">
+    <button id="sheet-handle" class="sheet-handle" type="button" aria-label="展开或收起对话面板" aria-expanded="true"></button>
+    <header>
+      <img class="brand-mark" src="/assets/v2/dino.svg" alt="" width="34" height="34">
+      <div class="brand"><b>理小龙</b><small>CDUTdino</small></div>
+      <span id="status" class="status" role="status">正在连接…</span>
+      <button id="new-chat" class="text-button" type="button">新对话</button>
+    </header>
+    <div id="thread" class="thread" role="log" aria-live="polite" aria-label="对话记录">
+      <section id="empty" class="empty">
+        <h1>我是理小龙，少翻几篇通知，少跑一趟冤枉路。</h1>
+        <p>说出你要办的事：我先列计划、查官方依据，再给你清单和去哪办，还能带你走过去。</p>
+        <div class="chips" aria-label="试试这些问题">
+          <button type="button" class="chip" data-question="校园卡丢了怎么补办？">校园卡丢了怎么补办？</button>
+          <button type="button" class="chip" data-question="王洪辉老师的办公室在哪？">王洪辉老师的办公室在哪？</button>
+          <button type="button" class="chip" data-question="研究生在读证明怎么开？">研究生在读证明怎么开？</button>
+          <button type="button" class="chip" data-question="学生邮箱怎么激活？">学生邮箱怎么激活？</button>
+          <button type="button" class="chip" data-question="附近哪里可以拿快递？">附近哪里可以拿快递？</button>
+        </div>
+      </section>
+    </div>
+    <form id="chat-form" class="composer">
+      <label class="sr-only" for="question">你的办事问题</label>
+      <textarea id="question" rows="1" maxlength="2000" placeholder="问问补卡、找老师、去哪办…"></textarea>
+      <button id="send" type="submit" disabled><span id="send-label">发送</span></button>
+    </form>
+  </section>
+  <section class="mapwrap" aria-label="校园地图">
+    <iframe id="map-frame" class="map-view" src="/map-view" title="高德地图视图" sandbox="allow-scripts allow-same-origin"></iframe>
+    <div id="map-fallback" class="map-fallback" hidden></div>
+    <div class="map-search" role="search">
+      <label class="sr-only" for="map-search">搜索地点</label>
+      <input id="map-search" type="search" placeholder="搜索地点、食堂、学院…" autocomplete="off" enterkeyhint="search">
+      <button id="filter-clear" class="filter-clear" type="button" hidden></button>
+      <div id="search-panel" class="search-panel" hidden>
+        <div id="filters" class="filters" role="toolbar" aria-label="地点分类"></div>
+        <ul id="search-results" class="search-results" role="listbox" aria-label="搜索结果"></ul>
+      </div>
+    </div>
+    <p id="map-status" class="map-status" role="status" hidden></p>
+    <button id="locate" class="locate-button" type="button" aria-label="定位到我的位置"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3" stroke="currentColor" stroke-width="2"/></svg></button>
+    <button id="dino-demo" class="dino-demo chip" type="button" aria-pressed="false" aria-label="演示：理小龙自动走完路线" hidden>演示</button>
+    <button id="heading-toggle" class="heading-toggle chip" type="button" aria-pressed="false" hidden>🧭 北朝上</button>
+    <div id="crosshair" class="crosshair" aria-hidden="true"></div>
+    <div class="pick-bar card" role="status"><span>拖动地图把 <b>＋</b> 对准起点，或直接点地图 / 地点</span>
+      <span class="pick-actions"><button id="pick-here" class="chip go" type="button">用这里作起点</button><button id="pick-cancel" class="chip ghost" type="button">取消</button></span></div>
+    <div class="map-dock">
+    <div id="route-note" class="route-note card" role="status" hidden></div>
+    <div id="place-card" class="place-card card" aria-live="polite" hidden></div>
+    </div>
+    <div class="guidance-slot" aria-live="polite"></div>
+  </section>
+</div>
+</body>
+</html>

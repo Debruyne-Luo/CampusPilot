@@ -1,0 +1,17 @@
+html,body,#map-view{width:100%;height:100%;margin:0;padding:0;overflow:hidden}
+.campus-marker{position:relative;display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid #65816b;border-radius:50%;background:#fff;color:#314b37;font:600 17px/1 system-ui,sans-serif;box-shadow:0 2px 8px #253d2b26;cursor:pointer}
+.campus-marker.candidate{border-style:dashed;border-color:#947f4e;background:#fffdf5;color:#65552f}
+.campus-marker.confirmed{background:#365b40;color:#fff}
+.campus-marker-label{display:none;position:absolute;bottom:42px;left:50%;transform:translateX(-50%);padding:8px 12px;border:1px solid #d9dfd6;border-radius:14px;background:#fff;color:#314b37;font:600 12px/1.4 system-ui,sans-serif;white-space:nowrap;box-shadow:0 2px 8px #253d2b26;pointer-events:none}
+.campus-marker:hover .campus-marker-label,.campus-marker:focus-visible .campus-marker-label,.campus-marker.selected .campus-marker-label{display:block}
+.campus-marker.selected{outline:3px solid #365b4040;z-index:2}
+.campus-marker:focus-visible{outline:3px solid #365b40}
+.route-marker{display:grid;place-items:center;width:30px;height:30px;border:2px solid white;border-radius:50%;background:#315e43;color:white;font:600 13px/1 system-ui;box-shadow:0 2px 8px #253d2b44}
+ .guidance-location{display:block;width:20px;height:20px;background:#397dd9;border:3px solid white;border-radius:50%;box-shadow:0 0 0 9px #397dd933,0 2px 8px #163b6855}
+.guidance-location{position:relative}
+.guidance-arrow{display:none;position:absolute;left:50%;top:50%;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:12px solid #397dd9;transform:translate(-50%,-50%) rotate(var(--arrow,0deg)) translateY(-17px);transition:transform .25s linear}
+.guidance-location.has-heading .guidance-arrow{display:block}
+.guide-sprite{display:block;width:46px;height:46px;border-radius:12px;box-shadow:0 2px 6px #0003;transform-origin:50% 100%}
+.guide-sprite.walking{animation:guide-bob .5s ease-in-out infinite alternate}
+@keyframes guide-bob{to{transform:translateY(-5px) rotate(3deg)}}
+@media (prefers-reduced-motion:reduce){.guide-sprite.walking{animation:none}}

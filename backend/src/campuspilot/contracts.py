@@ -4,7 +4,13 @@ from typing import Annotated, Literal, Self
 
 from pydantic import Field, JsonValue, model_validator
 
-from campuspilot.domain import CampusOffice, CampusService, DirectoryRecord
+from campuspilot.domain import (
+    CampusOffice,
+    CampusPlace,
+    CampusService,
+    CampusTeacher,
+    DirectoryRecord,
+)
 from campuspilot.evidence import Contract as Contract
 from campuspilot.evidence import Evidence as Evidence
 from campuspilot.evidence import FieldEvidence as FieldEvidence
@@ -70,6 +76,26 @@ class DirectoryOfficeResult(DirectoryPayload):
         return self
 
 
+class PlaceSearchResult(DirectoryPayload):
+    kind: Literal["directory_places"] = "directory_places"
+    matches: tuple[CampusPlace, ...] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def referenced_evidence_present(self) -> Self:
+        check_result_evidence(self.matches, self.evidence)
+        return self
+
+
+class TeacherSearchResult(DirectoryPayload):
+    kind: Literal["directory_teachers"] = "directory_teachers"
+    matches: tuple[CampusTeacher, ...] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def referenced_evidence_present(self) -> Self:
+        check_result_evidence(self.matches, self.evidence)
+        return self
+
+
 def check_result_evidence(
     records: tuple[DirectoryRecord, ...], evidence: tuple[SourceEvidence, ...]
 ) -> None:
@@ -81,7 +107,13 @@ def check_result_evidence(
 
 
 ToolData = Annotated[
-    ServiceResult | OfficeResult | RouteResult | ServiceSearchResult | DirectoryOfficeResult,
+    ServiceResult
+    | OfficeResult
+    | RouteResult
+    | ServiceSearchResult
+    | DirectoryOfficeResult
+    | PlaceSearchResult
+    | TeacherSearchResult,
     Field(discriminator="kind"),
 ]
 

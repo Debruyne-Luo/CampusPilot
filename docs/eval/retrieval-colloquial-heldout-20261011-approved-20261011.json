@@ -1,0 +1,46 @@
+{
+  "knowledge_version": "kb-d688f53ad28dafdd",
+  "embedding_model": "@cf/baai/bge-m3",
+  "vector_backend": "sqlite-vec",
+  "rrf_k": 60,
+  "k": 5,
+  "cases": 93,
+  "results": {
+    "lexical": {
+      "all": {
+        "n": 93,
+        "recall@5": 0.7204,
+        "mrr@20": 0.6418
+      },
+      "heldout": {
+        "n": 93,
+        "recall@5": 0.7204,
+        "mrr@20": 0.6418
+      }
+    },
+    "vector": {
+      "all": {
+        "n": 93,
+        "recall@5": 0.6254,
+        "mrr@20": 0.6331
+      },
+      "heldout": {
+        "n": 93,
+        "recall@5": 0.6254,
+        "mrr@20": 0.6331
+      }
+    },
+    "hybrid": {
+      "all": {
+        "n": 93,
+        "recall@5": 0.7581,
+        "mrr@20": 0.6659
+      },
+      "heldout": {
+        "n": 93,
+        "recall@5": 0.7581,
+        "mrr@20": 0.6659
+      }
+    }
+  }
+}

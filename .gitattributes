@@ -1,0 +1,3 @@
+*.sh text eol=lf
+*.sqlite binary
+data/cdut/rag/approved-*/raw/** -text

@@ -1,4 +1,30 @@
-# CDUT public source inventory — Issue #2
+# CDUT public source inventory
+
+2026-10-09 按用户本次要求补充校园生活与地图目录：现有 40 个地点、32 个高德
+建筑/店铺参考点，全部保留 `needs_review`。网安楼按用户同楼说明关联生态环境学院
+点位，王洪辉官网办公室原文关联该建筑；不确认老师当前在场或室内入口。东教 E1A、
+E1B、E2A、E2B、E2C 分别收录，可检索教室号；E1B/E2A/E2B/E2C 独立坐标仍为空。
+补卡地点加入银杏，保留余额大于20元及设备卡种限制。芙蓉/珙桐品牌餐饮、东苑
+餐饮与菜鸟/京东/顺丰可检索。来源明确区分学校官方、高德 API 与当次用户补充；
+用户补充没有公开 URL，不能用它证明费用、开放时间或学校政策。
+新增条目与隐私/推荐契约见 [API contract](../../docs/API_CONTRACT.md)。
+
+下文的 2026-10-07/08 数量与未关联状态是历史基线，本段描述当前目录。
+
+2026-10-07 的提交版增量依据用户批准的 [ADR 0004](../../docs/adr/0004-submission-web-map-and-dify.md)。
+现在包含 4 项事务、3 个部门、20 个地点候选、5 位计算机与网络安全学院教师和 13 条来源证据。
+新增 `places.json`、`teachers.json`。全部资料仍 `needs_review`。
+2026-10-08 本地增量为 14 个地点添加高德 GCJ02 建筑坐标候选，6 个仍为 `null`，
+0 个坐标获人工确认，未开放导航。用户已部署该快照，完整 API 记录与网页字节检查通过。
+高德坐标依据独立于校园业务来源；
+导入清单、排除理由及可复现查询记录见
+[地图候选核对清单](../../docs/MAP_CANDIDATE_REVIEW.zh-CN.md)。
+王洪辉的官网文本列出网安楼 204 室，但校区、建筑关联和当前办公室未确认，`place_id=null`。
+其他 4 位办公室未收录。学生补卡指引取自 2024 年指南；2026 年寒假自助区名单仅作核验线索，
+未把旧通知的卡种、设备状态或值班时间当成 10 月现行规则。详细清单与录入方法见
+[提交版资料核验](../../docs/SUBMISSION_DATA.zh-CN.md)。
+
+以下保留 Issue #2 原始三事务来源说明，新增记录不改变其原有出处。
 
 **CONFIRMED:** Tech Lead approved Stage A and implementation for exactly three matters:
 campus card loss reporting, graduate enrollment proof, and tuition electronic receipts
