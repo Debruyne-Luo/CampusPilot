@@ -1,7 +1,8 @@
 // 理小龙 CDUTdino v2 entry: chat (SSE with fallback) + map, wired with ES modules.
 import { ask } from "./sse.mjs";
 import { initialPlan, reducePlan } from "./plan-state.mjs";
-import { createChecklistStore, sessionId } from "./checklist-store.mjs";
+import { createHandlingStore, HANDLING_KEY, legacyTicks } from "./handling-store.mjs";
+import { createHandlingUI } from "./handling-ui.mjs";
 import { FILTERS, filterList, hasPosition, searchPlaces, rankPois } from "./places.mjs";
 import { h } from "./dom.mjs";
 import { answerCards, planCard } from "./render.mjs";
@@ -14,7 +15,10 @@ import { createHeadingTracker, needsPermission, viewRotation } from "./heading.m
 
 const $ = (id) => document.getElementById(id);
 const thread = $("thread"), form = $("chat-form"), input = $("question"), send = $("send");
-const store = createChecklistStore(localStorage, sessionId(sessionStorage));
+// Access storage lazily: a denied browser storage getter must not prevent chat boot.
+const local = { getItem: (k) => window.localStorage.getItem(k), setItem: (k, v) => window.localStorage.setItem(k, v) };
+const handlingStore = createHandlingStore(local);
+addEventListener("storage", (e) => { if (e.key === HANDLING_KEY || e.key === null) handlingStore.refresh(); });
 const HEADERS = { "Content-Type": "application/json", "X-CampusPilot-Request": "1" };
 let busy = false, ready = false, allPlaces = [];
 let origin = initialOrigin(), sheet = initialSheet(), pendingTarget = null, current = null, guiding = false;
@@ -241,8 +245,8 @@ let drag = null;
 chat.addEventListener("touchstart", (e) => {
   if (!mobile() || e.touches.length !== 1) return;
   // Drag from the handle/header anywhere; inside the thread only when it is scrolled to top.
-  const inThread = e.target.closest(".thread"), onControl = e.target.closest("textarea,select,input");
-  if (onControl || (inThread && thread.scrollTop > 0 && sheet.state === "expanded")) return;
+  const inThread = e.target.closest(".thread, .handling-scroll"), onControl = e.target.closest("textarea,select,input,button,a,label,summary");
+  if ((onControl && onControl.id !== "sheet-handle") || (inThread && inThread.scrollTop > 0 && sheet.state === "expanded")) return;
   const y = e.touches[0].clientY;
   drag = { y0: y, base: sheetY, moved: false, inThread: !!inThread, samples: [[e.timeStamp, y]] };
 }, { passive: true });
@@ -275,9 +279,18 @@ chat.addEventListener("touchcancel", endDrag, { passive: true });
 input.addEventListener("focus", () => applySheet({ type: "focus-input" }));
 applySheet({ type: "noop" });
 
+const handling = createHandlingUI({
+  store: handlingStore, entry: $("handling-entry"), panel: $("handling-panel"), toast: $("handling-toast"), thread, form,
+  getPlaces: () => allPlaces,
+  getLegacyTicks: (task) => legacyTicks(task, local, { getItem: (k) => window.sessionStorage.getItem(k) }),
+  onExpand: () => applySheet({ type: "focus-input" }),
+  onFocus: (p) => { map.reveal([p.place_id]); highlight(p); collapseForMap(); },
+  onGo: go,
+});
+
 // ---- chat -----------------------------------------------------------------------------
 function bubble(text) { const b = h("div", { class: "msg-user" }, text); thread.append(b); return b; }
-function scrollEnd() { thread.scrollTo({ top: thread.scrollHeight, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
+function scrollEnd() { if (!handling.active) thread.scrollTo({ top: thread.scrollHeight, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
 
 async function submit(text) {
   if (busy || !ready || !text.trim()) return;
@@ -312,7 +325,7 @@ async function submit(text) {
   } else {
     if (!result.streamed) planHost.remove();
     else { state = reducePlan(state, { event: "final", data: {} }); paint(); }
-    const cards = answerCards(result.body, { store, onFocus: highlight, onGo: go, onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
+    const cards = answerCards(result.body, { checklistPreview: handling.preview, onFocus: highlight, onGo: go, onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
     for (const c of cards) if (c.update) placeCards.add(c);
     thread.append(...cards); cardsIn(cards);
     map.reveal((result.body.places || []).map((p) => p.place_id));
@@ -320,7 +333,7 @@ async function submit(text) {
     if (first) highlight(first);
   }
   busy = false; send.disabled = false; $("send-label").textContent = "发送";
-  if (!mobile()) input.focus({ preventScroll: true });
+  if (!mobile() && !handling.active) input.focus({ preventScroll: true });
 }
 
 form.addEventListener("submit", (e) => { e.preventDefault(); const t = input.value; input.value = ""; submit(t); });

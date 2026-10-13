@@ -61,6 +61,20 @@ authorization requirements are in [SECURITY](SECURITY.md).
 training. The approved component boundaries are in
 [ARCHITECTURE](ARCHITECTURE.md); engineering team roles do not create runtime Agents.
 
+## Browser handling checklist
+
+**CONFIRMED (2026-10-13, user-approved plan):** Students explicitly save a whole structured
+service from a chat answer into a browser-local handling checklist. A compact entry opens the
+list and service details in the existing assistant panel. Preparation checks are distinct from
+the student's own “finished” record; finishing removes the item with a brief undo, with no
+completion history. Same-service additions reuse the saved snapshot without overwriting
+progress. Saved public instructions, applicability, sources and service-linked places remain
+available after a new conversation. Storage is independent of the anonymous chat session.
+
+**REJECTED FOR V1:** Account sync, custom task editing, deadlines and notification reminders
+for this increment. No school-system write or verified institutional completion is introduced.
+See the [implementation and verification handoff](HANDLING_CHECKLIST.zh-CN.md).
+
 ## Source authority and applicability
 
 **CONFIRMED (2026-10-08, current policy):** The user explicitly authorizes direct use of

@@ -32,37 +32,12 @@ function conclusion(body) {
     body.degraded_reason ? h("p", { class: "fineprint" }, "模型答案未通过校验，以下为已收录资料。") : null);
 }
 
-function checklistCard(list, store) {
-  // Steps have their own card; the checklist holds what to bring, know and watch out for.
-  const items = (list.items || []).filter((i) => i.kind !== "step");
-  const ids = items.map((i) => i.id);
-  const counter = h("span", { class: "count" });
-  const bar = h("i");
-  const update = () => {
-    const n = store.count(list.service_id, ids);
-    counter.textContent = `${n}/${ids.length}`;
-    bar.style.width = `${ids.length ? (n / ids.length) * 100 : 0}%`;
-  };
-  const ul = h("ul", { class: "checklist" });
-  for (const item of items) {
-    const box = h("input", { type: "checkbox", id: `ck-${list.service_id}-${item.id}` });
-    box.checked = store.isDone(list.service_id, item.id);
-    box.addEventListener("change", () => { box.checked = store.toggle(list.service_id, item.id); update(); });
-    const kind = { material: "材料", input: "信息", limit: "注意", step: "步骤" }[item.kind] || "";
-    ul.append(h("li", {}, box, h("label", { for: box.id }, h("span", { class: `kind ${item.kind}` }, kind), item.text)));
-  }
-  update();
-  return h("section", { class: "card checklist-card", "aria-label": "办理清单" },
-    h("h4", {}, list.title || "办理清单", " ", counter),
-    h("div", { class: "progress", role: "presentation" }, bar), ul,
-    list.fees_note?.length ? h("p", { class: "fineprint" }, "费用：", list.fees_note.join("；")) : null);
-}
-
 function stepsCard(services) {
-  const steps = services.flatMap((s) => s.steps || []).slice(0, 6);
+  const steps = services.flatMap((s) => s.steps || []);
   if (!steps.length) return null;
-  return h("section", { class: "card" }, h("h4", {}, "办理步骤"),
-    h("ol", { class: "steps" }, steps.map((s) => h("li", {}, s.instruction))));
+  return h("details", { class: "card citations" }, h("summary", {}, "办理方式"),
+    h("ul", { class: "steps" }, steps.map((s) => h("li", {},
+      s.condition ? h("p", { class: "fineprint" }, `适用：${s.condition}`) : null, s.instruction))));
 }
 
 /**
@@ -103,13 +78,13 @@ function citationsCard(citations) {
         c.url ? h("a", { href: c.url, target: "_blank", rel: "noopener noreferrer" }, " 查看原文") : null))));
 }
 
-export function answerCards(body, { store, onFocus, onGo, onFrom, origin = null }) {
+export function answerCards(body, { checklistPreview, onFocus, onGo, onFrom, origin = null }) {
   const teachers = (body.teachers || []).map((t) =>
     h("section", { class: "card" }, h("h4", {}, "老师"), h("p", { class: "conclusion" }, t.name),
       h("p", {}, [t.department, t.office].filter(Boolean).join(" · "))));
   return [
     conclusion(body),
-    body.checklist?.items?.some((i) => i.kind !== "step") ? checklistCard(body.checklist, store) : null,
+    checklistPreview?.(body),
     stepsCard(body.services || []),
     ...teachers,
     placesCard(body.places || [], { onFocus, onGo, onFrom, origin }),

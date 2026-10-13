@@ -136,7 +136,7 @@ a policy explanation can use Retrieval; a route uses GIS. One task may combine t
 | Backend Web framework / HTTP transport | CONFIRMED | FastAPI/Uvicorn shared backend for web and tools; ADR 0004 |
 | Frontend technology | CONFIRMED | Existing plain HTML/CSS/JS responsive web; ADR 0004 |
 | Specific LLM provider/model | OPEN | Evaluate capability, quality, permitted data handling, latency, cost |
-| Submission persistence | CONFIRMED | JSON directory and in-memory sessions; no database, restart resets conversations |
+| Submission persistence | CONFIRMED | JSON directory and in-memory sessions; no database, restart resets conversations. The 2026-10-13 [handling checklist](HANDLING_CHECKLIST.zh-CN.md) separately saves public service snapshots and user ticks in browser localStorage, independent of chat sessions |
 | Specific GIS/map provider | CONFIRMED | Amap base map, embedded one-shot walking reference routes over provider candidates, and separately gated external navigation; ADR 0004 |
 | MCP | DEFERRED | An actual integration must justify the protocol |
 | Embeddings / vector database | DEFERRED | Representative retrieval evaluation must justify them |

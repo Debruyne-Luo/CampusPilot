@@ -19,6 +19,7 @@
       <div class="brand"><b>理小龙</b><small>CDUTdino</small></div>
       <span id="status" class="status" role="status">正在连接…</span>
       <button id="new-chat" class="text-button" type="button">新对话</button>
+      <button id="handling-entry" class="text-button" type="button" aria-controls="handling-panel" aria-expanded="false">办理清单</button>
     </header>
     <div id="thread" class="thread" role="log" aria-live="polite" aria-label="对话记录">
       <section id="empty" class="empty">
@@ -33,6 +34,7 @@
         </div>
       </section>
     </div>
+    <section id="handling-panel" class="handling-panel" aria-label="我的办理清单" hidden></section>
     <form id="chat-form" class="composer">
       <label class="sr-only" for="question">你的办事问题</label>
       <textarea id="question" rows="1" maxlength="2000" placeholder="问问补卡、找老师、去哪办…"></textarea>
@@ -65,5 +67,6 @@
     <div class="guidance-slot" aria-live="polite"></div>
   </section>
 </div>
+<div id="handling-toast" class="handling-toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>
