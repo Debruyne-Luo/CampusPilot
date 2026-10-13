@@ -61,10 +61,11 @@ Read the relevant contracts and accepted [ADRs](docs/adr/README.md) before chang
 
 ## Current repository stage
 
-2026-10-12 user direction: organize the repository around the currently deployed version.
-The live source is `31ed5bb0264d927c7918046b66b2947c013e8205`, release `r-0f1805acf68e`.
+2026-10-13 user direction: deploy the handling checklist from its branch, without merging main,
+then hand off desktop redesign from this released baseline. Live source is
+`258ff205b73d6b2207d0234d26f04fcdec09134a`, release `r-994da5858c65`.
 Read [the live baseline](docs/LIVE_BASELINE.zh-CN.md) before inferring deployment state from
-older plans. Runtime code, data and dependencies must retain this baseline during this cleanup.
+older plans. Preserve this checklist behavior and saved-data compatibility during desktop redesign.
 The earlier coordinate-conversion fix is isolated in another worktree and is not deployed.
 The user reports mobile maps work; investigate the desktop issue separately before applying
 a shared map change. Do not interpret this feedback as full device or navigation acceptance.

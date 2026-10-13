@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-RECEIPT = ROOT / "docs/releases/live-20261012.manifest.json"
+RECEIPT = ROOT / "docs/releases/live-20261013.manifest.json"
 
 
 def digest(data: bytes) -> str:
