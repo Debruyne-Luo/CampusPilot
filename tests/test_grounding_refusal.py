@@ -241,12 +241,12 @@ def comparable(out: dict[str, Any]) -> dict[str, Any]:
 
 
 @pytest.mark.parametrize("question", ["学生邮箱用户名能改吗", "图书馆里有咖啡厅吗"])
-def test_flag_mode_records_but_keeps_summary_and_citations(question: str) -> None:
+def test_flag_mode_does_not_dump_unrelated_text_after_model_failure(question: str) -> None:
     flagged = run(runner(OFF_TOPIC, None, "flag"), question)
     off = run(runner(OFF_TOPIC, None, "off"), question)
     assert comparable(flagged) == off and "grounding_check" not in off
-    assert flagged["result_status"] == "limited" and flagged["answer"] != NO_BASIS_ANSWER
-    assert flagged["citations"] and flagged["excerpts"] and "grounding" not in flagged
+    assert flagged["result_status"] == "empty" and flagged["answer"] == NO_BASIS_ANSWER
+    assert not flagged["citations"] and not flagged["excerpts"] and "grounding" not in flagged
     check = flagged["grounding_check"]
     assert check["mode"] == "flag" and check["policy"] == "local-grounding-v1"
     assert check["would_refuse"] is True and set(check["decisions"]) == {"insufficient"}
@@ -282,10 +282,13 @@ def test_model_empty_status_hides_fallback_citations_in_every_mode(mode: Groundi
     assert out["citations"] == [] and out["excerpts"] == []
 
 
-def test_flag_mode_grounded_question_matches_off() -> None:
+def test_grounded_fallback_shows_only_confirmed_source_titles() -> None:
     vector = INDEX.vectors[MAIL.chunk_id]
     flagged = run(runner(vector, None, "flag"), "学生邮箱怎么激活")
-    assert comparable(flagged) == run(runner(vector, None, "off"), "学生邮箱怎么激活")
+    assert flagged["result_status"] == "limited"
+    assert MAIL.title in flagged["answer"] and MAIL.text not in flagged["answer"]
+    off = run(runner(vector, None, "off"), "学生邮箱怎么激活")
+    assert off["result_status"] == "empty"  # no relevance decision, no raw-text fallback
     check = flagged["grounding_check"]
     assert check["would_refuse"] is False and MAIL.chunk_id in check["grounded_chunk_ids"]
 

@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import json
+import time
+from collections.abc import Iterator
+from contextlib import ExitStack, contextmanager
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from decimal import Decimal
@@ -129,12 +132,39 @@ class OnlineBudget:
         limit_usd: Decimal,
         max_calls: int,
         today: str | None = None,
+        max_search_flows: int = 100,
     ) -> None:
-        if not limit_usd.is_finite() or limit_usd <= 0 or max_calls <= 0:
+        if (
+            not limit_usd.is_finite()
+            or limit_usd <= 0
+            or max_calls <= 0
+            or max_search_flows <= 0
+        ):
             raise ValueError("Invalid online budget limits")
         self.root = directory / "online"
         self.limit_usd, self.max_calls = limit_usd, max_calls
         self._today = today
+        self.max_search_flows = max_search_flows
+
+    @contextmanager
+    def _lock(self) -> Iterator[None]:
+        """Serialize concurrent workers without silently dropping a reservation."""
+        deadline = time.monotonic() + 2
+        while True:
+            stack = ExitStack()
+            try:
+                stack.enter_context(publication_lock(self.root))
+            except (FileExistsError, PermissionError):
+                # Windows may return EACCES rather than EEXIST for a lock file
+                # another worker is opening/removing. The retry remains bounded.
+                stack.close()
+                if time.monotonic() >= deadline:
+                    raise BudgetExhausted("online_budget_busy") from None
+                time.sleep(0.01)
+                continue
+            with stack:
+                yield
+            return
 
     @property
     def path(self) -> Path:
@@ -143,14 +173,20 @@ class OnlineBudget:
 
     def _read(self, path: Path) -> dict[str, object]:
         if not path.exists():
-            return {"schema_version": 1, "calls": 0, "charged_usd": "0", "reservations": {}}
+            return {
+                "schema_version": 1,
+                "calls": 0,
+                "search_flows": 0,
+                "charged_usd": "0",
+                "reservations": {},
+            }
         return dict(json.loads(path.read_bytes()))
 
     def reserve(self, maximum_cost: Decimal, label: str) -> str:
         if not maximum_cost.is_finite() or maximum_cost < 0:
             raise ValueError("Unknown external request price")
         path = self.path
-        with publication_lock(self.root):
+        with self._lock():
             data = self._read(path)
             charged = Decimal(str(data["charged_usd"]))
             calls = int(str(data["calls"]))
@@ -171,7 +207,7 @@ class OnlineBudget:
 
     def settle(self, ident: str, actual_cost: Decimal | None) -> None:
         path = self.root / (ident.split(":", 1)[0] + ".json")
-        with publication_lock(self.root):
+        with self._lock():
             data = self._read(path)
             reservations = data["reservations"]
             assert isinstance(reservations, dict)
@@ -193,3 +229,33 @@ class OnlineBudget:
 
     def report(self) -> dict[str, object]:
         return self._read(self.path)
+
+    def reserve_search_flow(self) -> str:
+        """Count a turn's single web flow separately from Jev/provider request calls.
+
+        The slot remains consumed on timeout/failure, preventing unlimited free retries.
+        Dollar reservations are made separately for each actual provider call.
+        """
+        path = self.path
+        with self._lock():
+            data = self._read(path)
+            flows = int(str(data.get("search_flows", 0)))
+            if flows >= self.max_search_flows:
+                raise BudgetExhausted("online_search_flow_exhausted")
+            data["search_flows"] = flows + 1
+            atomic_write(path, canonical(data))
+        return path.stem + ":flow:" + str(uuid4())
+
+    def reserve_free_search_credit(self, monthly_limit: int = 1000) -> None:
+        """Conservative local Tavily basic-credit cap; account free mode is also required."""
+        if not 0 < monthly_limit <= 1000:
+            raise ValueError("Free search allowance must not exceed 1000 monthly credits")
+        month = (self._today or datetime.now(UTC).strftime("%Y%m%d"))[:6]
+        path = self.root / f"free-search-{month}.json"
+        with self._lock():
+            data = dict(json.loads(path.read_bytes())) if path.exists() else {"credits": 0}
+            credits = int(str(data["credits"]))
+            if credits >= monthly_limit:
+                raise BudgetExhausted("free_search_credit_exhausted")
+            data["credits"] = credits + 1
+            atomic_write(path, canonical(data))

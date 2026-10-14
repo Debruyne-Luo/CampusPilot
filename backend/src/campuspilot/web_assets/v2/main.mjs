@@ -1,9 +1,11 @@
 // 理小龙 CDUTdino v2 entry: chat (SSE with fallback) + map, wired with ES modules.
 import { ask } from "./sse.mjs";
+import { createAttachmentComposer } from "./attachments.mjs";
+import { createPlaceSearch, navigationTarget } from "./place-search.mjs";
 import { initialPlan, reducePlan } from "./plan-state.mjs";
 import { createHandlingStore, HANDLING_KEY, legacyTicks } from "./handling-store.mjs";
 import { createHandlingUI } from "./handling-ui.mjs";
-import { FILTERS, filterList, hasPosition, searchPlaces, rankPois } from "./places.mjs";
+import { FILTERS, filterList, hasPosition } from "./places.mjs";
 import { h } from "./dom.mjs";
 import { answerCards, planCard } from "./render.mjs";
 import { cardsIn, stepIn, tick } from "./motion.mjs";
@@ -21,6 +23,11 @@ const handlingStore = createHandlingStore(local);
 addEventListener("storage", (e) => { if (e.key === HANDLING_KEY || e.key === null) handlingStore.refresh(); });
 const HEADERS = { "Content-Type": "application/json", "X-CampusPilot-Request": "1" };
 let busy = false, ready = false, allPlaces = [];
+let conversationRevision = 0, chatController = null;
+const placeSearch = createPlaceSearch();
+let attachments;
+attachments = createAttachmentComposer({ form, input, canEdit: () => ready && !busy,
+  onChange: () => { send.disabled = busy || !ready || !attachments?.ready; } });
 let origin = initialOrigin(), sheet = initialSheet(), pendingTarget = null, current = null, guiding = false;
 const placeCards = new Set();
 
@@ -149,7 +156,7 @@ async function go(raw) {
   }
   pendingTarget = null;
   note(`正在规划：${origin.label} → ${target.name}…`);
-  const dest = target.place ? { place_id: target.place.place_id } : { position: toGcj02(target.position) };
+  const dest = target.place ? navigationTarget(target.place) : { position: toGcj02(target.position) };
   const r = await map.route(dest, routeOrigin(origin));
   const change = () => h("button", { type: "button", class: "chip ghost", onclick: () => note(...originChooser("换个起点：")) }, "换起点");
   if (r.status !== "success") { note(h("span", {}, r.message || "暂未取得步行路线，可换个起点再试。"), change()); return; }
@@ -289,14 +296,27 @@ const handling = createHandlingUI({
 });
 
 // ---- chat -----------------------------------------------------------------------------
-function bubble(text) { const b = h("div", { class: "msg-user" }, text); thread.append(b); return b; }
+function bubble(text, images = []) {
+  const b = h("div", { class: "msg-user" }, text,
+    images.length ? h("div", { class: "message-images" }, images.map((p) => h("img", { src: p.url, alt: p.name }))) : null);
+  thread.append(b); return b;
+}
+function pickDestination() {
+  if (!map.pickDestination()) { note("地图尚未加载，可稍后重试。地点搜索不需要等待地图。"); return; }
+  collapseForMap(); note("点击地图上的目的地，地图文字地点也可直接点击。");
+}
 function scrollEnd() { if (!handling.active) thread.scrollTo({ top: thread.scrollHeight, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
 
 async function submit(text) {
-  if (busy || !ready || !text.trim()) return;
+  if (busy || !ready || (!text.trim() && !attachments.count)) return;
+  if (!attachments.ready) { attachments.report("请等待图片上传完成，或重试／移除失败的图片。"); return; }
+  const ticket = conversationRevision;
+  const attachmentIds = attachments.ids(), images = attachments.previews();
+  chatController = new AbortController();
   busy = true; send.disabled = true; $("send-label").textContent = "思考中";
+  $("new-chat").disabled = true; attachments.refresh();
   $("empty")?.remove();
-  bubble(text); scrollEnd();
+  bubble(text, images); scrollEnd();
   let state = initialPlan();
   const planHost = h("div", { class: "plan-host" });
   const live = h("p", { class: "conclusion streaming", "aria-live": "polite" });
@@ -314,32 +334,42 @@ async function submit(text) {
     }
   };
   const result = await ask(text, (e) => {
+    if (ticket !== conversationRevision) return;
     state = reducePlan(state, e);
     if (e.event === "answer_delta") { if (!live.isConnected) thread.append(live); live.textContent = state.answer; }
     else paint();
     scrollEnd();
-  });
+  }, fetch, { attachmentIds, signal: chatController.signal });
+  if (ticket !== conversationRevision) return;
   live.remove();
   if (!result.ok) {
     thread.append(h("div", { class: "card error", role: "alert" }, result.body?.message || "暂时无法回答，请稍后再试。"));
   } else {
     if (!result.streamed) planHost.remove();
     else { state = reducePlan(state, { event: "final", data: {} }); paint(); }
-    const cards = answerCards(result.body, { checklistPreview: handling.preview, onFocus: highlight, onGo: go, onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
+    attachments.sent();
+    const cards = answerCards(result.body, { checklistPreview: handling.preview, onFocus: highlight, onGo: go, onMapPick: pickDestination, onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
     for (const c of cards) if (c.update) placeCards.add(c);
     thread.append(...cards); cardsIn(cards);
+    map.addPlaces(result.body.places || []);
     map.reveal((result.body.places || []).map((p) => p.place_id));
-    const first = (result.body.places || []).find((p) => p.position);
-    if (first) highlight(first);
   }
-  busy = false; send.disabled = false; $("send-label").textContent = "发送";
+  busy = false; chatController = null; $("new-chat").disabled = false; $("send-label").textContent = "发送"; attachments.refresh();
   if (!mobile() && !handling.active) input.focus({ preventScroll: true });
 }
 
-form.addEventListener("submit", (e) => { e.preventDefault(); const t = input.value; input.value = ""; submit(t); });
+form.addEventListener("submit", (e) => { e.preventDefault(); if (busy || !ready || !attachments.ready || (!input.value.trim() && !attachments.count)) return; const t = input.value; input.value = ""; submit(t); });
 input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); } });
 document.querySelectorAll("[data-question]").forEach((b) => b.addEventListener("click", () => submit(b.dataset.question)));
-$("new-chat").addEventListener("click", async () => { await fetch("/api/session", { method: "POST", headers: HEADERS }); location.reload(); });
+$("new-chat").addEventListener("click", async () => {
+  if (busy) return;
+  $("new-chat").disabled = true;
+  try {
+    const response = await fetch("/api/session/reset", { method: "POST", headers: HEADERS, credentials: "same-origin" });
+    if (!response.ok) throw new Error("reset failed");
+    conversationRevision++; chatController?.abort(); placeSearch.cancel(); attachments.clear(); location.reload();
+  } catch { $("status").textContent = "新对话未能创建，请重试"; $("new-chat").disabled = false; }
+});
 $("locate").addEventListener("click", async () => {
   if (await locate()) { const p = routeOrigin(origin); if (p) map.centerOn(toGcj02(p)); }
   else note(...originChooser("无法定位，可这样选起点："));
@@ -349,21 +379,21 @@ $("locate").addEventListener("click", async () => {
 const searchBox = $("map-search"), results = $("search-results"), panel = $("search-panel"), filters = $("filters"), clearBtn = $("filter-clear");
 let searchTimer = 0, searchToken = 0, filterId = "all";
 function openPanel() { panel.hidden = false; }
-function closeSearch() { panel.hidden = true; results.replaceChildren(); }
+function closeSearch() { clearTimeout(searchTimer); searchToken++; placeSearch.cancel(); panel.hidden = true; results.replaceChildren(); }
 function resultRow(label, sub, pick) {
   return h("li", { role: "option" }, h("button", { type: "button", onclick: () => { closeSearch(); searchBox.value = ""; searchBox.blur(); pick(); } }, h("b", {}, label), sub ? h("small", {}, sub) : null));
 }
 const pickPlace = (p) => { map.reveal([p.place_id]); highlight(p); collapseForMap(); };
 async function runSearch(q) {
   const token = ++searchToken;
-  const local = searchPlaces(allPlaces, q);
-  const rows = local.map((p) => resultRow(p.name, null, () => pickPlace(p)));
-  results.replaceChildren(...rows, ...(rows.length ? [] : [h("li", { class: "hint" }, "正在搜索…")])); openPanel();
-  const pois = await map.searchPoi(q);
-  if (token !== searchToken) return;
-  const extra = rankPois(pois, local, q).slice(0, 6).map((poi) => resultRow(poi.name, poi.address || null, () => { map.centerOn(poi.position); showCard({ name: poi.name, position: poi.position, poi: true }); collapseForMap(); }));
-  results.replaceChildren(...rows, ...extra);
-  if (!rows.length && !extra.length) results.replaceChildren(h("li", { class: "hint" }, "没有找到"));
+  results.replaceChildren(h("li", { class: "hint" }, "正在搜索…")); openPanel();
+  const found = await placeSearch.search(q);
+  if (token !== searchToken || !found) return;
+  const places = found.places || [];
+  map.addPlaces(places);
+  results.replaceChildren(...places.map((p) => resultRow(p.name, p.source_provider === "amap" ? `高德地图${p.address ? ` · ${p.address}` : ""}` : p.address_detail || null, () => pickPlace(p))));
+  if (found.message) results.append(h("li", { class: "hint" }, found.message));
+  if (!places.length) results.append(resultRow("在地图上选择地点", "地图文字地点也可直接点击", pickDestination));
 }
 function setFilter(id) {
   filterId = id; map.setFilter(id);
@@ -380,14 +410,16 @@ for (const f of FILTERS) {
 }
 clearBtn.addEventListener("click", () => { setFilter("all"); closeSearch(); });
 searchBox.addEventListener("focus", () => { openPanel(); if (!searchBox.value.trim()) setFilter(filterId); });
-searchBox.addEventListener("input", () => { clearTimeout(searchTimer); const q = searchBox.value.trim(); if (!q) { searchToken++; setFilter(filterId); return; } searchTimer = setTimeout(() => runSearch(q), 250); });
+searchBox.addEventListener("input", () => { clearTimeout(searchTimer); searchToken++; placeSearch.cancel(); const q = searchBox.value.trim(); if (!q) { setFilter(filterId); return; } searchTimer = setTimeout(() => runSearch(q), 250); });
 searchBox.addEventListener("keydown", (e) => { if (e.key === "Escape") { searchBox.value = ""; closeSearch(); searchBox.blur(); } if (e.key === "Enter") { e.preventDefault(); results.querySelector("button")?.click(); } });
 document.addEventListener("pointerdown", (e) => { if (!e.target.closest(".map-search")) closeSearch(); });
 
 (async () => {
   try {
     const s = await fetch("/api/session", { method: "POST", headers: HEADERS });
-    ready = s.ok; send.disabled = !ready;
+    const sessionConfig = await s.json();
+    attachments.setEnabled(sessionConfig.images_enabled === true);
+    ready = s.ok; attachments.refresh();
     $("status").textContent = ready ? "已连接" : "服务暂不可用";
     const res = await fetch("/api/places", { headers: HEADERS });
     allPlaces = (await res.json()).places || [];

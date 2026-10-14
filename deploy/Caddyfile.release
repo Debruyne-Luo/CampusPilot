@@ -3,7 +3,12 @@
 # revalidates; API responses are never cached. Access logs stay disabled.
 {$CAMPUSPILOT_DOMAIN} {
     encode zstd gzip
-    request_body {
+    @image_upload path /api/attachments
+    request_body @image_upload {
+        max_size 10MiB
+    }
+    @ordinary_body not path /api/attachments
+    request_body @ordinary_body {
         max_size 16KB
     }
     @versioned path /assets/v-*

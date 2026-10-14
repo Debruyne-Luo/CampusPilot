@@ -1,5 +1,14 @@
 # Architecture and decision register
 
+## Approved backend evidence increment (2026-10-14)
+
+**CONFIRMED:** [ADR 0006](adr/0006-online-evidence-and-user-images.md) authorizes online Jev
+before/after bounded web search, server-side transient Amap candidates, and session-owned
+user images. The implementation keeps one Agent, distinct source authority, provider adapters,
+read-only permissions and browser-only personal positions. It supersedes the historical
+shadow-only Jev and browser-only POI restrictions below. Implementation and current validation
+limits are in [the handoff](EVIDENCE_MEDIA.zh-CN.md); this increment is not deployed.
+
 ## Observed deployment (2026-10-12)
 
 For current runtime facts, use [the live baseline](LIVE_BASELINE.zh-CN.md): source `31ed5bb`,

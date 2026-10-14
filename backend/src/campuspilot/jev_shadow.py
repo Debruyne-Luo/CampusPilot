@@ -9,6 +9,7 @@ fault returns ``unknown``.
 from __future__ import annotations
 
 import asyncio
+import json
 import math
 import re
 import time
@@ -23,6 +24,7 @@ from campuspilot.chat_runtime import public_input
 from campuspilot.dify import ChatUnavailable
 from campuspilot.evaluation_budget import SpendBudget, TokenPrice
 from campuspilot.rag import RetrievalHit, canonical
+from campuspilot.web_evidence import TurnEvidenceContext
 
 OPENROUTER_ENDPOINT = "https://openrouter.ai/api/alpha/decisions"
 
@@ -90,6 +92,7 @@ class JevShadowClient:
         budget: SpendBudget,
         rule_summary: str = "",
         online: bool = False,
+        evidence_context: TurnEvidenceContext | None = None,
     ) -> ShadowResult:
         original_order = tuple(h.chunk.chunk_id for h in candidates[:4])
         if not (public_fixture or online) or not public_input(question) or not self.api_key:
@@ -107,6 +110,12 @@ class JevShadowClient:
                 flags=re.I,
             )
         )
+        context_state = evidence_context.as_state() if evidence_context is not None else {}
+        if context_state and not public_input(json.dumps(context_state, ensure_ascii=False)):
+            return ShadowResult("unknown", selected_ids=original_order, reason="private_context")
+        # Redaction applies recursively to context as well as question/passages. Image
+        # observations are kept separate, and coordinates have already been removed.
+        context_state = json.loads(redacted(json.dumps(context_state, ensure_ascii=False)))
         mapping = {f"P{i}": h.chunk.chunk_id for i, h in enumerate(clean)}
         state = {
             "question": redacted(question)[:2000],
@@ -122,6 +131,8 @@ class JevShadowClient:
                 for i, h in enumerate(clean)
             ],
         }
+        if context_state:
+            state["evidence_context"] = context_state
         questions: dict[str, object] = {
             "answer_mode": {
                 "type": "choice",
@@ -134,7 +145,11 @@ class JevShadowClient:
             },
             "search_needed": {
                 "type": "noul",
-                "instructions": "Would more retrieval add necessary evidence?",
+                "instructions": (
+                    "Would a web search add necessary factual evidence? User observations "
+                    "and images are not official facts. Map records only support locations. "
+                    "If search_completed is true, do not request another search."
+                ),
                 "criteria": {
                     "true": "Missing required evidence.",
                     "false": "Required facts already present; avoid another search.",
@@ -143,7 +158,9 @@ class JevShadowClient:
             "sufficient": {
                 "type": "noul",
                 "instructions": (
-                    "Do the passages in the state, and nothing else, answer the question?"
+                    "Do the passages, attributed directory facts and fetched web pages in "
+                    "the state answer this task? Follow the state's authority_rule. User "
+                    "observations may identify the subject but cannot prove official facts."
                 ),
                 "criteria": {
                     "true": "At least one passage states or directly implies the answer, "
@@ -211,7 +228,10 @@ class JevShadowClient:
                     raise ValueError
             need = unit(answers["search_needed"]["noul"])
             sufficient = unit(answers["sufficient"]["noul"])
-            if not clean and sufficient >= 0.7:
+            has_context_facts = bool(
+                context_state.get("directory_facts") or context_state.get("web_pages")
+            )
+            if not clean and not has_context_facts and sufficient >= 0.7:
                 raise ValueError
             scores = []
             ranks: list[dict[str, Any]] = []
@@ -283,3 +303,20 @@ class JevShadowClient:
                 latency_ms=(time.perf_counter() - started) * 1000,
                 reason="jev_unavailable_or_invalid",
             )
+
+    async def evaluate_evidence(
+        self,
+        question: str,
+        candidates: tuple[RetrievalHit, ...],
+        *,
+        public_fixture: bool,
+        budget: SpendBudget,
+        rule_summary: str = "",
+        online: bool = False,
+        evidence_context: TurnEvidenceContext,
+    ) -> ShadowResult:
+        """Extended online capability; legacy evaluate-only clients remain compatible."""
+        return await self.evaluate(
+            question, candidates, public_fixture=public_fixture, budget=budget,
+            rule_summary=rule_summary, online=online, evidence_context=evidence_context,
+        )

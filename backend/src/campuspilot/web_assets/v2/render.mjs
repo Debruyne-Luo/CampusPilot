@@ -1,9 +1,16 @@
 // Structured answer cards built from the /api/chat response contract.
 import { h } from "./dom.mjs";
 import { hasPosition } from "./places.mjs";
-import { formatDistance, rankPlaces } from "./geo.mjs";
+import { distanceMeters, formatDistance, rankPlaces } from "./geo.mjs";
 
-const STATUS = { success: "已核对引用", limited: "资料摘要（未生成答案）", needs_clarification: "需要补充信息", empty: "没有找到依据" };
+const STATUS = { success: "已核对引用", limited: "目前可确认的信息", needs_clarification: "需要补充信息", empty: "没有找到依据" };
+const DEGRADED = { upstream_timeout: "模型响应超时。", upstream_unavailable: "模型暂不可用。", output_truncated: "模型回复未完整返回。", invalid_response: "模型返回格式异常。", tool_rounds_exceeded: "本轮查询已达到次数限制。", evidence_insufficient: "当前证据不足以回答全部问题。", agent_timeout: "本轮处理超时。", agent_error: "本轮处理暂不可用。", model_not_configured: "模型尚未配置。", model_timeout: "模型响应超时。", model_failed: "模型暂不可用。", model_format: "模型返回格式异常。", invalid_format: "模型返回格式异常。", answer_validation: "部分内容未通过依据校验。", validation_failed: "部分内容未通过依据校验。", insufficient_evidence: "当前证据不足以回答全部问题。", web_search_failed: "联网搜索未完成。" };
+
+export function answerBadge(body) {
+  if (body.answer_mode === "agent_place") return "已找到地点";
+  if (body.answer_mode === "agent_image" || body.answer_mode === "image") return "图片内容";
+  return `✓ ${STATUS.success}${citedCount(body) ? ` · ${citedCount(body)} 处` : ""}`;
+}
 
 export function planCard(state) {
   const list = h("ol", { class: "plan-steps", "aria-label": "执行计划" });
@@ -27,9 +34,9 @@ function conclusion(body) {
   const status = body.result_status || "success";
   const ok = status === "success";
   return h("section", { class: `card answer ${status}` },
-    h("span", { class: `badge ${ok ? "ok" : "warn"}` }, ok ? `✓ ${STATUS.success}${citedCount(body) ? ` · ${citedCount(body)} 处` : ""}` : STATUS[status] || status),
+    h("span", { class: `badge ${ok ? "ok" : "warn"}` }, ok ? answerBadge(body) : STATUS[status] || status),
     h("p", { class: "conclusion" }, body.answer || ""),
-    body.degraded_reason ? h("p", { class: "fineprint" }, "模型答案未通过校验，以下为已收录资料。") : null);
+    body.degraded_reason ? h("p", { class: "fineprint" }, DEGRADED[body.degraded_reason] || "当前只提供能够确认的信息。") : null);
 }
 
 function stepsCard(services) {
@@ -48,15 +55,20 @@ function stepsCard(services) {
 export function placesCard(places, { onFocus, onGo, onFrom, origin = null }) {
   if (!places.length) return null;
   const list = h("ul", { class: "place-list" });
-  const card = h("section", { class: "card places-card", "aria-label": "去哪办" }, h("h4", {}, "去哪办"), list);
+  const label = places.some((p) => p.transient) ? "目的地" : "去哪办";
+  const card = h("section", { class: "card places-card", "aria-label": label }, h("h4", {}, label), list);
   card.update = (from) => {
-    const { rows, recommended } = rankPlaces(places.slice(0, 8), from);
+    const ambiguous = places.length > 1 && places.some((p) => p.transient);
+    const { rows, recommended } = ambiguous
+      ? { rows: places.slice(0, 10).map((place) => ({ place, distance: from && place.position ? distanceMeters(from, place.position) : null })), recommended: null }
+      : rankPlaces(places.slice(0, 10), from);
     list.replaceChildren(...rows.map(({ place: p, distance }) => {
       const located = hasPosition(p), best = recommended && p.place_id === recommended.place_id;
       return h("li", { class: `place-row ${best ? "best" : ""}`, "data-place-id": p.place_id },
         h("button", { type: "button", class: "place-name", onclick: () => onFocus(p), "aria-label": `${p.name}，在地图上查看` },
           h("b", {}, p.name), best ? h("span", { class: "tag-best" }, "推荐 · 最近") : null,
-          h("small", {}, located ? (distance != null ? `约 ${formatDistance(distance)}` : "在地图上查看") : "暂无位置")),
+          h("small", {}, located ? (distance != null ? `约 ${formatDistance(distance)}` : "在地图上查看") : "暂无位置"),
+          p.source_provider === "amap" ? h("small", { class: "place-source" }, `来源：高德地图${p.address ? ` · ${p.address}` : ""}`) : null),
         located ? h("span", { class: "row-actions" },
           onFrom ? h("button", { type: "button", class: "chip ghost", onclick: () => onFrom(p), title: `从${p.name}出发` }, "从这出发") : null,
           h("button", { type: "button", class: "chip go", onclick: () => onGo(p) }, "带我去")) : null);
@@ -74,11 +86,19 @@ function citationsCard(citations) {
     shown.map((c, i) => h("details", {},
       h("summary", {}, `[${i + 1}] ${c.title || c.id}`),
       h("div", { class: "cite-meta" },
-        [c.publisher, c.date ? `${c.date_kind === "retrieved" ? "采集于 " : ""}${c.date}` : null, c.audience ? `适用：${c.audience}` : null].filter(Boolean).join(" · "),
+        [c.source_label, c.publisher, c.date ? `${c.date_kind === "retrieved" ? "采集于 " : ""}${c.date}` : null, c.audience ? `适用：${c.audience}` : null].filter(Boolean).join(" · "),
         c.url ? h("a", { href: c.url, target: "_blank", rel: "noopener noreferrer" }, " 查看原文") : null))));
 }
 
-export function answerCards(body, { checklistPreview, onFocus, onGo, onFrom, origin = null }) {
+function webSourcesCard(sources) {
+  if (!sources?.length) return null;
+  return h("details", { class: "card web-sources" }, h("summary", {}, "联网搜索线索（待核对）"),
+    sources.slice(0, 6).map((s) => h("p", { class: "cite-meta" },
+      h("span", {}, `${s.source_label || (s.authority?.startsWith("official_") || s.official ? "待核对官方材料" : "第三方辅助")} · `),
+      s.url ? h("a", { href: s.url, target: "_blank", rel: "noopener noreferrer" }, s.title || "查看搜索来源") : s.title || "搜索来源")));
+}
+
+export function answerCards(body, { checklistPreview, onFocus, onGo, onFrom, onMapPick, origin = null }) {
   const teachers = (body.teachers || []).map((t) =>
     h("section", { class: "card" }, h("h4", {}, "老师"), h("p", { class: "conclusion" }, t.name),
       h("p", {}, [t.department, t.office].filter(Boolean).join(" · "))));
@@ -88,6 +108,8 @@ export function answerCards(body, { checklistPreview, onFocus, onGo, onFrom, ori
     stepsCard(body.services || []),
     ...teachers,
     placesCard(body.places || [], { onFocus, onGo, onFrom, origin }),
+    body.map_pick_available && onMapPick ? h("section", { class: "card" }, h("button", { type: "button", class: "chip", onclick: onMapPick }, "在地图上选择地点")) : null,
     citationsCard(body.citations),
+    webSourcesCard(body.web_sources),
   ].filter(Boolean);
 }

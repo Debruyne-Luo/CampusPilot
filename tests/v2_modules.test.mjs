@@ -30,14 +30,26 @@ test("plan reducer tracks understanding, plan, tools, composing and final", () =
   assert.deepEqual(s.steps.map((x) => [x.key, x.status]), [["understanding", "done"], ["tool:search_service", "done"], ["tool:make_checklist", "running"]]);
   assert.equal(s.steps[0].meta, "办事 · 校园卡补办");
   s = reducePlan(s, { event: "composing", data: {} });
-  assert.equal(s.steps.find((x) => x.key === "tool:make_checklist").status, "done");
+  assert.equal(s.steps.find((x) => x.key === "tool:make_checklist").status, "empty", "composing cannot claim a tool completed without tool_end");
   s = reducePlan(reducePlan(s, { event: "answer_delta", data: { text: "先挂失" } }), { event: "answer_delta", data: { text: "再补卡" } });
   assert.equal(s.answer, "先挂失再补卡");
   s = reducePlan(s, { event: "final", data: {} });
-  assert.ok(s.done && s.steps.every((x) => x.status === "done"));
+  assert.ok(s.done);
+  assert.equal(s.steps.find((x) => x.key === "composing").status, "done");
+  assert.equal(s.steps.find((x) => x.key === "tool:make_checklist").status, "empty");
   const empty = reducePlan(initialPlan(), { event: "tool_end", data: { tool: "search_service", label: "查", status: "empty" } });
   assert.equal(empty.steps[0].status, "empty");
   assert.equal(reducePlan(s, { event: "unknown", data: {} }), s);
+});
+
+test("failed tool outcomes and degraded composition never show completed steps", () => {
+  let state = reducePlan(initialPlan(), { event: "tool_start", data: { tool: "web_search", label: "联网搜索" } });
+  state = reducePlan(state, { event: "tool_end", data: { tool: "web_search", label: "联网搜索", status: "timeout" } });
+  assert.equal(state.steps[0].status, "empty");
+  assert.equal(state.steps[0].meta, "超时");
+  state = reducePlan(state, { event: "composing", data: {} });
+  state = reducePlan(state, { event: "final", data: { degraded_reason: "evidence_insufficient" } });
+  assert.equal(state.steps.find((x) => x.key === "composing").status, "empty");
 });
 
 test("checklist store persists per session and survives bad storage", () => {

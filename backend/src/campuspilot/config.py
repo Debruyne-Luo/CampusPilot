@@ -42,6 +42,18 @@ class Settings:
     public_origin: str | None = None
     amap_key: str = field(default="", repr=False)
     amap_security_code: str = field(default="", repr=False)
+    amap_web_service_key: str = field(default="", repr=False)
+    amap_discovery: bool = False
+    images_enabled: bool = False
+    web_search: bool = False
+    web_search_provider: str = "deepseek"
+    evidence_budget_dir: str = ""
+    evidence_daily_usd: str = "1"
+    evidence_daily_flows: int = 100
+    search_input_price: str = ""
+    search_output_price: str = ""
+    tavily_api_key: str = field(default="", repr=False)
+    tavily_free_plan_confirmed: bool = False
     daily_chat_limit: int = 100
     direct_rules_report: str = ""
     retrieval_mode: str = "hybrid"
@@ -81,6 +93,18 @@ class Settings:
             public_origin=env.get("PUBLIC_ORIGIN"),
             amap_key=env.get("AMAP_JS_KEY", ""),
             amap_security_code=env.get("AMAP_SECURITY_JS_CODE", ""),
+            amap_web_service_key=env.get("AMAP_WEB_SERVICE_KEY", ""),
+            amap_discovery=env.get("CAMPUSPILOT_AMAP_DISCOVERY", "off") == "on",
+            images_enabled=env.get("CAMPUSPILOT_IMAGES", "off") == "on",
+            web_search=env.get("CAMPUSPILOT_WEB_SEARCH", "off") == "on",
+            web_search_provider=env.get("CAMPUSPILOT_WEB_SEARCH_PROVIDER", "deepseek"),
+            evidence_budget_dir=env.get("CAMPUSPILOT_EVIDENCE_BUDGET_DIR", ""),
+            evidence_daily_usd=env.get("CAMPUSPILOT_EVIDENCE_DAILY_USD", "1"),
+            evidence_daily_flows=int(env.get("CAMPUSPILOT_EVIDENCE_DAILY_FLOWS", "100")),
+            search_input_price=env.get("CAMPUSPILOT_SEARCH_INPUT_USD_PER_M", ""),
+            search_output_price=env.get("CAMPUSPILOT_SEARCH_OUTPUT_USD_PER_M", ""),
+            tavily_api_key=env.get("TAVILY_API_KEY", ""),
+            tavily_free_plan_confirmed=env.get("TAVILY_FREE_PLAN_CONFIRMED", "") == "true",
             daily_chat_limit=int(env.get("CAMPUSPILOT_DAILY_CHAT_LIMIT", "100")),
             direct_rules_report=env.get("CAMPUSPILOT_DIRECT_RULES_REPORT", ""),
             retrieval_mode=parse_retrieval_mode(env.get("CAMPUSPILOT_RETRIEVAL_MODE", "hybrid")),

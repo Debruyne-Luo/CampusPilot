@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import asyncio
+import base64
+import binascii
 import json
 from dataclasses import dataclass, field
 from typing import Annotated, Literal, Protocol, runtime_checkable
@@ -13,6 +15,82 @@ from pydantic import Field
 
 from campuspilot.contracts import Contract
 from campuspilot.dify import ChatUnavailable
+
+MAX_MODEL_IMAGE_BYTES = 2 * 1024 * 1024
+MAX_MODEL_IMAGES = 3
+IMAGE_MIME_TYPES = frozenset({"image/jpeg", "image/png", "image/webp"})
+
+
+@dataclass(frozen=True)
+class ImageInput:
+    """A server-validated session attachment; raw image bytes never enter repr or logs."""
+
+    attachment_id: str
+    mime_type: str
+    data: bytes = field(repr=False)
+
+    def __post_init__(self) -> None:
+        if (
+            self.mime_type not in IMAGE_MIME_TYPES
+            or not 0 < len(self.data) <= MAX_MODEL_IMAGE_BYTES
+        ):
+            raise ValueError("Invalid normalized image")
+
+
+def user_content(text: str, images: tuple[ImageInput, ...] = ()) -> str | list[dict[str, object]]:
+    """Build OpenAI-compatible content from text plus trusted, local image bytes."""
+    if len(images) > MAX_MODEL_IMAGES:
+        raise ChatUnavailable("invalid_request")
+    if not images:
+        return text
+    blocks: list[dict[str, object]] = [{"type": "text", "text": text}]
+    for image in images:
+        encoded = base64.b64encode(image.data).decode("ascii")
+        blocks.append(
+            {
+                "type": "image_url",
+                "image_url": {"url": f"data:{image.mime_type};base64,{encoded}"},
+            }
+        )
+    return blocks
+
+
+def validate_message_budget(messages: list[dict[str, object]]) -> None:
+    """Bound text separately from images and prohibit arbitrary remote image URLs."""
+    text_messages: list[dict[str, object]] = []
+    count = 0
+    for message in messages:
+        copied = dict(message)
+        content = copied.get("content")
+        if isinstance(content, list):
+            text_blocks: list[object] = []
+            for block in content:
+                if not isinstance(block, dict):
+                    raise ChatUnavailable("invalid_request")
+                if block.get("type") != "image_url":
+                    text_blocks.append(block)
+                    continue
+                count += 1
+                image_url = block.get("image_url")
+                url = image_url.get("url") if isinstance(image_url, dict) else None
+                if not isinstance(url, str):
+                    raise ChatUnavailable("invalid_request")
+                prefix, separator, encoded = url.partition(";base64,")
+                if separator == "" or prefix not in {f"data:{mime}" for mime in IMAGE_MIME_TYPES}:
+                    raise ChatUnavailable("invalid_request")
+                if len(encoded) > ((MAX_MODEL_IMAGE_BYTES + 2) // 3) * 4:
+                    raise ChatUnavailable("invalid_request")
+                try:
+                    image_data = base64.b64decode(encoded, validate=True)
+                except (binascii.Error, ValueError):
+                    raise ChatUnavailable("invalid_request") from None
+                if not 0 < len(image_data) <= MAX_MODEL_IMAGE_BYTES:
+                    raise ChatUnavailable("invalid_request")
+                text_blocks.append({"type": "image_url"})
+            copied["content"] = text_blocks
+        text_messages.append(copied)
+    if count > MAX_MODEL_IMAGES or len(json.dumps(text_messages, ensure_ascii=False)) > 60_000:
+        raise ChatUnavailable("invalid_request")
 
 
 class ChatTurn(Contract):
@@ -215,8 +293,7 @@ async def complete(
         payload["tool_choice"] = "auto"
     if json_mode:
         payload["response_format"] = {"type": "json_object"}
-    if len(json.dumps(messages, ensure_ascii=False)) > 60_000:
-        raise ChatUnavailable("invalid_request")
+    validate_message_budget(messages)
     try:
         async with asyncio.timeout(model.timeout_seconds):
             async with httpx.AsyncClient(

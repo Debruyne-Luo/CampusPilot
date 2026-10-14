@@ -1,0 +1,703 @@
+diff --git a/backend/src/campuspilot/web_assets/v2/main.mjs b/backend/src/campuspilot/web_assets/v2/main.mjs
+--- a/backend/src/campuspilot/web_assets/v2/main.mjs
++++ b/backend/src/campuspilot/web_assets/v2/main.mjs
+@@ -2,10 +2,12 @@
+ import { ask } from "./sse.mjs";
+ import { initDesktop } from "./desktop.mjs";
+ import {enterDesktop, isDesktop} from './desktop-motion.mjs';
++import { createAttachmentComposer } from "./attachments.mjs";
++import { createPlaceSearch, navigationTarget } from "./place-search.mjs";
+ import { initialPlan, reducePlan } from "./plan-state.mjs";
+ import { createHandlingStore, HANDLING_KEY, legacyTicks } from "./handling-store.mjs";
+ import { createHandlingUI } from "./handling-ui.mjs";
+-import { FILTERS, filterList, hasPosition, searchPlaces, rankPois } from "./places.mjs";
++import { FILTERS, filterList, hasPosition } from "./places.mjs";
+ import { h } from "./dom.mjs";
+ import { answerCards, planCard } from "./render.mjs";
+ import { cardsIn, stepIn, tick } from "./motion.mjs";
+@@ -26,6 +28,11 @@
+ const HEADERS = { "Content-Type": "application/json", "X-CampusPilot-Request": "1" };
+ let busy = false, ready = false, allPlaces = [];
+ let desktopUI = null, routeIntent = 0;
++let conversationRevision = 0, chatController = null;
++const placeSearch = createPlaceSearch();
++let attachments;
++attachments = createAttachmentComposer({ form, input, canEdit: () => ready && !busy,
++  onChange: () => { send.disabled = busy || !ready || !attachments?.ready; } });
+ let origin = initialOrigin(), sheet = initialSheet(), pendingTarget = null, current = null, guiding = false;
+ const placeCards = new Set();
+ 
+@@ -167,7 +174,7 @@
+   pendingTarget = null;
+   const intent=++routeIntent;
+   note(`正在规划：${origin.label} → ${target.name}…`);
+-  const dest = target.place ? { place_id: target.place.place_id } : { position: toGcj02(target.position) };
++  const dest = target.place ? navigationTarget(target.place) : { position: toGcj02(target.position) };
+   const r = await map.route(dest, routeOrigin(origin));
+   if(r.status==='cancelled'||(isDesktop()&&intent!==routeIntent))return;
+     const change = () => h("button", { type: "button", class: "chip ghost", onclick: () => {pendingTarget=target;note(...originChooser("换个起点："));} }, "换起点");
+@@ -321,7 +328,16 @@
+ desktopUI=initDesktop({showChat:()=>handling.showChat(),focusQuestion:()=>input.focus(),map});
+ 
+ // ---- chat -----------------------------------------------------------------------------
+-function bubble(text) { const b = h("div", { class: "msg-user" }, text); thread.append(b);if(isDesktop())enterDesktop([b],.24,8);return b; }
++function bubble(text, images = []) {
++  const b = h("div", { class: "msg-user" }, text,
++    images.length ? h("div", { class: "message-images" }, images.map((p) => h("img", { src: p.url, alt: p.name }))) : null);
++  thread.append(b); if(isDesktop())enterDesktop([b],.24,8); return b;
++}
++function pickDestination() {
++  if(isDesktop())desktopUI?.enterMap();
++  if (!map.pickDestination()) { note("地图尚未加载，可稍后重试。地点搜索不需要等待地图。"); return; }
++  collapseForMap(); note("点击地图上的目的地，地图文字地点也可直接点击。");
++}
+ let followAnswer = true;
+ thread.addEventListener("scroll", () => { followAnswer = thread.scrollHeight - thread.scrollTop - thread.clientHeight < 100; }, { passive: true });
+ function scrollEnd(force = false) {
+@@ -329,11 +345,15 @@
+ }
+ 
+ async function submit(text) {
+-  if (busy || !ready || !text.trim()) return;
++  if (busy || !ready || (!text.trim() && !attachments.count)) return;
++  if (!attachments.ready) { attachments.report("请等待图片上传完成，或重试／移除失败的图片。"); return; }
++  const ticket = conversationRevision;
++  const attachmentIds = attachments.ids(), images = attachments.previews();
++  chatController = new AbortController();
+   busy = true; send.disabled = true; $("send-label").textContent = "思考中";
+-  $("new-chat").disabled = true;
++  $("new-chat").disabled = true; attachments.refresh();
+   $("empty")?.remove();
+-  bubble(text); followAnswer = true; scrollEnd(true);
++  bubble(text, images); followAnswer = true; scrollEnd(true);
+   let state = initialPlan();
+   const planHost = h("div", { class: "plan-host" });
+   const live = h("p", { class: "conclusion streaming", "aria-live": "polite" });
+@@ -351,11 +371,13 @@
+     }
+   };
+   const result = await ask(text, (e) => {
++    if (ticket !== conversationRevision) return;
+     state = reducePlan(state, e);
+     if (e.event === "answer_delta") { if (!live.isConnected) thread.append(live); live.textContent = state.answer; }
+     else paint();
+     scrollEnd();
+-  });
++  }, fetch, { attachmentIds, signal: chatController.signal });
++  if (ticket !== conversationRevision) return;
+   if (!result.ok) {
+     if (state.answer) {
+       live.textContent = `${state.answer}\n\n（以上内容未完成，尚未核对引用）`;
+@@ -367,28 +389,29 @@
+     live.remove();
+     if (!result.streamed) planHost.remove();
+     else { state = reducePlan(state, { event: "final", data: {} }); paint(); }
+-    const cards = answerCards(result.body, { checklistPreview: handling.preview, onFocus: highlight, onGo: go, onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
++    attachments.sent();
++    const cards = answerCards(result.body, { checklistPreview: handling.preview, onFocus: highlight, onGo: go, onMapPick: pickDestination, onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
+     for (const c of cards) if (c.update) placeCards.add(c);
+     thread.append(...cards); cardsIn(cards);
++    map.addPlaces(result.body.places || []);
+     map.reveal((result.body.places || []).map((p) => p.place_id));
+-    const first = (result.body.places || []).find((p) => p.position);
+-    if (first && !isDesktop()) highlight(first);
+   }
+-  busy = false; send.disabled = false; $("new-chat").disabled = false; $("send-label").textContent = "发送";
++  busy = false; chatController = null; $("new-chat").disabled = false; $("send-label").textContent = "发送"; attachments.refresh();
+   scrollEnd();
+   if (!mobile() && !handling.active && !desktopUI?.mapMode) input.focus({ preventScroll: true });
+ }
+ 
+-form.addEventListener("submit", (e) => { e.preventDefault(); if (busy || !ready || !input.value.trim()) return; const t = input.value; input.value = ""; submit(t); });
++form.addEventListener("submit", (e) => { e.preventDefault(); if (busy || !ready || !attachments.ready || (!input.value.trim() && !attachments.count)) return; const t = input.value; input.value = ""; submit(t); });
+ input.addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); form.requestSubmit(); } });
+ document.querySelectorAll("[data-question]").forEach((b) => b.addEventListener("click", () => submit(b.dataset.question)));
+ $("new-chat").addEventListener("click", async () => {
+   if (busy) return;
++  $("new-chat").disabled = true;
+   try {
+-    const response = await fetch("/api/session", { method: "POST", headers: HEADERS });
+-    if (!response.ok) throw new Error("session unavailable");
+-    location.reload();
+-  } catch { $("status").textContent = "新对话未建立，请重试"; }
++    const response = await fetch("/api/session/reset", { method: "POST", headers: HEADERS, credentials: "same-origin" });
++    if (!response.ok) throw new Error("reset failed");
++    conversationRevision++; chatController?.abort(); placeSearch.cancel(); attachments.clear(); location.reload();
++  } catch { $("status").textContent = "新对话未能创建，请重试"; $("new-chat").disabled = false; }
+ });
+ $("locate").addEventListener("click", async () => {
+   if(demoOnly()){note(...originChooser("路线演示：选择校内起点"));return;}
+@@ -400,21 +423,21 @@
+ const searchBox = $("map-search"), results = $("search-results"), panel = $("search-panel"), filters = $("filters"), clearBtn = $("filter-clear");
+ let searchTimer = 0, searchToken = 0, filterId = "all";
+   function openPanel() { const opening=panel.hidden;panel.hidden = false;if(opening&&isDesktop())enterDesktop([panel],.18,-6); }
+-function closeSearch() { panel.hidden = true; results.replaceChildren(); }
++function closeSearch() { clearTimeout(searchTimer); searchToken++; placeSearch.cancel(); panel.hidden = true; results.replaceChildren(); }
+ function resultRow(label, sub, pick) {
+   return h("li", { role: "option" }, h("button", { type: "button", onclick: () => { closeSearch(); searchBox.value = ""; searchBox.blur(); pick(); } }, h("b", {}, label), sub ? h("small", {}, sub) : null));
+ }
+ const pickPlace = (p) => { map.reveal([p.place_id]); highlight(p); collapseForMap(); };
+ async function runSearch(q) {
+   const token = ++searchToken;
+-  const local = searchPlaces(allPlaces, q);
+-  const rows = local.map((p) => resultRow(p.name, null, () => pickPlace(p)));
+-  results.replaceChildren(...rows, ...(rows.length ? [] : [h("li", { class: "hint" }, "正在搜索…")])); openPanel();
+-  const pois = await map.searchPoi(q);
+-  if (token !== searchToken) return;
+-  const extra = rankPois(pois, local, q).slice(0, 6).map((poi) => resultRow(poi.name, poi.address || null, () => {if(isDesktop())selectPoi(poi);else{map.centerOn(poi.position);showCard({name:poi.name,position:poi.position,poi:true});collapseForMap();}}));
+-  results.replaceChildren(...rows, ...extra);
+-  if (!rows.length && !extra.length) results.replaceChildren(h("li", { class: "hint" }, "没有找到"));
++  results.replaceChildren(h("li", { class: "hint" }, "正在搜索…")); openPanel();
++  const found = await placeSearch.search(q);
++  if (token !== searchToken || !found) return;
++  const places = found.places || [];
++  map.addPlaces(places);
++  results.replaceChildren(...places.map((p) => resultRow(p.name, p.source_provider === "amap" ? `高德地图${p.address ? ` · ${p.address}` : ""}` : p.address_detail || null, () => pickPlace(p))));
++  if (found.message) results.append(h("li", { class: "hint" }, found.message));
++  if (!places.length) results.append(resultRow("在地图上选择地点", "地图文字地点也可直接点击", pickDestination));
+ }
+ function setFilter(id) {
+   filterId = id; map.setFilter(id);
+@@ -431,14 +454,16 @@
+ }
+ clearBtn.addEventListener("click", () => { setFilter("all"); closeSearch(); });
+ searchBox.addEventListener("focus", () => { openPanel(); if (!searchBox.value.trim()) setFilter(filterId); });
+-searchBox.addEventListener("input", () => { clearTimeout(searchTimer); const q = searchBox.value.trim(); if (!q) { searchToken++; setFilter(filterId); return; } searchTimer = setTimeout(() => runSearch(q), 250); });
++searchBox.addEventListener("input", () => { clearTimeout(searchTimer); searchToken++; placeSearch.cancel(); const q = searchBox.value.trim(); if (!q) { setFilter(filterId); return; } searchTimer = setTimeout(() => runSearch(q), 250); });
+ searchBox.addEventListener("keydown", (e) => { if (e.key === "Escape") { searchBox.value = ""; closeSearch(); searchBox.blur(); } if (e.key === "Enter") { e.preventDefault(); results.querySelector("button")?.click(); } });
+ document.addEventListener("pointerdown", (e) => { if (!e.target.closest(".map-search")) closeSearch(); });
+ 
+ (async () => {
+   try {
+     const s = await fetch("/api/session", { method: "POST", headers: HEADERS });
+-    ready = s.ok; send.disabled = !ready;
++    const sessionConfig = await s.json();
++    attachments.setEnabled(sessionConfig.images_enabled === true);
++    ready = s.ok; attachments.refresh();
+     $("status").textContent = ready ? "已连接" : "服务暂不可用";
+     const res = await fetch("/api/places", { headers: HEADERS });
+     allPlaces = (await res.json()).places || [];
+diff --git a/backend/src/campuspilot/web_assets/v2/map.mjs b/backend/src/campuspilot/web_assets/v2/map.mjs
+--- a/backend/src/campuspilot/web_assets/v2/map.mjs
++++ b/backend/src/campuspilot/web_assets/v2/map.mjs
+@@ -12,6 +12,7 @@
+   let mode = "loading", places = [], filter = "all", selected = null, routeSeq = 0, pendingRoute = null;
+   let extra = new Set(), searchSeq = 0, pendingSearch = null, fit = true, cameraSeq = 0;
+   let preferences = {desktop:matchMedia('(min-width:1280px)').matches,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches}, viewport = null;
++  let destinationSeq = 0, pickingDestination = false;
+   const send = (data) => frame.contentWindow?.postMessage({ type: "campuspilot-map", ...data, frame_generation: generation }, location.origin);
+   window.sendToMap = send; // guidance.js (classic script) talks to the frame through this global
+ 
+@@ -50,6 +51,10 @@
+     else if (d.action === "select") { const p = places.find((x) => x.place_id === d.place_id); if (p) onSelect(p); }
+     else if (d.action === "route-origin" && d.request_id === routeSeq) onOrigin(d.position, d.name);
+     else if (d.action === "poi-selection" && d.place) onPoi(d.place);
++    else if (d.action === "map-destination" && pickingDestination && d.request_id === destinationSeq && hasPosition({ position: d.position })) {
++      pickingDestination = false; send({ action: "discovery-cancel", request_id: ++destinationSeq });
++      onPoi({ name: "地图选定地点", position: d.position });
++    }
+     else if (d.action === "place-search-result" && pendingSearch && d.request_id === searchSeq) { pendingSearch(d.status === "success" ? d.places : []); pendingSearch = null; }
+     else if (d.action === "route-result" && pendingRoute && d.request_id === routeSeq) { pendingRoute(d); pendingRoute = null; }
+     else if (d.action === "guidance-position") window.Guidance?.receive(d);
+@@ -81,6 +86,11 @@
+     setFilter(id) { filter = id; push(); },
+     /** Places referenced by the current answer or a search are drawn in addition to hotspots. */
+     reveal(ids) { for (const id of ids) extra.add(id); push(); },
++    /** Session-only provider cards remain separate from the permanent catalogue. */
++    addPlaces(list) {
++      const known = new Set(places.map((p) => p.place_id));
++      places = [...places, ...list.filter((p) => p?.place_id && !known.has(p.place_id))];
++    },
+     /** AMap POI search near campus (frame-side); resolves [] when the map is unavailable. */
+     searchPoi(query) {
+       if (mode !== "amap") return Promise.resolve([]);
+@@ -113,6 +123,7 @@
+     },
+     /** Next map click (or marker) becomes the route origin; answered through onOrigin. */
+     pickOrigin() { if (mode !== "amap") return false; cancelPending();routeSeq += 1; send({ action: "route-pick", request_id: routeSeq }); return true; },
++    pickDestination() { if (mode !== "amap") return false; pickingDestination = true; send({ action: "destination-pick", request_id: ++destinationSeq }); return true; },
+     /** Use the map point under the on-screen crosshair (frame pixels) as the origin. */
+     pickAt(x, y) { if (mode === "amap") send({ action: "route-pick-point", request_id: routeSeq, x, y }); },
+     cancelPick() { cancelPending();routeSeq += 1; send({ action: "route-clear", request_id: routeSeq }); },
+diff --git a/backend/src/campuspilot/web_assets/v2/sse.mjs b/backend/src/campuspilot/web_assets/v2/sse.mjs
+--- a/backend/src/campuspilot/web_assets/v2/sse.mjs
++++ b/backend/src/campuspilot/web_assets/v2/sse.mjs
+@@ -20,11 +20,12 @@
+ 
+ /** Ask a question. Streams via /api/chat/stream; falls back to /api/chat when the stream
+  *  is unavailable (404/405/network) before any event arrived. Resolves to the final body. */
+-export async function ask(message, onEvent, fetchImpl = fetch) {
++export async function ask(message, onEvent, fetchImpl = fetch, { attachmentIds = [], signal } = {}) {
+   let got = false;
++  const payload = { message, ...(attachmentIds.length ? { attachment_ids: attachmentIds } : {}) };
+   try {
+     const res = await fetchImpl("/api/chat/stream", {
+-      method: "POST", headers: HEADERS, credentials: "same-origin", body: JSON.stringify({ message }),
++      method: "POST", headers: HEADERS, credentials: "same-origin", body: JSON.stringify(payload), signal,
+     });
+     if (res.ok && res.body && (res.headers.get("content-type") || "").includes("text/event-stream")) {
+       const reader = res.body.getReader();
+@@ -46,11 +47,12 @@
+       return { ok: false, status: res.status, body: await res.json().catch(() => ({})), streamed: false };
+     }
+   } catch {
++    if (signal?.aborted) return { ok: false, status: 0, body: { error_code: "cancelled", message: "对话已取消。" }, streamed: got };
+     if (got) return { ok: false, status: 0, body: { message: "连接中断，请重试。" }, streamed: true };
+   }
+   try {
+     const res = await fetchImpl("/api/chat", {
+-      method: "POST", headers: HEADERS, credentials: "same-origin", body: JSON.stringify({ message }),
++      method: "POST", headers: HEADERS, credentials: "same-origin", body: JSON.stringify(payload), signal,
+     });
+     const body = await res.json().catch(() => ({}));
+     return { ok: res.ok, status: res.status, body, streamed: false };
+diff --git a/backend/src/campuspilot/web_assets/v2/index.html b/backend/src/campuspilot/web_assets/v2/index.html
+--- a/backend/src/campuspilot/web_assets/v2/index.html
++++ b/backend/src/campuspilot/web_assets/v2/index.html
+@@ -6,6 +6,7 @@
+   <link rel="icon" href="/assets/v2/brand-icon.png" type="image/png"><link rel="apple-touch-icon" href="/assets/v2/brand-icon.png"><link rel="manifest" href="/assets/v2/manifest.webmanifest">
+   <link rel="stylesheet" href="/assets/v2/app.css">
+   <link rel="stylesheet" href="/assets/v2/desktop-enhancements.css">
++  <link rel="stylesheet" href="/assets/v2/attachments.css">
+   <script src="/assets/guidance.js" defer></script>
+   <script type="module" src="/assets/v2/main.mjs"></script>
+ </head>
+diff --git a/backend/src/campuspilot/web_assets/v2/render.mjs b/backend/src/campuspilot/web_assets/v2/render.mjs
+--- a/backend/src/campuspilot/web_assets/v2/render.mjs
++++ b/backend/src/campuspilot/web_assets/v2/render.mjs
+@@ -1,9 +1,16 @@
+ // Structured answer cards built from the /api/chat response contract.
+ import { h } from "./dom.mjs";
+ import { hasPosition } from "./places.mjs";
+-import { formatDistance, rankPlaces } from "./geo.mjs";
++import { distanceMeters, formatDistance, rankPlaces } from "./geo.mjs";
+ 
+-const STATUS = { success: "已核对引用", limited: "资料摘要（未生成答案）", needs_clarification: "需要补充信息", empty: "没有找到依据" };
++const STATUS = { success: "已核对引用", limited: "目前可确认的信息", needs_clarification: "需要补充信息", empty: "没有找到依据" };
++const DEGRADED = { upstream_timeout: "模型响应超时。", upstream_unavailable: "模型暂不可用。", output_truncated: "模型回复未完整返回。", invalid_response: "模型返回格式异常。", tool_rounds_exceeded: "本轮查询已达到次数限制。", evidence_insufficient: "当前证据不足以回答全部问题。", agent_timeout: "本轮处理超时。", agent_error: "本轮处理暂不可用。", model_not_configured: "模型尚未配置。", model_timeout: "模型响应超时。", model_failed: "模型暂不可用。", model_format: "模型返回格式异常。", invalid_format: "模型返回格式异常。", answer_validation: "部分内容未通过依据校验。", validation_failed: "部分内容未通过依据校验。", insufficient_evidence: "当前证据不足以回答全部问题。", web_search_failed: "联网搜索未完成。" };
++
++export function answerBadge(body) {
++  if (body.answer_mode === "agent_place") return "已找到地点";
++  if (body.answer_mode === "agent_image" || body.answer_mode === "image") return "图片内容";
++  return `✓ ${STATUS.success}${citedCount(body) ? ` · ${citedCount(body)} 处` : ""}`;
++}
+ 
+ export function planCard(state) {
+   const list = h("ol", { class: "plan-steps", "aria-label": "执行计划" });
+@@ -27,9 +34,9 @@
+   const status = body.result_status || "success";
+   const ok = status === "success";
+   return h("section", { class: `card answer ${status}` },
+-    h("span", { class: `badge ${ok ? "ok" : "warn"}` }, ok ? `✓ ${STATUS.success}${citedCount(body) ? ` · ${citedCount(body)} 处` : ""}` : STATUS[status] || status),
++    h("span", { class: `badge ${ok ? "ok" : "warn"}` }, ok ? answerBadge(body) : STATUS[status] || status),
+     h("p", { class: "conclusion" }, body.answer || ""),
+-    body.degraded_reason ? h("p", { class: "fineprint" }, "模型答案未通过校验，以下为已收录资料。") : null);
++    body.degraded_reason ? h("p", { class: "fineprint" }, DEGRADED[body.degraded_reason] || "当前只提供能够确认的信息。") : null);
+ }
+ 
+ function stepsCard(services) {
+@@ -48,15 +55,20 @@
+ export function placesCard(places, { onFocus, onGo, onFrom, origin = null }) {
+   if (!places.length) return null;
+   const list = h("ul", { class: "place-list" });
+-  const card = h("section", { class: "card places-card", "aria-label": "去哪办" }, h("h4", {}, "去哪办"), list);
++  const label = places.some((p) => p.transient) ? "目的地" : "去哪办";
++  const card = h("section", { class: "card places-card", "aria-label": label }, h("h4", {}, label), list);
+   card.update = (from) => {
+-    const { rows, recommended } = rankPlaces(places.slice(0, 8), from);
++    const ambiguous = places.length > 1 && places.some((p) => p.transient);
++    const { rows, recommended } = ambiguous
++      ? { rows: places.slice(0, 10).map((place) => ({ place, distance: from && place.position ? distanceMeters(from, place.position) : null })), recommended: null }
++      : rankPlaces(places.slice(0, 10), from);
+     list.replaceChildren(...rows.map(({ place: p, distance }) => {
+       const located = hasPosition(p), best = recommended && p.place_id === recommended.place_id;
+       return h("li", { class: `place-row ${best ? "best" : ""}`, "data-place-id": p.place_id },
+         h("button", { type: "button", class: "place-name", onclick: () => onFocus(p), "aria-label": `${p.name}，在地图上查看` },
+           h("b", {}, p.name), best ? h("span", { class: "tag-best" }, "推荐 · 最近") : null,
+-          h("small", {}, located ? (distance != null ? `约 ${formatDistance(distance)}` : "在地图上查看") : "暂无位置")),
++          h("small", {}, located ? (distance != null ? `约 ${formatDistance(distance)}` : "在地图上查看") : "暂无位置"),
++          p.source_provider === "amap" ? h("small", { class: "place-source" }, `来源：高德地图${p.address ? ` · ${p.address}` : ""}`) : null),
+         located ? h("span", { class: "row-actions" },
+           onFrom ? h("button", { type: "button", class: "chip ghost", onclick: () => onFrom(p), title: `从${p.name}出发` }, "从这出发") : null,
+           h("button", { type: "button", class: "chip go", onclick: () => onGo(p) }, "带我去")) : null);
+@@ -74,11 +86,19 @@
+     shown.map((c, i) => h("details", {},
+       h("summary", {}, `[${i + 1}] ${c.title || c.id}`),
+       h("div", { class: "cite-meta" },
+-        [c.publisher, c.date ? `${c.date_kind === "retrieved" ? "采集于 " : ""}${c.date}` : null, c.audience ? `适用：${c.audience}` : null].filter(Boolean).join(" · "),
++        [c.source_label, c.publisher, c.date ? `${c.date_kind === "retrieved" ? "采集于 " : ""}${c.date}` : null, c.audience ? `适用：${c.audience}` : null].filter(Boolean).join(" · "),
+         c.url ? h("a", { href: c.url, target: "_blank", rel: "noopener noreferrer" }, " 查看原文") : null))));
+ }
+ 
+-export function answerCards(body, { checklistPreview, onFocus, onGo, onFrom, origin = null }) {
++function webSourcesCard(sources) {
++  if (!sources?.length) return null;
++  return h("details", { class: "card web-sources" }, h("summary", {}, "联网搜索线索（待核对）"),
++    sources.slice(0, 6).map((s) => h("p", { class: "cite-meta" },
++      h("span", {}, `${s.source_label || (s.authority?.startsWith("official_") || s.official ? "待核对官方材料" : "第三方辅助")} · `),
++      s.url ? h("a", { href: s.url, target: "_blank", rel: "noopener noreferrer" }, s.title || "查看搜索来源") : s.title || "搜索来源")));
++}
++
++export function answerCards(body, { checklistPreview, onFocus, onGo, onFrom, onMapPick, origin = null }) {
+   const teachers = (body.teachers || []).map((t) =>
+     h("section", { class: "card" }, h("h4", {}, "老师"), h("p", { class: "conclusion" }, t.name),
+       h("p", {}, [t.department, t.office].filter(Boolean).join(" · "))));
+@@ -88,6 +108,8 @@
+     stepsCard(body.services || []),
+     ...teachers,
+     placesCard(body.places || [], { onFocus, onGo, onFrom, origin }),
++    body.map_pick_available && onMapPick ? h("section", { class: "card" }, h("button", { type: "button", class: "chip", onclick: onMapPick }, "在地图上选择地点")) : null,
+     citationsCard(body.citations),
++    webSourcesCard(body.web_sources),
+   ].filter(Boolean);
+ }
+diff --git a/backend/src/campuspilot/web_assets/v2/plan-state.mjs b/backend/src/campuspilot/web_assets/v2/plan-state.mjs
+--- a/backend/src/campuspilot/web_assets/v2/plan-state.mjs
++++ b/backend/src/campuspilot/web_assets/v2/plan-state.mjs
+@@ -9,7 +9,7 @@
+   if (i < 0) return [...steps, { key, status: "running", meta: "", ...patch }];
+   return steps.map((s, j) => (j === i ? { ...s, ...patch } : s));
+ }
+-const finishRunning = (steps) => steps.map((s) => (s.status === "running" ? { ...s, status: "done" } : s));
++const finishRunning = (steps) => steps.map((s) => (s.status === "running" ? { ...s, status: "empty", meta: "未完成" } : s));
+ 
+ export function reducePlan(state, { event, data }) {
+   let steps = state.steps;
+@@ -29,8 +29,9 @@
+       steps = upsert(finishRunning(steps), `tool:${data.tool}`, { label: data.label, status: "running" });
+       break;
+     case "tool_end": {
+-      const ok = !["empty", "skipped"].includes(data.status) && !String(data.status).includes("invalid") && data.status !== "unknown_tool";
+-      steps = upsert(steps, `tool:${data.tool}`, { label: data.label, status: ok ? "done" : "empty", meta: ok ? "" : "无结果" });
++      const ok = ["success", "done", "grounded"].includes(data.status);
++      const meta = { empty: "无结果", skipped: "跳过", timeout: "超时", not_configured: "尚未配置", quota_exceeded: "额度受限", unavailable: "暂不可用", limited: "部分信息", budget: "额度受限" }[data.status] || "未完成";
++      steps = upsert(steps, `tool:${data.tool}`, { label: data.label, status: ok ? "done" : "empty", meta: ok ? "" : meta });
+       break;
+     }
+     case "composing":
+@@ -39,7 +40,12 @@
+     case "answer_delta":
+       return { ...state, steps, answer: state.answer + (data.text || "") };
+     case "final":
+-      steps = steps.map((s) => (s.status === "running" || s.status === "pending" ? { ...s, status: s.status === "pending" ? "skipped" : "done" } : s));
++      steps = steps.map((s) => {
++        if (s.status === "pending") return { ...s, status: "skipped" };
++        if (s.status !== "running") return s;
++        const completed = s.key === "composing" && !data.degraded_reason;
++        return { ...s, status: completed ? "done" : "empty", meta: completed ? "" : "未完成" };
++      });
+       return { ...state, steps, done: true };
+     default:
+       return state;
+diff --git a/backend/src/campuspilot/web_assets/v2/attachments.mjs b/backend/src/campuspilot/web_assets/v2/attachments.mjs
+new file mode 100644
+--- /dev/null
++++ b/backend/src/campuspilot/web_assets/v2/attachments.mjs
+@@ -0,0 +1,125 @@
++// Session-owned image drafts. The chat body contains attachment references only.
++import { h } from "./dom.mjs";
++
++export const IMAGE_LIMIT = 3;
++export const IMAGE_BYTES = 10 * 1024 * 1024;
++const TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
++const HEADERS = { "X-CampusPilot-Request": "1" };
++
++export function imageProblem(file, count = 0) {
++  if (count >= IMAGE_LIMIT) return "每条消息最多 3 张图片。";
++  if (!TYPES.has(file?.type)) return "请选择 JPEG、PNG 或 WebP 图片。";
++  if (!file.size || file.size > IMAGE_BYTES) return "每张图片需大于 0 且不超过 10MB。";
++  return "";
++}
++
++/** Raw-binary upload with real progress. Synthetic tests inject an XHR implementation. */
++export function uploadImage(file, progress = () => {}, { xhrFactory = () => new XMLHttpRequest(), signal } = {}) {
++  return new Promise((resolve, reject) => {
++    const xhr = xhrFactory();
++    const finish = (error, value) => { signal?.removeEventListener("abort", abort); error ? reject(error) : resolve(value); };
++    const abort = () => xhr.abort();
++    xhr.open("POST", "/api/attachments");
++    xhr.withCredentials = true;
++    xhr.timeout = 60000;
++    xhr.setRequestHeader("Content-Type", file.type);
++    xhr.setRequestHeader("X-CampusPilot-Request", "1");
++    xhr.setRequestHeader("X-Attachment-Name", encodeURIComponent(file.name || "图片"));
++    xhr.upload.onprogress = (event) => { if (event.lengthComputable) progress(Math.round(100 * event.loaded / event.total)); };
++    xhr.onload = () => {
++      let body = {}; try { body = JSON.parse(xhr.responseText); } catch { /* invalid response */ }
++      if (xhr.status >= 200 && xhr.status < 300 && typeof body.attachment_id === "string") finish(null, body);
++      else finish(new Error(body.message || "图片上传失败，请重试。"));
++    };
++    xhr.onerror = () => finish(new Error("图片上传失败，请检查连接后重试。"));
++    xhr.ontimeout = () => finish(new Error("图片上传超时，请重试。"));
++    xhr.onabort = () => finish(new DOMException("已取消", "AbortError"));
++    if (signal?.aborted) { finish(new DOMException("已取消", "AbortError")); return; }
++    signal?.addEventListener("abort", abort, { once: true });
++    xhr.send(file);
++  });
++}
++
++export function createAttachmentComposer({ form, input, canEdit = () => true, onChange = () => {}, fetchImpl = fetch }) {
++  let drafts = [], serial = 0, generation = 0, enabled = true;
++  const host = h("div", { class: "attachment-drafts", "aria-label": "待发送图片", hidden: true });
++  const notice = h("p", { class: "attachment-notice", role: "status", hidden: true });
++  const picker = h("input", { type: "file", accept: "image/jpeg,image/png,image/webp", multiple: true, hidden: true, "aria-label": "选择校园图片" });
++  const addButton = h("button", { type: "button", class: "attach-button", "aria-label": "添加照片、课表或通知图片", title: "添加图片（最多3张）", onclick: () => picker.click() }, "+ 图片");
++  form.classList.add("has-attachments");
++  form.prepend(host, notice, picker, addButton);
++
++  const report = (message) => { notice.textContent = message; notice.hidden = !message; };
++  const notify = () => { render(); onChange(); };
++  function render() {
++    host.hidden = !drafts.length;
++    addButton.disabled = !enabled || !canEdit() || drafts.length >= IMAGE_LIMIT;
++    host.replaceChildren(...drafts.map((d) => h("figure", { class: `attachment-draft ${d.status}` },
++      h("img", { src: d.url, alt: d.file.name || "待发送图片" }),
++      h("figcaption", {}, d.status === "uploading" ? `上传 ${d.progress}%` : d.status === "ready" ? "已就绪" : d.error || "上传失败"),
++      d.status === "error" ? h("button", { type: "button", class: "attachment-retry", disabled: !canEdit(), onclick: () => upload(d) }, "重试") : null,
++      h("button", { type: "button", class: "attachment-remove", "aria-label": `移除${d.file.name || "图片"}`, disabled: !canEdit(), onclick: () => remove(d) }, "×"))));
++  }
++  async function upload(d) {
++    if (!enabled || !canEdit()) return;
++    const started = generation;
++    d.controller = new AbortController(); d.status = "uploading"; d.progress = 0; d.error = ""; notify();
++    try {
++      const data = await uploadImage(d.file, (percent) => { if (drafts.includes(d)) { d.progress = percent; render(); } }, { signal: d.controller.signal });
++      if (started !== generation || !drafts.includes(d)) {
++        // A removal can race with a successful server upload. Dispose the orphan reference.
++        await erase(data.attachment_id); return;
++      }
++      d.attachment = data; d.status = "ready"; notify();
++      // Fetch the normalized image through the protected endpoint, not an <img> URL.
++      try {
++        const response = await fetchImpl(`/api/attachments/${encodeURIComponent(data.attachment_id)}`, { headers: HEADERS, credentials: "same-origin" });
++        if (response.ok) {
++          const blob = await response.blob();
++          if (started === generation && drafts.includes(d)) { URL.revokeObjectURL(d.url); d.url = URL.createObjectURL(blob); render(); }
++        }
++      } catch { /* the existing local preview remains usable */ }
++    } catch (error) {
++      if (started !== generation || !drafts.includes(d)) return;
++      d.status = "error"; d.error = error.message || "上传失败"; notify();
++    }
++  }
++  async function erase(id) {
++    try { await fetchImpl(`/api/attachments/${encodeURIComponent(id)}`, { method: "DELETE", headers: HEADERS, credentials: "same-origin" }); } catch { /* server TTL is the cleanup fallback */ }
++  }
++  function remove(d) {
++    if (!canEdit()) return;
++    drafts = drafts.filter((x) => x !== d); d.controller?.abort(); URL.revokeObjectURL(d.url);
++    if (d.attachment) erase(d.attachment.attachment_id);
++    report(""); notify();
++  }
++  function add(files) {
++    if (!enabled || !canEdit()) return;
++    report("");
++    for (const file of files) {
++      const problem = imageProblem(file, drafts.length);
++      if (problem) { report(problem); continue; }
++      const draft = { id: ++serial, file, url: URL.createObjectURL(file), status: "uploading", progress: 0 };
++      drafts.push(draft); upload(draft);
++    }
++    notify();
++  }
++  picker.addEventListener("change", () => { add(picker.files || []); picker.value = ""; });
++  input.addEventListener("paste", (event) => {
++    const files = [...(event.clipboardData?.items || [])].filter((item) => item.kind === "file" && item.type.startsWith("image/")).map((item) => item.getAsFile()).filter(Boolean);
++    if (files.length) { event.preventDefault(); add(files); }
++  });
++  notify();
++  return {
++    get count() { return drafts.length; },
++    get ready() { return drafts.every((d) => d.status === "ready"); },
++    ids() { return drafts.filter((d) => d.status === "ready").map((d) => d.attachment.attachment_id); },
++    previews() { return drafts.map((d) => ({ url: d.url, name: d.file.name || "图片" })); },
++    refresh: notify,
++    report,
++    // Successful sends keep server attachments for follow-ups and previews in the thread.
++    sent() { drafts = []; report(""); notify(); },
++    clear() { generation++; for (const d of drafts) { d.controller?.abort(); URL.revokeObjectURL(d.url); } drafts = []; report(""); notify(); },
++    setEnabled(value) { enabled = value; addButton.hidden = !value; notify(); },
++  };
++}
+diff --git a/backend/src/campuspilot/web_assets/v2/attachments.css b/backend/src/campuspilot/web_assets/v2/attachments.css
+new file mode 100644
+--- /dev/null
++++ b/backend/src/campuspilot/web_assets/v2/attachments.css
+@@ -0,0 +1,15 @@
++/* Independent composer extension: compatible with the ongoing desktop redesign. */
++.composer.has-attachments{flex-wrap:wrap}
++.composer.has-attachments textarea{min-width:0;width:0}
++.composer .attach-button{flex:none;background:var(--brand-soft);color:var(--brand);padding:8px 10px;white-space:nowrap}
++.attachment-drafts{display:flex;gap:8px;flex-basis:100%;overflow-x:auto;padding:2px}
++.attachment-draft{position:relative;margin:0;flex:0 0 90px;max-width:110px}
++.attachment-draft img{display:block;width:90px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
++.attachment-draft figcaption{font-size:11px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere;margin-top:4px}
++.composer .attachment-remove{position:absolute;top:0;right:0;padding:0;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;line-height:24px}
++.composer .attachment-retry{padding:2px 6px;font-size:11px;background:var(--brand-soft);color:var(--brand);margin-top:2px}
++.attachment-notice{flex-basis:100%;font-size:12px;color:var(--danger);margin:0}
++.message-images{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
++.message-images img{max-width:140px;max-height:140px;object-fit:contain;border-radius:8px;background:var(--panel)}
++.place-source{color:var(--muted);font-size:12px;margin-top:3px}
++@media(max-width:420px){.composer .attach-button{padding:8px;font-size:13px}.composer.has-attachments #send{padding:8px 12px}}
+diff --git a/backend/src/campuspilot/web_assets/v2/place-search.mjs b/backend/src/campuspilot/web_assets/v2/place-search.mjs
+new file mode 100644
+--- /dev/null
++++ b/backend/src/campuspilot/web_assets/v2/place-search.mjs
+@@ -0,0 +1,29 @@
++// The server resolves names independently of iframe/SDK readiness. No user GPS is sent.
++const HEADERS = { "Content-Type": "application/json", "X-CampusPilot-Request": "1" };
++export function navigationTarget(place) {
++  return place?.transient || String(place?.place_id || "").startsWith("amap:poi:")
++    ? { position: place.position } : { place_id: place.place_id };
++}
++export function createPlaceSearch(fetchImpl = fetch) {
++  let revision = 0, active = null;
++  return {
++    cancel() { revision++; active?.abort(); active = null; },
++    async search(query) {
++      const ticket = ++revision;
++      active?.abort(); const controller = new AbortController(); active = controller;
++      try {
++        const response = await fetchImpl("/api/places/search", {
++          method: "POST", headers: HEADERS, credentials: "same-origin", signal: controller.signal,
++          body: JSON.stringify({ query }),
++        });
++        const body = await response.json();
++        if (ticket !== revision) return null;
++        if (!response.ok) return { places: [], status: "unavailable", message: body.message || "地点搜索暂不可用，请重新连接后重试。" };
++        return body;
++      } catch {
++        if (ticket !== revision) return null;
++        return { places: [], status: "unavailable", provider_status: "unavailable", message: "地点搜索连接中断，请稍后重试。" };
++      } finally { if (ticket === revision) active = null; }
++    },
++  };
++}
+diff --git a/tests/v2_evidence_media.test.mjs b/tests/v2_evidence_media.test.mjs
+new file mode 100644
+--- /dev/null
++++ b/tests/v2_evidence_media.test.mjs
+@@ -0,0 +1,91 @@
++import test from "node:test";
++import assert from "node:assert/strict";
++import { ask } from "../backend/src/campuspilot/web_assets/v2/sse.mjs";
++import { createAttachmentComposer, imageProblem, IMAGE_BYTES, uploadImage } from "../backend/src/campuspilot/web_assets/v2/attachments.mjs";
++import { createPlaceSearch, navigationTarget } from "../backend/src/campuspilot/web_assets/v2/place-search.mjs";
++import { answerBadge } from "../backend/src/campuspilot/web_assets/v2/render.mjs";
++
++test("image validation rejects oversized, empty, fourth and unsupported images", () => {
++  const valid = { type: "image/png", size: IMAGE_BYTES };
++  assert.equal(imageProblem(valid, 2), "");
++  assert.match(imageProblem(valid, 3), /最多/);
++  assert.match(imageProblem({ ...valid, size: IMAGE_BYTES + 1 }), /10MB/);
++  assert.match(imageProblem({ ...valid, size: 0 }), /10MB/);
++  assert.match(imageProblem({ ...valid, type: "image/svg+xml" }), /JPEG/);
++});
++
++test("image feature switch hides controls and rejects pasted images", () => {
++  class TestNode {
++    constructor() { this.children = []; this.events = {}; this.attributes = {}; this.classList = { add() {} }; }
++    setAttribute(k, v) { this.attributes[k] = v; }
++    addEventListener(k, v) { this.events[k] = v; }
++    append(...nodes) { this.children.push(...nodes); }
++    prepend(...nodes) { this.children.unshift(...nodes); }
++    replaceChildren(...nodes) { this.children = nodes; }
++  }
++  const previousDocument = globalThis.document, previousNode = globalThis.Node;
++  globalThis.Node = TestNode; globalThis.document = { createElement: () => new TestNode() };
++  try {
++    const form = new TestNode(), input = new TestNode();
++    const composer = createAttachmentComposer({ form, input });
++    composer.setEnabled(false);
++    const control = form.children.find((n) => n.className === "attach-button");
++    assert.equal(control.hidden, true);
++    input.events.paste({ preventDefault() {}, clipboardData: { items: [{ kind: "file", type: "image/png", getAsFile: () => ({ type: "image/png", size: 50 }) }] } });
++    assert.equal(composer.count, 0);
++    composer.setEnabled(true);
++    assert.equal(control.hidden, false);
++    assert.equal(control.disabled, false);
++  } finally { globalThis.document = previousDocument; globalThis.Node = previousNode; }
++});
++
++test("uploads send binary with browser boundary headers and surface actual progress", async () => {
++  const calls = [], progress = [];
++  const file = { name: "合成课表.png", type: "image/png", size: 50 };
++  const xhr = { upload: {}, open: (...args) => calls.push(args), setRequestHeader: (...args) => calls.push(args),
++    send(body) { assert.equal(body, file); this.upload.onprogress({ lengthComputable: true, loaded: 25, total: 50 }); this.status = 200; this.responseText = JSON.stringify({ attachment_id: "synthetic-image" }); this.onload(); } };
++  assert.equal((await uploadImage(file, (n) => progress.push(n), { xhrFactory: () => xhr })).attachment_id, "synthetic-image");
++  assert.deepEqual(progress, [50]);
++  assert.ok(calls.some(([name, value]) => name === "X-CampusPilot-Request" && value === "1"));
++  assert.ok(calls.some(([name, value]) => name === "X-Attachment-Name" && value === encodeURIComponent(file.name)));
++});
++
++test("pure image message and text fallback preserve the same attachment ids", async () => {
++  const sent = [];
++  const result = await ask("", () => {}, async (url, init) => {
++    sent.push([url, JSON.parse(init.body)]);
++    return url.endsWith("/stream") ? new Response("{}", { status: 404 }) : new Response(JSON.stringify({ answer: "Synthetic image answer" }), { status: 200 });
++  }, { attachmentIds: ["synthetic-image"] });
++  assert.equal(result.ok, true);
++  assert.deepEqual(sent.map(([, body]) => body), [{ message: "", attachment_ids: ["synthetic-image"] }, { message: "", attachment_ids: ["synthetic-image"] }]);
++});
++
++test("cancelled chat does not start the fallback request", async () => {
++  const controller = new AbortController(); controller.abort();
++  const calls = [];
++  const result = await ask("synthetic", () => {}, async (url) => { calls.push(url); throw new DOMException("aborted", "AbortError"); }, { signal: controller.signal });
++  assert.deepEqual(calls, ["/api/chat/stream"]);
++  assert.equal(result.body.error_code, "cancelled");
++});
++
++test("map search works without a map, protects header and ignores stale requests", async () => {
++  const pending = [], sent = [];
++  const service = createPlaceSearch(async (url, init) => { sent.push([url, init]); return await new Promise((resolve) => pending.push(resolve)); });
++  const first = service.search("合成旧地点"), second = service.search("合成新地点");
++  pending[1](new Response(JSON.stringify({ places: [{ place_id: "amap:poi:SYNTHETIC" }] }), { status: 200 }));
++  assert.equal((await second).places.length, 1);
++  pending[0](new Response(JSON.stringify({ places: [{ place_id: "old" }] }), { status: 200 }));
++  assert.equal(await first, null);
++  assert.equal(sent[0][0], "/api/places/search");
++  assert.equal(sent[0][1].headers["X-CampusPilot-Request"], "1");
++  assert.deepEqual(JSON.parse(sent[0][1].body), { query: "合成旧地点" });
++  assert.equal(sent[0][1].signal.aborted, true);
++});
++
++test("navigation uses provider coordinates while directory records retain IDs", () => {
++  const position = { longitude: 104.14, latitude: 30.67, coordinate_system: "GCJ02" };
++  assert.deepEqual(navigationTarget({ place_id: "amap:poi:SYNTHETIC", position }), { position });
++  assert.deepEqual(navigationTarget({ place_id: "cdut:place:synthetic", position }), { place_id: "cdut:place:synthetic" });
++  assert.equal(answerBadge({ answer_mode: "agent_place" }), "已找到地点");
++  assert.equal(answerBadge({ answer_mode: "agent_image" }), "图片内容");
++});
+diff --git a/tests/v2_modules.test.mjs b/tests/v2_modules.test.mjs
+--- a/tests/v2_modules.test.mjs
++++ b/tests/v2_modules.test.mjs
+@@ -30,14 +30,26 @@
+   assert.deepEqual(s.steps.map((x) => [x.key, x.status]), [["understanding", "done"], ["tool:search_service", "done"], ["tool:make_checklist", "running"]]);
+   assert.equal(s.steps[0].meta, "办事 · 校园卡补办");
+   s = reducePlan(s, { event: "composing", data: {} });
+-  assert.equal(s.steps.find((x) => x.key === "tool:make_checklist").status, "done");
++  assert.equal(s.steps.find((x) => x.key === "tool:make_checklist").status, "empty", "composing cannot claim a tool completed without tool_end");
+   s = reducePlan(reducePlan(s, { event: "answer_delta", data: { text: "先挂失" } }), { event: "answer_delta", data: { text: "再补卡" } });
+   assert.equal(s.answer, "先挂失再补卡");
+   s = reducePlan(s, { event: "final", data: {} });
+-  assert.ok(s.done && s.steps.every((x) => x.status === "done"));
++  assert.ok(s.done);
++  assert.equal(s.steps.find((x) => x.key === "composing").status, "done");
++  assert.equal(s.steps.find((x) => x.key === "tool:make_checklist").status, "empty");
+   const empty = reducePlan(initialPlan(), { event: "tool_end", data: { tool: "search_service", label: "查", status: "empty" } });
+   assert.equal(empty.steps[0].status, "empty");
+   assert.equal(reducePlan(s, { event: "unknown", data: {} }), s);
++});
++
++test("failed tool outcomes and degraded composition never show completed steps", () => {
++  let state = reducePlan(initialPlan(), { event: "tool_start", data: { tool: "web_search", label: "联网搜索" } });
++  state = reducePlan(state, { event: "tool_end", data: { tool: "web_search", label: "联网搜索", status: "timeout" } });
++  assert.equal(state.steps[0].status, "empty");
++  assert.equal(state.steps[0].meta, "超时");
++  state = reducePlan(state, { event: "composing", data: {} });
++  state = reducePlan(state, { event: "final", data: { degraded_reason: "evidence_insufficient" } });
++  assert.equal(state.steps.find((x) => x.key === "composing").status, "empty");
+ });
+ 
+ test("checklist store persists per session and survives bad storage", () => {

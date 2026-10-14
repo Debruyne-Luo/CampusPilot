@@ -1,21 +1,27 @@
 """Shared per-app state: browser sessions, rate limits and browser boundary helpers."""
 
 import secrets
+import threading
 import time
 from collections import deque
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from campuspilot.agent.executor import AgentRunner
+from campuspilot.attachments import AttachmentStore
 from campuspilot.chat_runtime import ChatRuntime, ConversationContext, Mode
 from campuspilot.dify import DifyClient
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.llm.chat_model import ProductionModel
 from campuspilot.llm.embedding import CloudflareEmbedder
+
+if TYPE_CHECKING:
+    from campuspilot.places_discovery import PlaceDiscovery
 
 ASSETS = Path(__file__).resolve().parent.parent / "web_assets"
 COOKIE = "campuspilot_session"
@@ -35,6 +41,7 @@ class BrowserSession:
     attempts: int = 0
     knowledge_titles: tuple[str, ...] = ()
     context: ConversationContext = field(default_factory=ConversationContext)
+    current_image_ids: tuple[str, ...] = ()
 
     @property
     def turns_exhausted(self) -> bool:
@@ -48,6 +55,7 @@ class SlidingWindow:
         self.window = window
         self.limit = limit
         self.events: deque[float] = deque()
+        self._lock = threading.RLock()
 
     def _prune(self, now: float) -> None:
         while self.events and now - self.events[0] >= self.window:
@@ -59,7 +67,17 @@ class SlidingWindow:
         return len(self.events) >= self.limit
 
     def record(self, now: float | None = None) -> None:
-        self.events.append(time.monotonic() if now is None else now)
+        with self._lock:
+            self.events.append(time.monotonic() if now is None else now)
+
+    def try_record(self, now: float | None = None) -> bool:
+        """Reserve a slot atomically for sync provider tools sharing the web event loop."""
+        with self._lock:
+            now = time.monotonic() if now is None else now
+            if self.full(now):
+                return False
+            self.events.append(now)
+            return True
 
 
 class ChatBudget:
@@ -98,15 +116,23 @@ class WebState:
     budget: ChatBudget
     embedder: CloudflareEmbedder | None = None
     agent: AgentRunner | None = None
+    attachments: AttachmentStore | None = None
+    place_discovery: "PlaceDiscovery | None" = None
     map_window: SlidingWindow = field(default_factory=lambda: SlidingWindow(60, 120))
     sessions: dict[str, BrowserSession] = field(default_factory=dict)
 
-    def check_browser(self, request: Request) -> None:
+    def check_browser(self, request: Request, *, allow_originless_get: bool = False) -> None:
         # No CORS. Custom header blocks cross-site simple forms; origin is checked as well.
         expected = self.public_origin or str(request.base_url).rstrip("/")
+        origin_ok = request.headers.get("Origin") == expected or (
+            allow_originless_get
+            and request.method == "GET"
+            and request.headers.get("Origin") is None
+            and request.headers.get("Sec-Fetch-Site") == "same-origin"
+        )
         if (
             request.headers.get("X-CampusPilot-Request") != "1"
-            or request.headers.get("Origin") != expected
+            or not origin_ok
             or request.headers.get("Sec-Fetch-Site") == "cross-site"
         ):
             raise HTTPException(403)
@@ -120,10 +146,16 @@ class WebState:
             status_code=status,
         )
 
-    def session_for(self, request: Request) -> BrowserSession:
-        self.check_browser(request)
+    def session_for(
+        self, request: Request, *, allow_originless_get: bool = False
+    ) -> BrowserSession:
+        self.check_browser(request, allow_originless_get=allow_originless_get)
         token = request.cookies.get(COOKIE, "")
         session = self.sessions.get(token)
         if session is None or session.expires < time.monotonic():
+            if session is not None:
+                if self.attachments is not None:
+                    self.attachments.cleanup_session(session.user)
+                self.sessions.pop(token, None)
             raise HTTPException(401)
         return session

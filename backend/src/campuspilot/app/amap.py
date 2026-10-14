@@ -29,9 +29,8 @@ def register(app: FastAPI, state: WebState) -> None:
         if not state.amap_key or not state.amap_security_code or path not in allowed:
             raise HTTPException(404)
         now = time.monotonic()
-        if state.map_window.full(now) or len(request.url.query) > 4096:
+        if len(request.url.query) > 4096 or not state.map_window.try_record(now):
             raise HTTPException(429)
-        state.map_window.record(now)
         params = dict(request.query_params)
         validate_route_params(path, params)
         validate_place_params(path, params)

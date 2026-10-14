@@ -30,6 +30,11 @@ GitHub `main` 是唯一长期主线；当前线上办理清单来自 `feat/handl
 
 ## 代码入口
 
+2026-10-14 的地点补查、联网补证和图片实现保留为独立可审查增量，未改变上述线上版本。
+配置、接口、验证与待验边界见 [后端交接](docs/EVIDENCE_MEDIA.zh-CN.md)、
+[独立复查记录](docs/EVIDENCE_MEDIA_QA.zh-CN.md) 和
+[桌面兼容补丁](docs/EVIDENCE_MEDIA_FRONTEND_HANDOFF.zh-CN.md)。
+
 | 目录 / 文件 | 职责 |
 | --- | --- |
 | `backend/src/campuspilot/app/` | FastAPI 应用装配、聊天/数据接口、高德代理 |

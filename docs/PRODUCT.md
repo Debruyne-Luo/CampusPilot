@@ -12,6 +12,13 @@ service has completed their request.
 
 ## V1 boundary
 
+**CONFIRMED (2026-10-14):** The backend evidence increment adds chat access to transient
+campus map places, Jev-controlled web supplementation and session-owned campus images.
+Unique exact map matches offer a navigation card; uncertain candidates require selection.
+User image text remains attributed input, never official policy. See
+[ADR 0006](adr/0006-online-evidence-and-user-images.md) and
+[implementation handoff](EVIDENCE_MEDIA.zh-CN.md) for limits and acceptance evidence.
+
 **CONFIRMED (2026-10-08, latest user request):** Provide campus-map and task-assistant
 spaces, improve mobile touch use, extend place interaction beyond the curated directory,
 and address the gap between route planning and navigation. The current web increment adds

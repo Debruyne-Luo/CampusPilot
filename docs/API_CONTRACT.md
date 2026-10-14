@@ -1,5 +1,47 @@
 # API and domain contract proposals
 
+## Approved evidence and image increment (2026-10-14)
+
+[ADR 0006](adr/0006-online-evidence-and-user-images.md) adds session-protected
+`POST /api/places/search`, `POST /api/attachments`, `GET/DELETE /api/attachments/{id}` and
+optional `attachment_ids` to ordinary/SSE chat. Empty text requires one or more attachments.
+Place results preserve `cdut:` directory identities versus transient `amap:poi:` map candidates,
+explicit `provider_status` and `resolution`; provider geometry is `location_only`.
+Session capabilities expose `images_enabled` and `place_discovery_enabled`.
+Response `web_search` carries bounded search status; `web_sources` are explicitly unverified
+leads, not successful citations. Image reading uses `answer_mode=agent_image` and user-image
+IDs, without official citations. See [limits and lifecycle](EVIDENCE_MEDIA.zh-CN.md).
+This supersedes the older no-chat-map-tool restriction below without changing business associations.
+
+The online decision boundary is application-owned `JevTurn.assess(query, candidates, local,
+evidence_context, stage)`. `stage` is `before_search` or `after_search`; the latter carries
+`search_completed=true`. A turn makes at most two actual requests, caches identical contexts,
+and shares the web-search dollar budget. The context separates the task, missing conditions,
+source-backed directory facts, attributed user observations, and at most three fetched web
+pages. Navigation coordinates are removed before transmission; image bytes are not sent to Jev.
+Zero RAG hits do not skip the decision. Decisions expose sufficient / insufficient / clarify /
+unknown and nullable `search_needed`; errors, uncertain responses or exhausted budgets cannot
+approve new web facts. Exact directory location results remain independently usable.
+
+Web evidence retains source URL/title, body, authority, retrieval/publication date and
+`access_method=direct|provider_extraction`; unknown dates stay unknown. Search snippets and
+generated overviews are excluded. Only official pages approved after search enter the campus
+fact evidence set; other pages appear as marked leads. Search completion freezes the turn's
+evidence, so a model cannot append unreviewed tool results during answer generation.
+
+Temporary map candidates contain `place_id`, `name`, `address`, `position` (finite longitude /
+latitude, `coordinate_system=GCJ02`, `source_provider=amap`), `source_url`, `source_label`,
+`match_quality=exact|candidate`, `transient=true`, and `evidence_scope=location_only`.
+`resolution=exact` requires a unique matching name / known alias; a single fuzzy result is
+still `candidates`. These objects never populate permanent directory or service associations.
+
+Conversation image state records an explicit task separately from attachment IDs and ordinary
+history. Short image follow-ups may reuse that task; unrelated campus questions exclude old
+images from model and official evidence inputs. Reset replaces all of this session state.
+Agent failures distinguish `model_format` (JSON/schema), `answer_validation` (facts/citations),
+`evidence_insufficient`, and transport timeout/unavailability. Image service failures return
+`limited`; uncertain visual evidence requests clarification instead of suggesting the API timed out.
+
 ## Backend runtime migration (2026-10-10, local implementation)
 
 ADR 0005 confirms legacy, phase1, and phase2 modes. /api/chat retains answer, services,

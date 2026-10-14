@@ -11,6 +11,7 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
   const generation = Math.floor(Math.random() * 1e9);
   let mode = "loading", places = [], filter = "all", selected = null, routeSeq = 0, pendingRoute = null;
   let extra = new Set(), searchSeq = 0, pendingSearch = null, fit = true;
+  let destinationSeq = 0, pickingDestination = false;
   const send = (data) => frame.contentWindow?.postMessage({ type: "campuspilot-map", ...data, frame_generation: generation }, location.origin);
   window.sendToMap = send; // guidance.js (classic script) talks to the frame through this global
 
@@ -45,6 +46,10 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     else if (d.action === "select") { const p = places.find((x) => x.place_id === d.place_id); if (p) onSelect(p); }
     else if (d.action === "route-origin" && d.request_id === routeSeq) onOrigin(d.position, d.name);
     else if (d.action === "poi-selection" && d.place) onPoi(d.place);
+    else if (d.action === "map-destination" && pickingDestination && d.request_id === destinationSeq && hasPosition({ position: d.position })) {
+      pickingDestination = false; send({ action: "discovery-cancel", request_id: ++destinationSeq });
+      onPoi({ name: "地图选定地点", position: d.position });
+    }
     else if (d.action === "place-search-result" && pendingSearch && d.request_id === searchSeq) { pendingSearch(d.status === "success" ? d.places : []); pendingSearch = null; }
     else if (d.action === "route-result" && pendingRoute && d.request_id === routeSeq) { pendingRoute(d); pendingRoute = null; }
     else if (d.action === "guidance-position") window.Guidance?.receive(d);
@@ -67,6 +72,11 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     setFilter(id) { filter = id; push(); },
     /** Places referenced by the current answer or a search are drawn in addition to hotspots. */
     reveal(ids) { for (const id of ids) extra.add(id); push(); },
+    /** Session-only provider cards remain separate from the permanent catalogue. */
+    addPlaces(list) {
+      const known = new Set(places.map((p) => p.place_id));
+      places = [...places, ...list.filter((p) => p?.place_id && !known.has(p.place_id))];
+    },
     /** AMap POI search near campus (frame-side); resolves [] when the map is unavailable. */
     searchPoi(query) {
       if (mode !== "amap") return Promise.resolve([]);
@@ -74,6 +84,7 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
       return new Promise((resolve) => { searchSeq += 1; pendingSearch = resolve; send({ action: "place-search", request_id: searchSeq, query }); setTimeout(() => { if (pendingSearch === resolve) { pendingSearch = null; resolve([]); } }, 8000); });
     },
     focus(place) {
+      if (!places.some((p) => p.place_id === place.place_id)) places = [...places, place];
       const known = extra.has(place.place_id) || place.hotspot === true;
       selected = place.place_id; extra.add(place.place_id);
       if (mode === "amap" && hasPosition(place)) {
@@ -94,6 +105,7 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     },
     /** Next map click (or marker) becomes the route origin; answered through onOrigin. */
     pickOrigin() { if (mode !== "amap") return false; routeSeq += 1; send({ action: "route-pick", request_id: routeSeq }); return true; },
+    pickDestination() { if (mode !== "amap") return false; pickingDestination = true; send({ action: "destination-pick", request_id: ++destinationSeq }); return true; },
     /** Use the map point under the on-screen crosshair (frame pixels) as the origin. */
     pickAt(x, y) { if (mode === "amap") send({ action: "route-pick-point", request_id: routeSeq, x, y }); },
     cancelPick() { routeSeq += 1; send({ action: "route-clear", request_id: routeSeq }); },

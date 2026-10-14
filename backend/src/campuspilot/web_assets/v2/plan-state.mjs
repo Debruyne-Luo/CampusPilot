@@ -9,7 +9,7 @@ function upsert(steps, key, patch) {
   if (i < 0) return [...steps, { key, status: "running", meta: "", ...patch }];
   return steps.map((s, j) => (j === i ? { ...s, ...patch } : s));
 }
-const finishRunning = (steps) => steps.map((s) => (s.status === "running" ? { ...s, status: "done" } : s));
+const finishRunning = (steps) => steps.map((s) => (s.status === "running" ? { ...s, status: "empty", meta: "未完成" } : s));
 
 export function reducePlan(state, { event, data }) {
   let steps = state.steps;
@@ -29,8 +29,9 @@ export function reducePlan(state, { event, data }) {
       steps = upsert(finishRunning(steps), `tool:${data.tool}`, { label: data.label, status: "running" });
       break;
     case "tool_end": {
-      const ok = !["empty", "skipped"].includes(data.status) && !String(data.status).includes("invalid") && data.status !== "unknown_tool";
-      steps = upsert(steps, `tool:${data.tool}`, { label: data.label, status: ok ? "done" : "empty", meta: ok ? "" : "无结果" });
+      const ok = ["success", "done", "grounded"].includes(data.status);
+      const meta = { empty: "无结果", skipped: "跳过", timeout: "超时", not_configured: "尚未配置", quota_exceeded: "额度受限", unavailable: "暂不可用", limited: "部分信息", budget: "额度受限" }[data.status] || "未完成";
+      steps = upsert(steps, `tool:${data.tool}`, { label: data.label, status: ok ? "done" : "empty", meta: ok ? "" : meta });
       break;
     }
     case "composing":
@@ -39,7 +40,12 @@ export function reducePlan(state, { event, data }) {
     case "answer_delta":
       return { ...state, steps, answer: state.answer + (data.text || "") };
     case "final":
-      steps = steps.map((s) => (s.status === "running" || s.status === "pending" ? { ...s, status: s.status === "pending" ? "skipped" : "done" } : s));
+      steps = steps.map((s) => {
+        if (s.status === "pending") return { ...s, status: "skipped" };
+        if (s.status !== "running") return s;
+        const completed = s.key === "composing" && !data.degraded_reason;
+        return { ...s, status: completed ? "done" : "empty", meta: completed ? "" : "未完成" };
+      });
       return { ...state, steps, done: true };
     default:
       return state;

@@ -1,3 +1,8 @@
-*.sh text eol=lf
-*.sqlite binary
-data/cdut/rag/approved-*/raw/** -text
+# Preserve generated patch bytes and their recorded SHA256 across Windows checkouts.
+# A blank diff context line contains a required space, not a source whitespace error.
+docs/patches/*.patch -text -whitespace
+
+# Runtime/model/font assets are binary and must never undergo newline conversion.
+*.glb binary
+*.blend binary
+*.woff2 binary

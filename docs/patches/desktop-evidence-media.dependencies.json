@@ -1,0 +1,38 @@
+{
+  "desktop_root": "D:\\Projects\\CampusPilot-desktop-field-notes",
+  "common_commit": "5fd207cdd557f34aae6dc6d9736815749a206308",
+  "desktop_inputs": {
+    "backend/src/campuspilot/web_assets/v2/main.mjs": "18da82bdd3026c80b78327de13e76f38224e4646b4d6aac0934e00603edab315",
+    "backend/src/campuspilot/web_assets/v2/map.mjs": "f6f4b57446bd2459928da55d7ce71bab1dabfce6e46093989a1f8f616533ece9",
+    "backend/src/campuspilot/web_assets/v2/sse.mjs": "7c75aac8e5ce8a900034a1c63b07550dffd536a754f8f3fe55bcff59bfc9214a",
+    "backend/src/campuspilot/web_assets/v2/index.html": "286b76c08d86190caba02298e2a681e31d88f27375d65e000ec1a706ef1d828f",
+    "backend/src/campuspilot/web_assets/v2/render.mjs": "ef5b783333caf030df639538eb8afae678983833b3e74699cf26f7cc33582431",
+    "backend/src/campuspilot/web_assets/v2/plan-state.mjs": "0a14cd92099e1f0ee12b1196d4676040137d8294944a3fafb891b504ff1e68da",
+    "backend/src/campuspilot/web_assets/v2/attachments.mjs": "ABSENT",
+    "backend/src/campuspilot/web_assets/v2/attachments.css": "ABSENT",
+    "backend/src/campuspilot/web_assets/v2/place-search.mjs": "ABSENT",
+    "tests/v2_evidence_media.test.mjs": "ABSENT",
+    "tests/v2_modules.test.mjs": "2d70f030f9b0288ce46aba9b0fd8045bf067f8e8811c6dc61240fd7be88e1cf7"
+  },
+  "conflicts_resolved": [
+    "main.mjs",
+    "map.mjs",
+    "sse.mjs",
+    "index.html"
+  ],
+  "remaining_conflicts": [],
+  "patch_paths": [
+    "backend/src/campuspilot/web_assets/v2/main.mjs",
+    "backend/src/campuspilot/web_assets/v2/map.mjs",
+    "backend/src/campuspilot/web_assets/v2/sse.mjs",
+    "backend/src/campuspilot/web_assets/v2/index.html",
+    "backend/src/campuspilot/web_assets/v2/render.mjs",
+    "backend/src/campuspilot/web_assets/v2/plan-state.mjs",
+    "backend/src/campuspilot/web_assets/v2/attachments.mjs",
+    "backend/src/campuspilot/web_assets/v2/attachments.css",
+    "backend/src/campuspilot/web_assets/v2/place-search.mjs",
+    "tests/v2_evidence_media.test.mjs",
+    "tests/v2_modules.test.mjs"
+  ],
+  "patch_sha256": "409f172474c110107823dfe2d900d4212ec68beaf98fbe9db83487abfb143fa3"
+}
