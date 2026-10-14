@@ -1,0 +1,27 @@
+# 图像生成提示词
+
+工具：内置 image_gen；原图为用户提供的四张校园恐龙实物照片，未复制进仓库。两项成品均保留生成工具输出的 alpha，不做后期抠图。
+
+## 3D 吉祥物
+
+Use case: stylized-concept
+Asset type: finished 3D-rendered mascot illustration for CDUTdino campus assistant desktop website, compatible with a geological field-notebook visual identity.
+Input images: all four supplied photos are subject references of the SAME pale teal four-legged long-neck dinosaur statue in foreground, photographed from several angles. Ignore the taller green dinosaur in background. Use references for character identity, not photographic setting.
+Primary request: redesign this specific campus dinosaur into a distinctive polished 3D mascot, recognizable to people who know the statue. One complete character, three-quarter front view facing slightly right, upright gently curved long neck, broad pear-shaped friendly head, short rounded muzzle, gentle closed smile, expressive dark oval eyes with small ivory sclera, four stout feet, tapering tail visibly curling to left behind body. Keep black academic mortarboard with broad square top and single ochre-gold tassel on viewer right. Keep pale mineral-teal body, warm ivory throat continuing to belly, a few terracotta and dark-teal round flank spots, modest rounded terracotta dorsal bumps and toenails. Refine proportions intentionally, large enough head for identity but retain long-neck quadruped anatomy, not a biped T-rex.
+Style: sculpted museum-design collectible, fine matte ceramic / softly satin glaze, controlled shallow highlights, refined contours, physically plausible 3D studio rendering, warm softbox lighting. Friendly intelligent campus guide, not a generic glossy AI blob. Main body #81B5AD, ivory #EEE4CC, mortarboard #26342E, ochre #D3A344, accent terracotta #A65D45. Color values guide appearance under lighting.
+Composition: portrait or square canvas, complete hat/tassel/feet/tail within frame with generous 8% margin, character fills most canvas. No ground plane, no pedestal, no cast shadow outside character. Genuinely transparent background.
+Avoid: street scene, other dinosaurs, eggs, tape on snout, dents, broken tail, damage, scarf, clothing beyond academic cap, backpack, hands, props, text, watermark, UI, decorative sparkles, plastic glare, huge anime eyes, spikes like dragon horns. Deliver a single final mascot asset, no contact sheet.
+
+## 图标首轮
+
+Use case: logo-brand
+Asset type: CDUTdino campus assistant primary brand icon, standalone flat raster master, square canvas, transparent background.
+Input image: reference of the approved 3D redesign of a campus long-neck dinosaur. Derive the SAME character identity, do not reproduce 3D shading.
+Primary request: design one distinctive professional flat emblem, showing the dinosaur HEAD AND CURVED LONG NECK ONLY in a friendly three-quarter profile facing right, wearing its broad black-green academic mortarboard and a single ochre tassel to the right. Recognizable broad pear-shaped cheek, short rounded projecting muzzle, gentle small closed smile, one visible dark oval eye with a tiny ivory highlight. Neck sweeps down toward lower left, ending in a confident clean curved cut; ivory throat inset follows the curve. The silhouette should suggest a long-neck dinosaur, never a snake or turtle. The cap and head combine into one balanced compact symbol. Preserve pale mineral teal, warm ivory, dark forest charcoal and ochre: #81B5AD, #EEE4CC, #26342E, #D3A344. Flat solid color regions only, bold controlled curves, restrained thick dark contour where needed, optical balance, almost screenprinted simplicity, crisp vector-like edges. No thin hairlines, no texture.
+Composition: exactly one isolated icon centered on square transparent canvas, approximately 80% canvas width, comfortable equal margins. No enclosing app tile, circle, shield, frame or background. Shape must read strongly reduced to a 32px navigation avatar; remove unnecessary details accordingly.
+Avoid: full body, cheeks/blush, nostril dots, multiple highlights, cap seams, tassel strand details, gradients, shadows, 3D bevel, glossy material, text, wordmark, letters, labels, mockup, multiple alternatives, sheet or presentation board. Deliver only the finished flat icon with real alpha transparency.
+
+## 图标精修
+
+Edit this CDUTdino logo into its final SMALL-SIZE BRAND ICON. Preserve this exact dinosaur face identity, pale teal body / ivory throat / dark academic mortarboard / gold tassel palette and friendly right-facing profile. One targeted refinement: simplify it for compact navigation usage. Shorten the long neck by approximately half to give the overall visible silhouette equal width and height; preserve a visible curved neck stub so it reads as a sauropod. Remove ALL gradients, highlights, simulated lighting, cap trim, extra green cap bands, texture and tiny far eye: exactly FOUR completely flat solid inks (#81B5AD, #EEE4CC, #26342E, #D3A344), plus transparency. Use one simple dark oval eye and a restrained smile, thick clean silhouette. Reduce the tassel to one bold angular gold drop hanging from a simple gold cord; remove the two separate round beads. Make the mortarboard a solid dark diamond with clean edges. No enclosing tile, no text, no background, no shadow. Square canvas, icon centered, evenly inset 12% margins. Finished professional logo master with crisp vector-like solid color shapes and genuinely transparent background. Only one icon.
+

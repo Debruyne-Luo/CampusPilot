@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f5f6f8"><meta name="color-scheme" content="light"><title>理小龙 CDUTdino</title>
-  <link rel="icon" href="/assets/v2/dino.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/assets/v2/icon-180.png"><link rel="manifest" href="/assets/v2/manifest.webmanifest">
+  <link rel="icon" href="/assets/v2/brand-icon.png" type="image/png"><link rel="apple-touch-icon" href="/assets/v2/brand-icon.png"><link rel="manifest" href="/assets/v2/manifest.webmanifest">
   <link rel="stylesheet" href="/assets/v2/app.css">
+  <link rel="stylesheet" href="/assets/v2/desktop-enhancements.css">
   <script src="/assets/guidance.js" defer></script>
   <script type="module" src="/assets/v2/main.mjs"></script>
 </head>
@@ -15,11 +16,12 @@
   <section class="chat" aria-label="事务助手">
     <button id="sheet-handle" class="sheet-handle" type="button" aria-label="展开或收起对话面板" aria-expanded="true"></button>
     <header>
-      <img class="brand-mark" src="/assets/v2/dino.svg" alt="" width="34" height="34">
+      <img class="brand-mark" src="/assets/v2/brand-icon.png" alt="" width="34" height="34">
       <div class="brand"><b>理小龙</b><small>CDUTdino</small></div>
       <span id="status" class="status" role="status">正在连接…</span>
       <button id="new-chat" class="text-button" type="button">新对话</button>
       <button id="handling-entry" class="text-button" type="button" aria-controls="handling-panel" aria-expanded="false">办理清单</button>
+      <button id="desktop-settings" class="text-button desktop-only settings-trigger" type="button" aria-label="阅读偏好" aria-haspopup="dialog" title="阅读偏好">⚙</button>
     </header>
     <div id="thread" class="thread" role="log" aria-live="polite" aria-label="对话记录">
       <section id="empty" class="empty">
@@ -34,6 +36,7 @@
         </div>
       </section>
     </div>
+    <aside id="desktop-context" class="desktop-only" aria-label="当前问题与地点"><h2 id="context-question"></h2><p id="context-answer"></p><div class="context-destination"><small>当前地点</small><strong id="context-place">还未选择地点</strong><p>地图可自由拖动。选好起点，再查看步行路线。</p></div><button id="return-reading" class="text-button" type="button">← 返回完整回答</button></aside>
     <section id="handling-panel" class="handling-panel" aria-label="我的办理清单" hidden></section>
     <form id="chat-form" class="composer">
       <label class="sr-only" for="question">你的办事问题</label>
@@ -53,6 +56,7 @@
         <ul id="search-results" class="search-results" role="listbox" aria-label="搜索结果"></ul>
       </div>
     </div>
+    <div class="desktop-map-tools desktop-only"><button id="desktop-map" class="text-button" type="button">展开地图</button><button id="route-overview" class="text-button" type="button">查看全貌</button></div>
     <p id="map-status" class="map-status" role="status" hidden></p>
     <button id="locate" class="locate-button" type="button" aria-label="定位到我的位置"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3" stroke="currentColor" stroke-width="2"/></svg></button>
     <button id="dino-demo" class="dino-demo chip" type="button" aria-pressed="false" aria-label="演示：理小龙自动走完路线" hidden>演示</button>
@@ -67,6 +71,13 @@
     <div class="guidance-slot" aria-live="polite"></div>
   </section>
 </div>
+<dialog id="reading-settings" class="reading-settings" aria-labelledby="settings-title">
+  <div class="settings-heading"><span>阅读偏好</span><button id="settings-close" type="button" class="text-button" aria-label="关闭设置">关闭</button></div>
+  <h2 id="settings-title">按你的习惯阅读。</h2><p>只影响此浏览器的桌面显示。</p>
+  <label class="setting-row" for="reading-size"><span><b>回答字号</b><small>调整回答、清单与引用的正文大小</small></span><select id="reading-size"><option value="normal">标准 · 16px</option><option value="large">较大 · 18px</option></select></label>
+  <label class="setting-row" for="reduce-motion"><span><b>减少动效</b><small>关闭内容入场过渡；始终尊重系统减少动态效果设置</small></span><input id="reduce-motion" type="checkbox"></label>
+  <p id="settings-notice" role="status"></p><div class="reading-sample"><span>阅读预览</span><p>先核对适用条件，再准备所需材料。资料来源随回答保留，方便你继续查阅。</p></div>
+</dialog>
 <div id="handling-toast" class="handling-toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

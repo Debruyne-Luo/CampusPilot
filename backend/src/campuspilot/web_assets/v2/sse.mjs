@@ -48,9 +48,13 @@ export async function ask(message, onEvent, fetchImpl = fetch) {
   } catch {
     if (got) return { ok: false, status: 0, body: { message: "连接中断，请重试。" }, streamed: true };
   }
-  const res = await fetchImpl("/api/chat", {
-    method: "POST", headers: HEADERS, credentials: "same-origin", body: JSON.stringify({ message }),
-  });
-  const body = await res.json().catch(() => ({}));
-  return { ok: res.ok, status: res.status, body, streamed: false };
+  try {
+    const res = await fetchImpl("/api/chat", {
+      method: "POST", headers: HEADERS, credentials: "same-origin", body: JSON.stringify({ message }),
+    });
+    const body = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, body, streamed: false };
+  } catch {
+    return { ok: false, status: 0, body: { message: "网络连接失败，请检查网络后重试。" }, streamed: false };
+  }
 }
