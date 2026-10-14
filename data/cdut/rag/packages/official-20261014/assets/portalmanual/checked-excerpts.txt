@@ -1,0 +1,20 @@
+[PDF page 1: visually checked cover; line breaks preserved]
+成都理工大学
+砚湖易办使用说明
+网络与信息化处
+2022 年 12 月
+
+[PDF page 3: visually checked excerpt; line wrapping normalized]
+“砚湖易办”是面向全校师生的一站式办事服务和部门协同工作的统一平台
+
+[PDF page 4: visually checked excerpt; line wrapping normalized]
+方式二：打开浏览器，输入网址：https://bsdt.cdut.edu.cn
+
+[PDF page 7: visually checked excerpt; line wrapping normalized]
+可通过搜索关键字，或按服务分类、服务对象、所属部门进行功能筛选和查找。
+
+[PDF page 8: visually checked excerpt; line wrapping normalized]
+依次点击“个人中心-待办中心-我发起的”，可以查看发出的申请事项具体办理进度。
+
+[PDF page 15: visually checked excerpt; line wrapping normalized]
+点击导航栏“待办”图标，进入“我发出的”，点击具体事项进行中的数字，在事项信息中→点击“查看详情”可以看到具体办事进度。

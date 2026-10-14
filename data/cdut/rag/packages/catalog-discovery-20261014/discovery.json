@@ -1,0 +1,1926 @@
+{
+  "schema_version": 1,
+  "method": "explicit_saved_catalog_hrefs",
+  "collected_at": "2026-10-14",
+  "collection_precision": "day",
+  "catalogs": [
+    {
+      "url": "https://xsc.cdut.edu.cn/zzgl/zzzc.htm",
+      "title": "资助政策-成都理工大学学生处",
+      "saved_file": "资助政策-成都理工大学学生处.html",
+      "source_sha256": "98a80b0f93e42f720e7505392ed002ec4afba9d42176500fddab3841b7698a84",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "channel": "browser_dom",
+      "pagination": [
+        {
+          "url": "https://xsc.cdut.edu.cn/zzgl/zzzc/1.htm",
+          "label": "2",
+          "kind": "number",
+          "href": "https://xsc.cdut.edu.cn/zzgl/zzzc/1.htm",
+          "anchor_ordinal": 78,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://xsc.cdut.edu.cn/zzgl/zzzc/1.htm",
+          "label": "下页",
+          "kind": "next",
+          "href": "https://xsc.cdut.edu.cn/zzgl/zzzc/1.htm",
+          "anchor_ordinal": 79,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://xsc.cdut.edu.cn/zzgl/zzzc/1.htm",
+          "label": "尾页",
+          "kind": "last",
+          "href": "https://xsc.cdut.edu.cn/zzgl/zzzc/1.htm",
+          "anchor_ordinal": 80,
+          "saved_catalog_supplied": false
+        }
+      ],
+      "detail_link_count": 5
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+      "title": "通知公告-计算机与网络安全学院（示范性软件学院）",
+      "saved_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+      "source_sha256": "36006027f0a92744e349ef09eaaee63d9e07f6e24793ac229608b599ad85037a",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "channel": "browser_dom",
+      "pagination": [
+        {
+          "url": "https://cist.cdut.edu.cn/index/tzgg/17.htm",
+          "label": "2",
+          "kind": "number",
+          "href": "https://cist.cdut.edu.cn/index/tzgg/17.htm",
+          "anchor_ordinal": 73,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/index/tzgg/16.htm",
+          "label": "3",
+          "kind": "number",
+          "href": "https://cist.cdut.edu.cn/index/tzgg/16.htm",
+          "anchor_ordinal": 74,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/index/tzgg/15.htm",
+          "label": "4",
+          "kind": "number",
+          "href": "https://cist.cdut.edu.cn/index/tzgg/15.htm",
+          "anchor_ordinal": 75,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/index/tzgg/14.htm",
+          "label": "5",
+          "kind": "number",
+          "href": "https://cist.cdut.edu.cn/index/tzgg/14.htm",
+          "anchor_ordinal": 76,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/index/tzgg/1.htm",
+          "label": "18",
+          "kind": "number",
+          "href": "https://cist.cdut.edu.cn/index/tzgg/1.htm",
+          "anchor_ordinal": 77,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/index/tzgg/17.htm",
+          "label": "下页",
+          "kind": "next",
+          "href": "https://cist.cdut.edu.cn/index/tzgg/17.htm",
+          "anchor_ordinal": 78,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/index/tzgg/1.htm",
+          "label": "尾页",
+          "kind": "last",
+          "href": "https://cist.cdut.edu.cn/index/tzgg/1.htm",
+          "anchor_ordinal": 79,
+          "saved_catalog_supplied": false
+        }
+      ],
+      "detail_link_count": 15
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+      "title": "团学风采-计算机与网络安全学院（示范性软件学院）",
+      "saved_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+      "source_sha256": "2b50613f52d745c7fd850a5ed1f22837654381eaf5612d5fcca1dfc7e6198b6e",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "channel": "browser_dom",
+      "pagination": [
+        {
+          "url": "https://cist.cdut.edu.cn/xtgz/txfc/11.htm",
+          "label": "2",
+          "kind": "number",
+          "href": "https://cist.cdut.edu.cn/xtgz/txfc/11.htm",
+          "anchor_ordinal": 76,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/xtgz/txfc/10.htm",
+          "label": "3",
+          "kind": "number",
+          "href": "https://cist.cdut.edu.cn/xtgz/txfc/10.htm",
+          "anchor_ordinal": 77,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/xtgz/txfc/9.htm",
+          "label": "4",
+          "kind": "number",
+          "href": "https://cist.cdut.edu.cn/xtgz/txfc/9.htm",
+          "anchor_ordinal": 78,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/xtgz/txfc/8.htm",
+          "label": "5",
+          "kind": "number",
+          "href": "https://cist.cdut.edu.cn/xtgz/txfc/8.htm",
+          "anchor_ordinal": 79,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/xtgz/txfc/1.htm",
+          "label": "12",
+          "kind": "number",
+          "href": "https://cist.cdut.edu.cn/xtgz/txfc/1.htm",
+          "anchor_ordinal": 80,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/xtgz/txfc/11.htm",
+          "label": "下页",
+          "kind": "next",
+          "href": "https://cist.cdut.edu.cn/xtgz/txfc/11.htm",
+          "anchor_ordinal": 81,
+          "saved_catalog_supplied": false
+        },
+        {
+          "url": "https://cist.cdut.edu.cn/xtgz/txfc/1.htm",
+          "label": "尾页",
+          "kind": "last",
+          "href": "https://cist.cdut.edu.cn/xtgz/txfc/1.htm",
+          "anchor_ordinal": 82,
+          "saved_catalog_supplied": false
+        }
+      ],
+      "detail_link_count": 15
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/",
+      "title": "成都理工大学教务处",
+      "saved_file": "round2/成都理工大学教务处.html",
+      "source_sha256": "4cbaaa07cce5980298a204eaced7c36e52044e6422c7fef6bdfba7920dedec49",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "channel": "browser_dom",
+      "pagination": [],
+      "detail_link_count": 48
+    }
+  ],
+  "documents": [
+    {
+      "url": "https://xsc.cdut.edu.cn/info/1032/4667.htm",
+      "title": "成都理工大学家庭经济困难学生认定申请表",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://xsc.cdut.edu.cn/zzgl/zzzc.htm",
+          "catalog_file": "资助政策-成都理工大学学生处.html",
+          "anchor_ordinal": 68,
+          "href": "https://xsc.cdut.edu.cn/info/1032/4667.htm",
+          "title": "成都理工大学家庭经济困难学生认定申请表",
+          "date_text": [
+            "06/11 2026"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://xsc.cdut.edu.cn/info/1032/3608.htm",
+      "title": "关于2025年秋季学期脱贫户（原建档立卡 贫困户）本专科学生特别资助在线补申请有关事项的公告",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://xsc.cdut.edu.cn/zzgl/zzzc.htm",
+          "catalog_file": "资助政策-成都理工大学学生处.html",
+          "anchor_ordinal": 69,
+          "href": "https://xsc.cdut.edu.cn/info/1032/3608.htm",
+          "title": "关于2025年秋季学期脱贫户（原建档立卡 贫困户）本专科学生特别资助在线补申请有关事项的公告",
+          "date_text": [
+            "09/30 2025"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://xsc.cdut.edu.cn/info/1032/3429.htm",
+      "title": "国家资助 助你飞翔——成都理工大学2025年本专科学生资助政策简介",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://xsc.cdut.edu.cn/zzgl/zzzc.htm",
+          "catalog_file": "资助政策-成都理工大学学生处.html",
+          "anchor_ordinal": 70,
+          "href": "https://xsc.cdut.edu.cn/info/1032/3429.htm",
+          "title": "国家资助 助你飞翔——成都理工大学2025年本专科学生资助政策简介",
+          "date_text": [
+            "07/09 2025"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://xsc.cdut.edu.cn/info/1032/3428.htm",
+      "title": "成都理工大学研究生资助政策简介",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://xsc.cdut.edu.cn/zzgl/zzzc.htm",
+          "catalog_file": "资助政策-成都理工大学学生处.html",
+          "anchor_ordinal": 71,
+          "href": "https://xsc.cdut.edu.cn/info/1032/3428.htm",
+          "title": "成都理工大学研究生资助政策简介",
+          "date_text": [
+            "07/09 2025"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://xsc.cdut.edu.cn/info/1032/3427.htm",
+      "title": "国家助学贷款宣传指南",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://xsc.cdut.edu.cn/zzgl/zzzc.htm",
+          "catalog_file": "资助政策-成都理工大学学生处.html",
+          "anchor_ordinal": 72,
+          "href": "https://xsc.cdut.edu.cn/info/1032/3427.htm",
+          "title": "国家助学贷款宣传指南",
+          "date_text": [
+            "07/09 2025"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7852.htm",
+      "title": "​成都理工大学计网院2027年推荐免试研究生拟录取名单（第一批）",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 58,
+          "href": "https://cist.cdut.edu.cn/info/1145/7852.htm",
+          "title": "​成都理工大学计网院2027年推荐免试研究生拟录取名单（第一批）",
+          "date_text": [
+            "2026-09-24"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7849.htm",
+      "title": "新-自组团出访后公示信息表（团组一份） ",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 59,
+          "href": "https://cist.cdut.edu.cn/info/1145/7849.htm",
+          "title": "新-自组团出访后公示信息表（团组一份） ",
+          "date_text": [
+            "2026-09-17"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7848.htm",
+      "title": "学院2027年接收推荐免试攻读硕士研究生工作实施细则",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 60,
+          "href": "https://cist.cdut.edu.cn/info/1145/7848.htm",
+          "title": "学院2027年接收推荐免试攻读硕士研究生工作实施细则",
+          "date_text": [
+            "2026-09-17"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7847.htm",
+      "title": "学院校庆活动预告：计算机与网络安全学院（示范性软件学院）“数字安全·智创未来”发展论坛",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 61,
+          "href": "https://cist.cdut.edu.cn/info/1145/7847.htm",
+          "title": "学院校庆活动预告：计算机与网络安全学院（示范性软件学院）“数字安全·智创未来”发展论坛",
+          "date_text": [
+            "2026-09-14"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7846.htm",
+      "title": "学院2026届本科毕业生建议授予学士学位名单公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 62,
+          "href": "https://cist.cdut.edu.cn/info/1145/7846.htm",
+          "title": "学院2026届本科毕业生建议授予学士学位名单公示",
+          "date_text": [
+            "2026-09-14"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7845.htm",
+      "title": "学院2025、2026届本科毕业生建议授予学士学位名单公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 63,
+          "href": "https://cist.cdut.edu.cn/info/1145/7845.htm",
+          "title": "学院2025、2026届本科毕业生建议授予学士学位名单公示",
+          "date_text": [
+            "2026-09-14"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7842.htm",
+      "title": "学院拟推荐2027年优秀应届本科毕业生免试攻读研究生名单公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 64,
+          "href": "https://cist.cdut.edu.cn/info/1145/7842.htm",
+          "title": "学院拟推荐2027年优秀应届本科毕业生免试攻读研究生名单公示",
+          "date_text": [
+            "2026-09-08"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7841.htm",
+      "title": "学院2027年拟申请推免学生材料审核及竞赛奖项成果答辩结果公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 65,
+          "href": "https://cist.cdut.edu.cn/info/1145/7841.htm",
+          "title": "学院2027年拟申请推免学生材料审核及竞赛奖项成果答辩结果公示",
+          "date_text": [
+            "2026-09-08"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7831.htm",
+      "title": "学院推荐2027年优秀应届本科毕业生免试攻读研究生遴选工作实施细则（含评分细则）",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 66,
+          "href": "https://cist.cdut.edu.cn/info/1145/7831.htm",
+          "title": "学院推荐2027年优秀应届本科毕业生免试攻读研究生遴选工作实施细则（含评分细则）",
+          "date_text": [
+            "2026-09-03"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7818.htm",
+      "title": "学院2026、2025、2024届本科毕业生建议授予学士学位名单公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 67,
+          "href": "https://cist.cdut.edu.cn/info/1145/7818.htm",
+          "title": "学院2026、2025、2024届本科毕业生建议授予学士学位名单公示",
+          "date_text": [
+            "2026-07-27"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7817.htm",
+      "title": "学院2024、2025、2026届中外合作办学专业本科毕业生建议授予学士学位名单公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 68,
+          "href": "https://cist.cdut.edu.cn/info/1145/7817.htm",
+          "title": "学院2024、2025、2026届中外合作办学专业本科毕业生建议授予学士学位名单公示",
+          "date_text": [
+            "2026-07-27"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7791.htm",
+      "title": "新-自组团出访后公示信息表（团组一份）",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 69,
+          "href": "https://cist.cdut.edu.cn/info/1145/7791.htm",
+          "title": "新-自组团出访后公示信息表（团组一份）",
+          "date_text": [
+            "2026-07-07"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7788.htm",
+      "title": "学院2025、2026届中外合作办学专业本科毕业生建议授予学士学位名单公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 70,
+          "href": "https://cist.cdut.edu.cn/info/1145/7788.htm",
+          "title": "学院2025、2026届中外合作办学专业本科毕业生建议授予学士学位名单公示",
+          "date_text": [
+            "2026-07-02"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7787.htm",
+      "title": "学院2026、2025届本科毕业生建议授予学士学位名单公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 71,
+          "href": "https://cist.cdut.edu.cn/info/1145/7787.htm",
+          "title": "学院2026、2025届本科毕业生建议授予学士学位名单公示",
+          "date_text": [
+            "2026-07-02"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1145/7776.htm",
+      "title": "学院2026年招用助学助管员拟审定确认人员公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/index/tzgg.htm",
+          "catalog_file": "round2/通知公告-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 72,
+          "href": "https://cist.cdut.edu.cn/info/1145/7776.htm",
+          "title": "学院2026年招用助学助管员拟审定确认人员公示",
+          "date_text": [
+            "2026-06-23"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7769.htm",
+      "title": "计算机与网络安全学院（示范性软件学院）举行2026届毕业典礼暨学位授予仪式",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 61,
+          "href": "https://cist.cdut.edu.cn/info/1142/7769.htm",
+          "title": "计算机与网络安全学院（示范性软件学院）举行2026届毕业典礼暨学位授予仪式",
+          "date_text": [
+            "2026-06-18"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7717.htm",
+      "title": "喜报！我院在2025年度成都理工大学共青团工作先进集体和个人评选中荣获多项荣誉",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 62,
+          "href": "https://cist.cdut.edu.cn/info/1142/7717.htm",
+          "title": "喜报！我院在2025年度成都理工大学共青团工作先进集体和个人评选中荣获多项荣誉",
+          "date_text": [
+            "2026-05-18"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7722.htm",
+      "title": "党建引领聚合力 智启青春筑未来｜校团委（“体、美、劳” 素质教育中心）党支部与人工智能系教工党支部结对共建活动圆满举行",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 63,
+          "href": "https://cist.cdut.edu.cn/info/1142/7722.htm",
+          "title": "党建引领聚合力 智启青春筑未来｜校团委（“体、美、劳” 素质教育中心）党支部与人工智能系教工党支部结对共建活动圆满举行",
+          "date_text": [
+            "2026-05-14"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7693.htm",
+      "title": "喜报！我院周游同学荣登《人民日报》国家奖学金获奖代表名录！",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 64,
+          "href": "https://cist.cdut.edu.cn/info/1142/7693.htm",
+          "title": "喜报！我院周游同学荣登《人民日报》国家奖学金获奖代表名录！",
+          "date_text": [
+            "2026-05-05"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7694.htm",
+      "title": "喜报 | 我院谭伍越同学获得2025“中国大学生自强之星”称号",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 65,
+          "href": "https://cist.cdut.edu.cn/info/1142/7694.htm",
+          "title": "喜报 | 我院谭伍越同学获得2025“中国大学生自强之星”称号",
+          "date_text": [
+            "2026-05-04"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7675.htm",
+      "title": "学院“一站式”学生社区2026年度建设工作会顺利召开",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 66,
+          "href": "https://cist.cdut.edu.cn/info/1142/7675.htm",
+          "title": "学院“一站式”学生社区2026年度建设工作会顺利召开",
+          "date_text": [
+            "2026-04-21"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7676.htm",
+      "title": "学院组织学习总体国家安全观“思政大课”",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 67,
+          "href": "https://cist.cdut.edu.cn/info/1142/7676.htm",
+          "title": "学院组织学习总体国家安全观“思政大课”",
+          "date_text": [
+            "2026-04-16"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/6949.htm",
+      "title": "“学思践悟明方向，网安护航启新程”网络空间安全专业团总支示范性主题团日活动",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 68,
+          "href": "https://cist.cdut.edu.cn/info/1142/6949.htm",
+          "title": "“学思践悟明方向，网安护航启新程”网络空间安全专业团总支示范性主题团日活动",
+          "date_text": [
+            "2025-12-29"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7562.htm",
+      "title": "“学思践悟明方向，网安护航启新程”｜网络空间安全专业团总支示范性主题团日活动",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 69,
+          "href": "https://cist.cdut.edu.cn/info/1142/7562.htm",
+          "title": "“学思践悟明方向，网安护航启新程”｜网络空间安全专业团总支示范性主题团日活动",
+          "date_text": [
+            "2025-12-28"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7561.htm",
+      "title": "学院2025年学生预备党员和新生党员培训班顺利结课",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 70,
+          "href": "https://cist.cdut.edu.cn/info/1142/7561.htm",
+          "title": "学院2025年学生预备党员和新生党员培训班顺利结课",
+          "date_text": [
+            "2025-12-09"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7560.htm",
+      "title": "青马工程“淬炼班”暨团校“培塑班”开展首次实践课程——走进四川科技馆",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 71,
+          "href": "https://cist.cdut.edu.cn/info/1142/7560.htm",
+          "title": "青马工程“淬炼班”暨团校“培塑班”开展首次实践课程——走进四川科技馆",
+          "date_text": [
+            "2025-12-04"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7559.htm",
+      "title": "第75期入党积极分子培训班及第23期学生党员发展对象培训班党课培训顺利结束",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 72,
+          "href": "https://cist.cdut.edu.cn/info/1142/7559.htm",
+          "title": "第75期入党积极分子培训班及第23期学生党员发展对象培训班党课培训顺利结束",
+          "date_text": [
+            "2025-11-01"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/6948.htm",
+      "title": "“融汇古今智慧，赋能文化新篇”计算机与网络安全学院（示范性软件学院）计算机科学与技术专业团总支示范性主题团日活动",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 73,
+          "href": "https://cist.cdut.edu.cn/info/1142/6948.htm",
+          "title": "“融汇古今智慧，赋能文化新篇”计算机与网络安全学院（示范性软件学院）计算机科学与技术专业团总支示范性主题团日活动",
+          "date_text": [
+            "2025-10-22"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7558.htm",
+      "title": "“融汇古今智慧，赋能文化新篇” |学院计算机科学与技术专业团总支示范性主题团日活动",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 74,
+          "href": "https://cist.cdut.edu.cn/info/1142/7558.htm",
+          "title": "“融汇古今智慧，赋能文化新篇” |学院计算机科学与技术专业团总支示范性主题团日活动",
+          "date_text": [
+            "2025-10-21"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/info/1142/7557.htm",
+      "title": "中共成都理工大学计算机与网络安全学院委员会分党校举行第75期学生入党积极分子培训班暨第23期学生党员发展对象培训班开班仪式",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://cist.cdut.edu.cn/xtgz/txfc.htm",
+          "catalog_file": "round2/团学风采-计算机与网络安全学院（示范性软件学院）.html",
+          "anchor_ordinal": 75,
+          "href": "https://cist.cdut.edu.cn/info/1142/7557.htm",
+          "title": "中共成都理工大学计算机与网络安全学院委员会分党校举行第75期学生入党积极分子培训班暨第23期学生党员发展对象培训班开班仪式",
+          "date_text": [
+            "2025-09-27"
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1172/6851.htm",
+      "title": "我校在中国国际大学生创新大赛总决赛再创佳绩！",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 14,
+          "href": "https://aao.cdut.edu.cn/info/1172/6851.htm",
+          "title": null,
+          "date_text": []
+        },
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 21,
+          "href": "https://aao.cdut.edu.cn/info/1172/6851.htm",
+          "title": "我校在中国国际大学生创新大赛总决赛再创佳绩！",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1172/7172.htm",
+      "title": "我校在2025年四川省教学成果奖评选中获佳绩",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 22,
+          "href": "https://aao.cdut.edu.cn/info/1172/7172.htm",
+          "title": "我校在2025年四川省教学成果奖评选中获佳绩",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1172/7169.htm",
+      "title": "喜讯！我校教材建设奖取得突破",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 23,
+          "href": "https://aao.cdut.edu.cn/info/1172/7169.htm",
+          "title": "喜讯！我校教材建设奖取得突破",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1172/7154.htm",
+      "title": "再创佳绩！我校教师斩获第八届全国高校青年教师教学竞赛工科组一等奖",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 24,
+          "href": "https://aao.cdut.edu.cn/info/1172/7154.htm",
+          "title": "再创佳绩！我校教师斩获第八届全国高校青年教师教学竞赛工科组一等奖",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1172/7084.htm",
+      "title": "我校师生赴巴中参加四川国际大学生创新大赛（2026）“青年红色筑梦之旅”启动仪式",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 25,
+          "href": "https://aao.cdut.edu.cn/info/1172/7084.htm",
+          "title": "我校师生赴巴中参加四川国际大学生创新大赛（2026）“青年红色筑梦之旅”启动仪式",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1172/7083.htm",
+      "title": "专业聚力、服务盛会——传艺学子全力保障第九届大视听实践教学创新研讨会",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 26,
+          "href": "https://aao.cdut.edu.cn/info/1172/7083.htm",
+          "title": "专业聚力、服务盛会——传艺学子全力保障第九届大视听实践教学创新研讨会",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1172/7075.htm",
+      "title": "践学力行促融合  微专业架起产学研用新桥梁",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 27,
+          "href": "https://aao.cdut.edu.cn/info/1172/7075.htm",
+          "title": "践学力行促融合  微专业架起产学研用新桥梁",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1172/7072.htm",
+      "title": "AIGC破界・教产共生：成都理工大学国家级一流课程《纪录片创作》构建传媒育人新范式",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 28,
+          "href": "https://aao.cdut.edu.cn/info/1172/7072.htm",
+          "title": "AIGC破界・教产共生：成都理工大学国家级一流课程《纪录片创作》构建传媒育人新范式",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1172/7060.htm",
+      "title": "学校召开国家教学成果奖申报动员会",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 29,
+          "href": "https://aao.cdut.edu.cn/info/1172/7060.htm",
+          "title": "学校召开国家教学成果奖申报动员会",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1441/7138.htm",
+      "title": "教务处党支部副书记王众讲授树立和践行正确政绩观专题党课",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 33,
+          "href": "https://aao.cdut.edu.cn/info/1441/7138.htm",
+          "title": "教务处党支部副书记王众讲授树立和践行正确政绩观专题党课",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1441/7126.htm",
+      "title": "校党委常委、副校长曾国强讲授树立和践行正确政绩观专题党课",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 34,
+          "href": "https://aao.cdut.edu.cn/info/1441/7126.htm",
+          "title": "校党委常委、副校长曾国强讲授树立和践行正确政绩观专题党课",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1441/6895.htm",
+      "title": "教务处党支部开展党的二十届四中全会专题学习",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 35,
+          "href": "https://aao.cdut.edu.cn/info/1441/6895.htm",
+          "title": "教务处党支部开展党的二十届四中全会专题学习",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1441/6756.htm",
+      "title": "校党委常委、副校长曾国强讲授深入贯彻中央八项规定精神学习教育专题党课",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 36,
+          "href": "https://aao.cdut.edu.cn/info/1441/6756.htm",
+          "title": "校党委常委、副校长曾国强讲授深入贯彻中央八项规定精神学习教育专题党课",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1441/6755.htm",
+      "title": "教务处党支部书记邓虎成讲授专题党课",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 37,
+          "href": "https://aao.cdut.edu.cn/info/1441/6755.htm",
+          "title": "教务处党支部书记邓虎成讲授专题党课",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1441/6627.htm",
+      "title": "教务处党支部组织生活会暨民主评议党员",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 38,
+          "href": "https://aao.cdut.edu.cn/info/1441/6627.htm",
+          "title": "教务处党支部组织生活会暨民主评议党员",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1441/6626.htm",
+      "title": "教务处党支部开展集中专题学习",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 39,
+          "href": "https://aao.cdut.edu.cn/info/1441/6626.htm",
+          "title": "教务处党支部开展集中专题学习",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1441/6425.htm",
+      "title": "教务处党支部组织学习习近平总书记在全国教育大会上的重要讲话精神",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 40,
+          "href": "https://aao.cdut.edu.cn/info/1441/6425.htm",
+          "title": "教务处党支部组织学习习近平总书记在全国教育大会上的重要讲话精神",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1171/7182.htm",
+      "title": "成都理工大学数字监督微专业2026年秋季招生简章",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 43,
+          "href": "https://aao.cdut.edu.cn/info/1171/7182.htm",
+          "title": "成都理工大学数字监督微专业2026年秋季招生简章",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1171/7177.htm",
+      "title": "关于开展四川省第三批本科高校应用型品牌课程遴选和建设工作的通知",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 44,
+          "href": "https://aao.cdut.edu.cn/info/1171/7177.htm",
+          "title": "关于开展四川省第三批本科高校应用型品牌课程遴选和建设工作的通知",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1171/7165.htm",
+      "title": "低空经济空间信息技术微专业招生简章",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 46,
+          "href": "https://aao.cdut.edu.cn/info/1171/7165.htm",
+          "title": "低空经济空间信息技术微专业招生简章",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1171/7163.htm",
+      "title": "关于开展 2026-2027学年第一学期课程重修报名的通知",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 47,
+          "href": "https://aao.cdut.edu.cn/info/1171/7163.htm",
+          "title": "关于开展 2026-2027学年第一学期课程重修报名的通知",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1171/7162.htm",
+      "title": "关于2026-2027-1学期网络平台通识选修课《物理学与现代科技》的开课通知",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 48,
+          "href": "https://aao.cdut.edu.cn/info/1171/7162.htm",
+          "title": "关于2026-2027-1学期网络平台通识选修课《物理学与现代科技》的开课通知",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1171/7161.htm",
+      "title": "关于2026-2027-1学期网络平台通识选修课《建筑艺术与赏析》与《形态构成学》的开课通知",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 49,
+          "href": "https://aao.cdut.edu.cn/info/1171/7161.htm",
+          "title": "关于2026-2027-1学期网络平台通识选修课《建筑艺术与赏析》与《形态构成学》的开课通知",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1248/6948.htm",
+      "title": "本科高等教育本科国家级规划教材拟推荐名单公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 51,
+          "href": "https://aao.cdut.edu.cn/info/1248/6948.htm",
+          "title": "本科高等教育本科国家级规划教材拟推荐名单公示",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1248/6831.htm",
+      "title": "成都理工大学2026年推荐优秀应届本科毕业生免试攻读研究生拟推荐人员名单公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 52,
+          "href": "https://aao.cdut.edu.cn/info/1248/6831.htm",
+          "title": "成都理工大学2026年推荐优秀应届本科毕业生免试攻读研究生拟推荐人员名单公示",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1248/6770.htm",
+      "title": "成都理工大学关于2025年拟新设专业与拟撤销专业的公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 53,
+          "href": "https://aao.cdut.edu.cn/info/1248/6770.htm",
+          "title": "成都理工大学关于2025年拟新设专业与拟撤销专业的公示",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1248/6769.htm",
+      "title": "第二届全国教材建设奖拟推荐名单公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 54,
+          "href": "https://aao.cdut.edu.cn/info/1248/6769.htm",
+          "title": "第二届全国教材建设奖拟推荐名单公示",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1248/6768.htm",
+      "title": "关于第二批“十四五”本科校级规划教材认定和第二批省级规划教材推荐评审结果的公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 55,
+          "href": "https://aao.cdut.edu.cn/info/1248/6768.htm",
+          "title": "关于第二批“十四五”本科校级规划教材认定和第二批省级规划教材推荐评审结果的公示",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1248/6767.htm",
+      "title": "成都理工大学2025年新生图像采集及人像比对服务项目比选成交结果公告",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 56,
+          "href": "https://aao.cdut.edu.cn/info/1248/6767.htm",
+          "title": "成都理工大学2025年新生图像采集及人像比对服务项目比选成交结果公告",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1248/6733.htm",
+      "title": "关于2024-2025学年第二学期本科教材选用结果的公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 57,
+          "href": "https://aao.cdut.edu.cn/info/1248/6733.htm",
+          "title": "关于2024-2025学年第二学期本科教材选用结果的公示",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1248/6732.htm",
+      "title": "2025年拟出版教材(第一批)评审结果公示",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 58,
+          "href": "https://aao.cdut.edu.cn/info/1248/6732.htm",
+          "title": "2025年拟出版教材(第一批)评审结果公示",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1442/7178.htm",
+      "title": "第十七届全国大学生市场调查与分析大赛报名通知",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 69,
+          "href": "https://aao.cdut.edu.cn/info/1442/7178.htm",
+          "title": "第十七届全国大学生市场调查与分析大赛报名通知",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1442/7175.htm",
+      "title": "第十八届全国大学生数学竞赛四川赛区初赛报名通知",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 70,
+          "href": "https://aao.cdut.edu.cn/info/1442/7175.htm",
+          "title": "第十八届全国大学生数学竞赛四川赛区初赛报名通知",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1442/7171.htm",
+      "title": "关于举办2026年四川省大生学社工项目创新设计大赛校内选拔赛的通知",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 71,
+          "href": "https://aao.cdut.edu.cn/info/1442/7171.htm",
+          "title": "关于举办2026年四川省大生学社工项目创新设计大赛校内选拔赛的通知",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1442/7158.htm",
+      "title": "我校材料学子在2026年中国大学生机械工程创新创意大赛——“欧波同杯”第十一届失效分析赛暨全国失效分析精英赛中斩获佳绩",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 72,
+          "href": "https://aao.cdut.edu.cn/info/1442/7158.htm",
+          "title": "我校材料学子在2026年中国大学生机械工程创新创意大赛——“欧波同杯”第十一届失效分析赛暨全国失效分析精英赛中斩获佳绩",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1442/7157.htm",
+      "title": "材化学子在中国大学生机械工程创新创意大赛——第十二届材料热处理创新创业赛总决赛中获二等奖",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 73,
+          "href": "https://aao.cdut.edu.cn/info/1442/7157.htm",
+          "title": "材化学子在中国大学生机械工程创新创意大赛——第十二届材料热处理创新创业赛总决赛中获二等奖",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1442/7156.htm",
+      "title": "喜报｜我校材料学子在第十五届全国大学生金相技能大赛斩获佳绩",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 74,
+          "href": "https://aao.cdut.edu.cn/info/1442/7156.htm",
+          "title": "喜报｜我校材料学子在第十五届全国大学生金相技能大赛斩获佳绩",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1442/7155.htm",
+      "title": "第一届高校大学生核科技创新大赛在成都理工大学成功举办",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 75,
+          "href": "https://aao.cdut.edu.cn/info/1442/7155.htm",
+          "title": "第一届高校大学生核科技创新大赛在成都理工大学成功举办",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1442/7140.htm",
+      "title": "关于举办“2026年四川省大学生社工项目创新设计大赛”的通知",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 76,
+          "href": "https://aao.cdut.edu.cn/info/1442/7140.htm",
+          "title": "关于举办“2026年四川省大学生社工项目创新设计大赛”的通知",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1187/6960.htm",
+      "title": "本科生可信电子证明申请操作指引",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 78,
+          "href": "https://aao.cdut.edu.cn/info/1187/6960.htm",
+          "title": "本科生可信电子证明申请操作指引",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1187/6963.htm",
+      "title": "期末考试课程成绩复核的申请流程",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 79,
+          "href": "https://aao.cdut.edu.cn/info/1187/6963.htm",
+          "title": "期末考试课程成绩复核的申请流程",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1224/6525.htm",
+      "title": "中国高等教育学生信息网（学信网）学位认证申请操作指南",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 80,
+          "href": "https://aao.cdut.edu.cn/info/1224/6525.htm",
+          "title": "中国高等教育学生信息网（学信网）学位认证申请操作指南",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1224/6524.htm",
+      "title": "中国高等教育学生信息网（学信网）学历认证申请操作指南",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 81,
+          "href": "https://aao.cdut.edu.cn/info/1224/6524.htm",
+          "title": "中国高等教育学生信息网（学信网）学历认证申请操作指南",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1224/6102.htm",
+      "title": "校友学士学位证明申请操作指南",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 82,
+          "href": "https://aao.cdut.edu.cn/info/1224/6102.htm",
+          "title": "校友学士学位证明申请操作指南",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1224/6101.htm",
+      "title": "校友学历证明申请操作指南",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 83,
+          "href": "https://aao.cdut.edu.cn/info/1224/6101.htm",
+          "title": "校友学历证明申请操作指南",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1224/6100.htm",
+      "title": "校友学士学位证明书办理申请操作指南",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 84,
+          "href": "https://aao.cdut.edu.cn/info/1224/6100.htm",
+          "title": "校友学士学位证明书办理申请操作指南",
+          "date_text": []
+        }
+      ]
+    },
+    {
+      "url": "https://aao.cdut.edu.cn/info/1224/6099.htm",
+      "title": "校友毕业证明书办理申请操作指南",
+      "evidence_kind": "saved_catalog_href",
+      "collected_at": "2026-10-14",
+      "collection_precision": "day",
+      "body_collected": false,
+      "adopted": false,
+      "observations": [
+        {
+          "catalog_url": "https://aao.cdut.edu.cn/",
+          "catalog_file": "round2/成都理工大学教务处.html",
+          "anchor_ordinal": 85,
+          "href": "https://aao.cdut.edu.cn/info/1224/6099.htm",
+          "title": "校友毕业证明书办理申请操作指南",
+          "date_text": []
+        }
+      ]
+    }
+  ],
+  "unvisited_pagination": [
+    {
+      "url": "https://xsc.cdut.edu.cn/zzgl/zzzc/1.htm",
+      "discovered_from": [
+        "https://xsc.cdut.edu.cn/zzgl/zzzc.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/index/tzgg/17.htm",
+      "discovered_from": [
+        "https://cist.cdut.edu.cn/index/tzgg.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/index/tzgg/16.htm",
+      "discovered_from": [
+        "https://cist.cdut.edu.cn/index/tzgg.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/index/tzgg/15.htm",
+      "discovered_from": [
+        "https://cist.cdut.edu.cn/index/tzgg.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/index/tzgg/14.htm",
+      "discovered_from": [
+        "https://cist.cdut.edu.cn/index/tzgg.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/index/tzgg/1.htm",
+      "discovered_from": [
+        "https://cist.cdut.edu.cn/index/tzgg.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/xtgz/txfc/11.htm",
+      "discovered_from": [
+        "https://cist.cdut.edu.cn/xtgz/txfc.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/xtgz/txfc/10.htm",
+      "discovered_from": [
+        "https://cist.cdut.edu.cn/xtgz/txfc.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/xtgz/txfc/9.htm",
+      "discovered_from": [
+        "https://cist.cdut.edu.cn/xtgz/txfc.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/xtgz/txfc/8.htm",
+      "discovered_from": [
+        "https://cist.cdut.edu.cn/xtgz/txfc.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    },
+    {
+      "url": "https://cist.cdut.edu.cn/xtgz/txfc/1.htm",
+      "discovered_from": [
+        "https://cist.cdut.edu.cn/xtgz/txfc.htm"
+      ],
+      "action": "manually_save_catalog_page",
+      "fetched": false
+    }
+  ],
+  "all_supplied_pages_scanned": true,
+  "date_cutoff_used": false,
+  "full_column_coverage_claimed": false,
+  "browser_access": false,
+  "network_access": false,
+  "ignored_nonofficial_or_unsafe_links": 9,
+  "authority": "discovery_only"
+}

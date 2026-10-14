@@ -2,6 +2,7 @@
 import { h } from "./dom.mjs";
 import { hasPosition } from "./places.mjs";
 import { distanceMeters, formatDistance, rankPlaces } from "./geo.mjs";
+import { normalizeServiceLinks } from "./service-links.mjs";
 
 const STATUS = { success: "已核对引用", limited: "目前可确认的信息", needs_clarification: "需要补充信息", empty: "没有找到依据" };
 const DEGRADED = { upstream_timeout: "模型响应超时。", upstream_unavailable: "模型暂不可用。", output_truncated: "模型回复未完整返回。", invalid_response: "模型返回格式异常。", tool_rounds_exceeded: "本轮查询已达到次数限制。", evidence_insufficient: "当前证据不足以回答全部问题。", agent_timeout: "本轮处理超时。", agent_error: "本轮处理暂不可用。", model_not_configured: "模型尚未配置。", model_timeout: "模型响应超时。", model_failed: "模型暂不可用。", model_format: "模型返回格式异常。", invalid_format: "模型返回格式异常。", answer_validation: "部分内容未通过依据校验。", validation_failed: "部分内容未通过依据校验。", insufficient_evidence: "当前证据不足以回答全部问题。", web_search_failed: "联网搜索未完成。" };
@@ -45,6 +46,20 @@ function stepsCard(services) {
   return h("details", { class: "card citations" }, h("summary", {}, "办理方式"),
     h("ul", { class: "steps" }, steps.map((s) => h("li", {},
       s.condition ? h("p", { class: "fineprint" }, `适用：${s.condition}`) : null, s.instruction))));
+}
+
+export function serviceLinksCard(body) {
+  const links = normalizeServiceLinks(body);
+  if (!links.length) return null;
+  return h("section", { class: "card service-links", "aria-label": "网上办理" },
+    h("h4", {}, "网上办理"),
+    links.map((link) => h("div", { class: "service-link-row" },
+      h("p", {}, h("strong", {}, link.title)),
+      h("a", { class: "chip go", href: link.url, target: "_blank", rel: "noopener noreferrer", "aria-label": `${link.action_label}：${link.title}` }, link.action_label),
+      h("p", { class: "fineprint" }, link.hints.join(" · ")),
+      h("p", { class: "fineprint" }, `依据：${link.source_title || "官方材料"} `,
+        link.source_url ? h("a", { href: link.source_url, target: "_blank", rel: "noopener noreferrer" }, "查看入口依据") : null))),
+    h("p", { class: "fineprint" }, "入口来自已引用的官方材料；当前可用性未核实，请以平台提示为准。"));
 }
 
 /**
@@ -105,6 +120,7 @@ export function answerCards(body, { checklistPreview, onFocus, onGo, onFrom, onM
   return [
     conclusion(body),
     checklistPreview?.(body),
+    serviceLinksCard(body),
     stepsCard(body.services || []),
     ...teachers,
     placesCard(body.places || [], { onFocus, onGo, onFrom, origin }),

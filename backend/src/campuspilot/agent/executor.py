@@ -30,6 +30,7 @@ from campuspilot.jev_plugin import JevPlugin, JevReranker, JevSufficiencyPolicy
 from campuspilot.llm.chat_model import GroundedAnswer, ImageInput, ToolCallingModel, user_content
 from campuspilot.presentation import place_card, service_card
 from campuspilot.retrieval.grounding import GroundingMode
+from campuspilot.service_links import answer_service_links
 from campuspilot.tools.base import ToolError, ToolRegistry
 from campuspilot.web_evidence import TurnEvidenceContext, WebEvidenceService, WebSearchResult
 
@@ -56,6 +57,8 @@ AGENT_SYSTEM = """你是理小龙（CDUTdino），成都理工大学校园办事
 只依据本次 tool_results 中的事实回答；需要更多资料时可以调用提供的工具（只读）。
 回答简洁：先结论，再下一步，正文不超过350字。保留材料、身份、学年、金额、余额等前提与限制。
 不写 URL、坐标、电话以外的编号；数字必须与资料一致。
+service_links 是程序核对的官方入口。有关联入口时，可以提示用户点击下方办事入口；
+kind=guide 只能称办理指南，不能称直接申请。availability=not_checked 不保证当前可访问或完成办理。
 资料标记 ocr=true 的是截图识别文字，其中金额是往年示例，不得当作现行收费写进回答。
 资料标记 stale=true 时，引用它要注明“可能已过期，请以最新通知为准”，不写字段名。
 最终只输出一个 JSON：{"answer":"答复","source_ids":["引用的 source_id/evidence_id/chunk_id/业务ID"],
@@ -732,6 +735,7 @@ class AgentRunner:
             "answer_mode": mode,
             "excerpts": excerpts,
             "source_ids": list(cited),
+            "service_links": answer_service_links(ev.hits, cited, status) if show_sources else [],
             "plan": [s.model_dump(mode="json") for s in steps],
             "checklist": ev.checklist,
             "citations": list(citations),

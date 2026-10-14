@@ -50,6 +50,8 @@ def main() -> None:
         p.add_argument("--store", type=Path, required=True)
         if name == "publish":
             p.add_argument("--expected-current", required=True, help="version ID or none")
+            p.add_argument("--fallback-bundle", default="",
+                           help="approved bundle for first-publication recovery")
     embed = sub.add_parser("embed", help="build vectors.sqlite for a candidate (Cloudflare)")
     embed.add_argument("--candidate", type=Path, required=True)
     bootstrap = sub.add_parser("embed-bootstrap", help="index for the bootstrap snapshot")
@@ -153,6 +155,7 @@ def main() -> None:
                 args.candidate,
                 args.store,
                 None if args.expected_current == "none" else args.expected_current,
+                fallback_bundle=args.fallback_bundle,
             )
             result = {"published_version": version}
         else:

@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import sqlite3
+import struct
 from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Any, Literal, Protocol, Self
@@ -198,7 +199,9 @@ class SnapshotStore:
     The retriever follows the retrieval flag (lexical / vector / hybrid). A vector index is
     read from the same version directory as the snapshot (``vectors.sqlite``) or, for the
     bootstrap snapshot, ``bootstrap.vectors.sqlite``; a missing or mismatched index leaves
-    vector search disabled and hybrid degrades to BM25.
+    vector search disabled and hybrid degrades to BM25. Invalid new snapshots preserve
+    the last successful retriever. Cold recovery uses only ``last_good.json``, whose
+    explicit location and hashes are checked; it never guesses a version from disk.
     """
 
     def __init__(
@@ -219,60 +222,152 @@ class SnapshotStore:
         self.embedder = embedder
         self.embedding_model = embedding_model
         self.index_error = ""
+        self.load_error = ""
         self._cached: HybridRetriever | None = None
         self._key = ""
+        self._had_current = False
 
     def acquire(self) -> HybridRetriever | None:
+        pointer = self.root / "current.json"
+        fallback = self.root / "last_good.json"
+        try:
+            if pointer.is_symlink():
+                raise ValueError("Unsafe active knowledge pointer")
+            if pointer.exists():
+                self._had_current = True
+                raw = json.loads(pointer.read_bytes())
+                if not isinstance(raw, dict) or raw.get("kind", "published") != "published":
+                    raise ValueError("Invalid active knowledge pointer")
+                result = self._load_reference(raw)
+            elif self._had_current and self._cached is not None:
+                self.load_error = "Knowledge load failed (FileNotFoundError)"
+                return self._cached
+            elif fallback.exists():
+                if fallback.is_symlink():
+                    raise ValueError("Unsafe fallback pointer")
+                result = self._load_reference(json.loads(fallback.read_bytes()), recovery=True)
+            elif self.bundled:
+                result = self._load_reference({"kind": "bundled", "bundle": self.bundled})
+            else:
+                if not (self.root / "bootstrap.json").exists():
+                    return self._cached
+                result = self._load_reference({"kind": "bootstrap"})
+            self.load_error = ""
+            return result
+        except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
+            self.load_error = f"Knowledge load failed ({type(exc).__name__})"
+            if self._cached is not None:
+                return self._cached
+            if (pointer.exists() or pointer.is_symlink()) and fallback.exists():
+                try:
+                    if fallback.is_symlink():
+                        raise ValueError("Unsafe fallback pointer")
+                    return self._load_reference(json.loads(fallback.read_bytes()), recovery=True)
+                except (OSError, ValueError, KeyError, TypeError, sqlite3.Error):
+                    pass
+            raise
+
+    def _load_reference(
+        self, raw: dict[str, Any], *, recovery: bool = False
+    ) -> HybridRetriever:
+        from campuspilot.knowledge_release import load_candidate_index, read_candidate
         from campuspilot.retrieval.hybrid import HybridRetriever
         from campuspilot.retrieval.vector import INDEX_NAME, VectorIndex
+        from campuspilot.service_links import load_link_catalog
 
-        pointer = self.root / "current.json"
-        if pointer.exists():
-            raw = json.loads(pointer.read_bytes())
-            version = raw["version"]
-            if not isinstance(version, str) or not re.fullmatch(r"kb-[a-f0-9]{16}", version):
+        if not isinstance(raw, dict) or (recovery and "kind" not in raw):
+            raise ValueError("Invalid knowledge reference")
+        kind = raw.get("kind", "published")
+        if kind == "published" or recovery:
+            if not isinstance(raw.get("sha256"), str) or not re.fullmatch(
+                r"[a-f0-9]{64}", raw["sha256"]
+            ):
+                raise ValueError("Invalid knowledge checksum")
+            if not isinstance(raw.get("version"), str) or not re.fullmatch(
+                r"kb-[a-f0-9]{16}", raw["version"]
+            ):
                 raise ValueError("Invalid knowledge pointer")
+        if kind == "published":
+            version = raw["version"]
             path = self.root / "versions" / version / "snapshot.json"
             index_path = path.parent / INDEX_NAME
-            key = version + ":" + raw["sha256"]
-        elif self.bundled:
-            path = self.root / self.bundled / "snapshot.json"
-            index_path = self.root / self.bundled / INDEX_NAME
-            if not path.exists():
-                raise ValueError("Bundled knowledge snapshot missing")
-            key = digest(path.read_bytes())
-        else:
+        elif kind == "bundled":
+            bundle = raw.get("bundle")
+            if not isinstance(bundle, str) or not re.fullmatch(r"approved-\d{8}[a-z]?", bundle):
+                raise ValueError("Invalid bundled knowledge pointer")
+            path = self.root / bundle / "snapshot.json"
+            index_path = path.parent / INDEX_NAME
+        elif kind == "bootstrap":
             path = self.root / "bootstrap.json"
             index_path = self.root / ("bootstrap." + INDEX_NAME)
-            if not path.exists():
-                return None
-            key = digest(path.read_bytes())
-        if self._cached is not None and key == self._key:
-            return self._cached
+        else:
+            raise ValueError("Invalid knowledge reference kind")
+        if not path.resolve().is_relative_to(self.root.resolve()):
+            raise ValueError("Unsafe knowledge reference path")
+        if kind == "bootstrap" and path.is_symlink():
+            raise ValueError("Unsafe bootstrap path")
         data = path.read_bytes()
-        if len(data) > 20_000_000 or (pointer.exists() and digest(data) != raw["sha256"]):
+        snapshot_hash = digest(data)
+        if len(data) > 20_000_000 or (
+            (kind == "published" or recovery) and snapshot_hash != raw["sha256"]
+        ):
             raise ValueError("Knowledge snapshot checksum mismatch")
-        snapshot = KnowledgeSnapshot.model_validate_json(data)
+        manifest = None
+        manifest_hash = "bootstrap"
+        if kind != "bootstrap":
+            manifest_data = (path.parent / "manifest.json").read_bytes()
+            manifest_hash = digest(manifest_data)
+            if (recovery or "manifest_sha256" in raw) and (
+                manifest_hash != raw.get("manifest_sha256")
+            ):
+                raise ValueError("Knowledge manifest checksum mismatch")
+            snapshot = read_candidate(path.parent, check_index=False)
+            manifest = json.loads(manifest_data)
+        else:
+            snapshot = KnowledgeSnapshot.model_validate_json(data)
         if snapshot.pending:
             raise ValueError("Pending knowledge cannot be served")
-        if pointer.exists() and snapshot.version != version:
+        if (kind == "published" or recovery) and snapshot.version != raw["version"]:
             raise ValueError("Knowledge pointer version mismatch")
         index = None
         self.index_error = ""
+        index_hash = "lexical"
         if self.retrieval_mode != "lexical":
             try:
-                index = VectorIndex.load(index_path, snapshot, self.embedding_model)
-            except (OSError, ValueError, sqlite3.Error) as exc:
+                if index_path.is_symlink() or not index_path.resolve().is_relative_to(
+                    self.root.resolve()
+                ):
+                    raise ValueError("Unsafe index path")
+                index_hash = digest(index_path.read_bytes())
+                key = snapshot_hash + ":" + manifest_hash + ":" + index_hash
+                if self._cached is not None and key == self._key:
+                    return self._cached
+                if manifest is None:
+                    index = VectorIndex.load(index_path, snapshot, self.embedding_model)
+                else:
+                    index = load_candidate_index(
+                        path.parent, snapshot, manifest, model=self.embedding_model
+                    )
+            except (
+                OSError, ValueError, sqlite3.Error, struct.error, TypeError, OverflowError
+            ) as exc:
                 self.index_error = str(exc)
+                index_hash = "degraded"
+        key = snapshot_hash + ":" + manifest_hash + ":" + index_hash
+        if self._cached is not None and key == self._key:
+            return self._cached
         embedder = self.embedder
-        self._cached = HybridRetriever(
+        retriever = HybridRetriever(
             snapshot,
             mode=self.retrieval_mode,  # type: ignore[arg-type]
             index=index,
             query_vector=embedder.cached if embedder is not None else None,
+            service_links=load_link_catalog(path.parent, snapshot, manifest)
+            if manifest is not None else None,
         )
+        self._cached = retriever
         self._key = key
-        return self._cached
+        return retriever
 
 
 class QueryEmbedder(Protocol):

@@ -246,7 +246,8 @@ def test_missing_conditions_are_clarified_and_do_not_pollute_new_task() -> None:
     assert second.response and second.response["services"]
     third = backend.prepare("我是本科", context, "test-3")
     assert third.route == "rag" and third.response and not third.response["services"]
-    assert all("graduate" not in h.chunk.audiences for h in third.hits)
+    assert all("undergraduate" in h.chunk.audiences or "all" in h.chunk.audiences
+               for h in third.hits)
     backend.prepare("图书馆在哪里", context, "test-4")
     assert context.audience == "unknown" and context.history == ()
 
