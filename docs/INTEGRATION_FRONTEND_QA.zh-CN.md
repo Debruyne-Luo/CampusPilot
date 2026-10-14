@@ -1,6 +1,7 @@
 # 桌面与后端集成前端验证
 
 2026-10-14，集成工作区 `D:\Projects\CampusPilot-integration`，分支 `feat/desktop-backend-integration`。测试对象为后端提交 `3c0c395` 与桌面提交 `f3dc8ed` 的待提交合并树；四个冲突已解决并暂存，本文件不表示已合并 main 或已部署。提交后的独立 QA 应重新锁定最终提交 SHA。
+该组合随后保存为 `893abcb`，并完成 [固定提交隔离 QA](INTEGRATION_QA.zh-CN.md)。
 
 ## 冲突处理与保留内容
 
@@ -17,15 +18,15 @@
 
 使用 Playwright CLI 命名会话 `integration-ui-qa`，Windows Chromium，桌面 1440×960、手机 viewport 390×844。localhost:8781 运行本集成源码的 `preview_evidence_media.py`；问答采用明确合成模型，图片内容是 `SYNTHETIC TEST ONLY: BLUE-731`。地图从用户指定的私密环境文件进程内读取独立 JS、Security 与 Web Service 配置，不调用生产问答 API。
 
-- 桌面真实文件选择、POST 图片上传、规范化 GET 预览和空文本纯图片 SSE 正常；识别结果澄清用途，图片气泡显示正常，未切走阅读视图。[本地截图](../output/playwright/integration-desktop-image.png)。
+- 桌面真实文件选择、POST 图片上传、规范化 GET 预览和空文本纯图片 SSE 正常；识别结果澄清用途，图片气泡显示正常，未切走阅读视图。[本地截图](qa/integration-screenshots/integration-desktop-image.png)。
 - “我想去商学院”经真实高德查询显示“成都理工大学二仙桥校区商学院”，临时地图卡标明高德来源并提供带我去；地点为 `amap:poi:B0FFFCLLP0`，GCJ02 `(104.146544, 30.677529)`。
-- 点击带我去，手选目录东区图书馆为起点，实际 Walking 请求 origin=`104.151472,30.676143`、destination=`104.146544,30.677529`，返回约 7 分钟、541 米；供应商目的地按坐标进入导航。[本地路线截图](../output/playwright/integration-real-route.png)。
-- 新三维恐龙实际加载为 `kind=3d`；暂停后 650ms 路程保持不变，继续后增长。结束后 `guide=false`、`raf=0`、地图可拖动、pitch=0；再次开始仍为 3d，证明引导退出／重复启动修复被保留。[本地截图](../output/playwright/integration-guide-3d.png)。
-- 手机布局新对话重置后旧气泡消失；模拟 PNG ClipboardEvent 通过上传并就绪，移除后草稿为零，没有横向溢出。[本地截图](../output/playwright/integration-mobile-reset.png)。第一次自动化粘贴在页面重置尚未连接时被正确拒绝；等待发送按钮恢复后重试通过，未修改代码绕过连接边界。
+- 点击带我去，手选目录东区图书馆为起点，实际 Walking 请求 origin=`104.151472,30.676143`、destination=`104.146544,30.677529`，返回约 7 分钟、541 米；供应商目的地按坐标进入导航。[本地路线截图](qa/integration-screenshots/integration-real-route.png)。
+- 新三维恐龙实际加载为 `kind=3d`；暂停后 650ms 路程保持不变，继续后增长。结束后 `guide=false`、`raf=0`、地图可拖动、pitch=0；再次开始仍为 3d，证明引导退出／重复启动修复被保留。[本地截图](qa/integration-screenshots/integration-guide-3d.png)。
+- 手机布局新对话重置后旧气泡消失；模拟 PNG ClipboardEvent 通过上传并就绪，移除后草稿为零，没有横向溢出。[本地截图](qa/integration-screenshots/integration-mobile-reset.png)。第一次自动化粘贴在页面重置尚未连接时被正确拒绝；等待发送按钮恢复后重试通过，未修改代码绕过连接边界。
 - 观察到的 GPS 调用计数为零；聊天请求仅有 message 或 message+附件引用，没有个人位置。测试全过程 `pageerror=[]`，正常请求未出现浏览器错误，仅有既存 iframe、WebGL 提示。截图已逐张目视检查。
 
 ## 验收边界
 
-这是本地开发者集成验证，不替代 Muse 独立发布 QA。手机为桌面 Chromium viewport 和模拟剪贴板，不代表真实系统相机、iOS／Android 剪贴板、国内移动网络、现场入口或 GPS 前台步行引导已通过。真实模型理解与联网证据链沿用后端单独实测，本次未重复付费调用。截图保存在忽略的 output 目录，PR 以此文字记录为准，审核可在本地复现或由主任务明确附图。
+这是本地开发者集成验证，不替代 Muse 独立发布 QA。手机为桌面 Chromium viewport 和模拟剪贴板，不代表真实系统相机、iOS／Android 剪贴板、国内移动网络、现场入口或 GPS 前台步行引导已通过。真实模型理解与联网证据链沿用后端单独实测，本次未重复付费调用。上述四张合成图片／公开校园路线截图已检查后收录到 docs/qa/integration-screenshots，供 GitHub 评审查看。
 
 验证结束关闭自建命名浏览器及 localhost:8781 服务，避免留下含凭据的进程；不关闭其他用户浏览器。

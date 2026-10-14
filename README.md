@@ -30,6 +30,10 @@ GitHub `main` 是唯一长期主线；当前线上办理清单来自 `feat/handl
 
 ## 代码入口
 
+2026-10-14 前后端已在 `feat/desktop-backend-integration` 融合，后续开发使用这一统一版本。
+整合结果、GitHub 审核依赖与待验边界见 [整合交接](docs/INTEGRATION.zh-CN.md)。
+这是可审查分支，尚未合入 main 或改变线上网站。
+
 2026-10-14 的地点补查、联网补证和图片实现保留为独立可审查增量，未改变上述线上版本。
 配置、接口、验证与待验边界见 [后端交接](docs/EVIDENCE_MEDIA.zh-CN.md)、
 [独立复查记录](docs/EVIDENCE_MEDIA_QA.zh-CN.md) 和

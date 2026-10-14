@@ -36,18 +36,18 @@
 
 | 场景 | 浏览器结果与证据 |
 | --- | --- |
-| 桌面系统文件选择与受保护预览 | POST 上传、GET 规范化预览成功，图片实际 naturalWidth=640；[截图](../output/playwright/desktop-overlay-image-draft.png) |
-| 纯图片与文字追问 | SSE body 只含 message 与附件 ID，追问使用会话图片；空输入纯图片正常返回用途澄清；[截图](../output/playwright/desktop-overlay-image-answer.png) |
+| 桌面系统文件选择与受保护预览 | POST 上传、GET 规范化预览成功，图片实际 naturalWidth=640；截图（本机归档 `output/playwright/desktop-overlay-image-draft.png`） |
+| 纯图片与文字追问 | SSE body 只含 message 与附件 ID，追问使用会话图片；空输入纯图片正常返回用途澄清；截图（本机归档 `output/playwright/desktop-overlay-image-answer.png`） |
 | E2A403 | 单独返回 E2A 卡并保留教室号，未输出楼层或电话表；桌面仍为阅读模式，没有自动切地图 |
 | 移除与新对话 | 实际 DELETE 请求移除草稿；实际 POST reset 成功后刷新，旧附件 GET=404、界面草稿清空 |
-| 手机布局选择与剪贴板粘贴 | 文件选择和模拟 ClipboardEvent 的 PNG 均上传并显示规范化预览；[截图](../output/playwright/mobile-overlay-choose-paste.png) |
+| 手机布局选择与剪贴板粘贴 | 文件选择和模拟 ClipboardEvent 的 PNG 均上传并显示规范化预览；截图（本机归档 `output/playwright/mobile-overlay-choose-paste.png`） |
 | 上传失败重试 | 注入一次合成 503：草稿及错误保留、发送禁用；点击重试真实上传成功，发送恢复 |
-| 多图与数量限制 | 两张纯图片发送成功；同次粘贴四张只接受三张，显示上限并禁用添加；[截图](../output/playwright/mobile-overlay-multimage-answer.png) |
-| 地图未配置与选点提示 | 后端实际返回 not_configured，显示选点入口；底图不可用时选点显示明确提示；[截图](../output/playwright/desktop-overlay-map-unavailable.png) |
-| 临时高德卡 | 合成卡显示高德来源、从这出发和带我去，保持桌面阅读模式；[截图](../output/playwright/desktop-overlay-provider-card.png) |
+| 多图与数量限制 | 两张纯图片发送成功；同次粘贴四张只接受三张，显示上限并禁用添加；截图（本机归档 `output/playwright/mobile-overlay-multimage-answer.png`） |
+| 地图未配置与选点提示 | 后端实际返回 not_configured，显示选点入口；底图不可用时选点显示明确提示；截图（本机归档 `output/playwright/desktop-overlay-map-unavailable.png`） |
+| 临时高德卡 | 合成卡显示高德来源、从这出发和带我去，保持桌面阅读模式；截图（本机归档 `output/playwright/desktop-overlay-provider-card.png`） |
 | 搜索竞态 | 合成旧查询延迟 650ms、新查询 10ms，最后只显示新地点；浏览器请求 body 只有 query，没有个人位置 |
-| 真实商学院地点 | 使用用户指定的私密环境文件，仅进程内读取。聊天和地图搜索均返回 `amap:poi:B0FFFCLLP0`、成都理工大学二仙桥校区商学院、exact/success；[真实卡片截图](../output/playwright/desktop-real-amap-college-card.png) |
-| 真实高德步行规划 | 点击带我去，选择目录东区图书馆为起点，实际 Walking 返回约 7 分钟、541 米；[真实路线截图](../output/playwright/desktop-real-amap-college-route.png) |
+| 真实商学院地点 | 使用用户指定的私密环境文件，仅进程内读取。聊天和地图搜索均返回 `amap:poi:B0FFFCLLP0`、成都理工大学二仙桥校区商学院、exact/success；真实卡片截图（本机归档 `output/playwright/desktop-real-amap-college-card.png`） |
+| 真实高德步行规划 | 点击带我去，选择目录东区图书馆为起点，实际 Walking 返回约 7 分钟、541 米；真实路线截图（本机归档 `output/playwright/desktop-real-amap-college-route.png`） |
 
 上述界面截图已经目视检查，无附件或卡片重叠、输入框溢出。正常流程未出现应用 JavaScript 异常；控制台的错误来自明确注入的 503 和预期旧附件 404，另有既存 iframe sandbox 提示。手机验收是桌面 Chromium 的手机 viewport 与模拟剪贴板，不能当作真实手机相机、操作系统剪贴板或国内移动网络验收。
 

@@ -68,7 +68,7 @@ Tavily 必须确认免费账户、无自动付费后才将 `TAVILY_FREE_PLAN_CON
 
 - 全量 Python：**600 passed / 21 failed**；原始 `5fd207c` 工作区同环境对照为 **456 passed / 同21 failed**。
   新增与修改的契约检查未引入新失败。Node **56 passed**，Ruff 全项目通过，mypy strict **109 files** 通过。
-  最终全量详情保存于 [JUnit](../output/evidence-media/final-pytest.xml)。已知失败分类如下，未改历史数据来绕过校验：
+  最终全量详情保存于 JUnit（本机归档 `output/evidence-media/final-pytest.xml`）。已知失败分类如下，未改历史数据来绕过校验：
 
   | 分类 | 失败数 | 原因 |
   | --- | ---: | --- |
@@ -76,8 +76,8 @@ Tavily 必须确认免费账户、无自动付费后才将 `TAVILY_FREE_PLAN_CON
   | 历史知识包与微信导入 | 2 | 提交的历史包版本／校验和不符 |
   | 发布切换 | 3 | Windows 拒绝 POSIX 目录链接原子替换 |
 
-  完整失败列表见 [已知基线失败](../output/evidence-media/known-baseline-failures.json)。
-  因为本轮未提交，用 [代码与测试指纹](../output/evidence-media/review-manifest.json) 绑定检查截面：
+  完整失败列表见 已知基线失败（本机归档 `output/evidence-media/known-baseline-failures.json`）。
+  此前工作区未提交时，用 代码与测试指纹（本机归档 `output/evidence-media/review-manifest.json`） 绑定检查截面：
   `92cef43fa911ecbef9e08972d9d05f4a827cedfbfbf04e70da94c1575f6050cf`。
   指纹覆盖基线提交及 331 个非文档文件，不替代未来 Muse 所需的 Tested Commit SHA。
 

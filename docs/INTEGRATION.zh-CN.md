@@ -34,7 +34,8 @@
 
 ## GitHub 审核顺序
 
-沿用办理清单 PR #27（`feat/handling-checklist` → `main`）。后端草稿 PR 以办理清单分支为 base，
+沿用 [办理清单 PR #27](https://github.com/Debruyne-Luo/CampusPilot/pull/27)（`feat/handling-checklist` → `main`）。
+[后端草稿 PR #28](https://github.com/Debruyne-Luo/CampusPilot/pull/28) 以办理清单分支为 base，
 统一前端草稿 PR 以后端分支为 base，避免评审重复看到前置改动。前置 PR 合入后，后续 PR 再调整 base。
 两条来源分支和统一分支均保存到 origin；没有强制推送、移动 main 或修改线上发布状态。
 
@@ -48,6 +49,11 @@
 新工作区首次检查出现 599 passed / 22 failed，增加的一项为原始文档在新 CRLF checkout 下的
 校验和检查；不修改语料、批准哈希或降低门禁。最终检查另用 Git archive 的标准文件字节运行，
 结果记录在整合 QA，Windows 的 POSIX 目录切换限制仍明确保留。
+
+冻结代码为 `893abcb062253f66d5a91e5b199db49d96903371`，标准 Git 字节全量检查为
+**618 passed / 3 failed**，三项均为 Windows POSIX 发布切换。Node **64 passed**、
+全项目 Ruff 与严格 mypy **109 files** 通过；[可携带结果记录](qa/integration-20261014.json)
+明确运行方法，不将平台失败跳过或宣称全量绿色。
 
 真实 DeepSeek 图片和 Agent 阅读／追问、真实高德商学院及浏览器 Walking 已验证；
 完整联网正文仍受学校 HTTP 412 限制，Tavily 免费凭据、Jev 独立开发／保留集校准、95% 保留集目标、
