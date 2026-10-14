@@ -1,5 +1,7 @@
 // 理小龙 CDUTdino v2 entry: chat (SSE with fallback) + map, wired with ES modules.
 import { ask } from "./sse.mjs";
+import { initDesktop } from "./desktop.mjs";
+import {enterDesktop, isDesktop} from './desktop-motion.mjs';
 import { createAttachmentComposer } from "./attachments.mjs";
 import { createPlaceSearch, navigationTarget } from "./place-search.mjs";
 import { initialPlan, reducePlan } from "./plan-state.mjs";
@@ -16,6 +18,8 @@ import { dragOffset, initialSheet, reduceSheet, releaseVelocity, sheetOffset, vi
 import { createHeadingTracker, needsPermission, viewRotation } from "./heading.mjs";
 
 const $ = (id) => document.getElementById(id);
+// A desktop window remains demo-only even when narrowed below the layout breakpoint.
+const demoOnly = () => isDesktop() || matchMedia('(hover:hover) and (pointer:fine)').matches;
 const thread = $("thread"), form = $("chat-form"), input = $("question"), send = $("send");
 // Access storage lazily: a denied browser storage getter must not prevent chat boot.
 const local = { getItem: (k) => window.localStorage.getItem(k), setItem: (k, v) => window.localStorage.setItem(k, v) };
@@ -23,6 +27,7 @@ const handlingStore = createHandlingStore(local);
 addEventListener("storage", (e) => { if (e.key === HANDLING_KEY || e.key === null) handlingStore.refresh(); });
 const HEADERS = { "Content-Type": "application/json", "X-CampusPilot-Request": "1" };
 let busy = false, ready = false, allPlaces = [];
+let desktopUI = null, routeIntent = 0;
 let conversationRevision = 0, chatController = null;
 const placeSearch = createPlaceSearch();
 let attachments;
@@ -38,7 +43,7 @@ const map = createMap({
   status: (text) => { $("map-status").textContent = text; $("map-status").hidden = !text; },
   onSelect: (place) => highlight(place),
   onOrigin: (position, name) => setOrigin({ type: "map", position, label: name }),
-  onPoi: (poi) => showCard({ name: poi.name, position: poi.position, poi: true }),
+  onPoi: (poi) => {if(poi)selectPoi(poi);},
   onArrive: () => { if (guideTarget) showArrival(guideTarget); },
   onGuide: (kind) => { document.body.dataset.guide = kind; },
 });
@@ -58,6 +63,7 @@ function setOrigin(action) {
 }
 function locate({ quiet = false } = {}) {
   return new Promise((resolve) => {
+    if(demoOnly()) return resolve(false);
     if (!navigator.geolocation || !window.isSecureContext) return resolve(false);
     navigator.geolocation.getCurrentPosition((fix) => {
       setOrigin({ type: "gps", position: { longitude: fix.coords.longitude, latitude: fix.coords.latitude, coordinate_system: "WGS84" } });
@@ -90,7 +96,7 @@ function originChooser(message) {
     if (!(await locate())) note(...originChooser("定位不可用，请换一种方式选择起点："));
   };
   return [h("span", {}, message), h("span", { class: "chooser" },
-    h("button", { type: "button", class: "chip", onclick: useGps }, "我的位置"),
+    !demoOnly() && h("button", { type: "button", class: "chip", onclick: useGps }, "我的位置"),
     h("button", { type: "button", class: "chip", onclick: pickOnMap }, "在地图上点选"), select)];
 }
 
@@ -111,10 +117,11 @@ function showCard(target) {
     h("div", { class: "card-head" },
       h("strong", {}, target.name),
       d != null ? h("small", {}, formatDistance(d)) : null,
-      h("button", { type: "button", class: "card-close", "aria-label": "关闭", onclick: () => { card.hidden = true; current = null; } }, "×")),
+      h("button", { type: "button", class: "card-close", "aria-label": "关闭", onclick: () => { card.hidden = true; current = null; if(isDesktop()){pendingTarget=null;routeIntent++;desktopUI?.clearPlace();map.clearSelection();note();document.querySelectorAll('.place-row.active').forEach(e=>e.classList.remove('active'));} } }, "×")),
     target.position ? h("div", { class: "card-actions" },
       h("button", { type: "button", class: "chip go", onclick: () => go(target) }, "带我去"), fromBtn) : null);
   card.hidden = false;
+    if(isDesktop())enterDesktop([card],.16,6);
 }
 /** Arrival: drop stale cards/notes and show only 已到达 + name + 完成 (理小龙 idles). */
 function showArrival(target) {
@@ -122,7 +129,7 @@ function showArrival(target) {
   const card = $("place-card");
   card.classList.add("arrival");
   card.replaceChildren(
-    h("div", { class: "card-head" }, h("small", { class: "arrived-label" }, "已到达"), h("strong", {}, target.name)),
+    h("div", { class: "card-head" }, h("small", { class: "arrived-label" }, demo ? "演示到达" : "已到达"), h("strong", {}, target.name)),
     h("div", { class: "card-actions" }, h("button", { type: "button", class: "chip go", onclick: finishArrival }, "完成")));
   card.hidden = false;
 }
@@ -131,9 +138,18 @@ function finishArrival() {
   window.Guidance?.stop(); map.dinoStop(); guideTarget = null; document.body.classList.remove("arrived");
 }
 function highlight(place) {
+  if(isDesktop()) {routeIntent++;pendingTarget=null;note();desktopUI?.enterMap(place);}
   map.focus(place);
   document.querySelectorAll(".place-row").forEach((c) => c.classList.toggle("active", c.dataset.placeId === place.place_id));
   showCard({ name: place.name, position: hasPosition(place) ? place.position : null, place });
+}
+function selectPoi(poi) {
+  if(isDesktop()) {
+    routeIntent++;pendingTarget=null;note();desktopUI?.enterMap(poi);
+    map.focus({...poi,place_id:`poi:${poi.poi_id||poi.position.longitude+','+poi.position.latitude}`});
+    document.querySelectorAll('.place-row.active').forEach(e=>e.classList.remove('active'));
+  }
+  showCard({name:poi.name,position:poi.position,poi:true});collapseForMap();
 }
 
 new MutationObserver(() => document.body.classList.toggle("card-open", !$("place-card").hidden)).observe($("place-card"), { attributes: true, attributeFilter: ["hidden"] });
@@ -150,38 +166,53 @@ async function go(raw) {
   if (!target.position) { note(`${target.name} 暂无位置，无法规划路线。`); return; }
   if (!routeOrigin(origin)) {
     pendingTarget = target;
+    if(demoOnly()){desktopUI?.enterMap(target);note(...originChooser(`从哪出发去 ${target.name}？`));return;}
     note("正在获取你的位置（只在本机使用）…");
     if (!(await locate())) note(...originChooser(`从哪出发去 ${target.name}？`));
     return; // a successful fix resumes the pending target through setOrigin
   }
   pendingTarget = null;
+  const intent=++routeIntent;
   note(`正在规划：${origin.label} → ${target.name}…`);
   const dest = target.place ? navigationTarget(target.place) : { position: toGcj02(target.position) };
   const r = await map.route(dest, routeOrigin(origin));
-  const change = () => h("button", { type: "button", class: "chip ghost", onclick: () => note(...originChooser("换个起点：")) }, "换起点");
+  if(r.status==='cancelled'||(isDesktop()&&intent!==routeIntent))return;
+    const change = () => h("button", { type: "button", class: "chip ghost", onclick: () => {pendingTarget=target;note(...originChooser("换个起点："));} }, "换起点");
   if (r.status !== "success") { note(h("span", {}, r.message || "暂未取得步行路线，可换个起点再试。"), change()); return; }
+  showRouteReady(target,r);
+}
+function showRouteReady(target,r) {
   note(h("b", {}, `${origin.label} → ${target.name}`),
     h("span", {}, ` 步行约 ${Math.max(1, Math.round(r.time / 60))} 分钟 · ${Math.round(r.distance)} 米 `),
-    h("button", { type: "button", class: "chip go", onclick: () => startGuidance(target, r) }, "开始步行引导"), change());
+    h("button", { type: "button", class: "chip go", onclick: () => startGuidance(target, r) }, demoOnly() ? "开始路线演示" : "开始步行引导"),
+    h("button", {type:"button",class:"chip ghost",onclick:()=>{pendingTarget=target;note(...originChooser("换个起点："));}},"换起点"));
 }
 // ?demo=1 makes 理小龙 walk the route by itself; ?speed= metres per second (default 9).
 const params = new URLSearchParams(location.search);
 // Without continuous location (desktop, no permission) the guide walks in demo mode.
-let demo = params.get("demo") === "1" || !navigator.geolocation || !window.isSecureContext, guideTarget = null;
+let demo = demoOnly() || params.get("demo") === "1" || !navigator.geolocation || !window.isSecureContext, guideTarget = null;
 const demoSpeed = Number(params.get("speed")) || undefined;
+let activeGuide=null;
 function setDemo(on) {
+  on=demoOnly() || on;
   demo = on; document.body.classList.toggle("demo", on); $("dino-demo").setAttribute("aria-pressed", String(on)); $("dino-demo").classList.toggle("active", on);
   map.dinoMode(on, demoSpeed);
 }
-$("dino-demo").addEventListener("click", () => setDemo(!demo));
+$("dino-demo").addEventListener("click", () => {setDemo(!demo);if(window.Guidance?.active() && activeGuide)startGuidance(activeGuide.target,activeGuide.r);});
 function startGuidance(target, r) {
-  enableHeading(); // inside the click: iOS asks for motion permission only on a user gesture
+  setDemo(demoOnly() || demo);
+  if(demo)stopHeading();
+  if(!demo) enableHeading(); // permission only inside a user gesture, never for desktop demos
   guideTarget = target; document.body.classList.remove("arrived");
   window.Guidance?.start({
     requestId: map.routeId, target: { name: target.name },
+    demo,
+    onStop:()=>{map.dinoStop();const id=map.routeId;queueMicrotask(()=>{if(!window.Guidance?.active() && id===map.routeId){showCard(target);showRouteReady(target,r);}});},
+    onExit:()=>{queueMicrotask(()=>{map.clearSelection();note();$("place-card").hidden=true;current=null;});},
     replan: (gps) => { setOrigin({ type: "use-gps" }); if (gps) setOrigin({ type: "gps", position: gps }); go(target); },
     route: { geometry: r.geometry, stepEnds: r.step_ends, distance: r.distance, time: r.time, steps: r.steps },
   });
+  activeGuide={target,r};
   setDemo(demo); map.dino(demo, demoSpeed, params.get("guide") || undefined);
 }
 // Guidance is a classic script whose own buttons call its internal stop(); observe the
@@ -193,7 +224,7 @@ new MutationObserver(() => {
 function guidanceChanged(on) {
   document.body.classList.toggle("guiding", on);
   applySheet({ type: on ? "guidance-start" : "guidance-stop" });
-  $("heading-toggle").hidden = !on; $("dino-demo").hidden = !on;
+  $("heading-toggle").hidden = !on || demo; $("dino-demo").hidden = !on || demoOnly();
   if (!on) { map.dinoStop(); guideTarget = null; document.body.classList.remove("arrived"); delete document.body.dataset.guide; }
   if (on) { note(); $("place-card").hidden = true; } else { stopHeading(); if ($("place-card").classList.contains("arrival")) { $("place-card").hidden = true; $("place-card").classList.remove("arrival"); } }
 }
@@ -245,7 +276,7 @@ function applySheet(action) {
   map.insets(sheetVisible() + 12);
 }
 const mobile = () => matchMedia("(max-width:760px)").matches;
-const collapseForMap = () => mobile() && applySheet({ type: "collapse" });
+const collapseForMap = () => {if(mobile())applySheet({type:'collapse'});else if(isDesktop())desktopUI?.enterMap(current);};
 addEventListener("resize", () => applySheet({ type: "noop" }));
 $("sheet-handle").addEventListener("click", () => applySheet({ type: "toggle" }));
 let drag = null;
@@ -294,18 +325,24 @@ const handling = createHandlingUI({
   onFocus: (p) => { map.reveal([p.place_id]); highlight(p); collapseForMap(); },
   onGo: go,
 });
+desktopUI=initDesktop({showChat:()=>handling.showChat(),focusQuestion:()=>input.focus(),map});
 
 // ---- chat -----------------------------------------------------------------------------
 function bubble(text, images = []) {
   const b = h("div", { class: "msg-user" }, text,
     images.length ? h("div", { class: "message-images" }, images.map((p) => h("img", { src: p.url, alt: p.name }))) : null);
-  thread.append(b); return b;
+  thread.append(b); if(isDesktop())enterDesktop([b],.24,8); return b;
 }
 function pickDestination() {
+  if(isDesktop())desktopUI?.enterMap();
   if (!map.pickDestination()) { note("地图尚未加载，可稍后重试。地点搜索不需要等待地图。"); return; }
   collapseForMap(); note("点击地图上的目的地，地图文字地点也可直接点击。");
 }
-function scrollEnd() { if (!handling.active) thread.scrollTo({ top: thread.scrollHeight, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" }); }
+let followAnswer = true;
+thread.addEventListener("scroll", () => { followAnswer = thread.scrollHeight - thread.scrollTop - thread.clientHeight < 100; }, { passive: true });
+function scrollEnd(force = false) {
+  if (!handling.active && (force || followAnswer)) thread.scrollTo({ top: thread.scrollHeight, behavior: "instant" });
+}
 
 async function submit(text) {
   if (busy || !ready || (!text.trim() && !attachments.count)) return;
@@ -316,7 +353,7 @@ async function submit(text) {
   busy = true; send.disabled = true; $("send-label").textContent = "思考中";
   $("new-chat").disabled = true; attachments.refresh();
   $("empty")?.remove();
-  bubble(text, images); scrollEnd();
+  bubble(text, images); followAnswer = true; scrollEnd(true);
   let state = initialPlan();
   const planHost = h("div", { class: "plan-host" });
   const live = h("p", { class: "conclusion streaming", "aria-live": "polite" });
@@ -341,10 +378,15 @@ async function submit(text) {
     scrollEnd();
   }, fetch, { attachmentIds, signal: chatController.signal });
   if (ticket !== conversationRevision) return;
-  live.remove();
   if (!result.ok) {
-    thread.append(h("div", { class: "card error", role: "alert" }, result.body?.message || "暂时无法回答，请稍后再试。"));
+    if (state.answer) {
+      live.textContent = `${state.answer}\n\n（以上内容未完成，尚未核对引用）`;
+      live.classList.remove("streaming");
+    } else live.remove();
+    const retry = h("button", { type: "button", class: "text-button", onclick: () => { input.value = text; handling.showChat(); input.focus(); } }, "重新提问");
+    thread.append(h("div", { class: "card error", role: "alert" }, h("p", {}, result.body?.message || "暂时无法回答，请稍后再试。"), retry));
   } else {
+    live.remove();
     if (!result.streamed) planHost.remove();
     else { state = reducePlan(state, { event: "final", data: {} }); paint(); }
     attachments.sent();
@@ -355,7 +397,8 @@ async function submit(text) {
     map.reveal((result.body.places || []).map((p) => p.place_id));
   }
   busy = false; chatController = null; $("new-chat").disabled = false; $("send-label").textContent = "发送"; attachments.refresh();
-  if (!mobile() && !handling.active) input.focus({ preventScroll: true });
+  scrollEnd();
+  if (!mobile() && !handling.active && !desktopUI?.mapMode) input.focus({ preventScroll: true });
 }
 
 form.addEventListener("submit", (e) => { e.preventDefault(); if (busy || !ready || !attachments.ready || (!input.value.trim() && !attachments.count)) return; const t = input.value; input.value = ""; submit(t); });
@@ -371,6 +414,7 @@ $("new-chat").addEventListener("click", async () => {
   } catch { $("status").textContent = "新对话未能创建，请重试"; $("new-chat").disabled = false; }
 });
 $("locate").addEventListener("click", async () => {
+  if(demoOnly()){note(...originChooser("路线演示：选择校内起点"));return;}
   if (await locate()) { const p = routeOrigin(origin); if (p) map.centerOn(toGcj02(p)); }
   else note(...originChooser("无法定位，可这样选起点："));
 });
@@ -378,7 +422,7 @@ $("locate").addEventListener("click", async () => {
 // ---- one search bar: focus shows category shortcuts + results; hidden otherwise -------
 const searchBox = $("map-search"), results = $("search-results"), panel = $("search-panel"), filters = $("filters"), clearBtn = $("filter-clear");
 let searchTimer = 0, searchToken = 0, filterId = "all";
-function openPanel() { panel.hidden = false; }
+  function openPanel() { const opening=panel.hidden;panel.hidden = false;if(opening&&isDesktop())enterDesktop([panel],.18,-6); }
 function closeSearch() { clearTimeout(searchTimer); searchToken++; placeSearch.cancel(); panel.hidden = true; results.replaceChildren(); }
 function resultRow(label, sub, pick) {
   return h("li", { role: "option" }, h("button", { type: "button", onclick: () => { closeSearch(); searchBox.value = ""; searchBox.blur(); pick(); } }, h("b", {}, label), sub ? h("small", {}, sub) : null));
@@ -426,5 +470,6 @@ document.addEventListener("pointerdown", (e) => { if (!e.target.closest(".map-se
   } catch { $("status").textContent = "服务暂不可用"; }
   map.init(allPlaces);
   // Use location silently only when already granted; otherwise ask on 带我去.
-  try { if ((await navigator.permissions?.query({ name: "geolocation" }))?.state === "granted") locate({ quiet: true }); } catch { /* unsupported */ }
+  if(demoOnly()) $("locate").setAttribute("aria-label","选择路线演示起点");
+  try { if (!demoOnly() && (await navigator.permissions?.query({ name: "geolocation" }))?.state === "granted") locate({ quiet: true }); } catch { /* unsupported */ }
 })();

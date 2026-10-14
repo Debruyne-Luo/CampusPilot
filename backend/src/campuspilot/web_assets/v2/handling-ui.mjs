@@ -1,3 +1,4 @@
+import {enterDesktop, isDesktop} from './desktop-motion.mjs';
 import { h } from "./dom.mjs";
 import { hasPosition } from "./places.mjs";
 import { preparationLabel, sourceUrl, taskSnapshot } from "./handling-store.mjs";
@@ -32,7 +33,7 @@ export function createHandlingUI({ store, entry, panel, toast, thread, form, get
       thread.scrollTop = chatScroll;
       if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });
       else entry.focus({ preventScroll: true });
-    } else { render(); focusHeading(); }
+    } else { render(); focusHeading(); if(isDesktop())enterDesktop(panel.children,.18,8); }
   }
   function open(id = null) {
     show(id ? "detail" : "list", id);
@@ -142,6 +143,7 @@ export function createHandlingUI({ store, entry, panel, toast, thread, form, get
   sync();
   return {
     get active() { return view !== "chat"; },
+    showChat() { if (view !== "chat") show("chat"); },
     preview(body) {
       const task = taskSnapshot(body, getPlaces());
       if (!task) return null;

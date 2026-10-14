@@ -1,0 +1,42 @@
+[
+  {
+    "file": "craft-floor.md",
+    "sha256": "e802e4f7bdc89050a9c0f2ca506e1d493a2316e6e810c0336c57aa073717ef3e",
+    "read_date": "2026-10-13"
+  },
+  {
+    "file": "critique.md",
+    "sha256": "cb8caddbb3919e5bf7f252143b519fb16db28a244642d937b186cb89962d9201",
+    "read_date": "2026-10-13"
+  },
+  {
+    "file": "gsap-core.md",
+    "sha256": "3887b47e050ab5afbe2a9a820f23d39fa02ab785e06a343be44c6f91d84d12b3",
+    "read_date": "2026-10-13"
+  },
+  {
+    "file": "gsap-performance.md",
+    "sha256": "cb5408d6fba707aabcbfe3320317a14c1f8fca6070074e5261047930f50d441e",
+    "read_date": "2026-10-13"
+  },
+  {
+    "file": "impeccable.md",
+    "sha256": "58c0252bca04521de87007aeb495f7ec99dc4c7341bc890fe82b6d577573af91",
+    "read_date": "2026-10-13"
+  },
+  {
+    "file": "mode-operate.md",
+    "sha256": "7a52dd7a94ee75f6ae89542c86a1b6e1d306812b16e0d9dbf12d4acad44d148b",
+    "read_date": "2026-10-13"
+  },
+  {
+    "file": "polish.md",
+    "sha256": "81666fc7f783b4e3514db6554e713dc0479bd9cdedb06e93d15f8b579aae869a",
+    "read_date": "2026-10-13"
+  },
+  {
+    "file": "taste.md",
+    "sha256": "2136ed83016bfada39f7b8013b2aafd9f78fcbd9799110ed222a79c6419ba5fb",
+    "read_date": "2026-10-13"
+  }
+]

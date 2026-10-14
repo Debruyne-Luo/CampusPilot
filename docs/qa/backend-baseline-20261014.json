@@ -1,0 +1,116 @@
+{
+  "date": "2026-10-14",
+  "environment": "Python 3.14.7 / Windows / CRLF checkout",
+  "baseline_commit": "5fd207cdd557f34aae6dc6d9736815749a206308",
+  "feature_commit": "3c0c395",
+  "baseline_passed": 456,
+  "feature_passed": 600,
+  "same_failure_ids": true,
+  "failures": [
+    {
+      "class": "tests.test_api_evaluation",
+      "test": "test_api_answers_keep_fixed_case_identity_and_charge_unknown_usage",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_api_evaluation",
+      "test": "test_exhausted_budget_returns_partial_evidence_without_model_request",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_knowledge_package",
+      "test": "test_import_is_reproducible_and_matches_committed_bundle",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_complete_synthetic_gate_binds_model_and_files",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[offline]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[partial_shadow]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[all_shadow_failed]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[critical_fact]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[wrong_model]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[unlocked_baseline]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[stale_files]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[no_network_block]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[incomplete_api]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[budget]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[nan_timing]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[negative_budget]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_migration_gate",
+      "test": "test_gate_never_promotes_missing_or_bad_evidence[untyped_baseline_comparison]",
+      "category": "canonical file checksum under CRLF checkout"
+    },
+    {
+      "class": "tests.test_release",
+      "test": "test_failed_health_check_rolls_back_to_previous_release",
+      "category": "POSIX release switch on Windows"
+    },
+    {
+      "class": "tests.test_release",
+      "test": "test_legacy_directory_layout_is_migrated_and_used_for_rollback",
+      "category": "POSIX release switch on Windows"
+    },
+    {
+      "class": "tests.test_release",
+      "test": "test_old_releases_are_pruned_but_current_and_previous_kept",
+      "category": "POSIX release switch on Windows"
+    },
+    {
+      "class": "tests.test_wechat_package",
+      "test": "test_wechat_import_is_reproducible_and_ocr_is_clean",
+      "category": "canonical file checksum under CRLF checkout"
+    }
+  ]
+}

@@ -18,6 +18,8 @@ DIRECTORIES = (
     "scripts",
     "tests",
     "evaluation/runtime-migration",
+    "tools/models",
+    ".github",
 )
 FILES = (
     "README.md",
@@ -44,6 +46,16 @@ SUFFIXES = {
     ".sh",
     ".ps1",
     ".service",
+    ".mjs",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".webm",
+    ".glb",
+    ".blend",
+    ".woff2",
+    ".webmanifest",
+    ".patch",
 }
 
 

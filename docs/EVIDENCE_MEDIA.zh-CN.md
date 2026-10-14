@@ -1,6 +1,7 @@
 # 后端地点、联网与图片交接
 
-状态：**CONFIRMED**（方案批准）；实现保留在 `feat/backend-evidence-media` 工作区，尚未部署或合并。
+状态：**CONFIRMED**（方案批准）；后端实现已保存为 `3c0c395`，仍未合入 main 或部署。
+前后端统一版本与 GitHub 整合状态见 [整合交接](INTEGRATION.zh-CN.md)。下文测试与本机路径保留原检查截面。
 基线为 `5fd207c`，线上仍以 [上线基线](LIVE_BASELINE.zh-CN.md) 为准。
 
 ## 行为与接口

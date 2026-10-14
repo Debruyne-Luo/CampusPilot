@@ -6,3 +6,6 @@ docs/patches/*.patch -text -whitespace
 *.glb binary
 *.blend binary
 *.woff2 binary
+
+# Keep third-party distribution and license bytes intact.
+backend/src/campuspilot/web_assets/v2/vendor/gsap-*.min.js -whitespace
