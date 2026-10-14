@@ -36,7 +36,8 @@
 
 沿用 [办理清单 PR #27](https://github.com/Debruyne-Luo/CampusPilot/pull/27)（`feat/handling-checklist` → `main`）。
 [后端草稿 PR #28](https://github.com/Debruyne-Luo/CampusPilot/pull/28) 以办理清单分支为 base，
-统一前端草稿 PR 以后端分支为 base，避免评审重复看到前置改动。前置 PR 合入后，后续 PR 再调整 base。
+[统一前端草稿 PR #29](https://github.com/Debruyne-Luo/CampusPilot/pull/29) 以后端分支为 base，
+避免评审重复看到前置改动。审核依赖为 **#27 → #28 → #29**；前置 PR 合入后，后续 PR 再调整 base。
 两条来源分支和统一分支均保存到 origin；没有强制推送、移动 main 或修改线上发布状态。
 
 这种堆叠只表达审核依赖，不代表可以跳过验收。最终 Review / Merge 由 Tech Lead 决定，发布单独执行。
