@@ -552,7 +552,10 @@ function dinoFrame(now) {
     if (near.off < 25) s.d = near.d;
     const moved = walk.meters([s.shown.lng, s.shown.lat], [target.lng, target.lat]);
     walking = moved > 0.4;
-  } else target = s.shown;
+  } else {
+    // Position smoothing stores only lng/lat; retain heading while waiting for GPS.
+    target = {...s.shown, bearing: s.bearing};
+  }
   // Ease the shown position toward the target (GPS jumps glide), heading toward the travel
   // direction or the compass when standing still.
   const k = s.demo ? 1 : 1 - Math.exp(-dt / 0.6);
