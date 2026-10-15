@@ -300,7 +300,9 @@ def _images_for_turn(
     identifiers = tuple(body.attachment_ids) or session.current_image_ids
     if not identifiers:
         return ()
-    if state.attachments is None or agent.model is None:
+    # Uploads need a model that can actually see them; the reader may differ from the
+    # text generation model, so requiring `model` here would block a reader-only setup.
+    if state.attachments is None or agent.reader is None:
         return state.problem(request, "images_unavailable", "图片理解服务尚未启用。", 503)
     try:
         return tuple(state.attachments.read(session.user, ident) for ident in identifiers)

@@ -68,20 +68,40 @@ def price(prefix: str) -> TokenPrice:
     return TokenPrice(Decimal(values[0]), Decimal(values[1]))
 
 
-def generation_model() -> ChatCompletionsModel | None:
+def chat_model(prefix: str, *, timeout: float, max_tokens: int) -> ChatCompletionsModel | None:
+    """Build a ChatCompletionsModel from `<prefix>[_BASE_URL|_API_KEY|_TIMEOUT|_MAX_TOKENS]`.
+
+    Returns None when neither the model name nor the base URL is set, so callers can fall
+    back instead of failing.
+    """
     base, model = (
-        os.environ.get("CAMPUSPILOT_MODEL_BASE_URL", ""),
-        os.environ.get("CAMPUSPILOT_MODEL", ""),
+        os.environ.get(prefix + "_BASE_URL", ""),
+        os.environ.get(prefix, ""),
     )
     if not base and not model:
         return None
     return ChatCompletionsModel(
         base_url=base,
         model=model,
-        api_key=secret("CAMPUSPILOT_MODEL"),
-        timeout_seconds=bounded_float("CAMPUSPILOT_MODEL_TIMEOUT", 14.0),
-        max_output_tokens=bounded_int("CAMPUSPILOT_MODEL_MAX_TOKENS", 700),
+        api_key=secret(prefix),
+        timeout_seconds=bounded_float(prefix + "_TIMEOUT", timeout),
+        max_output_tokens=bounded_int(prefix + "_MAX_TOKENS", max_tokens),
     )
+
+
+def generation_model() -> ChatCompletionsModel | None:
+    return chat_model("CAMPUSPILOT_MODEL", timeout=14.0, max_tokens=700)
+
+
+def reader_model() -> ChatCompletionsModel | None:
+    """Optional vision model for uploaded images.
+
+    Unset means "reuse the generation model". Reading an image costs more than answering from
+    text, and reasoning models spend output tokens before answering, so the defaults are more
+    generous than generation_model's. Configure with CAMPUSPILOT_READER* to keep a text-only
+    generation model (which cannot see images at all) while still accepting uploads.
+    """
+    return chat_model("CAMPUSPILOT_READER", timeout=40.0, max_tokens=2000)
 
 
 def shadow_client() -> JevShadowClient:

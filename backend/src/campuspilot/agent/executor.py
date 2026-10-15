@@ -113,6 +113,7 @@ class AgentRunner:
         web_service: WebEvidenceService | None = None,
         snapshots: SnapshotStore | None = None,
         execution: ExecutionBoundary | None = None,
+        reader: ToolCallingModel | None = None,
     ) -> None:
         self.grounding = grounding
         self.jev = jev
@@ -124,6 +125,9 @@ class AgentRunner:
         self.registry = registry
         self.repository = repository
         self.model = model
+        # Uploaded images go to a vision-capable model when one is configured; otherwise the
+        # generation model is reused, which preserves the single-model behaviour.
+        self.reader = reader or model
         self.max_tool_rounds = max_tool_rounds
         self.responses = ResponseBuilder(repository, grounding, self._trace)
         knowledge = next((t for t in registry.tools if isinstance(t, HybridKnowledgeTool)), None)
@@ -672,7 +676,8 @@ class AgentRunner:
         else:
             context.image_task = None
         ev.images = images
-        view = await understand(self.model, question, context.history, images)
+        understanding_model = self.reader if images else self.model
+        view = await understand(understanding_model, question, context.history, images)
         ev.user_observation = view.image_observation
         ev.visible_text = view.image_visible_text if images else ""
         if images and view.image_observation:
@@ -924,7 +929,7 @@ class AgentRunner:
         self, question: str, view: Understanding, ev: Evidence
     ) -> dict[str, JsonValue]:
         identifiers = tuple("user:image:" + image.attachment_id for image in ev.images)
-        if self.model is None:
+        if self.reader is None:
             return self.responses.build(
                 answer="图片理解服务暂不可用，请稍后重试。",
                 status="limited",
@@ -937,7 +942,7 @@ class AgentRunner:
             )
         await ev.notify("composing", {"label": "理解上传图片"})
         try:
-            completed = await self.model.complete(
+            completed = await self.reader.complete(
                 [
                     {
                         "role": "system",

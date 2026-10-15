@@ -106,6 +106,7 @@ def create_web_app(
     daily_chat_limit: int = 100,
     runtime_mode: Mode = "legacy",
     model: ProductionModel | None = None,
+    reader: ProductionModel | None = None,
     approved_direct_rules: frozenset[str] = frozenset(),
     retrieval_mode: str = "hybrid",
     embedder: CloudflareEmbedder | None = None,
@@ -251,6 +252,7 @@ def create_web_app(
                 jev=plugin,
                 web_service=web_service,
                 snapshots=snapshots,
+                reader=reader if isinstance(reader, ToolCallingModel) else None,
             )
             if agent_loop and runtime_mode == "phase2"
             else None
@@ -401,7 +403,7 @@ def _register_shell(app: FastAPI, state: WebState, version: str = "") -> None:
                 "runtime_mode": runtime_mode,
                 "images_enabled": state.attachments is not None
                 and state.agent is not None
-                and state.agent.model is not None,
+                and state.agent.reader is not None,
                 "place_discovery_enabled": state.place_discovery is not None,
                 "model_configured": (
                     model is not None if runtime_mode != "legacy" else dify is not None

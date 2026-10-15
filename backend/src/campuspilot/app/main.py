@@ -22,6 +22,12 @@ def model_from_env() -> ChatCompletionsModel | None:
     return generation_model()
 
 
+def reader_from_env() -> ChatCompletionsModel | None:
+    from campuspilot.migration_config import reader_model
+
+    return reader_model()
+
+
 def direct_rules(settings: Settings) -> frozenset[str]:
     if not settings.direct_rules_report:
         return frozenset()
@@ -64,6 +70,7 @@ def build_app(settings: Settings) -> FastAPI:
         daily_chat_limit=settings.daily_chat_limit,
         runtime_mode=mode,
         model=model_from_env() if mode != "legacy" else None,
+        reader=reader_from_env() if mode != "legacy" else None,
         approved_direct_rules=direct_rules(settings),
         retrieval_mode=settings.retrieval_mode,
         embedder=embedder_from(settings) if mode == "phase2" else None,
