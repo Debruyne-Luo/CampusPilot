@@ -16,10 +16,11 @@ export function answerBadge(body) {
 export function planCard(state) {
   const list = h("ol", { class: "plan-steps", "aria-label": "执行计划" });
   for (const s of state.steps) {
+    const runningText = s.status === "running" ? `${s.label?.includes("查") || s.label?.includes("搜") ? "" : "正在"}${s.label}…` : (s.meta || "");
     list.append(h("li", { class: `step ${s.status}`, "data-key": s.key },
       h("span", { class: "dot", "aria-hidden": "true" }),
       h("span", { class: "label" }, s.label),
-      h("span", { class: "meta" }, s.status === "running" ? "进行中…" : s.meta || ""),
+      h("span", { class: "meta" }, s.status === "running" ? (s.meta || "进行中…") : s.meta || ""),
       h("span", { class: "sr-only" }, { done: "已完成", running: "进行中", pending: "等待", empty: "无结果", skipped: "跳过" }[s.status] || "")));
   }
   return h("section", { class: "card plan", "aria-label": "执行计划" }, h("h4", {}, "执行计划"), list);
@@ -34,18 +35,42 @@ export function citedCount(body) {
 function conclusion(body) {
   const status = body.result_status || "success";
   const ok = status === "success";
+  const n = citedCount(body);
+  const title = (body.places || [])[0]?.name || "";
+  const rail = (body.citations || []).slice(0, 3);
   return h("section", { class: `card answer ${status}` },
-    h("span", { class: `badge ${ok ? "ok" : "warn"}` }, ok ? answerBadge(body) : STATUS[status] || status),
+    h("div", { class: "stream-line", "aria-hidden": "true" }, h("i", {})),
+    h("div", { class: "kicker" }, ok ? `已核对 · 引用 ${n} 条` : (STATUS[status] || status)),
+    title ? h("h3", { class: "bigq" }, title) : null,
     h("p", { class: "conclusion" }, body.answer || ""),
+    rail.length ? h("div", { class: "srcs" }, rail.map((c, i) =>
+      h("div", { class: "src" }, h("b", {}, `[${i + 1}] ${c.title || c.id}`),
+        h("span", {}, [c.source_label || "官方材料", c.date || null].filter(Boolean).join(" · "),
+          c.url ? h("a", { href: c.url, target: "_blank", rel: "noopener noreferrer" }, " ↗") : null)))) : null,
     body.degraded_reason ? h("p", { class: "fineprint" }, DEGRADED[body.degraded_reason] || "当前只提供能够确认的信息。") : null);
 }
 
 function stepsCard(services) {
   const steps = services.flatMap((s) => s.steps || []);
   if (!steps.length) return null;
-  return h("details", { class: "card citations" }, h("summary", {}, "办理方式"),
-    h("ul", { class: "steps" }, steps.map((s) => h("li", {},
-      s.condition ? h("p", { class: "fineprint" }, `适用：${s.condition}`) : null, s.instruction))));
+  return h("section", { class: "card" }, h("div", { class: "kicker" }, "办理方式"),
+    h("ol", { class: "numsteps" }, steps.map((s, i) => h("li", {},
+      h("span", { class: "no" }, String(i + 1).padStart(2, "0")),
+      h("span", {}, s.condition ? `${s.instruction}（适用：${s.condition}）` : s.instruction)))));
+}
+
+export function serviceLinksCard(body) {
+  const links = normalizeServiceLinks(body);
+  if (!links.length) return null;
+  return h("section", { class: "card service-links", "aria-label": "网上办理" },
+    h("h4", {}, "网上办理"),
+    links.map((link) => h("div", { class: "service-link-row" },
+      h("p", {}, h("strong", {}, link.title)),
+      h("a", { class: "chip go", href: link.url, target: "_blank", rel: "noopener noreferrer", "aria-label": `${link.action_label}：${link.title}` }, link.action_label),
+      h("p", { class: "fineprint" }, link.hints.join(" · ")),
+      h("p", { class: "fineprint" }, `依据：${link.source_title || "官方材料"} `,
+        link.source_url ? h("a", { href: link.source_url, target: "_blank", rel: "noopener noreferrer" }, "查看入口依据") : null))),
+    h("p", { class: "fineprint" }, "入口来自已引用的官方材料；当前可用性未核实，请以平台提示为准。"));
 }
 
 export function serviceLinksCard(body) {
@@ -96,13 +121,16 @@ export function placesCard(places, { onFocus, onGo, onFrom, origin = null }) {
 function citationsCard(citations) {
   if (!citations?.length) return null;
   const shown = citations.slice(0, 6);
+  const official = citations.filter((c) => String(c.source_label || "").includes("官方") || String(c.authority || "").startsWith("official_") || c.official).length;
+  const third = citations.length - official;
+  const mix = official && third ? ` · 官方 ${official} / 第三方 ${third}` : official ? ` · 官方 ${official}` : "";
   return h("details", { class: "card citations" },
-    h("summary", {}, h("span", {}, "引用来源"), h("span", { class: "count-pill" }, `${citations.length} 条`)),
-    shown.map((c, i) => h("details", {},
+    h("summary", {}, h("span", {}, "全部引用来源"), h("span", { class: "count-pill" }, `${citations.length} 条${mix}`)),
+    shown.map((c, i) => h("details", { id: `cite-${i + 1}` },
       h("summary", {}, `[${i + 1}] ${c.title || c.id}`),
       h("div", { class: "cite-meta" },
         [c.source_label, c.publisher, c.date ? `${c.date_kind === "retrieved" ? "采集于 " : ""}${c.date}` : null, c.audience ? `适用：${c.audience}` : null].filter(Boolean).join(" · "),
-        c.url ? h("a", { href: c.url, target: "_blank", rel: "noopener noreferrer" }, " 查看原文") : null))));
+        c.url ? h("a", { href: c.url, target: "_blank", rel: "noopener noreferrer" }, " 查看原文↗") : null))));
 }
 
 function webSourcesCard(sources) {

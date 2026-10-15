@@ -148,6 +148,8 @@ const Guidance = typeof document === "undefined" ? null : (() => {
     slot.querySelector('.guidance-step-label').textContent=`下一步 · 第 ${step+1} / ${context.route.steps.length} 步`;
     slot.querySelector('h3').textContent=context.route.steps[step] || '继续沿路线步行';
     slot.querySelector('.guidance-progress').textContent=`剩余约 ${Math.round(progress.remaining)} 米`;
+    const bar=slot.querySelector('.g-progress i');
+    if (bar && distance > 0) bar.style.width=`${Math.max(0,Math.min(100,(travelled/distance)*100))}%`;
   }
   function render() {
     const slot=document.querySelector('.guidance-slot'); if (!slot) return;
@@ -163,12 +165,28 @@ const Guidance = typeof document === "undefined" ? null : (() => {
     box.append(element('p','前往 ' + context.target.name,'guidance-target'));
     if (context.detail) box.append(element('p',context.detail,'guidance-detail'));
     const status=element('p',note,note === '按参考路线步行，留意现场道路与入口。' ? 'guidance-normal-note' : ''); status.setAttribute('role','status'); box.append(status);
-    if (phase === 'arrived') box.append(element('h3','已到达目的地附近'));
+    // Honest progress: fraction of the real route already covered (GPS or demo position).
+    const total=Number(context.route.distance) || 0;
+    function progressBar(remaining) {
+      const wrap=element('div',undefined,'g-progress'); wrap.setAttribute('aria-hidden','true');
+      const fill=element('i'); wrap.append(fill);
+      if (total > 0) fill.style.width=`${Math.max(0,Math.min(100,(1-remaining/total)*100))}%`;
+      return wrap;
+    }
+    if (phase === 'arrived') {
+      const done=element('div',undefined,'g-arrived');
+      done.append(element('span','✓','tick'),element('h3','已到达目的地附近'));
+      box.append(done);
+      box.append(element('p','请核对建筑入口与楼层指引。','guidance-arrived-note'));
+    }
     else if (progress?.status === 'walking') {
       box.append(element('p',`下一步 · 第 ${progress.step+1} / ${context.route.steps.length} 步`,'guidance-step-label'));
       box.append(element('h3',context.route.steps[progress.step] || '继续沿路线步行'));
       const remaining=Math.round(progress.remaining), time=Math.max(1,Math.ceil(context.route.time*progress.remaining/context.route.distance/60));
-      box.append(element('p',`剩余约 ${remaining} 米 · ${time} 分钟`,'guidance-progress'));
+      box.append(progressBar(progress.remaining));
+      const meta=element('div',undefined,'g-progress-meta');
+      meta.append(element('span',`剩余约 ${remaining} 米`,'guidance-progress'),element('span',`约 ${time} 分钟`));
+      box.append(meta);
     }
     if (['paused','error'].includes(phase)) box.append(button(context.demo ? '继续演示' : phase === 'paused' ? '继续引导' : '重试定位',resume));
     else if (phase !== 'arrived') {

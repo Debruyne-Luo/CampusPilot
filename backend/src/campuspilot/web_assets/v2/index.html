@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f5f6f8"><meta name="color-scheme" content="light"><title>理小龙 CDUTdino</title>
+  <meta name="theme-color" content="#f4f8f8"><meta name="color-scheme" content="light dark"><title>理小龙 CDUTdino</title>
   <link rel="icon" href="/assets/v2/brand-icon.png" type="image/png"><link rel="apple-touch-icon" href="/assets/v2/brand-icon.png"><link rel="manifest" href="/assets/v2/manifest.webmanifest">
   <link rel="stylesheet" href="/assets/v2/app.css">
   <link rel="stylesheet" href="/assets/v2/desktop-enhancements.css">
@@ -20,17 +20,20 @@
       <img class="brand-mark" src="/assets/v2/brand-icon.png" alt="" width="34" height="34">
       <div class="brand"><b>理小龙</b><small>CDUTdino</small></div>
       <span id="status" class="status" role="status">正在连接…</span>
+      <span class="theme-seg" role="group" aria-label="深色或浅色">
+        <button id="theme-light" type="button" aria-pressed="true">浅色</button><button id="theme-dark" type="button" aria-pressed="false">深色</button>
+      </span>
       <button id="new-chat" class="text-button" type="button">新对话</button>
       <button id="handling-entry" class="text-button" type="button" aria-controls="handling-panel" aria-expanded="false">办理清单</button>
       <button id="desktop-settings" class="text-button desktop-only settings-trigger" type="button" aria-label="阅读偏好" aria-haspopup="dialog" title="阅读偏好">⚙</button>
     </header>
     <div id="thread" class="thread" role="log" aria-live="polite" aria-label="对话记录">
       <section id="empty" class="empty">
-        <h1>我是理小龙，少翻几篇通知，少跑一趟冤枉路。</h1>
-        <p>说出你要办的事：我先列计划、查官方依据，再给你清单和去哪办，还能带你走过去。</p>
+        <div class="kicker">校园问答 · 引用可验</div>
+        <h1>我是理小龙，<span class="hl">帮你少跑冤枉路。</span></h1>
+        <p>说出要办的事——我列计划、查官方依据，给你清单和路线，还能带你走过去。</p>
         <div class="chips" aria-label="试试这些问题">
           <button type="button" class="chip" data-question="校园卡丢了怎么补办？">校园卡丢了怎么补办？</button>
-          <button type="button" class="chip" data-question="王洪辉老师的办公室在哪？">王洪辉老师的办公室在哪？</button>
           <button type="button" class="chip" data-question="研究生在读证明怎么开？">研究生在读证明怎么开？</button>
           <button type="button" class="chip" data-question="学生邮箱怎么激活？">学生邮箱怎么激活？</button>
           <button type="button" class="chip" data-question="附近哪里可以拿快递？">附近哪里可以拿快递？</button>
