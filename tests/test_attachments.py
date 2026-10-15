@@ -51,6 +51,8 @@ def image_bytes(format: str = "PNG", size: tuple[int, int] = (64, 32)) -> bytes:
 
 class ImageAgent:
     model = object()
+    # Image availability follows the reader model, so the stub mirrors that attribute too.
+    reader = object()
 
     def __init__(self) -> None:
         self.seen: list[tuple[str, tuple[ImageInput, ...]]] = []
