@@ -73,20 +73,6 @@ export function serviceLinksCard(body) {
     h("p", { class: "fineprint" }, "入口来自已引用的官方材料；当前可用性未核实，请以平台提示为准。"));
 }
 
-export function serviceLinksCard(body) {
-  const links = normalizeServiceLinks(body);
-  if (!links.length) return null;
-  return h("section", { class: "card service-links", "aria-label": "网上办理" },
-    h("h4", {}, "网上办理"),
-    links.map((link) => h("div", { class: "service-link-row" },
-      h("p", {}, h("strong", {}, link.title)),
-      h("a", { class: "chip go", href: link.url, target: "_blank", rel: "noopener noreferrer", "aria-label": `${link.action_label}：${link.title}` }, link.action_label),
-      h("p", { class: "fineprint" }, link.hints.join(" · ")),
-      h("p", { class: "fineprint" }, `依据：${link.source_title || "官方材料"} `,
-        link.source_url ? h("a", { href: link.source_url, target: "_blank", rel: "noopener noreferrer" }, "查看入口依据") : null))),
-    h("p", { class: "fineprint" }, "入口来自已引用的官方材料；当前可用性未核实，请以平台提示为准。"));
-}
-
 /**
  * "去哪办": every place is selectable, with its own distance and 带我去. When the origin is
  * known the list is nearest-first and the nearest is marked 推荐. `card.update(origin)`
