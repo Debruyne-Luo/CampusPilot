@@ -5,19 +5,20 @@
 | 项目 | 当前结果 |
 | --- | --- |
 | 用户入口 | https://cdutdino.pages.dev/ |
-| 源码提交 | `2f2604b6fef51a8662e953632d6ebab1e14bc79b` |
-| 分支 | `feat/desktop-backend-integration`（未合并 main） |
-| 发布目录 | `/opt/campuspilot/releases/r-e950e1d98cfc` |
-| 前端资源 ID | `0fe1e54412d4` |
+| 源码提交 | `2b8dd1b394f3934e11d3f67d4cddfabcc08ac1b3` |
+| 分支 | `main`（整合已回到主干） |
+| 发布目录 | `/opt/campuspilot/releases/r-869cfdc79a57` |
+| 前端资源 ID | `a1dfcaa50a54` |
 | 知识包 | `approved-20261011b` / `kb-f08fa4fd8b583700`（未改） |
-| 回滚目标 | `/opt/campuspilot/releases/r-994da5858c65` |
+| 回滚目标 | `/opt/campuspilot/releases/r-e950e1d98cfc` |
 
-本次发布包含 Teal 玻璃主题前端、架构审查修正（观测、快照固定、执行边界、部分回答）
-及此前的图片证据后端、桌面交互与办理清单。首次发布因服务器 venv 缺少 `pillow` 触发
-健康检查失败并自动回滚，补装依赖后重发成功；外部验证见
-[集成发布记录](releases/integration-20261015.md)。
+当前线上包含 Teal 玻璃主题前端、架构审查修正、图片证据后端、桌面交互与办理清单，
+以及 GPS 引导坐标转换修复。高德在线地点搜索已开启（`CAMPUSPILOT_AMAP_DISCOVERY=on`
+＋独立 `AMAP_WEB_SERVICE_KEY`）。本轮两次发布的细节见
+[集成发布记录](releases/integration-20261015.md) 与
+[GPS 修复发布记录](releases/gpsfix-20261015.md)。
 
-服务器 venv 依赖已补齐 Pillow；`deploy/vps/02-venv-and-deps.sh` 原本已含该依赖。
+`CAMPUSPILOT_IMAGES` 仍为关闭：当前模型实测无法读图。
 真实手机 Safari／微信、实际 GPS 路线与 3D 引导仍未验收。
 `python scripts/check_live_baseline.py` 默认对照发布清单；此离线检查不证明服务器仍运行该版本。
 下方记录只保留为历史证据，其版本、测试结论和清理约束不应覆盖本次发布。
