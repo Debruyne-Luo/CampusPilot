@@ -38,6 +38,23 @@ const placeCards = new Set();
 
 window.element = (tag, text, className) => h(tag, { class: className }, text ?? ""); // for guidance.js
 
+// ---- theme: light default, persisted per browser -------------------------------------
+const THEME_KEY = "campuspilot:theme:v1";
+function applyTheme(mode) {
+  document.documentElement.dataset.theme = mode;
+  try { localStorage.setItem(THEME_KEY, mode); } catch { /* private mode */ }
+  const light = mode !== "dark";
+  $("theme-light")?.classList.toggle("on", light);
+  $("theme-dark")?.classList.toggle("on", !light);
+  $("theme-light")?.setAttribute("aria-pressed", String(light));
+  $("theme-dark")?.setAttribute("aria-pressed", String(!light));
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", light ? "#f4f8f8" : "#040708");
+}
+try { applyTheme(localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light"); }
+catch { applyTheme("light"); }
+$("theme-light")?.addEventListener("click", () => applyTheme("light"));
+$("theme-dark")?.addEventListener("click", () => applyTheme("dark"));
+
 const map = createMap({
   frame: $("map-frame"), fallback: $("map-fallback"),
   status: (text) => { $("map-status").textContent = text; $("map-status").hidden = !text; },
@@ -182,10 +199,11 @@ async function go(raw) {
   showRouteReady(target,r);
 }
 function showRouteReady(target,r) {
-  note(h("b", {}, `${origin.label} → ${target.name}`),
-    h("span", {}, ` 步行约 ${Math.max(1, Math.round(r.time / 60))} 分钟 · ${Math.round(r.distance)} 米 `),
-    h("button", { type: "button", class: "chip go", onclick: () => startGuidance(target, r) }, demoOnly() ? "开始路线演示" : "开始步行引导"),
-    h("button", {type:"button",class:"chip ghost",onclick:()=>{pendingTarget=target;note(...originChooser("换个起点："));}},"换起点"));
+  note(h("div", { class: "route-head" }, h("b", {}, `${origin.label} → ${target.name}`),
+    h("small", {}, `步行约 ${Math.max(1, Math.round(r.time / 60))} 分钟 · ${Math.round(r.distance)} 米`)),
+    h("div", { class: "card-actions" },
+      h("button", { type: "button", class: "chip go", onclick: () => startGuidance(target, r) }, demoOnly() ? "开始路线演示" : "开始步行引导"),
+      h("button", {type:"button",class:"chip ghost",onclick:()=>{pendingTarget=target;note(...originChooser("换个起点："));}},"换起点")));
 }
 // ?demo=1 makes 理小龙 walk the route by itself; ?speed= metres per second (default 9).
 const params = new URLSearchParams(location.search);
@@ -373,11 +391,21 @@ async function submit(text) {
   const result = await ask(text, (e) => {
     if (ticket !== conversationRevision) return;
     state = reducePlan(state, e);
-    if (e.event === "answer_delta") { if (!live.isConnected) thread.append(live); live.textContent = state.answer; }
+    if (e.event === "answer_delta") {
+      if (!live.isConnected) {
+        const bar = h("div", { class: "stream-line", "aria-hidden": "true" }, h("i", { style: "width:12%" }));
+        bar.dataset.streamBar = "true";
+        thread.append(bar, live);
+      }
+      live.textContent = state.answer;
+      const barFill = thread.querySelector('[data-stream-bar] i');
+      if (barFill) barFill.style.width = `${Math.min(90, 12 + state.answer.length / 24)}%`;
+    }
     else paint();
     scrollEnd();
   }, fetch, { attachmentIds, signal: chatController.signal });
   if (ticket !== conversationRevision) return;
+  thread.querySelector('[data-stream-bar]')?.remove();
   if (!result.ok) {
     if (state.answer) {
       live.textContent = `${state.answer}\n\n（以上内容未完成，尚未核对引用）`;

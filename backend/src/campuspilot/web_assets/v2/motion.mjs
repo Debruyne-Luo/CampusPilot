@@ -4,24 +4,24 @@ import {enterDesktop} from './desktop-motion.mjs';
 
 const desktop = () => typeof matchMedia === "function" && matchMedia("(min-width:1280px)").matches;
 const reduced = () => typeof matchMedia === "function" && (matchMedia("(prefers-reduced-motion: reduce)").matches || (desktop() && document.body.dataset.reduceMotion === "true"));
-const SPRING = [0.2, 1.2, 0.4, 1];
+const SPRING = "cubic-bezier(.2,.7,.2,1)";
 
 export function stepIn(el) {
   if (reduced() || !el) return;
   if (desktop()) { enterDesktop([el], .16, 0); return; }
-  animate(el, { opacity: [0, 1], transform: ["translateY(8px)", "none"] }, { duration: 0.38, ease: SPRING });
+  animate(el, { opacity: [0, 1], transform: ["translateY(8px)", "none"] }, { duration: 0.22, ease: SPRING });
 }
 export function tick(el) {
   if (reduced() || !el) return;
   if (desktop()) { enterDesktop([el], .12, 0); return; }
-  animate(el, { transform: ["scale(.4)", "scale(1)"] }, { duration: 0.32, ease: SPRING });
+  animate(el, { transform: ["scale(.4)", "scale(1)"] }, { duration: 0.22, ease: SPRING });
 }
 export function cardsIn(els) {
   if (reduced() || !els.length) return;
   if (desktop()) {
-    enterDesktop(els, .2, 6);
+    enterDesktop(els.slice(0, 6), .22, 8);
     return;
   }
-  animate(els, { opacity: [0, 1], transform: ["translateY(12px) scale(.985)", "none"] },
-    { duration: 0.42, delay: stagger(0.07), ease: SPRING });
+  animate(els.slice(0, 6), { opacity: [.4, 1], transform: ["translateY(8px)", "none"] },
+    { duration: 0.22, delay: stagger(0.03), ease: SPRING });
 }
