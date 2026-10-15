@@ -1,25 +1,25 @@
 # 当前线上版本基线
 
-核对日期：2026-10-13（Asia/Shanghai）。用户批准从功能分支发布办理清单，不合并 main。
+核对日期：2026-10-15（Asia/Shanghai）。用户批准发布整合后的集成分支，不合并 main。
 
 | 项目 | 当前结果 |
 | --- | --- |
 | 用户入口 | https://cdutdino.pages.dev/ |
-| 源码提交 | `258ff205b73d6b2207d0234d26f04fcdec09134a` |
-| 分支 | `feat/handling-checklist`（未合并 main） |
-| 发布目录 | `/opt/campuspilot/releases/r-994da5858c65` |
-| 前端资源 ID | `cc200f2fc48f` |
+| 源码提交 | `2f2604b6fef51a8662e953632d6ebab1e14bc79b` |
+| 分支 | `feat/desktop-backend-integration`（未合并 main） |
+| 发布目录 | `/opt/campuspilot/releases/r-e950e1d98cfc` |
+| 前端资源 ID | `0fe1e54412d4` |
 | 知识包 | `approved-20261011b` / `kb-f08fa4fd8b583700`（未改） |
-| 回滚目标 | `/opt/campuspilot/releases/r-0f1805acf68e` |
+| 回滚目标 | `/opt/campuspilot/releases/r-994da5858c65` |
 
-服务器 `current` 已切换；122 个发布文件逐项 SHA-256 与 Git blob 完全一致。
-相比此前部署只改变 6 个 v2 前端文件；后端、知识、依赖及服务器配置未改。
-正式域名首页、healthz 可达，真实回答加入、刷新、勾选、办完/撤销、新对话保留通过。
-独立 QA 锁定源码 SHA 通过；真实 iPhone Safari/微信及实际路线仍未验收。
+本次发布包含 Teal 玻璃主题前端、架构审查修正（观测、快照固定、执行边界、部分回答）
+及此前的图片证据后端、桌面交互与办理清单。首次发布因服务器 venv 缺少 `pillow` 触发
+健康检查失败并自动回滚，补装依赖后重发成功；外部验证见
+[集成发布记录](releases/integration-20261015.md)。
 
-本次 [发布清单](releases/live-20261013.manifest.json) 与
-[发布及交接记录](releases/checklist-20261013.md) 为当前依据。
-`python scripts/check_live_baseline.py` 默认对照本次清单；此离线检查不证明服务器仍运行该版本。
+服务器 venv 依赖已补齐 Pillow；`deploy/vps/02-venv-and-deps.sh` 原本已含该依赖。
+真实手机 Safari／微信、实际 GPS 路线与 3D 引导仍未验收。
+`python scripts/check_live_baseline.py` 默认对照发布清单；此离线检查不证明服务器仍运行该版本。
 下方记录只保留为历史证据，其版本、测试结论和清理约束不应覆盖本次发布。
 
 ## 2026-10-12 历史核对记录（非当前部署）

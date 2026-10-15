@@ -1,5 +1,11 @@
 # 自动采集工具清理（2026-10-15）
 
+> 最新清理状态：重新出现的两份采集入口和专属测试已再次移入回收站；
+> 隔离环境与 `.crawl4ai` 缓存仍不存在。正式卸载 `chrome@openai-bundled` 已成功，
+> 复核本机连接桥注册项、JSON 清单及宿主程序均不存在。
+> Chrome 商店版 ChatGPT 扩展仍安装并禁用，需要用户在浏览器扩展管理页手动移除。
+> 下方保留各次检查的时间顺序；ChatGPT 故障仍未证实修复。
+
 用户要求检查 Chrome 报错并清理此前配置的自动采集工具。清理使用回收站，未清空回收站；
 已从原位置移除，可由用户恢复。直接永久删除命令被自动审批拒绝，改用可恢复方式完成。
 
@@ -80,3 +86,79 @@ metadata 的 `default_model_slug`，提交时将所选 `model` 写入请求；�
 下一步最小证据为成功首轮及失败续聊的 `model`，以及失败请求状态码和错误 code/message。
 不需要原始会话 ID、消息正文、Cookie、Authorization、验证令牌或完整 HAR。现阶段
 根因和修复均未确认，不应宣称重装、清缓存或卸载扩展能够解决。
+
+### 已取得失败请求证据
+
+用户随后提供 DevTools 截图：`POST /backend-api/f/conversation` 返回 HTTP 404，
+响应正文为 `{"detail":"Model not found"}`。同一失败请求的 `model` 为
+`gpt-6-thinking`，`client_contextual_info.app_surface` 为 `codex_browser`，
+`app_name` 为 `chatgpt.com`。仅记录必要字段，不保存截图中消息关系 ID。
+
+这确认该请求所选择的模型在该请求上下文中被拒绝；尚不能判断该模型是否全局停用、
+对账号不可用，还是客户端选择与服务端路由不匹配。成功首轮与 Edge 的实际请求模型
+仍未取得。`codex_browser` 是客户端自报字段，不能单凭它证明扩展仍在运行。
+下一步通过可见模型选择器重新选择当前可用模型并连续三轮验证；若选择器只显示思考
+强度或没有模型，读取用户当前 `models` 请求响应中的可用模型标识后再决定，不编造
+可选项、不手工篡改请求、不读取 Cookie 或本地模型偏好。问题尚未证实修复。
+
+## 用户要求的变更追溯复查
+
+本次仅进行只读核查，没有启动/控制浏览器、运行采集、修改浏览器资料或注册表。
+范围为本会话及 `collector_experiments` 的工具调用、现有采集源码及 Git 版本、当前
+Chrome/Edge 启动参数与策略、相关扩展安全字段、本机连接桥、系统网络配置和目标路径。
+未读取 Cookie、浏览历史、登录凭据或站点存储。
+
+- **已确认操作过日常 Chrome。** 根会话日志第 57、66 行实际执行
+  `cua.createBrowserTab('chrome', 官方页面)`，第 340、498、820 行连接已登录砚湖页面。
+  不能把全部浏览器操作描述为独立临时配置。10 月 15 日北京时间 10:22:05–10:22:13
+  也重新连接过浏览器以检查故障；扩展管理页访问随后被安全策略拒绝。
+- **隔离采集脚本没有发现直接改写日常资料的代码路径。** 当前源码与 Git `43633f8`
+  相同。DrissionPage 使用 `ChromiumOptions(read_file=False)`、临时目录、`auto_port()`
+  及禁用扩展参数；Crawl4AI 关闭持久上下文、使用隔离上下文。系统代理只通过
+  `OpenKey`/`QueryValueEx` 读取；直连模式参数只作用于创建的采集进程。
+  已核对的历史工具调用未发现写 Chrome Preferences/Secure Preferences、代理策略、
+  DNS 或 hosts 的命令。源码和已审日志均不能替代操作前后完整快照。
+- **当前 Chrome/Edge 主进程没有相关覆盖参数或策略。** 未发现自动化、远程调试、
+  指定资料目录、加载扩展或代理启动参数；相关 HKCU/HKLM Policies 不存在。
+  未发现本轮采集进程。系统代理仍为 `127.0.0.1:7897`，端口由 Clash Verge 的
+  `verge-mihomo.exe` 监听；相关域名 hosts 覆盖为零。本次未修改这些配置。
+- **浏览器控制组件仍有保留。** Chrome ChatGPT 扩展的 `disable_reasons:[1]`
+  与用户禁用一致；安装/更新记录早于本轮采集。Native Messaging 注册及清单仍在，
+  最后写入为北京时间 10 月 15 日 08:41:30。根会话在 08:35–08:50 没有工具调用，
+  不能据写入时间归因于本线程，也不能排除桌面应用自动注册/恢复集成的影响。
+  Edge 未找到对应扩展配置或连接桥。这些差异需要保留为疑点，并非已确认根因。
+- **清理现状已变化。** `probe_official_collectors.py`、
+  `package_official_captures.py`、`tests/test_official_collectors.py` 当前重新存在，
+  创建/最后写入均为北京时间 10 月 15 日 14:20:13，与 Git `43633f8` 无内容差异。
+  probe 的大小差异完全由 CRLF/LF 换行解释。不能据时间戳确定恢复者或恢复动作；
+  未擅自删除这些已跟踪文件。`output/official-tools` 与 `.crawl4ai` 仍不存在。
+
+结论：没有找到“自动采集脚本直接改坏日常 Chrome 配置”的证据；确实使用过日常
+Chrome 的浏览器控制集成，其对受控标签的影响尚不能排除。当前已确认的直接失败是
+请求 `gpt-6-thinking` 被该请求上下文以 404 拒绝。尚未证明为何选中该模型或与集成
+是否有因果关系，不应声称完全与此前操作无关，也不能声称已经定位或修复。
+
+追溯来源（仅必要工具调用行，不复制日志中的其他内容）：
+
+- `C:/Users/21207/.codex/sessions/2026/10/14/rollout-2026-10-14T14-06-15-01a13904-c393-7542-911f-d2f947fb3b02.jsonl`：57、66、340、498、820、2200–2210、2263–2266 行。
+- `C:/Users/21207/.codex/sessions/2026/10/14/rollout-2026-10-14T14-55-47-01a13932-1c10-7b30-b16f-848ae7b49492.jsonl`：105、112、130、181、217、305 行。
+
+## 再次清理的实际执行结果
+
+用户追问清理状态后，按此前明确的清理授权执行，而非仅作检查：
+
+- 使用正式插件管理入口卸载 `chrome`，返回 `status: uninstalled`，
+  插件 ID 为 `chrome@openai-bundled`。
+- 独立只读复核：`HKCU/Software/Google/Chrome/NativeMessagingHosts/com.openai.codexextension`
+  注册项、`AppData/Local/OpenAI/extension/com.openai.codexextension.json`、原插件
+  `extension-host/windows/x64/extension-host.exe` 均不存在；未发现相关宿主进程。
+- 对已确认恢复且与 Git 内容相同的两份专用采集入口和专属测试，核对绝对路径在工作区
+  内、类型为普通文件后再次 `SendToRecycleBin`。三份共 49,212 字节，执行后原路径均
+  不存在。未清空回收站，未提交这些删除。
+- 复核先前全部八个清理目标的原路径均不存在，知识库 `current.json` 清理前后 SHA256
+  相同；没有修改 Chrome 个人资料、其他扩展、系统代理/DNS 或知识内容。
+- Chrome 商店版 ChatGPT 扩展仍有配置及安装目录，保持 `disable_reasons:[1]`。
+  正式插件卸载没有移除它；没有通过文件或注册表绕过浏览器管理限制去删除。
+  用户仍需在 Chrome 扩展管理页选择“移除”。此残留须明确报告，不能宣称全部清空。
+
+仅验证清理状态，没有重新运行浏览器或用账号发送测试消息，ChatGPT 是否恢复仍未验证。
