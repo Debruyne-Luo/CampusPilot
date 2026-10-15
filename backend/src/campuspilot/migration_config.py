@@ -32,6 +32,34 @@ def secret(prefix: str) -> str:
     return key
 
 
+def bounded_float(name: str, default: float) -> float:
+    """Positive numeric budget from the environment; blank or unset means the default."""
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return default
+    try:
+        value = float(raw)
+    except ValueError as exc:
+        raise ValueError(f"{name} must be a number") from exc
+    if value <= 0:
+        raise ValueError(f"{name} must be positive")
+    return value
+
+
+def bounded_int(name: str, default: int) -> int:
+    """Integer budget from the environment; blank or unset means the default."""
+    raw = os.environ.get(name, "").strip()
+    if not raw:
+        return default
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise ValueError(f"{name} must be an integer") from exc
+    if value <= 0:
+        raise ValueError(f"{name} must be positive")
+    return value
+
+
 def price(prefix: str) -> TokenPrice:
     names = (prefix + "_INPUT_USD_PER_MILLION", prefix + "_OUTPUT_USD_PER_MILLION")
     values = [os.environ.get(n, "").strip() for n in names]
@@ -47,7 +75,13 @@ def generation_model() -> ChatCompletionsModel | None:
     )
     if not base and not model:
         return None
-    return ChatCompletionsModel(base_url=base, model=model, api_key=secret("CAMPUSPILOT_MODEL"))
+    return ChatCompletionsModel(
+        base_url=base,
+        model=model,
+        api_key=secret("CAMPUSPILOT_MODEL"),
+        timeout_seconds=bounded_float("CAMPUSPILOT_MODEL_TIMEOUT", 14.0),
+        max_output_tokens=bounded_int("CAMPUSPILOT_MODEL_MAX_TOKENS", 700),
+    )
 
 
 def shadow_client() -> JevShadowClient:
