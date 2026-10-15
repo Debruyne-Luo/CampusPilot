@@ -2,7 +2,7 @@
 
 import asyncio
 import json
-from collections.abc import Callable
+from collections.abc import AsyncIterator, Callable
 from pathlib import Path
 from typing import Any
 
@@ -333,6 +333,54 @@ def test_chat_completions_complete_parses_tool_calls() -> None:
     result = asyncio.run(model.complete([{"role": "user", "content": "x"}], tools, json_mode=True))
     assert result.tool_calls[0].name == "search_place" and result.input_tokens == 5
     assert seen[0]["tools"] == tools and seen[0]["response_format"] == {"type": "json_object"}
+
+
+@pytest.mark.parametrize("failure", ["read_timeout", "response_body_stall"])
+def test_complete_timeouts_are_bounded_and_not_retried(failure: str) -> None:
+    class StalledBody(httpx.AsyncByteStream):
+        def __init__(self) -> None:
+            self.read_started = False
+            self.closed = False
+
+        async def __aiter__(self) -> AsyncIterator[bytes]:
+            self.read_started = True
+            yield b'{"choices":['
+            await asyncio.Event().wait()
+
+        async def aclose(self) -> None:
+            self.closed = True
+
+    body = StalledBody()
+    calls = 0
+    key = "SYNTHETIC-key-for-offline-timeout-contract"
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal calls
+        calls += 1
+        if failure == "read_timeout":
+            raise httpx.ReadTimeout(key, request=request)
+        return httpx.Response(200, stream=body)
+
+    model = ChatCompletionsModel(
+        "https://synthetic.invalid/v1", "synthetic", key,
+        transport=httpx.MockTransport(handler), timeout_seconds=0.05,
+    )
+
+    async def scenario() -> None:
+        with pytest.raises(ChatUnavailable) as raised:
+            # A missing model deadline must fail this test rather than hang the suite.
+            await asyncio.wait_for(
+                model.complete([{"role": "user", "content": "SYNTHETIC timeout fixture"}]),
+                timeout=1,
+            )
+        assert raised.value.code == "upstream_timeout"
+        assert key not in str(raised.value)
+
+    asyncio.run(scenario())
+
+    assert calls == 1
+    if failure == "response_body_stall":
+        assert body.read_started and body.closed
 
 
 # --- web wiring --------------------------------------------------------------------------------
