@@ -3,6 +3,7 @@
 import asyncio
 import copy
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -18,7 +19,13 @@ from test_jev_plugin import FakeJev
 from test_snapshot_fallback import synthetic_snapshot
 from test_web_evidence import MemoryBudget
 
-from scripts.evaluate_jev_replay import prepare_cases, replay_arm
+# `python -m pytest` puts the repo root on sys.path but the `pytest` console script (used by CI
+# via `uv run pytest`) does not, so importing the replay script needs an explicit root entry.
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.evaluate_jev_replay import prepare_cases, replay_arm  # noqa: E402
 
 
 def source_case() -> tuple[HybridRetriever, list[dict[str, Any]], list[dict[str, Any]]]:
