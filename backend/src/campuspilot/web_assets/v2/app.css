@@ -71,6 +71,11 @@ button,.chip,select,summary{touch-action:manipulation;-webkit-tap-highlight-colo
 .chip.active{border-color:var(--brand);background:var(--brand-soft);color:var(--brand)}
 .chip.go{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;border-color:transparent}
 .chip.unlocated small{color:var(--warn)}
+.service-link-row{padding:10px 0;border-top:1px dashed var(--line)}
+.service-link-row:first-of-type{padding-top:0;border-top:0}
+.service-link-row>p:first-child{margin:0 0 8px;overflow-wrap:anywhere}
+.service-link-row a.chip{text-decoration:none}
+.service-link-row .fineprint a{color:var(--brand)}
 details{border-top:1px solid var(--line);padding:8px 0}details:first-of-type{border-top:0}
 summary{cursor:pointer;font-size:14px}
 .cite-meta{font-size:var(--text-xs);color:var(--muted);margin:4px 0 0 16px}

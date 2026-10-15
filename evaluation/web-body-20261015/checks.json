@@ -1,0 +1,28 @@
+{
+  "targeted": {
+    "passed": 123,
+    "failed": 0
+  },
+  "new_regressions": 46,
+  "full": {
+    "passed": 916,
+    "failed": 3,
+    "baseline_failures": [
+      "test_release.py::test_failed_health_check_rolls_back_to_previous_release",
+      "test_release.py::test_legacy_directory_layout_is_migrated_and_used_for_rollback",
+      "test_release.py::test_old_releases_are_pruned_but_current_and_previous_kept"
+    ],
+    "cause": "Windows WinError 5 on existing POSIX directory symlink switch"
+  },
+  "ruff": "all project passed",
+  "mypy": {
+    "strict": true,
+    "files": 129,
+    "result": "passed"
+  },
+  "environment": {
+    "PYTHONUTF8": "1",
+    "basetemp_outside_repository": true
+  },
+  "production_modified": false
+}

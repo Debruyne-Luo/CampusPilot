@@ -1,5 +1,18 @@
 # Architecture and decision register
 
+## Architecture review corrections (2026-10-14)
+
+**CONFIRMED:** The user authorized the evidence-based architecture review corrections:
+metadata-only operational events, one knowledge version per Agent turn, application-owned
+execution controls for existing capabilities, and behavior-preserving evidence/response seams.
+Supported partial answers take precedence over a blanket refusal when structured evidence exists.
+The implementation and baseline comparison are in [the review handoff](ARCHITECTURE_REVIEW.zh-CN.md).
+This is local work; live configuration, deployment and real-model quality acceptance remain separate.
+
+**CONFIRMED (2026-10-14, subsequent direction):** The user removed the mandatory Muse independent
+QA stage. Codex performs verification and reports evidence directly; the Tech Lead retains final
+review/merge authority. The current workflow in [AGENTS](../AGENTS.md) supersedes historical QA gates.
+
 ## Approved backend evidence increment (2026-10-14)
 
 **CONFIRMED:** [ADR 0006](adr/0006-online-evidence-and-user-images.md) authorizes online Jev

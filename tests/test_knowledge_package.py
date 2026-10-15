@@ -90,10 +90,12 @@ def test_stale_chunks_are_flagged_and_downweighted() -> None:
     assert downweight_stale(()) == ()
 
 
-def test_bundle_flag_validates_name_and_default_runtime_is_unchanged() -> None:
+def test_bundle_flag_validates_name_and_default_runtime_is_unchanged(tmp_path: Path) -> None:
     with pytest.raises(ValueError, match="bundled"):
         SnapshotStore(DATA / "rag", "lexical", bundled="../etc")
-    default = SnapshotStore(DATA / "rag", "lexical").acquire()
+    # A locally published release must not affect the bootstrap fallback fixture.
+    (tmp_path / "bootstrap.json").write_bytes((DATA / "rag/bootstrap.json").read_bytes())
+    default = SnapshotStore(tmp_path, "lexical").acquire()
     assert default is not None and default.snapshot.version == "kb-db2f7f77dc388555"
 
 

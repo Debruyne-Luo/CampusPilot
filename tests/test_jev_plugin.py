@@ -2,13 +2,14 @@
 
 import asyncio
 import json
+from dataclasses import replace
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
 
 import httpx
 import pytest
-from campuspilot.agent.executor import JEV_CLARIFY_ANSWER, NO_BASIS_ANSWER, AgentRunner
+from campuspilot.agent.executor import NO_BASIS_ANSWER, AgentRunner
 from campuspilot.config import Settings
 from campuspilot.evaluation_budget import (
     BudgetExhausted,
@@ -28,6 +29,7 @@ from campuspilot.jev_shadow import JevShadowClient, ShadowResult
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.rag import RetrievalHit, SnapshotStore
 from campuspilot.tools import agent_registry
+from campuspilot.web_evidence import TurnEvidenceContext, WebPageEvidence
 from test_grounding_refusal import (
     DATA,
     INDEX,
@@ -220,11 +222,14 @@ def test_on_insufficient_refuses_without_citations_or_model_answer(tmp_path: Pat
     assert out["jev"]["applied"] == "refuse" and len(model.calls) == 1
 
 
-def test_on_clarify_asks_without_citations(tmp_path: Path) -> None:
+def test_on_clarify_without_user_gap_reports_missing_evidence(tmp_path: Path) -> None:
     fake = FakeJev(sufficient=0.5, mode="clarify")
-    out = run(runner(OFF_TOPIC, FakeLLM(UNDERSTOOD), fake, "on", tmp_path))
-    assert out["answer"] == JEV_CLARIFY_ANSWER and out["result_status"] == "needs_clarification"
-    assert out["citations"] == [] and out["excerpts"] == [] and out["jev"]["applied"] == "clarify"
+    model = FakeLLM(UNDERSTOOD)
+    out = run(runner(OFF_TOPIC, model, fake, "on", tmp_path))
+    assert out["answer"] == NO_BASIS_ANSWER and out["result_status"] == "empty"
+    assert "身份" not in out["answer"] and "补充" not in out["answer"]
+    assert out["citations"] == [] and out["excerpts"] == [] and out["jev"]["applied"] == "refuse"
+    assert len(model.calls) == 1
 
 
 @pytest.mark.parametrize(
@@ -306,6 +311,89 @@ def test_online_path_returns_scores_and_keeps_privacy_guard(tmp_path: Path) -> N
         )
     )
     assert private.status == "unknown" and len(sent) == 1
+
+
+@pytest.mark.parametrize("retrieved_at,published_at", [
+    ("2026-10-15T03:28:17.829643+00:00", None),
+    ("2026-10-15T11:28:17.830147+08:00", "2026-10-14T03:20:21.030902Z"),
+    ("2026-10-15T03:28:17Z", "2026-10-14"),
+])
+def test_web_source_timestamps_do_not_look_like_personal_coordinates(
+    tmp_path: Path, retrieved_at: str, published_at: str | None,
+) -> None:
+    sent: list[dict[str, Any]] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        sent.append(json.loads(request.content))
+        return httpx.Response(200, json=jev_reply(0, 0.1))
+
+    page = WebPageEvidence(
+        "web:SYNTHETIC", "SYNTHETIC paper", "https://fixture.cdut.edu.cn/SYNTHETIC",
+        "SYNTHETIC public paper on library lighting; no loan-policy evidence.",
+        "official_university", retrieved_at, published_at,
+    )
+    context = TurnEvidenceContext(task="SYNTHETIC loan policy", web_pages=(page,),
+                                  search_completed=True)
+    budget = EvaluationBudget(tmp_path, "phase2")
+    client = JevShadowClient("SYNTHETIC-key", TokenPrice(Decimal("0.042"), Decimal("0")),
+                             transport=httpx.MockTransport(handler))
+    result = asyncio.run(client.evaluate_evidence(
+        "SYNTHETIC loan policy", (), public_fixture=False, budget=budget,
+        online=True, evidence_context=context,
+    ))
+    assert result.status == "ok" and result.sufficient_probability == 0.1
+    assert len(sent) == 1 and budget.report()["calls"] == 1
+    # Only the privacy-check representation may change. The evidence sent is exact.
+    assert sent[0]["state"]["evidence_context"] == context.as_state()
+
+
+@pytest.mark.parametrize("field,private", [
+    ("retrieved_at", "104.123456,30.123456"),
+    ("retrieved_at", "2026-10-15T03:28:17.829643Z 我的密码是SYNTHETIC123"),
+    ("retrieved_at", "2026-99-99T03:28:17.829643+00:00"),
+    ("published_at", "104.123456,30.123456"),
+    ("published_at", "2026-10-14T03:28:17.829643Z 104.123456,30.123456"),
+    ("text", "SYNTHETIC position 104.123456,30.123456"),
+    ("text", "SYNTHETIC 2026-10-15T03:28:17Z position 104.123456,30.123456"),
+    ("text", "我的密码是SYNTHETIC123"),
+    ("title", "SYNTHETIC position 104.123456,30.123456"),
+    ("url", "https://fixture.cdut.edu.cn/SYNTHETIC?position=104.123456,30.123456"),
+    ("task", "SYNTHETIC position 104.123456,30.123456"),
+    ("observation", "我的密码是SYNTHETIC123"),
+    ("observation", "SYNTHETIC position 104.123456,30.123456"),
+    ("directory", "SYNTHETIC position 104.123456,30.123456"),
+])
+def test_web_metadata_exception_cannot_bypass_private_context_checks(
+    tmp_path: Path, field: str, private: str,
+) -> None:
+    sent: list[httpx.Request] = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        sent.append(request)
+        return httpx.Response(200, json=jev_reply(0, 0.1))
+
+    page = WebPageEvidence(
+        "web:SYNTHETIC", "SYNTHETIC paper", "https://fixture.cdut.edu.cn/SYNTHETIC",
+        "SYNTHETIC public document.", "official_university", "2026-10-15T03:28:17Z",
+    )
+    if field not in {"task", "observation", "directory"}:
+        changes: dict[str, Any] = {field: private}
+        page = replace(page, **changes)
+    context = TurnEvidenceContext(
+        task=private if field == "task" else "SYNTHETIC loan policy", web_pages=(page,),
+        user_observations=(private,) if field == "observation" else (),
+        directory_facts=({"description": private},) if field == "directory" else (),
+        search_completed=True,
+    )
+    budget = EvaluationBudget(tmp_path, "phase2")
+    client = JevShadowClient("SYNTHETIC-key", TokenPrice(Decimal("0.042"), Decimal("0")),
+                             transport=httpx.MockTransport(handler))
+    result = asyncio.run(client.evaluate_evidence(
+        "SYNTHETIC loan policy", (), public_fixture=False, budget=budget,
+        online=True, evidence_context=context,
+    ))
+    assert result.status == "unknown" and result.reason == "private_context"
+    assert sent == [] and budget.report()["calls"] == 0
 
 
 def test_shadow_runs_in_background_and_does_not_delay_the_answer(tmp_path: Path) -> None:

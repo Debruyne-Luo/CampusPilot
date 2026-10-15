@@ -9,6 +9,8 @@ dependencies = ["pydantic>=2.12,<3"]
 api = ["fastapi>=0.135,<1", "uvicorn>=0.34,<1", "httpx>=0.28,<1", "pillow>=12,<13"]
 # Optional vector backend; without it retrieval falls back to pure-Python cosine.
 vector = ["sqlite-vec>=0.1.6,<0.2", "numpy>=2,<3"]
+# Offline official-document maintenance; XLSX parsing uses the standard library.
+maintenance = ["pypdf>=6.10,<7"]
 
 [project.scripts]
 campuspilot = "campuspilot.__main__:main"

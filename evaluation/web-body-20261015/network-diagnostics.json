@@ -1,0 +1,262 @@
+{
+  "scope": "public read-only requests; validated public DoH; fixed-address connections; TLS verification enabled; no redirects followed by diagnostic probes",
+  "conclusion": {
+    "observed": "All four HTTPS pages return HTTP 412 and script-only challenge documents in both independent clients. Application correctly rejects the non-200 response.",
+    "likely_cause": "University website JavaScript protection. Transport Host/SNI mistakes, PDF content and charset errors do not explain the matching 412 responses.",
+    "environment_constraint": "System DNS returns non-global synthetic 198.18.0.x addresses; production default resolver must not be bypassed to connect to them. Public DoH diagnostic uses only validated global IPs.",
+    "safe_followups": [
+      "Record HTTP status and a coarse protection-page reason without storing raw challenge scripts.",
+      "Attempt provider-extracted page body only through existing public-source extraction contract, with exact URL attribution; snippets alone remain insufficient.",
+      "Preserve already grounded local answers if public bodies remain unavailable."
+    ],
+    "not_attempted": [
+      "No JS challenge execution, login, captcha, cookie replay, proxy rotation, TLS disablement or DNS/private-address protection bypass."
+    ]
+  },
+  "results": [
+    {
+      "url": "https://wxc.cdut.edu.cn/info/1012/3873.htm",
+      "observed_at": "2026-10-15T01:13:49.631664+00:00",
+      "system_dns_addresses": [
+        "198.18.0.95"
+      ],
+      "system_dns_validated": false,
+      "system_dns_rejection": "private_page_address",
+      "public_addresses": [
+        "202.115.137.77"
+      ],
+      "requests": [
+        {
+          "method": "httpx_pinned_same_as_reader",
+          "address": "202.115.137.77",
+          "status": 412,
+          "location": null,
+          "duration_ms": 171.9,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2466,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "93654b071d2f54699e92ec3830084acb723d0233425199549e9664b1f1fbb27d"
+        },
+        {
+          "method": "curl_hostname_url_public_resolve",
+          "address": "202.115.137.77",
+          "status": 412,
+          "exit_code": 0,
+          "stderr": "",
+          "duration_ms": 170.5,
+          "location": null,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2484,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "34096ae44069eda4287affdcaca907b7921f4251286888c4b5239b3353964d5e"
+        }
+      ],
+      "application_reader": {
+        "status": "error",
+        "error_type": "PageReadError",
+        "message": "page_unavailable"
+      }
+    },
+    {
+      "url": "https://lib.cdut.edu.cn/gk/jyzn.htm",
+      "observed_at": "2026-10-15T01:13:49.638013+00:00",
+      "system_dns_addresses": [
+        "198.18.0.94"
+      ],
+      "system_dns_validated": false,
+      "system_dns_rejection": "private_page_address",
+      "public_addresses": [
+        "202.115.137.77"
+      ],
+      "requests": [
+        {
+          "method": "httpx_pinned_same_as_reader",
+          "address": "202.115.137.77",
+          "status": 412,
+          "location": null,
+          "duration_ms": 213.0,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2489,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "1f30cd8259276dc6e9672c863d7caeec3de8b5c757fabb342f2adbfe8a952c49"
+        },
+        {
+          "method": "curl_hostname_url_public_resolve",
+          "address": "202.115.137.77",
+          "status": 412,
+          "exit_code": 0,
+          "stderr": "",
+          "duration_ms": 213.9,
+          "location": null,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2524,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "9b4c805b1bb503dcca81b6e962aac128cfd97d217a2171d378501e4460fc495a"
+        }
+      ],
+      "application_reader": {
+        "status": "error",
+        "error_type": "PageReadError",
+        "message": "page_unavailable"
+      }
+    },
+    {
+      "url": "https://lib.cdut.edu.cn/info/1006/1017.htm",
+      "observed_at": "2026-10-15T01:13:49.638278+00:00",
+      "system_dns_addresses": [
+        "198.18.0.94"
+      ],
+      "system_dns_validated": false,
+      "system_dns_rejection": "private_page_address",
+      "public_addresses": [
+        "202.115.137.77"
+      ],
+      "requests": [
+        {
+          "method": "httpx_pinned_same_as_reader",
+          "address": "202.115.137.77",
+          "status": 412,
+          "location": null,
+          "duration_ms": 190.5,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2490,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "e7218dd5734beb418ffbe5ffd8644856ffb7c9aa191c524fbe352682591e00e4"
+        },
+        {
+          "method": "curl_hostname_url_public_resolve",
+          "address": "202.115.137.77",
+          "status": 412,
+          "exit_code": 0,
+          "stderr": "",
+          "duration_ms": 198.6,
+          "location": null,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2524,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "9b4c805b1bb503dcca81b6e962aac128cfd97d217a2171d378501e4460fc495a"
+        }
+      ],
+      "application_reader": {
+        "status": "error",
+        "error_type": "PageReadError",
+        "message": "page_unavailable"
+      }
+    },
+    {
+      "url": "https://news.cdut.edu.cn/info/1005/21426.htm",
+      "observed_at": "2026-10-15T01:13:49.638522+00:00",
+      "system_dns_addresses": [
+        "198.18.0.96"
+      ],
+      "system_dns_validated": false,
+      "system_dns_rejection": "private_page_address",
+      "public_addresses": [
+        "202.115.137.77"
+      ],
+      "requests": [
+        {
+          "method": "httpx_pinned_same_as_reader",
+          "address": "202.115.137.77",
+          "status": 412,
+          "location": null,
+          "duration_ms": 181.4,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2507,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "32f3b2ffa9890071e7d93ea5f50d883e4c927f32270a3265138d12687ba46ac0"
+        },
+        {
+          "method": "curl_hostname_url_public_resolve",
+          "address": "202.115.137.77",
+          "status": 412,
+          "exit_code": 0,
+          "stderr": "",
+          "duration_ms": 187.9,
+          "location": null,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2467,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "a9440efb75cfb531c173ccdbcc6262e51cf3be00c1c821e6fc9452c79256a888"
+        }
+      ],
+      "application_reader": {
+        "status": "error",
+        "error_type": "PageReadError",
+        "message": "page_unavailable"
+      }
+    }
+  ]
+}

@@ -3,18 +3,24 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import re
+import sqlite3
 import stat
+import struct
 import tempfile
 from collections.abc import Callable, Iterator, Sequence
-from contextlib import contextmanager
+from contextlib import closing, contextmanager
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
-from typing import Any
+from typing import TYPE_CHECKING, Any, Literal
 from zipfile import ZipFile
 
 from campuspilot.rag import KnowledgeSnapshot, RagChunk, RagSource, canonical, digest, make_snapshot
+
+if TYPE_CHECKING:
+    from campuspilot.retrieval.vector import VectorIndex
 
 APPROVED_FILES = (
     "data/sources.json",
@@ -201,37 +207,155 @@ def write_candidate(
     atomic_write(directory / "manifest.json", canonical(manifest))
 
 
-def read_candidate(directory: Path) -> KnowledgeSnapshot:
+def read_candidate(directory: Path, *, check_index: bool = True) -> KnowledgeSnapshot:
+    """Validate a release; runtime may isolate an index failure for BM25 fallback."""
+    from campuspilot.retrieval.vector import INDEX_NAME
+
+    if directory.is_symlink() or (directory / "manifest.json").is_symlink():
+        raise ValueError("Unsafe release manifest")
     manifest = json.loads((directory / "manifest.json").read_bytes())
-    if manifest.get("schema_version") != 1 or "snapshot.json" not in manifest["files_sha256"]:
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schema_version") != 1
+        or not isinstance(manifest.get("files_sha256"), dict)
+        or "snapshot.json" not in manifest["files_sha256"]
+    ):
         raise ValueError("Incomplete candidate manifest")
-    if directory.is_symlink():
-        raise ValueError("Release directory cannot be a symbolic link")
     for name, checksum in manifest["files_sha256"].items():
+        # All vector-specific faults are checked separately so runtime can still use BM25.
+        if name == INDEX_NAME:
+            continue
+        if (
+            not isinstance(name, str)
+            or "\\" in name
+            or ":" in name
+            or any(part in {"", ".", ".."} for part in name.split("/"))
+            or not isinstance(checksum, str)
+            or not re.fullmatch(r"[a-f0-9]{64}", checksum)
+        ):
+            raise ValueError("Unsafe release path or checksum")
         path = directory / name
         if path.is_symlink() or not path.resolve().is_relative_to(directory.resolve()):
             raise ValueError("Unsafe release path")
         if digest(path.read_bytes()) != checksum:
             raise ValueError("Candidate checksum mismatch")
-    snapshot = KnowledgeSnapshot.model_validate_json((directory / "snapshot.json").read_bytes())
-    if snapshot.version != manifest["version"]:
+    data = (directory / "snapshot.json").read_bytes()
+    if len(data) > 20_000_000:
+        raise ValueError("Knowledge snapshot too large")
+    snapshot = KnowledgeSnapshot.model_validate_json(data)
+    if snapshot.version != manifest.get("version"):
         raise ValueError("Candidate version mismatch")
-    if manifest["counts"] != {"sources": len(snapshot.sources), "chunks": len(snapshot.chunks)}:
+    if manifest.get("counts") != {"sources": len(snapshot.sources), "chunks": len(snapshot.chunks)}:
         raise ValueError("Candidate counts mismatch")
     included = [c.chunk_id for c in snapshot.chunks if c.enabled]
     if (
-        manifest["included"] != included
-        or snapshot.source_package_sha256 != manifest["source_package_sha256"]
+        manifest.get("included") != included
+        or snapshot.source_package_sha256 != manifest.get("source_package_sha256")
     ):
         raise ValueError("Candidate evidence mapping mismatch")
+    if check_index and (INDEX_NAME in manifest["files_sha256"] or "vector_index" in manifest):
+        load_candidate_index(directory, snapshot, manifest, prefer="python")
     return snapshot
+
+
+def load_candidate_index(
+    directory: Path,
+    snapshot: KnowledgeSnapshot,
+    manifest: dict[str, Any],
+    *,
+    model: str | None = None,
+    prefer: Literal["python"] | None = None,
+) -> VectorIndex:
+    """Check the file checksum and its model, version, dimensions and exact coverage."""
+    from campuspilot.retrieval.vector import INDEX_NAME, VectorIndex, unpack
+
+    binding = manifest.get("vector_index")
+    checksum = manifest["files_sha256"].get(INDEX_NAME)
+    if (
+        not isinstance(binding, dict)
+        or not isinstance(checksum, str)
+        or not re.fullmatch(r"[a-f0-9]{64}", checksum)
+        or not isinstance(binding.get("model"), str)
+        or not binding["model"]
+        or type(binding.get("dimensions")) is not int
+        or binding["dimensions"] <= 0
+        or type(binding.get("rows")) is not int
+        or binding["rows"] != len(snapshot.chunks)
+    ):
+        raise ValueError("Incomplete candidate index binding")
+    if model is not None and binding["model"] != model:
+        raise ValueError("Vector index built with another embedding model")
+    path = directory / INDEX_NAME
+    if path.is_symlink() or not path.resolve().is_relative_to(directory.resolve()):
+        raise ValueError("Unsafe index path")
+    if digest(path.read_bytes()) != checksum:
+        raise ValueError("Vector index checksum mismatch")
+    try:
+        # Close even malformed SQLite files before publication renames the staged directory.
+        with closing(sqlite3.connect(f"file:{path.as_posix()}?mode=ro", uri=True)) as connection:
+            metadata = dict(connection.execute("SELECT key, value FROM meta").fetchall())
+            rows = connection.execute(
+                "SELECT chunk_id, text_sha256, embedding FROM vectors"
+            ).fetchall()
+        if metadata.get("knowledge_version") != snapshot.version:
+            raise ValueError("Vector index bound to another knowledge version")
+        if metadata.get("embedding_model") != binding["model"]:
+            raise ValueError("Vector index built with another embedding model")
+        dimensions = int(metadata.get("dimensions", "0"))
+        hashes = {chunk.chunk_id: chunk.text_sha256 for chunk in snapshot.chunks}
+        vectors: dict[str, list[float]] = {}
+        for chunk_id, text_hash, blob in rows:
+            if hashes.get(chunk_id) != text_hash:
+                raise ValueError("Vector index does not match approved chunk bodies")
+            vector = unpack(blob)
+            if len(vector) != dimensions:
+                raise ValueError("Vector dimension mismatch")
+            vectors[chunk_id] = vector
+    except (sqlite3.Error, struct.error, TypeError, OverflowError) as exc:
+        raise ValueError("Invalid candidate vector index") from exc
+    if (
+        dimensions != binding["dimensions"]
+        or len(rows) != binding["rows"]
+        or len(vectors) != binding["rows"]
+        or set(vectors) != set(hashes)
+        or any(not math.isfinite(value) for vector in vectors.values() for value in vector)
+    ):
+        raise ValueError("Candidate index counts or dimensions mismatch")
+    if prefer == "python":
+        return VectorIndex(snapshot, vectors, binding["model"], dimensions)
+    return VectorIndex.load(path, snapshot, binding["model"])
+
+
+def release_reference(directory: Path, *, kind: str = "published") -> dict[str, str]:
+    """A durable reference binds one previously validated location, never a directory scan."""
+    snapshot = read_candidate(directory)
+    if snapshot.pending:
+        raise ValueError("Pending knowledge cannot be a fallback")
+    reference = {
+        "kind": kind,
+        "version": snapshot.version,
+        "sha256": digest((directory / "snapshot.json").read_bytes()),
+        "manifest_sha256": digest((directory / "manifest.json").read_bytes()),
+    }
+    if kind == "bundled":
+        if not re.fullmatch(r"approved-\d{8}[a-z]?", directory.name):
+            raise ValueError("Invalid fallback bundle")
+        reference["bundle"] = directory.name
+    elif kind != "published" or directory.name != snapshot.version:
+        raise ValueError("Invalid release reference kind")
+    return reference
 
 
 def current_version(root: Path) -> str | None:
     path = root / "current.json"
+    if path.is_symlink():
+        raise ValueError("Unsafe active knowledge pointer")
     if not path.exists():
         return None
-    version = json.loads(path.read_bytes())["version"]
+    pointer = json.loads(path.read_bytes())
+    if not isinstance(pointer, dict) or pointer.get("kind", "published") != "published":
+        raise ValueError("Invalid active knowledge pointer")
+    version = pointer.get("version")
     if not isinstance(version, str) or not re.fullmatch(r"kb-[a-f0-9]{16}", version):
         raise ValueError("Invalid active knowledge version")
     return version
@@ -254,7 +378,13 @@ def preview(candidate: Path, root: Path) -> dict[str, object]:
     }
 
 
-def publish(candidate: Path, root: Path, expected_current: str | None) -> str:
+def publish(
+    candidate: Path,
+    root: Path,
+    expected_current: str | None,
+    *,
+    fallback_bundle: str = "",
+) -> str:
     with publication_lock(root):
         if current_version(root) != expected_current:
             raise ValueError("Published knowledge drifted; preview again")
@@ -265,8 +395,44 @@ def publish(candidate: Path, root: Path, expected_current: str | None) -> str:
         if not reference.exists():
             reference = root / "bootstrap.json"
         read_metadata = reference.stat() if reference.exists() else root.stat()
+        previous: dict[str, str] | None = None
+        if expected_current:
+            previous_directory = root / "versions" / expected_current
+            if not previous_directory.resolve().is_relative_to(root.resolve()):
+                raise ValueError("Unsafe active knowledge directory")
+            previous = release_reference(previous_directory)
+            pointer = json.loads((root / "current.json").read_bytes())
+            if pointer.get("sha256") != previous["sha256"] or (
+                pointer.get("manifest_sha256", previous["manifest_sha256"])
+                != previous["manifest_sha256"]
+            ):
+                raise ValueError("Active knowledge checksum mismatch")
+        elif fallback_bundle:
+            if not isinstance(fallback_bundle, str) or not re.fullmatch(
+                r"approved-\d{8}[a-z]?", fallback_bundle
+            ):
+                raise ValueError("Invalid fallback bundle")
+            bundle = root / fallback_bundle
+            if not bundle.resolve().is_relative_to(root.resolve()):
+                raise ValueError("Unsafe fallback bundle")
+            previous = release_reference(bundle, kind="bundled")
+        elif (root / "bootstrap.json").exists() or (root / "bootstrap.json").is_symlink():
+            bootstrap_path = root / "bootstrap.json"
+            if bootstrap_path.is_symlink():
+                raise ValueError("Unsafe bootstrap fallback")
+            bootstrap = bootstrap_path.read_bytes()
+            if len(bootstrap) > 20_000_000:
+                raise ValueError("Bootstrap fallback too large")
+            baseline = KnowledgeSnapshot.model_validate_json(bootstrap)
+            if baseline.pending:
+                raise ValueError("Pending bootstrap cannot be a fallback")
+            previous = {
+                "kind": "bootstrap", "version": baseline.version, "sha256": digest(bootstrap)
+            }
         # Empty stores inherit root's read bits; deployed stores preserve a proven reader.
         version_dir = root / "versions" / snapshot.version
+        if not version_dir.resolve().is_relative_to(root.resolve()):
+            raise ValueError("Unsafe version destination")
         if not version_dir.exists():
             # Build a complete directory before making even the immutable version visible.
             manifest = json.loads((candidate / "manifest.json").read_bytes())
@@ -293,16 +459,21 @@ def publish(candidate: Path, root: Path, expected_current: str | None) -> str:
                     inherit_owner(folder, directory_metadata)
                 os.replace(staged, version_dir)
         read_candidate(version_dir)
+        next_reference = release_reference(version_dir)
+        if previous is not None:
+            atomic_write(root / "last_good.json", canonical(previous), read_metadata)
         atomic_write(
             root / "current.json",
-            canonical(
-                {
-                    "version": snapshot.version,
-                    "sha256": digest((version_dir / "snapshot.json").read_bytes()),
-                }
-            ),
+            canonical(next_reference),
             read_metadata,
         )
+        if previous is None:
+            # The pointer commit succeeded. A backup-write failure cannot undo that commit
+            # or report a failed publication after changing the active version.
+            try:
+                atomic_write(root / "last_good.json", canonical(next_reference), read_metadata)
+            except OSError:
+                pass
         return snapshot.version
 
 

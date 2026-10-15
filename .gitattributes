@@ -7,5 +7,10 @@ docs/patches/*.patch -text -whitespace
 *.blend binary
 *.woff2 binary
 
+# Knowledge manifests approve exact bytes, including originals and immutable snapshots.
+# Windows checkout conversion must not invalidate those published checksums.
+data/cdut/rag/** -text
+evaluation/runtime-migration/cases.jsonl -text
+
 # Keep third-party distribution and license bytes intact.
 backend/src/campuspilot/web_assets/v2/vendor/gsap-*.min.js -whitespace

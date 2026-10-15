@@ -11,6 +11,7 @@ from campuspilot.knowledge import KnowledgeQuery, KnowledgeStore, campus_today
 from campuspilot.llm.embedding import CloudflareEmbedder, EmbeddingUnavailable
 from campuspilot.rag import RetrievalFilters, SnapshotStore
 from campuspilot.retrieval.grounding import POLICY_VERSION, GroundingMode, assess
+from campuspilot.service_links import hit_service_links
 
 
 class KnowledgeSearchTool:
@@ -55,6 +56,11 @@ class HybridKnowledgeTool:
         self._embedder = embedder
         self.grounding = grounding
 
+    @property
+    def snapshot_store(self) -> SnapshotStore:
+        """The application-owned store shared with the turn and optional judge."""
+        return self._snapshots
+
     def run(self, params: Any) -> dict[str, JsonValue]:
         retriever = self._snapshots.acquire()
         if retriever is None:
@@ -84,6 +90,17 @@ class HybridKnowledgeTool:
                 "temporal_status": h.source.temporal_status,
                 "stale": h.chunk.stale,
                 "ocr": h.chunk.ocr,
+                "locator": h.chunk.locator,
+                "text_sha256": h.chunk.text_sha256,
+                "verification_status": h.chunk.verification_status,
+                "service_links": hit_service_links(h, retriever.service_links),
+                "applicability": {
+                    "audiences": list(h.chunk.audiences),
+                    "academic_year": h.chunk.academic_year,
+                    "valid_from": h.chunk.valid_from.isoformat() if h.chunk.valid_from else None,
+                    "valid_until": h.chunk.valid_until.isoformat() if h.chunk.valid_until else None,
+                    "source_scope": h.source.applicability,
+                },
                 "score": round(h.score, 6),
             }
             for h in hits

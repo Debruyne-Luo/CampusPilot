@@ -14,6 +14,7 @@ from typing import Literal
 from campuspilot.rag import KnowledgeSnapshot, RetrievalFilters, RetrievalHit
 from campuspilot.retrieval.bm25 import BM25Retriever
 from campuspilot.retrieval.vector import VectorIndex
+from campuspilot.service_links import LinkCatalog
 
 RetrievalMode = Literal["lexical", "vector", "hybrid"]
 RETRIEVAL_MODES: frozenset[str] = frozenset({"lexical", "vector", "hybrid"})
@@ -79,6 +80,7 @@ class HybridRetriever:
         weights: Sequence[float] = RRF_WEIGHTS,
         stale_weight: float = STALE_WEIGHT,
         min_similarity: float | None = None,
+        service_links: LinkCatalog | None = None,
     ) -> None:
         if mode not in RETRIEVAL_MODES:
             raise ValueError("Invalid retrieval mode")
@@ -93,6 +95,7 @@ class HybridRetriever:
         self.weights = tuple(weights)
         self.stale_weight = stale_weight
         self.min_similarity = min_similarity
+        self.service_links = service_links or {}
 
     def _vector(self, query: str) -> Sequence[float] | None:
         if self.index is None or self.query_vector is None:

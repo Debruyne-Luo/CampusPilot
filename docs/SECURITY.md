@@ -29,6 +29,13 @@ used only by the bounded fixed-host proxy. Sessions/quotas reset on restart. See
 [deployment](SUBMISSION_DEPLOY.zh-CN.md) and [validation limitations](SUBMISSION_VALIDATION.zh-CN.md).
 These are local implementation checks, not proof of deployed production security.
 
+**CONFIRMED (2026-10-14):** The local Agent execution boundary now declares and checks existing
+capabilities, including Jev, web search and embedding prefetch, and writes content-free operational
+events to the existing service stream. Unknown declarations and non-public risks are denied;
+provider budgets, source restrictions and rate limits remain independent controls. This is public
+read authorization, not authenticated student access or future write approval. See the
+[implementation and verification handoff](ARCHITECTURE_REVIEW.zh-CN.md) for scope and limits.
+
 **CONFIRMED:** The approved local Skeleton implements schema validation, a public-read
 Tool policy, default denial, and observable synthetic execution records. Developer tests
 exercise these boundaries; they are not production security certification or Muse QA.

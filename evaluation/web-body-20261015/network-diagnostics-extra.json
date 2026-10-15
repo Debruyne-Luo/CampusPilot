@@ -1,0 +1,247 @@
+{
+  "scope": "Read-only public DoH validated fixed address plus independent hostname URL curl resolve; no challenge execution",
+  "results": [
+    {
+      "url": "https://lib.cdut.edu.cn/fw/qtfw/cjwt.htm",
+      "observed_at": "2026-10-15T01:15:40.084817+00:00",
+      "system_dns_addresses": [
+        "198.18.0.94"
+      ],
+      "system_dns_validated": false,
+      "system_dns_rejection": "private_page_address",
+      "public_addresses": [
+        "202.115.137.77"
+      ],
+      "requests": [
+        {
+          "method": "httpx_pinned_same_as_reader",
+          "address": "202.115.137.77",
+          "status": 412,
+          "location": null,
+          "duration_ms": 287.1,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2564,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "703a44f1027179366f8349254c7ac6d881555b763d4744f308d60e03e5144d20"
+        },
+        {
+          "method": "curl_hostname_url_public_resolve",
+          "address": "202.115.137.77",
+          "status": 412,
+          "exit_code": 0,
+          "stderr": "",
+          "duration_ms": 314.5,
+          "location": null,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2530,
+          "title": null,
+          "sample": "r='m'>_$it();",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "9f9e7951770889538157d747227840ca054053807ee8655e32f53bc02183c33b"
+        }
+      ],
+      "application_reader": {
+        "status": "error",
+        "error_type": "PageReadError",
+        "message": "page_unavailable"
+      }
+    },
+    {
+      "url": "https://lib.cdut.edu.cn/info/1011/1628.htm",
+      "observed_at": "2026-10-15T01:15:40.091074+00:00",
+      "system_dns_addresses": [
+        "198.18.0.94"
+      ],
+      "system_dns_validated": false,
+      "system_dns_rejection": "private_page_address",
+      "public_addresses": [
+        "202.115.137.77"
+      ],
+      "requests": [
+        {
+          "method": "httpx_pinned_same_as_reader",
+          "address": "202.115.137.77",
+          "status": 412,
+          "location": null,
+          "duration_ms": 266.7,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2523,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "af604057951eb950e55cf8e17f175159822a7fe49c7fee7c65902af681ed2d0e"
+        },
+        {
+          "method": "curl_hostname_url_public_resolve",
+          "address": "202.115.137.77",
+          "status": 412,
+          "exit_code": 0,
+          "stderr": "",
+          "duration_ms": 278.5,
+          "location": null,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2530,
+          "title": null,
+          "sample": "r='m'>_$it();",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "9f9e7951770889538157d747227840ca054053807ee8655e32f53bc02183c33b"
+        }
+      ],
+      "application_reader": {
+        "status": "error",
+        "error_type": "PageReadError",
+        "message": "page_unavailable"
+      }
+    },
+    {
+      "url": "https://lib.cdut.edu.cn/info/1103/1689.htm",
+      "observed_at": "2026-10-15T01:15:40.091555+00:00",
+      "system_dns_addresses": [
+        "198.18.0.94"
+      ],
+      "system_dns_validated": false,
+      "system_dns_rejection": "private_page_address",
+      "public_addresses": [
+        "202.115.137.77"
+      ],
+      "requests": [
+        {
+          "method": "httpx_pinned_same_as_reader",
+          "address": "202.115.137.77",
+          "status": 412,
+          "location": null,
+          "duration_ms": 256.9,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2528,
+          "title": null,
+          "sample": "[No visible text after excluding scripts/styles]",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "48b0a66a327741bd8af199f5da84f5a7a3d0313a608ca9baa32f25a9770d1a6e"
+        },
+        {
+          "method": "curl_hostname_url_public_resolve",
+          "address": "202.115.137.77",
+          "status": 412,
+          "exit_code": 0,
+          "stderr": "",
+          "duration_ms": 249.6,
+          "location": null,
+          "content_type": "text/html; charset=utf-8",
+          "httpx_encoding": "utf-8",
+          "meta_charset": "utf-8",
+          "diagnostic_decode": "utf-8",
+          "bytes": 2530,
+          "title": null,
+          "sample": "r='m'>_$it();",
+          "signals": [
+            "$_ts.nsd",
+            "$_ts.cd",
+            "document.createElement"
+          ],
+          "sha256": "9f9e7951770889538157d747227840ca054053807ee8655e32f53bc02183c33b"
+        }
+      ],
+      "application_reader": {
+        "status": "error",
+        "error_type": "PageReadError",
+        "message": "page_unavailable"
+      }
+    },
+    {
+      "url": "https://wxc.cdut.edu.cn/jiaoshiyx.pdf",
+      "observed_at": "2026-10-15T01:15:40.091902+00:00",
+      "system_dns_addresses": [
+        "198.18.0.95"
+      ],
+      "system_dns_validated": false,
+      "system_dns_rejection": "private_page_address",
+      "public_addresses": [
+        "202.115.137.77"
+      ],
+      "requests": [
+        {
+          "method": "httpx_pinned_same_as_reader",
+          "address": "202.115.137.77",
+          "status": 200,
+          "location": null,
+          "duration_ms": 582.2,
+          "content_type": "application/pdf",
+          "httpx_encoding": null,
+          "meta_charset": null,
+          "diagnostic_decode": null,
+          "bytes": 1518002,
+          "title": null,
+          "sample": "[PDF binary; successfully parsed separately with existing parse_attachment]",
+          "signals": [],
+          "sha256": "36a862cc391fab815e0d849a8b310b8c245ebeb4018fdb7f3ff03639cd759fd7"
+        },
+        {
+          "method": "curl_hostname_url_public_resolve",
+          "address": "202.115.137.77",
+          "status": 200,
+          "exit_code": 0,
+          "stderr": "",
+          "duration_ms": 763.5,
+          "location": null,
+          "content_type": "application/pdf",
+          "httpx_encoding": null,
+          "meta_charset": null,
+          "diagnostic_decode": null,
+          "bytes": 1518002,
+          "title": null,
+          "sample": "[PDF binary; successfully parsed separately with existing parse_attachment]",
+          "signals": [],
+          "sha256": "36a862cc391fab815e0d849a8b310b8c245ebeb4018fdb7f3ff03639cd759fd7"
+        }
+      ],
+      "application_reader": {
+        "status": "error",
+        "error_type": "PageReadError",
+        "message": "page_format_unsupported"
+      },
+      "pdf_parse": {
+        "pages": 50,
+        "text_length": 32126,
+        "title_sample": "[page 1]\n  \n \n \n \n \n \n \n \n \n成都理工大学 \n邮箱用户使用手册 \n\n[page 2]\nI \n \n目录 \n前言 ................................................................................................................",
+        "artifact": "pdf-diagnostics.json"
+      }
+    }
+  ]
+}

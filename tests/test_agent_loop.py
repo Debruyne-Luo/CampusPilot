@@ -251,7 +251,8 @@ def test_missing_identity_asks_and_context_answers_next_turn() -> None:
     assert (
         first["result_status"] == "needs_clarification" and first["answer_mode"] == "agent_clarify"
     )
-    assert first["answer"] == "你是本科生还是研究生？" and first["plan"] == []
+    assert "本科生" in first["answer"] and "研究生" in first["answer"]
+    assert first["answer"].count("？") == 1 and first["plan"] == []
     assert len(model.calls) == 1
     # Identity given in text is authoritative, remembered in context, and removes the gap.
     second_model = FakeLLM(understood(missing=["identity"]), answer("请走研究生流程。", []))

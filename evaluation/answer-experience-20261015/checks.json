@@ -1,0 +1,44 @@
+{
+  "pytest": {
+    "passed": 954,
+    "failed": 3,
+    "known_windows_baseline_failures": [
+      "tests/test_release.py::test_failed_health_check_rolls_back_to_previous_release",
+      "tests/test_release.py::test_legacy_directory_layout_is_migrated_and_used_for_rollback",
+      "tests/test_release.py::test_old_releases_are_pruned_but_current_and_previous_kept"
+    ],
+    "log_local": ".test-runs/answer-experience-20261015/pytest-final.log",
+    "log_sha256": "552078bb954bd20fcfba2c6bd7505e87e4e043a7b1cf35d8bcfa7a29556fca90",
+    "env": {
+      "PYTHONUTF8": "1"
+    },
+    "basetemp": "D:/Projects/.campuspilot-test-runs/answer-experience-20261015-final"
+  },
+  "ruff": {
+    "scope": ".",
+    "status": "passed"
+  },
+  "mypy": {
+    "scope": [
+      "backend/src",
+      "tests"
+    ],
+    "source_files": 132,
+    "status": "passed"
+  },
+  "new_regressions": {
+    "answer_experience": 8,
+    "frozen_replay": 10,
+    "tavily_contracts": 3,
+    "timestamp_and_privacy": 17,
+    "answer_experience_before_fix": {
+      "failed": 7,
+      "passed": 1
+    },
+    "timestamp_before_fix": {
+      "failed": 2,
+      "passed": 15
+    }
+  },
+  "counts_do_not_add_overlapping_test_runs": true
+}

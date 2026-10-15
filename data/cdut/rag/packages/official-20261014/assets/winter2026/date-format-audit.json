@@ -1,0 +1,235 @@
+{
+  "sheet": "Sheet1",
+  "used_range": "A1:E34",
+  "title": "网络与信息化处2026年寒假值班表",
+  "date_cells": [
+    {
+      "cell": "A3",
+      "raw_value": "44587",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-01-26"
+    },
+    {
+      "cell": "A4",
+      "raw_value": "44588",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-01-27"
+    },
+    {
+      "cell": "A5",
+      "raw_value": "44589",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-01-28"
+    },
+    {
+      "cell": "A6",
+      "raw_value": "44590",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-01-29"
+    },
+    {
+      "cell": "A7",
+      "raw_value": "44591",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-01-30"
+    },
+    {
+      "cell": "A8",
+      "raw_value": "44594",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-02"
+    },
+    {
+      "cell": "A9",
+      "raw_value": "44595",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-03"
+    },
+    {
+      "cell": "A10",
+      "raw_value": "44596",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-04"
+    },
+    {
+      "cell": "A11",
+      "raw_value": "44597",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-05"
+    },
+    {
+      "cell": "A12",
+      "raw_value": "44598",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-06"
+    },
+    {
+      "cell": "A13",
+      "raw_value": "44601",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-09"
+    },
+    {
+      "cell": "A14",
+      "raw_value": "44602",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-10"
+    },
+    {
+      "cell": "A15",
+      "raw_value": "44603",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-11"
+    },
+    {
+      "cell": "A16",
+      "raw_value": "44604",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-12"
+    },
+    {
+      "cell": "A17",
+      "raw_value": "44605",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-13"
+    },
+    {
+      "cell": "A18",
+      "raw_value": "44606",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-14"
+    },
+    {
+      "cell": "A19",
+      "raw_value": "44607",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-15"
+    },
+    {
+      "cell": "A20",
+      "raw_value": "44608",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-16"
+    },
+    {
+      "cell": "A21",
+      "raw_value": "44609",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-17"
+    },
+    {
+      "cell": "A22",
+      "raw_value": "44610",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-18"
+    },
+    {
+      "cell": "A23",
+      "raw_value": "44611",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-19"
+    },
+    {
+      "cell": "A24",
+      "raw_value": "44612",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-20"
+    },
+    {
+      "cell": "A25",
+      "raw_value": "44613",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-21"
+    },
+    {
+      "cell": "A26",
+      "raw_value": "44614",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-22"
+    },
+    {
+      "cell": "A27",
+      "raw_value": "44615",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-23"
+    },
+    {
+      "cell": "A28",
+      "raw_value": "44616",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-24"
+    },
+    {
+      "cell": "A29",
+      "raw_value": "44617",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-25"
+    },
+    {
+      "cell": "A30",
+      "raw_value": "44618",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-26"
+    },
+    {
+      "cell": "A31",
+      "raw_value": "44619",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-27"
+    },
+    {
+      "cell": "A32",
+      "raw_value": "44620",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-02-28"
+    },
+    {
+      "cell": "A33",
+      "raw_value": "44622",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-03-02"
+    },
+    {
+      "cell": "A34",
+      "raw_value": "44623",
+      "style_index": "5",
+      "numFmtId": "58",
+      "stored_date": "2022-03-03"
+    }
+  ],
+  "builtin_numFmt_58_zh_cn": "m\"月\"d\"日\"",
+  "display_note": "Format mapping describes expected display in zh-cn, not an observation of Excel UI; stored values remain unchanged.",
+  "limitation": "Do not silently correct the hidden storage year or interpret it as applicability year.",
+  "reference": "https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.spreadsheet.numberingformat"
+}

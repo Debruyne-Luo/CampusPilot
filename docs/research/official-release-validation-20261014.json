@@ -1,0 +1,1707 @@
+{
+  "base_version": "kb-f08fa4fd8b583700",
+  "published_version": "kb-229ee34eba99ef34",
+  "sources": 176,
+  "chunks": 322,
+  "adopted_documents": 20,
+  "adopted_clauses": 44,
+  "preserved_old_chunks": 278,
+  "diff": {
+    "before": "kb-f08fa4fd8b583700",
+    "after": "kb-229ee34eba99ef34",
+    "added": [
+      "cdut:chunk:official:gradesindex:review-guide",
+      "cdut:chunk:official:graduate-proof-2023:application",
+      "cdut:chunk:official:graduate-proof-2023:contacts",
+      "cdut:chunk:official:graduate-proof-2023:frequency",
+      "cdut:chunk:official:identity2026:maintenance",
+      "cdut:chunk:official:netcarrier2025:counter-service",
+      "cdut:chunk:official:netcarrier2025:online-service",
+      "cdut:chunk:official:portal-06:checked-step-3",
+      "cdut:chunk:official:portal-06:checked-step-4",
+      "cdut:chunk:official:portal-06:checked-step-5",
+      "cdut:chunk:official:portal-06:checked-step-6",
+      "cdut:chunk:official:portal-06:guide-body",
+      "cdut:chunk:official:portal-1042:guide-body",
+      "cdut:chunk:official:portal-1046:guide-body",
+      "cdut:chunk:official:portal-1053:checked-flow",
+      "cdut:chunk:official:portal-1053:guide-body",
+      "cdut:chunk:official:portal-1165:checked-flow",
+      "cdut:chunk:official:portal-1165:guide-body",
+      "cdut:chunk:official:portal-11:guide-body",
+      "cdut:chunk:official:portal-1212:guide-body",
+      "cdut:chunk:official:portal-1266:guide-body",
+      "cdut:chunk:official:portal-1267:guide-body",
+      "cdut:chunk:official:portal-rakaxabe4inxkxyakznn2ahs3zxdxa68:guide-body",
+      "cdut:chunk:official:portal2020:mobile-progress",
+      "cdut:chunk:official:portal2020:pc-progress",
+      "cdut:chunk:official:portal2020:service-search",
+      "cdut:chunk:official:proofindex:apply",
+      "cdut:chunk:official:proofindex:cohort-boundary",
+      "cdut:chunk:official:tuition-2026:card-update",
+      "cdut:chunk:official:tuition-2026:deferral",
+      "cdut:chunk:official:tuition-2026:insurance-notice",
+      "cdut:chunk:official:tuition-2026:invoices",
+      "cdut:chunk:official:tuition-2026:loan-payment",
+      "cdut:chunk:official:tuition-2026:payment-channels",
+      "cdut:chunk:official:winter2026:office-hours"
+    ],
+    "removed": [],
+    "changed": [
+      "cdut:chunk:libhours:01",
+      "cdut:chunk:netfaq2023:01",
+      "cdut:chunk:netfaq2023:02",
+      "cdut:chunk:netfaq2023:03",
+      "cdut:chunk:portalmanual:01",
+      "cdut:chunk:voucher2026:01",
+      "cdut:chunk:winter2026:01",
+      "cdut:chunk:winter2026:02",
+      "cdut:chunk:winter2026:03"
+    ]
+  },
+  "actual_hybrid_retrieval": [
+    {
+      "query": "网络故障报修怎么提交申请？",
+      "filters": {
+        "audience": "undergraduate",
+        "academic_year": null
+      },
+      "result": {
+        "result_status": "success",
+        "answer": "网络故障报修\n\n事项编号：1053\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t.028-84079467\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n2.提交申请\n\n3.申请人登录平台，发起申请\n\n4.填写申请表\n\n5.等待办理结果通知\n\n6.审核\n\n7.网络与信息化处经办人\n\n8.流程办结\n\n9.申请人查看审核结果，确认结果并办结流程\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n网络故障报修\n\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。\n登录“砚湖易办”\n进入“事务中心”\n选择网络与信息化处\n填写《网络故障保修》并提交审批\n审批通过后维修\n\n适用限制（采集校验标注）：图片中的“保修”字样按原图保留，正文事项名为“报修”。\n后勤保障部楼寓服务页列出可通过“成理智慧后勤”微信报修平台申请大楼和公寓的零星维修，也提供电话和服务群报单渠道。",
+        "hits": [
+          {
+            "chunk_id": "cdut:chunk:official:portal-1053:guide-body",
+            "source_id": "cdut:source:official:portal-1053",
+            "title": "网络故障报修正文与服务条件",
+            "text": "网络故障报修\n\n事项编号：1053\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t.028-84079467\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n2.提交申请\n\n3.申请人登录平台，发起申请\n\n4.填写申请表\n\n5.等待办理结果通知\n\n6.审核\n\n7.网络与信息化处经办人\n\n8.流程办结\n\n9.申请人查看审核结果，确认结果并办结流程\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n网络故障报修\n\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+            "source_title": "网络故障报修",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "documents/portal-1053/body.txt:chars[0:302] sha256=d9b4b7be538b981d38a9e94b9256cf83e6249e7350282b95b65991ad524769ee",
+            "text_sha256": "6538da2cab4327c3bcbebae3519fa53ecf31e6ab13c6a1fec970f34bbf63a61a",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.204545,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-1053:checked-flow",
+            "source_id": "cdut:source:official:portal-1053",
+            "title": "网络故障报修流程图核对",
+            "text": "登录“砚湖易办”\n进入“事务中心”\n选择网络与信息化处\n填写《网络故障保修》并提交审批\n审批通过后维修\n\n适用限制（采集校验标注）：图片中的“保修”字样按原图保留，正文事项名为“报修”。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+            "source_title": "网络故障报修",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": true,
+            "locator": "documents/portal-1053/assets/image-198883ffa554aaa5639e731d-checked.txt:chars[0:52] sha256=e8b4ef8df7b0f269a95dbd43b53ad2051b26ea567b5abf74c191ecac7137386a",
+            "text_sha256": "d98f29d78ac0f8b8c14d0195798c59a8b4001d4421d84cb0899f8df2e167c4c4",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.1875,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:repair:01",
+            "source_id": "cdut:source:repair",
+            "title": "宿舍楼宇零星维修报修渠道",
+            "text": "后勤保障部楼寓服务页列出可通过“成理智慧后勤”微信报修平台申请大楼和公寓的零星维修，也提供电话和服务群报单渠道。",
+            "url": "https://clhq.cdut.edu.cn/fwdt1/lyfw.htm",
+            "source_title": "后勤保障部楼寓服务",
+            "publisher": "后勤保障部",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "楼寓服务/零星维修报修",
+            "text_sha256": "2954f2606c1cef41f7fecc2cd37d4c63fd9fa3cafe7e67c949314a1f5c0d4035",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "常规说明；实际办理状态待核对"
+            },
+            "score": 0.144841,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:lyfwdorm:bs06",
+            "source_id": "cdut:source:lyfwdorm",
+            "title": "楼寓服务-成都理工大学后勤保障部（6/8）",
+            "text": "服务事项 | 零星维修报修\n服务对象 | 师生对大楼和公寓的报修 | 服务方式 | 微信报修平台、电话、QQ党群服务群\n责任单位 | 楼寓服务中心 | 责任人 | 陈志平\n办公地点 | 松2-102 | 咨询电话 | 84076460（侯老师）\n办事时间 | 1.微信报修平台维修派单时间：上午8:00-12：00，下午2:30-6:002.电话、QQ党群服务群应急报单24小时接单，接单后立即安排现场勘查、处理。\n办事流程 | 1.师生在“成理智慧后勤”报修平台报修。2.接单、派单、现场勘查。3.维修范围内及时安排维修。4.维修范围外的事项，由责任单位上报相关部门（后勤保障部综合科、规建处、保卫处、网信处等）维修。\n所需资料 | 需填报楼栋名称，房间号，维修内容及图片，报修人名和电话号码。\n办事依据 | 根据报修人上报的时间、地点、维修内容及图片，进行筛查判断分派给相关维修工，维修工现场勘查，楼寓服务中心维修范围内及时维修，不能维修的由各责任单位上报相关部门进行维修。（注：师生在“成理智慧后勤”报修平台报修项目：详见微信报修平台报修栏信息。）\n注意事项 | 1.具体维修时间以楼寓服务中心零星维修组具体派单和上门维修时间为准。2.报修人报修内容须真实准确，上传图片须清晰。需要报修人报修事实真实，报修信息正确，需上传维修损坏的图片，避免不必要的人力资源浪费。",
+            "url": "https://clhq.cdut.edu.cn/fwdt1/lyfw.htm",
+            "source_title": "楼寓服务-成都理工大学后勤保障部",
+            "publisher": "后勤保障部楼寓服务中心",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "browser-raw/pages/楼寓服务-成都理工大学后勤保障部.html 正文第6段（共8段）",
+            "text_sha256": "ae44a79639804ebea38743a974b2cd0be1b79fb282f3c44b50a4e4551b522851",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "在校学生（外专楼入住为外籍及港澳台专家）"
+            },
+            "score": 0.143773,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:netcarrier2025:counter-service",
+            "source_id": "cdut:source:official:netcarrier2025",
+            "title": "成都及宜宾校区运营商营业厅办理指南",
+            "text": "（二）线下办理方式：\n\n校区\n\n\t\n\n中国移动\n\n\t\n\n中国联通\n\n\t\n\n中国电信\n\n\n\n\n成都\n\n\t\n\n1、成华区成都理工大学香樟餐厅1楼左侧；联系电话：19828440218\n\n2、成华区成都理工大学农贸市场（蜜雪冰城斜对面）\n\n\t\n\n香樟营业厅一楼\n\n\t\n\n成华区成都理工大学香樟宿舍3号楼1楼（香樟餐厅对面）\n\n\n\n\n联系电话：\n\n17882377816\n\n\t\n\n联系电话：\n\n16608080218\n\n\t\n\n联系电话：\n\n18980903005\n\n\n\n\n宜宾校区\n\n\t\n\n成都理工大学宜宾校区二期宿舍B4一楼移动校园营业厅\n\n\t\n\n暂无线下办理，可直接扫描二维码线上办理或电话联系办理\n\n\t\n\n四川省宜宾市三江新区大学路成都理工大学宜宾校区银杏4舍1楼\n\n\n\n\n联系电话：\n\n13688290521\n\n\t\n\n联系电话：\n\n16608080218\n\n\t\n\n联系电话：\n\n19383952354\n\n温馨提示：\n\n1.办理宽带业务可通过线上咨询对应运营商相关营业厅负责人进行线上办理，办理时请认准营业厅授权人员，防范电信诈骗。\n\n2.业务办理过程中如遇问题可分别拨打10000（中国电信）、10010（中国联通）、10086（中国移动）进行故障报修及投诉反馈。\n\n\n\n\n校区：成都；宜宾校区\n适用限制（采集校验标注）：2025年发布，当前营业厅位置和联系电话的继续有效性未知；二维码已保存但未解码为链接，不推测对应目标。",
+            "url": "https://wxc.cdut.edu.cn/info/1006/3864.htm",
+            "source_title": "成都理工大学运营商宽带业务服务办理指南",
+            "publisher": "成都理工大学网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/netcarrier2025.txt:chars[259:795] sha256=18d9a6a186a5967b82a1fa95dbc5e936f6b77e171c8324bfcb455a514aee4b53",
+            "text_sha256": "15af93de49ab52bf7ab57ce3322e63fa28800683d04560f231257ccec4e18b76",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"all\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"全校师生员工\", \"audiences\": [\"all\"], \"campuses\": [\"成都\", \"宜宾校区\"], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"全校师生员工\", \"audiences\": [\"all\"], \"campuses\": [\"成都\", \"宜宾校区\"], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.140873,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:netfaq2023:03",
+            "source_id": "cdut:source:netfaq2023",
+            "title": "校园网故障与认证错误处理",
+            "text": "问：Web方式登录提示用户名和密码错误怎么办？\n\n答：请带上有效证件（身份证或者学生证）到网络信息化处(第二行政楼五楼507办公室)处理，联系电话： 84078860。\n\n问：办公室里的多台电脑共用一个路由器上网，为什么会出现部分电脑不能上的问题？\n\n答：使用路由器的用户请对路由器进行如下设置：（1）关闭路由器的DHCP功能；（2）将主线从WAN端口换到LAN端口，WAN端口不再使用。这样路由器就可以作为交换机来使用了。因各个路由器功能和型号的不同，具体操作请参见路由器配置说明书。\n\n问：一个账号只能被一台上网设备使用吗?\n\n答：教职员工账号可以同时被5台上网设备使用，学生账号可以同时被3台上网设备使用。\n\n问:如何安装微软正版windows操作系统和office软件？\n\n答:  安装网址和说明请访问http://wxc.cdut.edu.cn/zbrjglyfwpt.htm\n\n问：网络出现故障（如无法获取IP地址，本地无法连接）如何处理？\n\n答：请拨打网络服务部电话84079467。\n\n问：外网如何访问校内资源（如图书馆资源）？\n\n答：使用SSL VPN进行访问，操作方法请参见《成都理工大学SSLVPN使用指南.pdf》。\n\n\n\n\n适用限制（采集校验标注）：2023年发布的常见问题；适用起止日期未知，登录界面及密码规则应同时核对当前指南。",
+            "url": "https://wxc.cdut.edu.cn/info/1012/1165.htm",
+            "source_title": "校园网使用常见问题",
+            "publisher": "成都理工大学网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/netfaq2023.txt:chars[623:1147] sha256=ae3f071c1b0081b7df5d6b973254ea285086ca7da0083880f10eba5587750462",
+            "text_sha256": "e3af83ceed6e95af42eec471b5a8dc7eb3683b5496d2bc3a44d17dd762b7045a",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate",
+                "staff"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"staff\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"校园网使用常见问题\\n\\n问：为什么要实行实名上网？\\n\\n答：根据四川省公安厅和成都市公安部门的要求，为确保信息、网络安全，校园网用户登陆网络时进行认证，同时四川省教育厅也要求全省各校要落实上网人员身份认证和日志留存等相关技术措施，确保校园网信息安全和学校稳定。\\n\\n问：教职工上网帐号和密码是多少？\\n\\n答：我校所有教职员工实名上网系统帐号为人员标识符（即“校园一卡通”的卡号），如果身份证号数为18位，初始密码为身份证第九至十四位（即生日后6位），如果身份证号数为15位，初始密码为身份证第七至十二位（即生日后6位）。（例如某老师 “校园一卡通”上的卡号为10201409876，身份证号为511333197201151254，他的上网帐号应为10201409876，密码应为720115）。\\n\\n问：博（硕）士研究生上网帐号和密码是多少？\\n\\n答：学生帐号为学号；密码均为个人身份证号上生日后6位，即身份证号的第九至第十四位。（身份证号为511333200001151254，密码应为000115）。\\n\\n问：本（专）科生帐号和密码是多少？\\n\\n答：学生帐号为学号；密码均为个人身份证号上生日后6位，即身份证号的第九至第十四位。（身份证号为511333200001151254，密码应为000115）。\\n\\n说明：为了您的帐号安全，请您在第一次登陆后修改密码并妥善保管自己实名制个人账号，不得转用，每个实名制账号上网时发生的一切网络行为，由账号所有人负责。\\n\\n问：Web方式登录提示用户名和密码错误怎么办？\\n\\n答：请带上有效证件（身份证或者学生证）到网络信息化处(第二行政楼五楼507办公室)处理，联系电话： 84078860。\\n\\n问：办公室里的多台电脑共用一个路由器上网，为什么会出现部分电脑不能上的问题？\\n\\n答：使用路由器的用户请对路由器进行如下设置：（1）关闭路由器的DHCP功能；（2）将主线从WAN端口换到LAN端口，WAN端口不再使用。这样路由器就可以作为交换机来使用了。因各个路由器功能和型号的不同，具体操作请参见路由器配置说明书。\\n\\n问：一个账号只能被一台上网设备使用吗?\\n\\n答：教职员工账号可以同时被5台上网设备使用，学生账号可以同时被3台上网设备使用。\\n\\n问:如何安装微软正版windows操作系统和office软件？\\n\\n答:  安装网址和说明请访问http://wxc.cdut.edu.cn/zbrjglyfwpt.htm\\n\\n问：网络出现故障（如无法获取IP地址，本地无法连接）如何处理？\\n\\n答：请拨打网络服务部电话84079467。\\n\\n问：外网如何访问校内资源（如图书馆资源）？\\n\\n答：使用SSL VPN进行访问，操作方法请参见《成都理工大学SSLVPN使用指南.pdf》。\\n\\n\\n\\n\", \"audiences\": [\"undergraduate\", \"graduate\", \"staff\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"校园网使用常见问题\\n\\n问：为什么要实行实名上网？\\n\\n答：根据四川省公安厅和成都市公安部门的要求，为确保信息、网络安全，校园网用户登陆网络时进行认证，同时四川省教育厅也要求全省各校要落实上网人员身份认证和日志留存等相关技术措施，确保校园网信息安全和学校稳定。\\n\\n问：教职工上网帐号和密码是多少？\\n\\n答：我校所有教职员工实名上网系统帐号为人员标识符（即“校园一卡通”的卡号），如果身份证号数为18位，初始密码为身份证第九至十四位（即生日后6位），如果身份证号数为15位，初始密码为身份证第七至十二位（即生日后6位）。（例如某老师 “校园一卡通”上的卡号为10201409876，身份证号为511333197201151254，他的上网帐号应为10201409876，密码应为720115）。\\n\\n问：博（硕）士研究生上网帐号和密码是多少？\\n\\n答：学生帐号为学号；密码均为个人身份证号上生日后6位，即身份证号的第九至第十四位。（身份证号为511333200001151254，密码应为000115）。\\n\\n问：本（专）科生帐号和密码是多少？\\n\\n答：学生帐号为学号；密码均为个人身份证号上生日后6位，即身份证号的第九至第十四位。（身份证号为511333200001151254，密码应为000115）。\\n\\n说明：为了您的帐号安全，请您在第一次登陆后修改密码并妥善保管自己实名制个人账号，不得转用，每个实名制账号上网时发生的一切网络行为，由账号所有人负责。\\n\\n问：Web方式登录提示用户名和密码错误怎么办？\\n\\n答：请带上有效证件（身份证或者学生证）到网络信息化处(第二行政楼五楼507办公室)处理，联系电话： 84078860。\\n\\n问：办公室里的多台电脑共用一个路由器上网，为什么会出现部分电脑不能上的问题？\\n\\n答：使用路由器的用户请对路由器进行如下设置：（1）关闭路由器的DHCP功能；（2）将主线从WAN端口换到LAN端口，WAN端口不再使用。这样路由器就可以作为交换机来使用了。因各个路由器功能和型号的不同，具体操作请参见路由器配置说明书。\\n\\n问：一个账号只能被一台上网设备使用吗?\\n\\n答：教职员工账号可以同时被5台上网设备使用，学生账号可以同时被3台上网设备使用。\\n\\n问:如何安装微软正版windows操作系统和office软件？\\n\\n答:  安装网址和说明请访问http://wxc.cdut.edu.cn/zbrjglyfwpt.htm\\n\\n问：网络出现故障（如无法获取IP地址，本地无法连接）如何处理？\\n\\n答：请拨打网络服务部电话84079467。\\n\\n问：外网如何访问校内资源（如图书馆资源）？\\n\\n答：使用SSL VPN进行访问，操作方法请参见《成都理工大学SSLVPN使用指南.pdf》。\\n\\n\\n\\n\", \"audiences\": [\"undergraduate\", \"graduate\", \"staff\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"校园网使用常见问题\\n\\n问：为什么要实行实名上网？\\n\\n答：根据四川省公安厅和成都市公安部门的要求，为确保信息、网络安全，校园网用户登陆网络时进行认证，同时四川省教育厅也要求全省各校要落实上网人员身份认证和日志留存等相关技术措施，确保校园网信息安全和学校稳定。\\n\\n问：教职工上网帐号和密码是多少？\\n\\n答：我校所有教职员工实名上网系统帐号为人员标识符（即“校园一卡通”的卡号），如果身份证号数为18位，初始密码为身份证第九至十四位（即生日后6位），如果身份证号数为15位，初始密码为身份证第七至十二位（即生日后6位）。（例如某老师 “校园一卡通”上的卡号为10201409876，身份证号为511333197201151254，他的上网帐号应为10201409876，密码应为720115）。\\n\\n问：博（硕）士研究生上网帐号和密码是多少？\\n\\n答：学生帐号为学号；密码均为个人身份证号上生日后6位，即身份证号的第九至第十四位。（身份证号为511333200001151254，密码应为000115）。\\n\\n问：本（专）科生帐号和密码是多少？\\n\\n答：学生帐号为学号；密码均为个人身份证号上生日后6位，即身份证号的第九至第十四位。（身份证号为511333200001151254，密码应为000115）。\\n\\n说明：为了您的帐号安全，请您在第一次登陆后修改密码并妥善保管自己实名制个人账号，不得转用，每个实名制账号上网时发生的一切网络行为，由账号所有人负责。\\n\\n问：Web方式登录提示用户名和密码错误怎么办？\\n\\n答：请带上有效证件（身份证或者学生证）到网络信息化处(第二行政楼五楼507办公室)处理，联系电话： 84078860。\\n\\n问：办公室里的多台电脑共用一个路由器上网，为什么会出现部分电脑不能上的问题？\\n\\n答：使用路由器的用户请对路由器进行如下设置：（1）关闭路由器的DHCP功能；（2）将主线从WAN端口换到LAN端口，WAN端口不再使用。这样路由器就可以作为交换机来使用了。因各个路由器功能和型号的不同，具体操作请参见路由器配置说明书。\\n\\n问：一个账号只能被一台上网设备使用吗?\\n\\n答：教职员工账号可以同时被5台上网设备使用，学生账号可以同时被3台上网设备使用。\\n\\n问:如何安装微软正版windows操作系统和office软件？\\n\\n答:  安装网址和说明请访问http://wxc.cdut.edu.cn/zbrjglyfwpt.htm\\n\\n问：网络出现故障（如无法获取IP地址，本地无法连接）如何处理？\\n\\n答：请拨打网络服务部电话84079467。\\n\\n问：外网如何访问校内资源（如图书馆资源）？\\n\\n答：使用SSL VPN进行访问，操作方法请参见《成都理工大学SSLVPN使用指南.pdf》。\\n\\n\\n\\n\", \"audiences\": [\"undergraduate\", \"graduate\", \"staff\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.135965,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:repair:02",
+            "source_id": "cdut:source:repair",
+            "title": "维修报修必要信息",
+            "text": "楼寓服务官方说明要求报修说明楼栋、房间、维修内容，附清晰图片及报修联系信息；这些信息应只填写在学校正式报修系统，不应由 CampusPilot 收集私人联系方式。",
+            "url": "https://clhq.cdut.edu.cn/fwdt1/lyfw.htm",
+            "source_title": "后勤保障部楼寓服务",
+            "publisher": "后勤保障部",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "楼寓服务/所需资料",
+            "text_sha256": "055215d93d0a4aaa3ed8b2013ec8b24a8dfacce415813d519ecbc83c197d2c5b",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "常规说明；实际办理状态待核对"
+            },
+            "score": 0.128125,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:lyzn2023:bs07",
+            "source_id": "cdut:source:lyzn2023",
+            "title": "楼寓中心服务指南（7/10）",
+            "text": "4.各教学楼门卫按临时借用教室安排表按时开关教室。\n5.若教室多媒体设施设备临时故障，5分钟内无法修复的，由多媒体教室管理员临时调整教室，并向教室管理班报备，保障正常教学。\n（四）多媒体设备使用注意事项\n1.将校园一卡通教室卡插入桌上插槽中，设备自动启动。使用完毕后，取下一卡通，设备自动延时关闭。设备关闭后，需等待2分钟以后才能再次启动，请不要频繁拔插一卡通。请不要将一卡通遗留在教室！\n2.若使用无线扩音设备，请提前到相应楼栋多媒体管理办公室（9教： 9B-200 6教：6A208-2 东区：E1A111）借用无线话筒。\n3.若设备无法使用，可以通过桌面呼叫器联系管理员，管理员通过远程或到现场解决问题。\n4.白板上只能使用水性笔书写，严禁在黑板或白板上使用记号笔等不可擦除的笔书写，以免造成永久损伤。\n5.禁止在黑板上或白板上粘贴任何物品。\n6.备用粉笔放在讲桌侧面抽屉中，粉笔用完时，可打开侧面抽屉取用。\n报修电话：84079877\n东区： 杨开兰18090110058 李桂霞 13882098037\n吴秋菊 15281316966 罗清明18981901352\n6教： 王 悦 13618085857 杨 霞 18227662262",
+            "url": "https://clhq.cdut.edu.cn/info/1037/2344.htm",
+            "source_title": "楼寓中心服务指南",
+            "publisher": "后勤保障部（页面来源：后期服务集团；作者：刘俊丽）",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "browser-raw/pages/楼寓中心服务指南-成都理工大学后勤保障部.html 正文第7段（共10段）",
+            "text_sha256": "1cad6bea34de96ce7cb9048e5071e555620903d7b2243f8ec3b1f7343e532a72",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "未注明"
+            },
+            "score": 0.1025,
+            "grounded": false
+          }
+        ],
+        "knowledge_version": "kb-229ee34eba99ef34",
+        "retrieval_mode": "hybrid",
+        "degraded": false,
+        "grounding": {
+          "policy": "local-grounding-v1",
+          "mode": "flag",
+          "decision": "grounded"
+        }
+      }
+    },
+    {
+      "query": "新生统一身份认证账号怎么激活？密码要求是什么？",
+      "filters": {
+        "audience": "undergraduate",
+        "academic_year": null
+      },
+      "result": {
+        "result_status": "success",
+        "answer": "新生统一身份认证账号激活说明\n\n事项编号：06\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t服务事项\n\n办理途径\t线上\t办理时间\n\n咨询电话\t028-84079530\t监督电话\t暂无\n\n其它说明\n\n新生进入迎新网：yx.cdut.edu.cn，点击“在线报道”后\n\n1、在登陆页面选择“激活账号”：\n\n2、在激活账号页面输入您的姓名和证件号码：\n\n3、如果您输入的姓名和证件号码与系统记录的一致，进入绑定安全手机页面：\n\n（注意：安全手机是您未来找回密码的依据，请使用自己本人的手机号）\n\n4、输入手机号后，请单击获取验证码，将手机收到验证码输入后点击下一步，设置好密码（密码必须包含大小写字母和 数字并长度不少于8位）\n\n5、显示下页后，账号激活成功，你可以使用账号继续访问学校系统了。\n\n服务人群：\n\n研究生,学校管理员,教师,兼职教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n\n适用条件：新生\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。\n统一身份认证使用手册列有首次账号激活功能：在登录界面选择激活账号，按页面提示完成身份核验和安全手机绑定，之后设置密码。实际页面流程可能更新。\n填写信息\n绑定手机/邮箱\n设置密码\n激活结果\n姓名\n证件号码\n下一步\n\n适用条件：新生",
+        "hits": [
+          {
+            "chunk_id": "cdut:chunk:official:portal-06:guide-body",
+            "source_id": "cdut:source:official:portal-06",
+            "title": "新生统一身份认证账号激活说明正文与服务条件",
+            "text": "新生统一身份认证账号激活说明\n\n事项编号：06\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t服务事项\n\n办理途径\t线上\t办理时间\n\n咨询电话\t028-84079530\t监督电话\t暂无\n\n其它说明\n\n新生进入迎新网：yx.cdut.edu.cn，点击“在线报道”后\n\n1、在登陆页面选择“激活账号”：\n\n2、在激活账号页面输入您的姓名和证件号码：\n\n3、如果您输入的姓名和证件号码与系统记录的一致，进入绑定安全手机页面：\n\n（注意：安全手机是您未来找回密码的依据，请使用自己本人的手机号）\n\n4、输入手机号后，请单击获取验证码，将手机收到验证码输入后点击下一步，设置好密码（密码必须包含大小写字母和 数字并长度不少于8位）\n\n5、显示下页后，账号激活成功，你可以使用账号继续访问学校系统了。\n\n服务人群：\n\n研究生,学校管理员,教师,兼职教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n\n适用条件：新生\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/jz4wkfzkwprfemxbpppb84e6kbyk5dbr.htm",
+            "source_title": "新生统一身份认证账号激活说明",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "documents/portal-06/body.txt:chars[0:403] sha256=66baa2b618611d58dcb0d13a3e9101ae47594dab6af373bffd03e84f25edf475",
+            "text_sha256": "a1b2365452528c373d9564cec00362f4eda7a34a2dac8c9289e7b690a7a57ac9",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.204545,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:identity2021:01",
+            "source_id": "cdut:source:identity2021",
+            "title": "激活统一身份认证账号",
+            "text": "统一身份认证使用手册列有首次账号激活功能：在登录界面选择激活账号，按页面提示完成身份核验和安全手机绑定，之后设置密码。实际页面流程可能更新。",
+            "url": "https://wxc.cdut.edu.cn/info/1013/1560.htm",
+            "source_title": "统一身份认证使用手册",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "二、PC端账号激活",
+            "text_sha256": "983ef2eefdf9fa5fc9c311c8e8e0a93169d393d5b84bd679bcaaf0da26d24299",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "常规说明；实际办理状态待核对"
+            },
+            "score": 0.1875,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-06:checked-step-3",
+            "source_id": "cdut:source:official:portal-06",
+            "title": "新生账号激活图示第3步",
+            "text": "填写信息\n绑定手机/邮箱\n设置密码\n激活结果\n姓名\n证件号码\n下一步\n\n适用条件：新生",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/jz4wkfzkwprfemxbpppb84e6kbyk5dbr.htm",
+            "source_title": "新生统一身份认证账号激活说明",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": true,
+            "locator": "documents/portal-06/assets/image-6c56b3bfa4305feee47065a9-checked.txt:chars[0:35] sha256=10770543157d77d4bf51163b6e4e67e01049b1b4ef62509ff9a41cdbb1bda386",
+            "text_sha256": "973add8eb4d99a6e26fcdd9d474ac0b55d8062bd4f9b5a140eed2dcf36ae5c73",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.158654,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-06:checked-step-5",
+            "source_id": "cdut:source:official:portal-06",
+            "title": "新生账号激活图示第5步",
+            "text": "设置密码\n密码必须是包含数字、小写字母、大写字母，8位以上、20位以下的组合\n确认密码\n下一步\n\n适用条件：新生\n适用限制（采集校验标注）：仅新生激活流程；图片和文字的密码长度表述不同，图片8位以上20位以下，文字不少于8位，实际以当前激活页面校验为准。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/jz4wkfzkwprfemxbpppb84e6kbyk5dbr.htm",
+            "source_title": "新生统一身份认证账号激活说明",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": true,
+            "locator": "documents/portal-06/assets/image-5455db5e58f789e3efc94a1a-checked.txt:chars[0:48] sha256=bdd178ce245ce392a80a56b9d9579e5c711b3ba9a4d001c11274cb7e829ff8f1",
+            "text_sha256": "62787dd18cbd7d73a9aff3e1735c1c49894b411faafc4ed48e7151ab94cb5c11",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.155952,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:identity2021:02",
+            "source_id": "cdut:source:identity2021",
+            "title": "通过绑定方式找回密码",
+            "text": "统一身份认证手册说明密码找回通常需要已经设置安全手机或安全邮箱：在登录页面进入忘记密码，验证身份后重置密码。",
+            "url": "https://wxc.cdut.edu.cn/info/1013/1560.htm",
+            "source_title": "统一身份认证使用手册",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "二、PC端密码找回",
+            "text_sha256": "ea951edbdc13b603c586e433ca331754ff4b537f6f36d448e2101ea00c4f542a",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "常规说明；实际办理状态待核对"
+            },
+            "score": 0.137218,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-06:checked-step-4",
+            "source_id": "cdut:source:official:portal-06",
+            "title": "新生账号激活图示第4步",
+            "text": "绑定手机/邮箱\n绑定方式：安全手机\n为保障账号安全，请至少完成安全手机或邮箱绑定！\n验证码\n下一步\n\n适用条件：新生",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/jz4wkfzkwprfemxbpppb84e6kbyk5dbr.htm",
+            "source_title": "新生统一身份认证账号激活说明",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": true,
+            "locator": "documents/portal-06/assets/image-570af44f66b33caecdad147f-checked.txt:chars[0:50] sha256=125c0a3897b1b039172dc09149e512ce358815e7e6fba73ee334b54cf48cb33b",
+            "text_sha256": "582eb63f65e7a874dcd3505f6b8a640637cd8ddbce7be7fc114693727370ac19",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.135965,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-06:checked-step-6",
+            "source_id": "cdut:source:official:portal-06",
+            "title": "新生账号激活图示第6步",
+            "text": "激活结果\n恭喜您！\n您的账号已经激活成功！\n返回登录页面\n\n适用条件：新生",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/jz4wkfzkwprfemxbpppb84e6kbyk5dbr.htm",
+            "source_title": "新生统一身份认证账号激活说明",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": true,
+            "locator": "documents/portal-06/assets/image-5e97fcf0ef1d4cfb441875ef-checked.txt:chars[0:29] sha256=001b01aa5689f2e3f11ef45e4acec4050abd754c9bc965ac3525087aea9b0df5",
+            "text_sha256": "14333427f9dfe368de4d414ea1e68bb8b2f078850d65e9bdded321cb860dd0ef",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"新生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.133681,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:mail2022:02",
+            "source_id": "cdut:source:mail2022",
+            "title": "学生邮箱激活步骤",
+            "text": "官网2022年指导说明邮箱初次激活要核对身份信息、绑定手机号、设置邮箱别名和新密码。验证所需材料依页面为准；不要向 CampusPilot 提供账号密码。",
+            "url": "https://wxc.cdut.edu.cn/info/1012/3873.htm",
+            "source_title": "学生邮箱激活方法和校友邮箱使用方法",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "二至四、验证、手机绑定、设置密码",
+            "text_sha256": "d766563069eb02d3010e448c4864e563667b7cf7f5d1a751939bb142ad0f4556",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "常规说明；实际办理状态待核对"
+            },
+            "score": 0.132353,
+            "grounded": true
+          }
+        ],
+        "knowledge_version": "kb-229ee34eba99ef34",
+        "retrieval_mode": "hybrid",
+        "degraded": false,
+        "grounding": {
+          "policy": "local-grounding-v1",
+          "mode": "flag",
+          "decision": "grounded"
+        }
+      }
+    },
+    {
+      "query": "生源地贷款合同和回执单交给谁？",
+      "filters": {
+        "audience": "undergraduate",
+        "academic_year": null
+      },
+      "result": {
+        "result_status": "success",
+        "answer": "学生向生源地学生资助管理中心咨询具体贷款政策，并提出贷款申请\n生源地学生资助管理中心负责对学生提交的贷款申请进行资格初审，金融机构负责终审，审查合格，签订贷款合同\n学生持贷款合同及贷款确认回执单到学校报到并交给所属学院，学院汇总后交给学校学生资助管理中心\n学校学生资助管理中心完成贷款合同信息确认后将回执单返还学生所在学院→申请贷款的学生将回执单邮寄到生源地的学生资助管理中心\n生源地学生资助管理中心接收回执，并联系相关金融机构发放贷款→学生到学校计划财务确认款项到账\n\n适用限制（采集校验标注）：具体贷款政策和报送截止由生源地资助中心与学校当年通知确认。\n生源地贷款\n\n事项编号：1165\n\n基本信息\n\n办理方式\t线下办理\t事项性质\t服务事项\n\n办理途径\t线下\t办理时间\t报送时间截止前\n\n咨询电话\t028-84078912\t监督电话\t暂无\n\n办理流程\n\n1.学生向生源地学生资助管理中心咨询具体贷款政策，并提出贷款申请→生源地学生资助管理中心负责对学生提交的贷款申请进行资格初审，金融机构负责终审，审查合格，签订贷款合同→学生持贷款合同及贷款确认回执单到学校报到并交给所属学院，学院汇总后交给学校学生资助管理中心→学校学生资助管理中心完成贷款合同信息确认后将回执单返还学生所在学院→申请贷款的学生将回执单邮寄到生源地的学生资助管理中心→生源地学生资助管理中心接收回执，并联系相关金融机构发放贷款→学生到学校计划财务确认款项到账\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,兼职教师,学生\n\n所属部门：\n\n党委学生工作部、学生工作处、学生资助管理中心（副处级）\n\n服务日期：\n\n长期有效\n\n办理入口\n\n生源地贷款\n\n适用条件：报送时间截止前\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。 页面未给出具体报送截止日期。\n（四）生源地助学贷款缴费\n\n1. 国家开发银行和中国银行生源地信用贷款同学：开学报到时，登录学工系统（https://xgfw.cdut.edu.cn）提交贷款回执校验码即可。当地资助中心审核、银行放款后，财务处会直接抵扣学费住宿费，收到银行放款短信后记得确认缴费状态哦～\n\n2. 四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度～\n\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\n适用条件：国家开发银行和中国银行生源地信用贷款同学；四川农信贷款同学；其他银行贷款同学\n例外条件：如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～",
+        "hits": [
+          {
+            "chunk_id": "cdut:chunk:official:portal-1165:checked-flow",
+            "source_id": "cdut:source:official:portal-1165",
+            "title": "生源地贷款流程图核对",
+            "text": "学生向生源地学生资助管理中心咨询具体贷款政策，并提出贷款申请\n生源地学生资助管理中心负责对学生提交的贷款申请进行资格初审，金融机构负责终审，审查合格，签订贷款合同\n学生持贷款合同及贷款确认回执单到学校报到并交给所属学院，学院汇总后交给学校学生资助管理中心\n学校学生资助管理中心完成贷款合同信息确认后将回执单返还学生所在学院→申请贷款的学生将回执单邮寄到生源地的学生资助管理中心\n生源地学生资助管理中心接收回执，并联系相关金融机构发放贷款→学生到学校计划财务确认款项到账\n\n适用限制（采集校验标注）：具体贷款政策和报送截止由生源地资助中心与学校当年通知确认。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/npkc7n43m4fq6djimf5gyrcc2fm2ktep.htm",
+            "source_title": "生源地贷款",
+            "publisher": "党委学生工作部、学生工作处、学生资助管理中心（副处级）",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": true,
+            "locator": "documents/portal-1165/assets/image-9cadad0fefdfeadacb676485-checked.txt:chars[0:235] sha256=8632db7c7c6d3c67fe9878e89a490229c2f93c97aaf42a617f7214d8e7ab6e15",
+            "text_sha256": "5f4144d7cc374e7b9bdc25dfb20862170a44b61cff12325ea1a0a031354cc979",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"报送时间截止前\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.204545,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-1165:guide-body",
+            "source_id": "cdut:source:official:portal-1165",
+            "title": "生源地贷款正文与服务条件",
+            "text": "生源地贷款\n\n事项编号：1165\n\n基本信息\n\n办理方式\t线下办理\t事项性质\t服务事项\n\n办理途径\t线下\t办理时间\t报送时间截止前\n\n咨询电话\t028-84078912\t监督电话\t暂无\n\n办理流程\n\n1.学生向生源地学生资助管理中心咨询具体贷款政策，并提出贷款申请→生源地学生资助管理中心负责对学生提交的贷款申请进行资格初审，金融机构负责终审，审查合格，签订贷款合同→学生持贷款合同及贷款确认回执单到学校报到并交给所属学院，学院汇总后交给学校学生资助管理中心→学校学生资助管理中心完成贷款合同信息确认后将回执单返还学生所在学院→申请贷款的学生将回执单邮寄到生源地的学生资助管理中心→生源地学生资助管理中心接收回执，并联系相关金融机构发放贷款→学生到学校计划财务确认款项到账\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,兼职教师,学生\n\n所属部门：\n\n党委学生工作部、学生工作处、学生资助管理中心（副处级）\n\n服务日期：\n\n长期有效\n\n办理入口\n\n生源地贷款\n\n适用条件：报送时间截止前\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。 页面未给出具体报送截止日期。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/npkc7n43m4fq6djimf5gyrcc2fm2ktep.htm",
+            "source_title": "生源地贷款",
+            "publisher": "党委学生工作部、学生工作处、学生资助管理中心（副处级）",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "documents/portal-1165/body.txt:chars[0:442] sha256=63445a6958ac7c6f4b650322b1d52a574b54c880d3d2df69cfee4024f23ef2f8",
+            "text_sha256": "5ae1b47b87178b8995e3900a58fc5eca1e7adc8fcb9e993bbc43435ea649a0ef",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"报送时间截止前\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.1875,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:tuition-2026:loan-payment",
+            "source_id": "cdut:source:official:tuition-2026",
+            "title": "2026-2027学年各银行贷款抵缴条件",
+            "text": "（四）生源地助学贷款缴费\n\n1. 国家开发银行和中国银行生源地信用贷款同学：开学报到时，登录学工系统（https://xgfw.cdut.edu.cn）提交贷款回执校验码即可。当地资助中心审核、银行放款后，财务处会直接抵扣学费住宿费，收到银行放款短信后记得确认缴费状态哦～\n\n2. 四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度～\n\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\n适用条件：国家开发银行和中国银行生源地信用贷款同学；四川农信贷款同学；其他银行贷款同学\n例外条件：如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～",
+            "url": "https://jcc.cdut.edu.cn/info/1012/2724.htm",
+            "source_title": "成都理工大学在校生2026-2027学年缴费通知",
+            "publisher": "成都理工大学财务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/tuition-2026.txt:chars[450:775] sha256=5323e799fe7fc159ad55a6b7a51a85c035532cf402c7df10bc4b44680b81eb6c",
+            "text_sha256": "9dad1c447741f6625977873693e503a020eb7f0c64aac362bdde57850b8a819d",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": "2026-2027",
+              "valid_from": "2026-07-16",
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台\", \"校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"国家开发银行和中国银行生源地信用贷款同学\", \"四川农信贷款同学\", \"其他银行贷款同学\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [\"如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\"], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"微信/网页缴费成功\", \"银行放款满1个月（或确认支用成功满1个月）\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"家庭经济困难且暂未办理生源地助学贷款\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_until\": \"于2026年7月30日前提交申请\"}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": \"2026-07-30\"}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.139286,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:cistfresh2024:bs10",
+            "source_id": "cdut:source:cistfresh2024",
+            "title": "一键收藏！2024本科新生入学指南（10/16）",
+            "text": "1.学生向生源地学生资助管理中心咨询具体政策，并提出货款申请(国家开发银行的生源地信用助学货款通过国家开发银行助学货款信息网申请。网址为http://www.csls.cdb.com.cn，国家开发银行助学货款咨询热线：95593，部分地区可根据咨询意见直接到相关金融机构申请）；\n2.生源地学生资助管理中心负责对学生提交的货款申请进行资格初审，金融机构负责终审，审查合格，签订货款合同;\n3.学生持货款合同及货款确认回执单到学校报到，并在学工系统中填报个人货款信息：\n（1）国家开发银行和中国银行生源地信用货款学生：在系统中填报回执校验码即可；\n（2）四川省农村信用社货款学生：需将四川农信APP中的二维码截图上传系统；\n（3）上述3个银行以外的其他银行货款学生：在线填报信息基础上，还需将纸质回执单交给学院，由学院汇总后统一交学校学生资助管理中心处理；\n4.学校对货款回执单或受理证明进行确认井盖章后返还给学院（国家开发银行、中国银行、四川省农村信用社贷款学生不涉及此环节）\n5.学生将回执单邮寄到生源地学生资助管理中心（国家开发银行、中国银行、四川省农村信用社货款学生不涉及此环节）；\n6.生源地学生资助理中心接收回执，并联系相关金融机构发放货款：\n成都理工大学开户银行信息\n开户名称：成都理工大学",
+            "url": "https://cist.cdut.edu.cn/info/1135/7328.htm",
+            "source_title": "一键收藏！2024本科新生入学指南",
+            "publisher": "计算机与网络安全学院（示范性软件学院）（页面：发布者 计网学院）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/pages/一键收藏！2024本科新生入学指南-计算机与网络安全学院（示范性软件学院）.html 正文第10段（共16段）",
+            "text_sha256": "63ee2f9ef93fb8ec1831ad007d8adc614af8ce3905f8445697126a4ac24fcabf",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "2024级本科新生"
+            },
+            "score": 0.131791,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:loanconfirm2026:bs01",
+            "source_id": "cdut:source:loanconfirm2026",
+            "title": "2026届毕业生｜国家助学贷款毕业确认，请及时完成！（1/4）",
+            "text": "亲爱的2026届毕业生：\n毕业临近，崭新的旅程即将开启。同学们在收拾行囊、奔赴前程之际，请留意还有一项重要手续需按时完成：\n国家助学贷款毕业确认\n毕业确认关系到个人贷款信息更新、还款计划衔接和个人信用记录。请办理过国家助学贷款的毕业生，认真阅读以下内容，按要求完成相关手续。\n一、哪些同学需要办理？\n在校期间办理过国家助学贷款的2026届毕业生，均需关注并按要求完成毕业确认。\n主要包括：\n国家开发银行生源地信用助学贷款；四川农商银行／四川农信助学贷款；中国银行国家助学贷款；其他银行承办的生源地信用助学贷款。\n如不确定自己的贷款银行，可查看贷款合同、登录贷款系统，或咨询生源地学生资助管理中心。\n二、国家开发银行助学贷款毕业确认\n办理国家开发银行生源地信用助学贷款的同学，于规定时间内请登录国家开发银行生源地助学贷款学生在线系统：\nhttps://sls.cdb.com.cn\n1. 登录系统\n选择“生源地助学贷款学生在线系统”。忘记密码的同学，可通过系统提示找回密码，若学生修改初始密码后忘记新密码，需联系生源地县级资助管理中心申请重置密码。\n操作流程：进入系统首页 → 选择“生源地助学贷款” → 输入身份证号、密码和验证码 → 点击登录。\n2. 完善个人信息",
+            "url": "https://xsc.cdut.edu.cn/info/1033/4603.htm",
+            "source_title": "2026届毕业生｜国家助学贷款毕业确认，请及时完成！",
+            "publisher": "学生处（信息来源：学生资助管理中心）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/pages/2026届毕业生｜国家助学贷款毕业确认，请及时完成！-成都理工大学学生处.html 正文第1段（共4段）",
+            "text_sha256": "5af089f159313cfd160ba91bc0b3faec89a234e67cfca7431d26777a8759283f",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "在校期间办理过国家助学贷款的2026届毕业生"
+            },
+            "score": 0.119742,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:cistfresh2025:bs09",
+            "source_id": "cdut:source:cistfresh2025",
+            "title": "新成理人集合！速戳这份开学秘籍（9/15）",
+            "text": "2.学生通过申请生源地贷款缴费的，在银行汇出货款一个月后，登录网上缴费平台查看或打印票据。其他需要在APP上点支用操作的贷款缴费，请确认支用成功一个月后，登录网上缴费平台查看或打印票据。\n附表：成都理工大学2025级普通本科学生缴费项目及缴费标准\n5.温馨提示\n未满18周岁未成年人由其监护人(父/母)本人带关系证明及身份证件在任意一家建行网点办理学生本人建行卡，为方便在校期间奖、助学金等各类学生经费的发放。学生报到时应一次性交清所有费用。\n确因特殊原因无法按时交清费用的，须按照学校的规定办理缓缴手续，经学校相关部门审批同意后，应及时缴纳除获批缓缴金额外的学杂费用，剩余款项需在批准的缓缴期限内交清。\n申请了助学贷款的学生，如果获批贷款金额小于应缴金额，可通过微信，支付宝或网上缴费方式补齐学杂费。\n生源地信用助学贷款\n生源地信用助学贷款是指国家开发银行等金融机构向符合条件的家庭经济困难普通高校新生和在校生发放的，学生和家长（或其他法定监护人）向学生入学前户籍所在县（市、区）的学生资助管理中心（以下简称生源地学生资助管理中心）或金融机构申请办理的，帮助家庭经济困难学生优先支付在校期间所需学费、住宿费的助学贷款。",
+            "url": "https://cist.cdut.edu.cn/info/1135/7388.htm",
+            "source_title": "新成理人集合！速戳这份开学秘籍",
+            "publisher": "计算机与网络安全学院（示范性软件学院）（页面：发布者 计网学院）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/pages/新成理人集合！速戳这份开学秘籍-计算机与网络安全学院（示范性软件学院）.html 正文第9段（共15段）",
+            "text_sha256": "59af8741b98e87dbf193eb855cb2e2ab5bf32ac0a9aacb9153de4da977e0da8b",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "2025级新生（成都校区）"
+            },
+            "score": 0.115625,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:cistfresh2025:bs10",
+            "source_id": "cdut:source:cistfresh2025",
+            "title": "新成理人集合！速戳这份开学秘籍（10/15）",
+            "text": "生源地信用助学贷款为信用贷款，无需担保或抵押，学生和家长（或其他法定监护人）共同借款人，共同承担还款责任。该贷款办理程序简捷、申请成功率高、贷后便于还款，是家庭经济困难学生顺利完成学业的最佳贷款途径。\n现将生源地信用助学贷款办理有关事宜作如下简要说明：\n床上用品购买须知\n根据国家质量检验检疫总局、教育部《关于加强高校学生床上用品质量监督管理工作的通知》四川省质量技术监督局、四川省教育厅转发教育部《关于加强高校学生床上用品质量监督管理工作的通知》的通知及《关于进一步加强学生床上用品质量打击“黑心棉”违法犯罪行为的通知》规定：凡不符合国家要求的床上用品不得进入校园使用。\n为方便学生生活，保障学生健康，现就新生购买床上用品作如下告知：\n为了防止同学们买到“黑心棉” 和布类产品甲醛、PH值、禁用可分解致癌芳香胺染料、色牢度等不达标产品，影响身心健康。学校通过公开招标，引进成都市新都蜀绣工艺制品有限公司为同学们提供优质床上用品。\n床上用品购买为自愿行为。\n为节省同学们的报到时间，愿意购买以上床上用品的同学通过网上预订，操作程序详见《成都理工大学卧具线上购买流程》。报到时，商家根据网上付款情况，在公寓直接将床上用品发放给同学们，方便同学们入住。（网上预购不方便的同学，也可在公寓现场购买）。\n大学新生军训注意事项",
+            "url": "https://cist.cdut.edu.cn/info/1135/7388.htm",
+            "source_title": "新成理人集合！速戳这份开学秘籍",
+            "publisher": "计算机与网络安全学院（示范性软件学院）（页面：发布者 计网学院）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/pages/新成理人集合！速戳这份开学秘籍-计算机与网络安全学院（示范性软件学院）.html 正文第10段（共15段）",
+            "text_sha256": "d9f2dafa3284e2b1ab16475ed8c434c355ccbd552993c14efdb7b04e59143b56",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "2025级新生（成都校区）"
+            },
+            "score": 0.113212,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:wx:fresh2026fee:02",
+            "source_id": "cdut:source:wx:fresh2026fee",
+            "title": "2026级成理萌新看过来！这份超全缴费指南请收好（2）",
+            "text": "1.打开浏览器（建议使用谷歌或 IE10 以上的浏览器）校外访问：成都理工大学主页→砚湖易办→VPN 入口→财务缴费平台。\n校内访问：成都理工大学财务处主页访问 https://jcc.cdut.edu.cn\n→学生网上缴费\n2. 输入用户名和密码（新生第一次登录需要激活账号、设置密码后登录），选择缴费项进行缴费。\n生源地缴费\n1.国家开发银行和中国银行生源地信用贷款缴费的学生\n开学报到时通过学工系统（ https://xgfw.cdut.edu.cn）在线填报提交贷款回执校验码，贷款银行会直接将款项划拨至学校。请您在收到银行放款短信后，及时登录缴费平台确认学费、住宿费是否已抵扣。若学杂费超出贷款金额，请自行补缴差额部分。\n2. 四川省农村信用合作社（以下简称“四川农信”）生源地信用助学贷款学生\n开学报到时需将四川农信 APP 中的二维码截图上传学工系统（https://xgfw.cdut.edu.cn），学生生源地资助管理中心进行审核后，由贷款银行放款。贷款放到学生卡上后为冻结状态，学生需要自行支用缴费，支付到指定的学校学费账户才算完成缴费。学生可在四川农信 APP 中全程跟进货款状态。学杂费超过生源地贷款的部分请学生自行完成缴纳。\n四川农信助学贷款自行支用缴费手机操作流程如下所示：\n① 打开农信银行 APP，点击“贷款”\n② 点击“贷款申请”\n③ 在右上角点击“进度”",
+            "url": "https://mp.weixin.qq.com/s/37b1EidELwZnhfLEiCDtjA",
+            "source_title": "2026级成理萌新看过来！这份超全缴费指南请收好",
+            "publisher": "成都理工大学财务处",
+            "temporal_status": "unknown",
+            "stale": true,
+            "ocr": false,
+            "locator": "微信原文 第2段落组",
+            "text_sha256": "a960302feeb9905ba9661d3095fb871673ae99355ade0fb8827eb7d9df931349",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "2026级本科新生"
+            },
+            "score": 0.112588,
+            "grounded": false
+          }
+        ],
+        "knowledge_version": "kb-229ee34eba99ef34",
+        "retrieval_mode": "hybrid",
+        "degraded": false,
+        "grounding": {
+          "policy": "local-grounding-v1",
+          "mode": "flag",
+          "decision": "grounded"
+        }
+      }
+    },
+    {
+      "query": "研究生在读证明线上一天能申请几次？下载有没有次数限制？",
+      "filters": {
+        "audience": "graduate",
+        "academic_year": null
+      },
+      "result": {
+        "result_status": "success",
+        "answer": "三、收费与申请次数\n\n电子证明申请为 免费 ，线上申请一天限制一次，下载不受限制；线下自助打印没有申请次数限制，每类文件有限定的免费打印次数。\n\n四、电子证明验证方法\n\n电子证明的接收单位可使用 【扫一扫】 ，调取原件进行核对真伪。\n\n五、联系方式\n适用条件：研究生：成绩单、在读证明\n适用限制（采集校验标注）：2023年试运行通知；试运行终止日未知，未明确线下每类文件的免费份数。\n一、适用人群\n\n研究生：成绩单、在读证明\n\n二、申请流程\n\n本业务开通 线上申请 及 线下自助打印 功能，可根据个人需求进行选择。\n\n线上：登录“砚湖易办” ——“常用系统入口”——“管理服务相关”——点击“可信电子凭证平台”——点击“电子签约”——在“用印流程”中选择需要的文件——点击“下一步，补全文件内容”——自动生成文件证明——点击“开始签署”按钮——点击“下载”至本地使用——接收单位可扫描文件右上角二维码核验真伪。\n\n线下：自助打印机——选择“研究生”——使用“统一身份认证/校园卡”方式进入个人账户——选择需要打印的文件名称——预览打印效果，选择打印份数——点击“打印”\n\n三、收费与申请次数\n适用条件：研究生：成绩单、在读证明\n适用限制（采集校验标注）：2023年试运行通知；试运行终止日未知，未明确线下每类文件的免费份数。\n五、联系方式\n\n联系电话：84078860马老师\n\n设备故障：15982311804\n适用条件：研究生：成绩单、在读证明\n适用限制（采集校验标注）：2023年试运行通知；试运行终止日未知，未明确线下每类文件的免费份数。",
+        "hits": [
+          {
+            "chunk_id": "cdut:chunk:official:graduate-proof-2023:frequency",
+            "source_id": "cdut:source:official:graduate-proof-2023",
+            "title": "研究生电子证明费用和申请次数",
+            "text": "三、收费与申请次数\n\n电子证明申请为 免费 ，线上申请一天限制一次，下载不受限制；线下自助打印没有申请次数限制，每类文件有限定的免费打印次数。\n\n四、电子证明验证方法\n\n电子证明的接收单位可使用 【扫一扫】 ，调取原件进行核对真伪。\n\n五、联系方式\n适用条件：研究生：成绩单、在读证明\n适用限制（采集校验标注）：2023年试运行通知；试运行终止日未知，未明确线下每类文件的免费份数。",
+            "url": "https://gra.cdut.edu.cn/info/1007/5283.htm",
+            "source_title": "关于线上线下一体化自助平台试运行的通知",
+            "publisher": "成都理工大学研究生院",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/graduate-proof-2023.txt:chars[418:542] sha256=e6bd4f8cb3ca4c91e7ba6213148b207c5f42d0e7cd92834af3f2deacb840e16c",
+            "text_sha256": "639f513b290dc9e6f34034d2c69fab968934f49ce5e651d87ce15eee63a48b3f",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"研究生：成绩单、在读证明\", \"audiences\": [\"graduate\"], \"campuses\": [], \"conditions\": [\"研究生：成绩单、在读证明\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"研究生：成绩单、在读证明\", \"audiences\": [\"graduate\"], \"campuses\": [], \"conditions\": [\"研究生：成绩单、在读证明\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"研究生：成绩单、在读证明\", \"audiences\": [\"graduate\"], \"campuses\": [], \"conditions\": [\"研究生：成绩单、在读证明\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.204545,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:graduate-proof-2023:application",
+            "source_id": "cdut:source:official:graduate-proof-2023",
+            "title": "研究生成绩单与在读证明线上线下申请",
+            "text": "一、适用人群\n\n研究生：成绩单、在读证明\n\n二、申请流程\n\n本业务开通 线上申请 及 线下自助打印 功能，可根据个人需求进行选择。\n\n线上：登录“砚湖易办” ——“常用系统入口”——“管理服务相关”——点击“可信电子凭证平台”——点击“电子签约”——在“用印流程”中选择需要的文件——点击“下一步，补全文件内容”——自动生成文件证明——点击“开始签署”按钮——点击“下载”至本地使用——接收单位可扫描文件右上角二维码核验真伪。\n\n线下：自助打印机——选择“研究生”——使用“统一身份认证/校园卡”方式进入个人账户——选择需要打印的文件名称——预览打印效果，选择打印份数——点击“打印”\n\n三、收费与申请次数\n适用条件：研究生：成绩单、在读证明\n适用限制（采集校验标注）：2023年试运行通知；试运行终止日未知，未明确线下每类文件的免费份数。",
+            "url": "https://gra.cdut.edu.cn/info/1007/5283.htm",
+            "source_title": "关于线上线下一体化自助平台试运行的通知",
+            "publisher": "成都理工大学研究生院",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/graduate-proof-2023.txt:chars[124:427] sha256=e6bd4f8cb3ca4c91e7ba6213148b207c5f42d0e7cd92834af3f2deacb840e16c",
+            "text_sha256": "9d65cff4d46375037c333d9651ac7f238a642a6d0ec33200f3fd3fe0306d7b24",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"研究生：成绩单、在读证明\", \"audiences\": [\"graduate\"], \"campuses\": [], \"conditions\": [\"研究生：成绩单、在读证明\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"研究生：成绩单、在读证明\", \"audiences\": [\"graduate\"], \"campuses\": [], \"conditions\": [\"研究生：成绩单、在读证明\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"研究生：成绩单、在读证明\", \"audiences\": [\"graduate\"], \"campuses\": [], \"conditions\": [\"研究生：成绩单、在读证明\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.1875,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:graduate-proof-2023:contacts",
+            "source_id": "cdut:source:official:graduate-proof-2023",
+            "title": "研究生证明业务和设备故障联系",
+            "text": "五、联系方式\n\n联系电话：84078860马老师\n\n设备故障：15982311804\n适用条件：研究生：成绩单、在读证明\n适用限制（采集校验标注）：2023年试运行通知；试运行终止日未知，未明确线下每类文件的免费份数。",
+            "url": "https://gra.cdut.edu.cn/info/1007/5283.htm",
+            "source_title": "关于线上线下一体化自助平台试运行的通知",
+            "publisher": "成都理工大学研究生院",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/graduate-proof-2023.txt:chars[536:578] sha256=e6bd4f8cb3ca4c91e7ba6213148b207c5f42d0e7cd92834af3f2deacb840e16c",
+            "text_sha256": "cb26b46a96a434e593be4a71172af63a071342328faf29182ffbd5bf8b609162",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"研究生：成绩单、在读证明\", \"audiences\": [\"graduate\"], \"campuses\": [], \"conditions\": [\"研究生：成绩单、在读证明\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"研究生：成绩单、在读证明\", \"audiences\": [\"graduate\"], \"campuses\": [], \"conditions\": [\"研究生：成绩单、在读证明\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"研究生：成绩单、在读证明\", \"audiences\": [\"graduate\"], \"campuses\": [], \"conditions\": [\"研究生：成绩单、在读证明\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.173077,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-1266:guide-body",
+            "source_id": "cdut:source:official:portal-1266",
+            "title": "借户口本申请正文与服务条件",
+            "text": "借户口本申请\n\n事项编号：1266\n\n基本信息\n\n办理方式\t线上线下结合办理\t事项性质\t审批事项\n\n办理途径\t线上线下结合\t办理时间\t上午8:30-12:00，下午2:30-6:00\n\n咨询电话\t028-84076063\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n其它说明\n\n注意事项：\n\n学生申请者需是户口在学校的学生，才能办理\n\n服务人群：\n\n研究生,学校管理员,教师,学生\n\n服务仅限：\n\n党委武装部、保卫处,管理员组,学生,研究生使用\n\n所属部门：\n\n党委武装部、保卫处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n借户口本申请\n\n适用条件：学生申请者需是户口在学校的学生，才能办理\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/xybwd4bpsrwp7jknjgge34th27ztn5zc.htm",
+            "source_title": "借户口本申请",
+            "publisher": "党委武装部、保卫处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "documents/portal-1266/body.txt:chars[0:268] sha256=6cf8cf844ef35b368aa191c8a10597e170e4274297c302b11660cdb1b4f6f8ac",
+            "text_sha256": "bd32bbcbfde51d0b44b11e5cd68661eebe4e94e94aca93eaaa16edd5406cc75b",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"学生申请者需是户口在学校的学生，才能办理\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.15,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-1046:guide-body",
+            "source_id": "cdut:source:official:portal-1046",
+            "title": "学籍档案查询（毕业生）正文与服务条件",
+            "text": "学籍档案查询（毕业生）\n\n事项编号：1046\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午：08:00—12:00，下午：14:30—18:00\n\n咨询电话\t028-84074249\t监督电话\t暂无\n\n办理流程\n\n1.提交申请\n\n2.申请人登录平台，发起申请\n\n3.填写申请表\n\n4.等待办理结果通知\n\n5.审核\n\n6.档案馆经办人\n\n7.流程办结\n\n8.申请人查看审核结果，确认结果并办结流程\n\n9.领取资料\n\n10.档案馆邮寄复印件或发送电子版档案\n\n其它说明\n\n注意事项\t1.有效身份证明包括：居民身份证（含有效期内临时身份证）、军官证、户口簿、护照等。 2.请先勾选所查档案对应学历，再勾选具体查档内容； 3.查阅高考录取名单，务必提供生源地（参加高考省份）信息； 4.如需复制件（纸质）请提供收件地址，我们会采用顺丰到付方式寄出；如需电子版请填写电子邮箱； 5.办理周期一般为三个工作日。\n\n服务人群：\n\n校友研究生,校友本专科生,研究生,学校管理员,教师,学生\n\n所属部门：\n\n档案馆\n\n服务日期：\n\n长期有效\n\n办理入口\n\n学籍档案查询（毕业生）\n\n适用条件：毕业生\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/mcpthsjchsajwch7wjbrshcfzciher7a.htm",
+            "source_title": "学籍档案查询（毕业生）",
+            "publisher": "档案馆",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "documents/portal-1046/body.txt:chars[0:502] sha256=0f2a40b52199dcb812a60abef4679583db1262b7e39cd8d2f7797001f91bf5cf",
+            "text_sha256": "03150b7f18d98ac3c31027175c8624382f858bc1be50b4fa1066fa0e6e5cb340",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"毕业生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.128289,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:zzzc:bs02",
+            "source_id": "cdut:source:zzzc",
+            "title": "资助政策-成都理工大学学生处（2/5）",
+            "text": "[2025-07-09]\n成都理工大学研究生资助政策简介\n成都理工大学研究生资助政策简介在高等教育研究生阶段，目前已建立起国家奖学金、学业奖学金、国家助学金、国家助学贷款等多种形式有机结合的研究生资助政策体系。如遇国家政策调整，以新政策文件为准。1.国家奖学金奖励特别优秀的全日制研究生。全国每年奖励9万名，其中硕士研究生7万名、每生每年20000元，博士研究生2万名、每生每年30000元，颁发国家统一印制的荣誉证书。按学年进行申请，符合条件的学生可在9月向学校提出申....\n[2025-07-09]\n国家助学贷款宣传指南\n国家助学贷款宣传指南一、什么是国家助学贷款？国家助学贷款是高等教育学生资助体系“奖助贷勤免补”的重要组成部分，由政府主导，金融机构向符合条件的高校家庭经济困难学生提供的信用贷款。二、国家助学贷款有哪些类型？国家助学贷款分为生源地信用助学贷款和校园地国家助学贷款，有贷款需求的家庭经济困难学生可向户籍地县（市、区）教育行政部门学生资助管理中心咨询办理生源地信用助学贷款，或向高校学生资助管理中心咨询....",
+            "url": "https://xsc.cdut.edu.cn/zzgl/zzzc.htm",
+            "source_title": "资助政策-成都理工大学学生处",
+            "publisher": "学生处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "browser-raw/pages/资助政策-成都理工大学学生处.html 正文第2段（共5段）",
+            "text_sha256": "f8d16f3bfb97261e88702bd376f4549cbaeca8aabd7f7112b748221580ef7d03",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "未注明"
+            },
+            "score": 0.12358,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:libfaq:03",
+            "source_id": "cdut:source:libfaq",
+            "title": "图书馆借阅数量",
+            "text": "图书馆FAQ中记载本科生可借40本、研究生和教职工可借50本，借期约两个月，可在到期前续借；如政策变动以图书馆系统为准。",
+            "url": "https://lib.cdut.edu.cn/fw/qtfw/cjwt.htm",
+            "source_title": "图书馆常见问题",
+            "publisher": "图书馆",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "常见问题/借阅数量和期限",
+            "text_sha256": "b1e520b10b7fd5e5a5836e724dcd323c898dcb6bfad5e3f1dfbc715e1e318558",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "常规说明；实际办理状态待核对"
+            },
+            "score": 0.122619,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:cistwork2025:bs02",
+            "source_id": "cdut:source:cistwork2025",
+            "title": "2025-2026学年秋季学期计算机与网络安全学院（示范性软件学院） 勤工助学岗（2/3）",
+            "text": "4.每周能保证一定的工作时间完成勤工助学工作。\n5.具备一定办公软件使用能力者优先考虑。\n6.符合本学年经学校认定入库的家庭经济困难学生。\n以下情况不得录用：\n1.已在其他部门担任勤工助学工作。\n2.提交虚假申请材料。\n3.存在违纪、违规处罚且在影响期内。\n四、报名及选聘\n1.报名方式及时间：本科生填写《成都理工大学学生校内勤工助学固定岗位申请表》（附件1），研究生填写《成都理工大学研究生“助管”岗位申请表》（附件2），不用签字。于 2025年9月24日12:00前将电子版发送至邮箱675767435@qq.com，报名邮件以“【本科生助理岗/研究生助管岗】+姓名+学号”命名（如“本科生助理岗+张三+学号”）。\n2.选聘方式：应聘者将报名申请表发到指定邮箱，对资格审查符合条件的，学院将择优通知面试考核，确定拟聘人选。\n五、薪资待遇\n用工岗位负责老师每月对在岗“勤工助学”或“助管”学生进行工作记录，在线填报考核结果，在完成岗位考核的基础上进行薪酬申请，学校学生资助管理中心以此为依据进行助管津贴的审核，并提交财务处发放。",
+            "url": "https://cist.cdut.edu.cn/info/1143/7510.htm",
+            "source_title": "2025-2026学年秋季学期计算机与网络安全学院（示范性软件学院） 勤工助学岗位 研究生“助管”岗位 岗位招募通知",
+            "publisher": "计算机与网络安全学院（示范性软件学院）（页面：发布者 计网学院）",
+            "temporal_status": "unknown",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/pages/2025-2026学年秋季学期计算机与网络安全学院（示范性软件学院） 勤工助学岗~505d67d4.html 正文第2段（共3段）",
+            "text_sha256": "4ddc0cd6d182b635603506423dabb2d21859e0f757fa9e64b659b3d934611abf",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "本科生勤工助学岗位：全体本科生（家庭经济困难学生优先）；研究生“助管”岗位：研究生"
+            },
+            "score": 0.094444,
+            "grounded": false
+          }
+        ],
+        "knowledge_version": "kb-229ee34eba99ef34",
+        "retrieval_mode": "hybrid",
+        "degraded": false,
+        "grounding": {
+          "policy": "local-grounding-v1",
+          "mode": "flag",
+          "decision": "grounded"
+        }
+      }
+    },
+    {
+      "query": "2026-2027学年校外通过网页缴费需要VPN吗？",
+      "filters": {
+        "audience": "undergraduate",
+        "academic_year": "2026-2027"
+      },
+      "result": {
+        "result_status": "success",
+        "answer": "一、缴费时间\n\n自2026年7月16日起正式开启。\n\n温馨提示：建议同学们在返校前完成缴费，以免影响报到注册。\n\n二、缴费方式\n\n（一）微信缴费\n\n1.打开微信，搜索并关注 “成都理工大学财务处”微信公众号。\n\n2.进入公众号，点击【学生服务】→【在线缴费】，输入账号密码，选择缴费项缴费。\n\n（二）支付宝缴费\n\n1.打开支付宝，搜索并关注“成都理工大学生活号”。\n\n2.关注后点击【缴费大厅】→【学杂费】，输入账号密码，选择缴费项缴费。\n\n（三）网页端缴费\n\n1. 推荐使用谷歌或IE10以上浏览器\n\n2. 校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台\n\n校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费\n\n3．输入用户名和密码，选择缴费项缴费。\n\n（四）生源地助学贷款缴费\n适用条件：校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台；校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费\n第五、注意事项 \n1.校外学生可以通过VPN访问砚湖易办平台； \n2.平台仅收录2014级及以后毕业生成绩数据，2014级以前学生成绩证\n明，请与学校档案馆联系办理； \n3.如遇砚湖易办平台无法登录等相关问题，请联系学校网络与信息化\n处。 \n \n\n\n适用条件：平台仅收录2014级及以后毕业生成绩数据\n例外条件：2014级以前学生成绩证\n明，请与学校档案馆联系办理\n适用限制（采集校验标注）：2014级是数据收录界限，不转换为当前学年或推断其他证明的数据范围。\n成都理工大学在校生\n2026-2027学年缴费通知\n各位同学：\n根据学校收费工作安排，为方便同学们轻松搞定新学年学杂费缴纳，财务处特意为大家整理了这份缴费“小贴士”，记得查收哦。\n一、缴费时间\n自2026年7月16日起正式开启。\n温馨提示：建议同学们在返校前完成缴费，以免影响报到注册。\n二、缴费方式\n微信缴费\n1.打开微信，搜索并关注 “成都理工大学财务处”微信公众号。\n2.进入公众号，点击【学生服务】→【在线缴费】，输入账号密码，选择缴费项缴费。\n支付宝缴费\n1.打开支付宝，搜索并关注“成都理工大学生活号”。\n2.关注后点击【缴费大厅】→【学杂费】，输入账号密码，选择缴费项缴费。\n网页端缴费\n1. 推荐使用谷歌或IE10以上浏览器\n2. 校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台\n校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费\n3．输入用户名和密码，选择缴费项缴费。\n助学贷款缴费\n1. 国家开发银行和中国银行生源地信用贷款同学：开学报到时，登录学工系统（https://xgfw.cdut.edu.cn）提交贷款回执校验码即可。当地资助中心审核、银行放款后，财务处会直接抵扣学费住宿费，收到银行放款短信后记得确认缴费状态。",
+        "hits": [
+          {
+            "chunk_id": "cdut:chunk:official:tuition-2026:payment-channels",
+            "source_id": "cdut:source:official:tuition-2026",
+            "title": "2026-2027学年缴费渠道及校外 VPN 条件",
+            "text": "一、缴费时间\n\n自2026年7月16日起正式开启。\n\n温馨提示：建议同学们在返校前完成缴费，以免影响报到注册。\n\n二、缴费方式\n\n（一）微信缴费\n\n1.打开微信，搜索并关注 “成都理工大学财务处”微信公众号。\n\n2.进入公众号，点击【学生服务】→【在线缴费】，输入账号密码，选择缴费项缴费。\n\n（二）支付宝缴费\n\n1.打开支付宝，搜索并关注“成都理工大学生活号”。\n\n2.关注后点击【缴费大厅】→【学杂费】，输入账号密码，选择缴费项缴费。\n\n（三）网页端缴费\n\n1. 推荐使用谷歌或IE10以上浏览器\n\n2. 校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台\n\n校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费\n\n3．输入用户名和密码，选择缴费项缴费。\n\n（四）生源地助学贷款缴费\n适用条件：校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台；校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费",
+            "url": "https://jcc.cdut.edu.cn/info/1012/2724.htm",
+            "source_title": "成都理工大学在校生2026-2027学年缴费通知",
+            "publisher": "成都理工大学财务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/tuition-2026.txt:chars[95:462] sha256=5323e799fe7fc159ad55a6b7a51a85c035532cf402c7df10bc4b44680b81eb6c",
+            "text_sha256": "6bbf52c619f2e96ce9f634118a8f283341a7fd17edb415315cb9c31f3f15246e",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": "2026-2027",
+              "valid_from": "2026-07-16",
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台\", \"校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"国家开发银行和中国银行生源地信用贷款同学\", \"四川农信贷款同学\", \"其他银行贷款同学\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [\"如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\"], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"微信/网页缴费成功\", \"银行放款满1个月（或确认支用成功满1个月）\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"家庭经济困难且暂未办理生源地助学贷款\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_until\": \"于2026年7月30日前提交申请\"}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": \"2026-07-30\"}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.190559,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:proofindex:cohort-boundary",
+            "source_id": "cdut:source:official:proofindex",
+            "title": "本科证明校外访问和毕业年级数据限制",
+            "text": "第五、注意事项 \n1.校外学生可以通过VPN访问砚湖易办平台； \n2.平台仅收录2014级及以后毕业生成绩数据，2014级以前学生成绩证\n明，请与学校档案馆联系办理； \n3.如遇砚湖易办平台无法登录等相关问题，请联系学校网络与信息化\n处。 \n \n\n\n适用条件：平台仅收录2014级及以后毕业生成绩数据\n例外条件：2014级以前学生成绩证\n明，请与学校档案馆联系办理\n适用限制（采集校验标注）：2014级是数据收录界限，不转换为当前学年或推断其他证明的数据范围。",
+            "url": "https://aao.cdut.edu.cn/info/1187/6960.htm",
+            "source_title": "本科生可信电子证明申请操作指引",
+            "publisher": "成都理工大学教务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/proofindex.txt:chars[409:533] sha256=1fa0c589ed49f0026e64f611548a00d7d4262c57892c1de076293f5c3c681771",
+            "text_sha256": "fd7f594f487bb397fa08bc02bacd83cd101a167aecab0243027041934df26219",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "alumni"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"alumni\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"本科生可信电子证明\", \"audiences\": [\"undergraduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"本科生可信电子证明申请操作指引\\n\\n[page 1]\\n成都理工大学本科生可信电子证明-操作手册 \\n1 \\n \\n \\n \\n本科生可信电子证明申请操作指引 \\n \\n第一、 申请入口（砚湖易办） \\n进入砚湖易办系统访问常用系统入口，点击【可信电子凭证平台】\\n按钮，即可跳转到可信电子凭证平台系统，在线申请本科生中英文成\\n绩单、四六级证明、绩点证明、在读证明、学历学位证明。 \\n \\n第二、 申请所需证明 \\n点击【电子签约 】按钮，选择需要申请文件流程，点击【确认\\n发起】即申请电子版对应文件。 \\n\\n\\n[page 2]\\n成都理工大学本科生可信电子证明-操作手册 \\n2 \\n \\n \\n第三、点击【查看文件】在线查阅，或点击【下载】按钮下载至本地。 \\n \\n \\n \\n \\n \\n第四、文件核验 \\n电子文件接收单位可使用任意拥有【扫一扫】功能智能设备，调\\n取原件进行核对。 \\n\\n\\n[page 3]\\n成都理工大学本科生可信电子证明-操作手册 \\n3 \\n \\n第五、注意事项 \\n1.校外学生可以通过VPN访问砚湖易办平台； \\n2.平台仅收录2014级及以后毕业生成绩数据，2014级以前学生成绩证\\n明，请与学校档案馆联系办理； \\n3.如遇砚湖易办平台无法登录等相关问题，请联系学校网络与信息化\\n处。 \\n \\n\\n\", \"audiences\": [\"undergraduate\", \"alumni\"], \"campuses\": [], \"conditions\": [\"平台仅收录2014级及以后毕业生成绩数据\"], \"evidence_quotes\": {}, \"exceptions\": [\"2014级以前学生成绩证\\n明，请与学校档案馆联系办理\"], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.133333,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:wx:fee20262027:01",
+            "source_id": "cdut:source:wx:fee20262027",
+            "title": "成都理工大学在校生2026-2027学年 缴费通知（1）",
+            "text": "成都理工大学在校生\n2026-2027学年缴费通知\n各位同学：\n根据学校收费工作安排，为方便同学们轻松搞定新学年学杂费缴纳，财务处特意为大家整理了这份缴费“小贴士”，记得查收哦。\n一、缴费时间\n自2026年7月16日起正式开启。\n温馨提示：建议同学们在返校前完成缴费，以免影响报到注册。\n二、缴费方式\n微信缴费\n1.打开微信，搜索并关注 “成都理工大学财务处”微信公众号。\n2.进入公众号，点击【学生服务】→【在线缴费】，输入账号密码，选择缴费项缴费。\n支付宝缴费\n1.打开支付宝，搜索并关注“成都理工大学生活号”。\n2.关注后点击【缴费大厅】→【学杂费】，输入账号密码，选择缴费项缴费。\n网页端缴费\n1. 推荐使用谷歌或IE10以上浏览器\n2. 校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台\n校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费\n3．输入用户名和密码，选择缴费项缴费。\n助学贷款缴费\n1. 国家开发银行和中国银行生源地信用贷款同学：开学报到时，登录学工系统（https://xgfw.cdut.edu.cn）提交贷款回执校验码即可。当地资助中心审核、银行放款后，财务处会直接抵扣学费住宿费，收到银行放款短信后记得确认缴费状态。",
+            "url": "https://mp.weixin.qq.com/s/mVGytkIE_8J4o5IliHFGaA",
+            "source_title": "成都理工大学在校生2026-2027学年 缴费通知",
+            "publisher": "成都理工大学财务处",
+            "temporal_status": "unknown",
+            "stale": true,
+            "ocr": false,
+            "locator": "微信原文 第1段落组",
+            "text_sha256": "2af3153e9ea91f200f5a01af084a28511ae81d48e03fc560938ada731799bebb",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "在校生（2026-2027学年）"
+            },
+            "score": 0.123214,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:pubelective20262027:bs02",
+            "source_id": "cdut:source:pubelective20262027",
+            "title": "关于2026-2027学年第一学期公共选修课申报的通知（2/2）",
+            "text": "5.公共选修课实行归口管理，教师须向课程归属学院申请，由课程所在系（部）主任、教学院长初审，报教务处审核通过后实施。\n6.在不影响计划内课程开设的情况下，每位教师可申请开设1门次公共选修课，每门课程原则上不超过32学时（含实验学时），人数不超过120人。\n7.每门课程原则上只开一个班次，如有多人申请时，由课程归属学院审定。鼓励对某个学科领域有较深研究的教师为全校学生开设专题讲座。\n8.公共选修课任课教师必须加强课堂管理，保障课堂效率，开课后3次后到课人数不足20人的停止开课。\n三、申报要求\n1.本次公共选修课采用网上申报方式，教师登录新版教务管理系统(左侧菜单依次展开)：教学任务 —> 本科教学 —> 公选开课申请。\n2.按照要求填写开课申请，在课程名称一栏，选择相应学时的课程，若新增课程，请与相关课程归属学院教务科联系；上传PDF版教学大纲，点保存并送审，并打印申报表，将申报表交至课程归属学院（在宜宾校区开设公选课的开课申请表需由课程归属学院、宜宾校区双签）。学院教务科在教务管理系统中导出汇总表，将汇总表和申报表签字盖章后于2026年5月17日18：00之前交至教务处质量建设与智慧教学科（行政楼105室），逾期不再受理。\n联系人：杨老师\n联系电话：028-84078883\n教务处\n2026年4月29日",
+            "url": "https://aao.cdut.edu.cn/info/1171/7023.htm",
+            "source_title": "关于2026-2027学年第一学期公共选修课申报的通知",
+            "publisher": "成都理工大学教务处（页面：作者 教务处）",
+            "temporal_status": "unknown",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/round2/关于2026-2027学年第一学期公共选修课申报的通知-成都理工大学教务处.html 正文第2段（共2段）",
+            "text_sha256": "9118e4888917520a2a3302f022482dffce95674eee760d64e1df58a77688a20d",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "各单位、学院（拟开设公共选修课的教师）"
+            },
+            "score": 0.114529,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:official:tuition-2026:loan-payment",
+            "source_id": "cdut:source:official:tuition-2026",
+            "title": "2026-2027学年各银行贷款抵缴条件",
+            "text": "（四）生源地助学贷款缴费\n\n1. 国家开发银行和中国银行生源地信用贷款同学：开学报到时，登录学工系统（https://xgfw.cdut.edu.cn）提交贷款回执校验码即可。当地资助中心审核、银行放款后，财务处会直接抵扣学费住宿费，收到银行放款短信后记得确认缴费状态哦～\n\n2. 四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度～\n\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\n适用条件：国家开发银行和中国银行生源地信用贷款同学；四川农信贷款同学；其他银行贷款同学\n例外条件：如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～",
+            "url": "https://jcc.cdut.edu.cn/info/1012/2724.htm",
+            "source_title": "成都理工大学在校生2026-2027学年缴费通知",
+            "publisher": "成都理工大学财务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/tuition-2026.txt:chars[450:775] sha256=5323e799fe7fc159ad55a6b7a51a85c035532cf402c7df10bc4b44680b81eb6c",
+            "text_sha256": "9dad1c447741f6625977873693e503a020eb7f0c64aac362bdde57850b8a819d",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": "2026-2027",
+              "valid_from": "2026-07-16",
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台\", \"校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"国家开发银行和中国银行生源地信用贷款同学\", \"四川农信贷款同学\", \"其他银行贷款同学\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [\"如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\"], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"微信/网页缴费成功\", \"银行放款满1个月（或确认支用成功满1个月）\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"家庭经济困难且暂未办理生源地助学贷款\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_until\": \"于2026年7月30日前提交申请\"}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": \"2026-07-30\"}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.11131,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:select20262027:bs02",
+            "source_id": "cdut:source:select20262027",
+            "title": "关于2026-2027学年第一学期选课的通知（2/2）",
+            "text": "（3）本学期若利用大学英语四、六级等级成绩替代大学英语课程的，则不需选其相应课程。\n（4）未选课不能参加课程学习与考核，成绩不予记载；选课结束后，一律不能补、退选课程。\n（5）其余要求将参照《成都理工大学学生选课管理办法》执行。\n（6）重要提醒：选课仅限于在学校教务系统操作，严禁使用第三方抢课软件、脚本外挂。此类工具会大量占用服务器资源，造成系统拥堵，损害全体同学选课公平。学校将实时监测异常访问，一经查实，取消本次所有选课结果，并按校规处理，相关损失自行承担。\n教务处\n2026 年 6 月 26 日",
+            "url": "https://aao.cdut.edu.cn/info/1171/7107.htm",
+            "source_title": "关于2026-2027学年第一学期选课的通知",
+            "publisher": "教务处",
+            "temporal_status": "unknown",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/select-embedded.pdf 正文第2段（共2段）",
+            "text_sha256": "94ef6b7b5a3262ddfa729cf294e06b7e4b1649e983a674098864c75fbac99427",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "未注明"
+            },
+            "score": 0.096397,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:wx:fresh2026fee:01",
+            "source_id": "cdut:source:wx:fresh2026fee",
+            "title": "2026级成理萌新看过来！这份超全缴费指南请收好（1）",
+            "text": "2026级成理萌新看过来！这份超全缴费指南请收好\n各位2026级的新同学，大家好！\n欢迎加入成都理工大学大家庭！ 为了方便大家顺利完成入学前的各项准备，我们特别准备了这份详细的学杂费缴纳指南。请仔细阅读，确保您的报到流程顺畅无忧。\n缴费时间\n缴费通道开启时间：8月20日全面开放\n建议完成时间：请在 2026年9月14日 前完成缴费，以免影响后续的学籍注册和选课。\n系统维护时段：每日22:00至24:00，以及每月最后两天，缴费系统将进行维护，届时将暂停服务。\n缴费方式\n迎新系统缴费\n1.登录学校迎新网 yx.cdut.edu.cn 点击【在线报到】。\n2.输入用户名和密码（新生第一次登录需要激活账号、设置密码后登录），登录数字迎新系统。\n3.进入【财务缴费】模块，选择缴费项，点击【网上缴费】支付。\n微信公众号缴费\n1.打开微信，搜索并关注“成都理工大学财务处”微信服务号。\n2.进入微信服务号，选择【学生服务】→【在线缴费】，输入用户名和密码（新生第一次登录需要激活账号、设置密码后登录），选择缴费项进行缴费。\n支付宝缴费\n1.打开手机支付宝，搜索并关注“成都理工大学”生活号。\n2.关注后点击【缴费大厅】→【学杂费】，输入用户名和密码（新生第一次登录需要激活账号、设置密码后登录），选择缴费项进行缴费。\n网上缴费方式",
+            "url": "https://mp.weixin.qq.com/s/37b1EidELwZnhfLEiCDtjA",
+            "source_title": "2026级成理萌新看过来！这份超全缴费指南请收好",
+            "publisher": "成都理工大学财务处",
+            "temporal_status": "unknown",
+            "stale": true,
+            "ocr": false,
+            "locator": "微信原文 第1段落组",
+            "text_sha256": "61e7cd54330eb6ef76caf135caa4e8b84326e9b9dfe2729be843e345024d4752",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "2026级本科新生"
+            },
+            "score": 0.094444,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:cistfresh2024:bs08",
+            "source_id": "cdut:source:cistfresh2024",
+            "title": "一键收藏！2024本科新生入学指南（8/16）",
+            "text": "（2）校外访问：成都理工大学主页一砚湖易办一VPN入口一财务缴费平台；\n校内访问：成都理工大学财务处主页一学生网上缴费；\n（3）输入用户名和密码（新生第一次登录需要激活账号），进入缴费页面，选择相应的缴费项目，完成缴费。具体操作参见登录界面“缴费指南”。\n3.支付宝方式\n适用于所有学生。选择支付宝方式缴费，请学生用手机登录支付宝，搜索并关注“成都理工大学生活号”，进入“缴费大厅”，点击“学杂费”，根据页面提示输入用户名和密码（新生第一次登录需要激活账号）。进入缴费页面，选择相应的缴费项目，完成缴费。\n4.缴费票据\n2024学年学费、住宿费的收取使用“四川省政府非税收入通用票据（电子）”；教材费、体检复查费、基本医疗保险费的收取使用“四川省行政事业单位资金往来结算票据（电子）”。学生缴费票据下载方法为：学生访问成都理工大学财务处主页，点击“学生网上缴费”，登录网上缴费平台，点击 “缴费历史查询”选择相应历史缴费项，点击“电子票据”便可查询和下载电子票据。\n附表：成都理工大学2024级普通本科学生缴费项目及缴费标准\n5.温馨提示",
+            "url": "https://cist.cdut.edu.cn/info/1135/7328.htm",
+            "source_title": "一键收藏！2024本科新生入学指南",
+            "publisher": "计算机与网络安全学院（示范性软件学院）（页面：发布者 计网学院）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/pages/一键收藏！2024本科新生入学指南-计算机与网络安全学院（示范性软件学院）.html 正文第8段（共16段）",
+            "text_sha256": "9ad690bc9fc902c4049d3ddeb3544f137e28b62c9da2918a6421a7c842b794c0",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "2024级本科新生"
+            },
+            "score": 0.093032,
+            "grounded": false
+          }
+        ],
+        "knowledge_version": "kb-229ee34eba99ef34",
+        "retrieval_mode": "hybrid",
+        "degraded": false,
+        "grounding": {
+          "policy": "local-grounding-v1",
+          "mode": "flag",
+          "decision": "grounded"
+        }
+      }
+    },
+    {
+      "query": "2013级本科毕业生成绩证明在哪里办理？",
+      "filters": {
+        "audience": "undergraduate",
+        "academic_year": null
+      },
+      "result": {
+        "result_status": "success",
+        "answer": "第五、注意事项 \n1.校外学生可以通过VPN访问砚湖易办平台； \n2.平台仅收录2014级及以后毕业生成绩数据，2014级以前学生成绩证\n明，请与学校档案馆联系办理； \n3.如遇砚湖易办平台无法登录等相关问题，请联系学校网络与信息化\n处。 \n \n\n\n适用条件：平台仅收录2014级及以后毕业生成绩数据\n例外条件：2014级以前学生成绩证\n明，请与学校档案馆联系办理\n适用限制（采集校验标注）：2014级是数据收录界限，不转换为当前学年或推断其他证明的数据范围。\n[page 1]\n成都理工大学本科生可信电子证明-操作手册 \n1 \n \n \n \n本科生可信电子证明申请操作指引 \n \n第一、 申请入口（砚湖易办） \n进入砚湖易办系统访问常用系统入口，点击【可信电子凭证平台】\n按钮，即可跳转到可信电子凭证平台系统，在线申请本科生中英文成\n绩单、四六级证明、绩点证明、在读证明、学历学位证明。 \n \n第二、 申请所需证明 \n点击【电子签约 】按钮，选择需要申请文件流程，点击【确认\n发起】即申请电子版对应文件。 \n\n\n[page 2]\n成都理工大学本科生可信电子证明-操作手册 \n2 \n \n \n第三、点击【查看文件】在线查阅，或点击【下载】按钮下载至本地。 \n \n \n \n \n \n第四、文件核验 \n电子文件接收单位可使用任意拥有【扫一扫】功能智能设备，调\n取原件进行核对。 \n\n\n[page 3]\n适用限制（采集校验标注）：本科证明操作指引；毕业生成绩数据仅2014级及以后，较早成绩联系档案馆。\n学籍档案查询（毕业生）\n\n事项编号：1046\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午：08:00—12:00，下午：14:30—18:00\n\n咨询电话\t028-84074249\t监督电话\t暂无\n\n办理流程\n\n1.提交申请\n\n2.申请人登录平台，发起申请\n\n3.填写申请表\n\n4.等待办理结果通知\n\n5.审核\n\n6.档案馆经办人\n\n7.流程办结\n\n8.申请人查看审核结果，确认结果并办结流程\n\n9.领取资料\n\n10.档案馆邮寄复印件或发送电子版档案\n\n其它说明\n\n注意事项\t1.有效身份证明包括：居民身份证（含有效期内临时身份证）、军官证、户口簿、护照等。 2.请先勾选所查档案对应学历，再勾选具体查档内容； 3.查阅高考录取名单，务必提供生源地（参加高考省份）信息； 4.如需复制件（纸质）请提供收件地址，我们会采用顺丰到付方式寄出；如需电子版请填写电子邮箱； 5.办理周期一般为三个工作日。\n\n服务人群：\n\n校友研究生,校友本专科生,研究生,学校管理员,教师,学生\n\n所属部门：\n\n档案馆\n\n服务日期：\n\n长期有效\n\n办理入口\n\n学籍档案查询（毕业生）\n\n适用条件：毕业生\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+        "hits": [
+          {
+            "chunk_id": "cdut:chunk:official:proofindex:cohort-boundary",
+            "source_id": "cdut:source:official:proofindex",
+            "title": "本科证明校外访问和毕业年级数据限制",
+            "text": "第五、注意事项 \n1.校外学生可以通过VPN访问砚湖易办平台； \n2.平台仅收录2014级及以后毕业生成绩数据，2014级以前学生成绩证\n明，请与学校档案馆联系办理； \n3.如遇砚湖易办平台无法登录等相关问题，请联系学校网络与信息化\n处。 \n \n\n\n适用条件：平台仅收录2014级及以后毕业生成绩数据\n例外条件：2014级以前学生成绩证\n明，请与学校档案馆联系办理\n适用限制（采集校验标注）：2014级是数据收录界限，不转换为当前学年或推断其他证明的数据范围。",
+            "url": "https://aao.cdut.edu.cn/info/1187/6960.htm",
+            "source_title": "本科生可信电子证明申请操作指引",
+            "publisher": "成都理工大学教务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/proofindex.txt:chars[409:533] sha256=1fa0c589ed49f0026e64f611548a00d7d4262c57892c1de076293f5c3c681771",
+            "text_sha256": "fd7f594f487bb397fa08bc02bacd83cd101a167aecab0243027041934df26219",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "alumni"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"alumni\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"本科生可信电子证明\", \"audiences\": [\"undergraduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"本科生可信电子证明申请操作指引\\n\\n[page 1]\\n成都理工大学本科生可信电子证明-操作手册 \\n1 \\n \\n \\n \\n本科生可信电子证明申请操作指引 \\n \\n第一、 申请入口（砚湖易办） \\n进入砚湖易办系统访问常用系统入口，点击【可信电子凭证平台】\\n按钮，即可跳转到可信电子凭证平台系统，在线申请本科生中英文成\\n绩单、四六级证明、绩点证明、在读证明、学历学位证明。 \\n \\n第二、 申请所需证明 \\n点击【电子签约 】按钮，选择需要申请文件流程，点击【确认\\n发起】即申请电子版对应文件。 \\n\\n\\n[page 2]\\n成都理工大学本科生可信电子证明-操作手册 \\n2 \\n \\n \\n第三、点击【查看文件】在线查阅，或点击【下载】按钮下载至本地。 \\n \\n \\n \\n \\n \\n第四、文件核验 \\n电子文件接收单位可使用任意拥有【扫一扫】功能智能设备，调\\n取原件进行核对。 \\n\\n\\n[page 3]\\n成都理工大学本科生可信电子证明-操作手册 \\n3 \\n \\n第五、注意事项 \\n1.校外学生可以通过VPN访问砚湖易办平台； \\n2.平台仅收录2014级及以后毕业生成绩数据，2014级以前学生成绩证\\n明，请与学校档案馆联系办理； \\n3.如遇砚湖易办平台无法登录等相关问题，请联系学校网络与信息化\\n处。 \\n \\n\\n\", \"audiences\": [\"undergraduate\", \"alumni\"], \"campuses\": [], \"conditions\": [\"平台仅收录2014级及以后毕业生成绩数据\"], \"evidence_quotes\": {}, \"exceptions\": [\"2014级以前学生成绩证\\n明，请与学校档案馆联系办理\"], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.204545,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:proofindex:apply",
+            "source_id": "cdut:source:official:proofindex",
+            "title": "本科可信电子证明申请、下载及核验",
+            "text": "[page 1]\n成都理工大学本科生可信电子证明-操作手册 \n1 \n \n \n \n本科生可信电子证明申请操作指引 \n \n第一、 申请入口（砚湖易办） \n进入砚湖易办系统访问常用系统入口，点击【可信电子凭证平台】\n按钮，即可跳转到可信电子凭证平台系统，在线申请本科生中英文成\n绩单、四六级证明、绩点证明、在读证明、学历学位证明。 \n \n第二、 申请所需证明 \n点击【电子签约 】按钮，选择需要申请文件流程，点击【确认\n发起】即申请电子版对应文件。 \n\n\n[page 2]\n成都理工大学本科生可信电子证明-操作手册 \n2 \n \n \n第三、点击【查看文件】在线查阅，或点击【下载】按钮下载至本地。 \n \n \n \n \n \n第四、文件核验 \n电子文件接收单位可使用任意拥有【扫一扫】功能智能设备，调\n取原件进行核对。 \n\n\n[page 3]\n适用限制（采集校验标注）：本科证明操作指引；毕业生成绩数据仅2014级及以后，较早成绩联系档案馆。",
+            "url": "https://aao.cdut.edu.cn/info/1187/6960.htm",
+            "source_title": "本科生可信电子证明申请操作指引",
+            "publisher": "成都理工大学教务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/proofindex.txt:chars[17:381] sha256=1fa0c589ed49f0026e64f611548a00d7d4262c57892c1de076293f5c3c681771",
+            "text_sha256": "b57d3f676be2e08052b72ec9e94cc5bb11167d1b7e7b26fa2be67755a37876a3",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"alumni\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"本科生可信电子证明\", \"audiences\": [\"undergraduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"本科生可信电子证明申请操作指引\\n\\n[page 1]\\n成都理工大学本科生可信电子证明-操作手册 \\n1 \\n \\n \\n \\n本科生可信电子证明申请操作指引 \\n \\n第一、 申请入口（砚湖易办） \\n进入砚湖易办系统访问常用系统入口，点击【可信电子凭证平台】\\n按钮，即可跳转到可信电子凭证平台系统，在线申请本科生中英文成\\n绩单、四六级证明、绩点证明、在读证明、学历学位证明。 \\n \\n第二、 申请所需证明 \\n点击【电子签约 】按钮，选择需要申请文件流程，点击【确认\\n发起】即申请电子版对应文件。 \\n\\n\\n[page 2]\\n成都理工大学本科生可信电子证明-操作手册 \\n2 \\n \\n \\n第三、点击【查看文件】在线查阅，或点击【下载】按钮下载至本地。 \\n \\n \\n \\n \\n \\n第四、文件核验 \\n电子文件接收单位可使用任意拥有【扫一扫】功能智能设备，调\\n取原件进行核对。 \\n\\n\\n[page 3]\\n成都理工大学本科生可信电子证明-操作手册 \\n3 \\n \\n第五、注意事项 \\n1.校外学生可以通过VPN访问砚湖易办平台； \\n2.平台仅收录2014级及以后毕业生成绩数据，2014级以前学生成绩证\\n明，请与学校档案馆联系办理； \\n3.如遇砚湖易办平台无法登录等相关问题，请联系学校网络与信息化\\n处。 \\n \\n\\n\", \"audiences\": [\"undergraduate\", \"alumni\"], \"campuses\": [], \"conditions\": [\"平台仅收录2014级及以后毕业生成绩数据\"], \"evidence_quotes\": {}, \"exceptions\": [\"2014级以前学生成绩证\\n明，请与学校档案馆联系办理\"], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.179487,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-1046:guide-body",
+            "source_id": "cdut:source:official:portal-1046",
+            "title": "学籍档案查询（毕业生）正文与服务条件",
+            "text": "学籍档案查询（毕业生）\n\n事项编号：1046\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午：08:00—12:00，下午：14:30—18:00\n\n咨询电话\t028-84074249\t监督电话\t暂无\n\n办理流程\n\n1.提交申请\n\n2.申请人登录平台，发起申请\n\n3.填写申请表\n\n4.等待办理结果通知\n\n5.审核\n\n6.档案馆经办人\n\n7.流程办结\n\n8.申请人查看审核结果，确认结果并办结流程\n\n9.领取资料\n\n10.档案馆邮寄复印件或发送电子版档案\n\n其它说明\n\n注意事项\t1.有效身份证明包括：居民身份证（含有效期内临时身份证）、军官证、户口簿、护照等。 2.请先勾选所查档案对应学历，再勾选具体查档内容； 3.查阅高考录取名单，务必提供生源地（参加高考省份）信息； 4.如需复制件（纸质）请提供收件地址，我们会采用顺丰到付方式寄出；如需电子版请填写电子邮箱； 5.办理周期一般为三个工作日。\n\n服务人群：\n\n校友研究生,校友本专科生,研究生,学校管理员,教师,学生\n\n所属部门：\n\n档案馆\n\n服务日期：\n\n长期有效\n\n办理入口\n\n学籍档案查询（毕业生）\n\n适用条件：毕业生\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/mcpthsjchsajwch7wjbrshcfzciher7a.htm",
+            "source_title": "学籍档案查询（毕业生）",
+            "publisher": "档案馆",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "documents/portal-1046/body.txt:chars[0:502] sha256=0f2a40b52199dcb812a60abef4679583db1262b7e39cd8d2f7797001f91bf5cf",
+            "text_sha256": "03150b7f18d98ac3c31027175c8624382f858bc1be50b4fa1066fa0e6e5cb340",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"毕业生\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 0.15,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:proofindex:01",
+            "source_id": "cdut:source:proofindex",
+            "title": "本科生电子证明官方指南",
+            "text": "成都理工大学教务处官网办事指南栏目列有“本科生可信电子证明申请操作指引”；当前仅获得栏目标题，无法确认具体办理步骤、下载入口及费用。",
+            "url": "https://aao.cdut.edu.cn/",
+            "source_title": "教务处办事指南：本科生可信电子证明申请操作指引",
+            "publisher": "教务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "教务处首页/办事指南栏目",
+            "text_sha256": "c6b50b27c81c4314d310e922f4c6b46c6488b334bdce7aed6caa00bc76265468",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "仅确认指南标题与栏目存在，未取得全文"
+            },
+            "score": 0.138649,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:xjgl2019:16",
+            "source_id": "cdut:source:xjgl2019",
+            "title": "证书遗失证明与成绩单",
+            "text": "第五十六条学历证书和学位证书遗失或者损坏，经本人申请，教务处审查批准后，可以出具相应的证明书。证明书与原证书具有同等效力。第十三章学籍档案第五十七条在读学生的学籍档案由教务处建立、维护和管理。毕业、结业及退学学生的学籍档案由学校档案馆保管。第五十八条在读学生需要出具学习成绩单时向所在学院提出申请，成绩单经学院审核后由教务处复核签章。毕业学生需要学习成绩单时向学校档案馆提出申请，由学校档案馆负责出具。第十四章申诉与仲裁",
+            "url": "https://dbxb.cdut.edu.cn/__local/7/B6/E5/006AC04D88A214D1AD8B1F5E540_16B4A5B7_C543C.pdf",
+            "source_title": "关于印发《成都理工大学全日制普通本科学生学籍管理办法》的通知（成理校教〔2019〕18号）",
+            "publisher": "成都理工大学（教务处负责解释）",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "第五十六条至第五十八条",
+            "text_sha256": "1e026cd7d43751cd1d9cbebea9463602dd1e170aabed723ee8a34714df62af11",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "全日制普通本科生"
+            },
+            "score": 0.129286,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:loanconfirm2026:bs01",
+            "source_id": "cdut:source:loanconfirm2026",
+            "title": "2026届毕业生｜国家助学贷款毕业确认，请及时完成！（1/4）",
+            "text": "亲爱的2026届毕业生：\n毕业临近，崭新的旅程即将开启。同学们在收拾行囊、奔赴前程之际，请留意还有一项重要手续需按时完成：\n国家助学贷款毕业确认\n毕业确认关系到个人贷款信息更新、还款计划衔接和个人信用记录。请办理过国家助学贷款的毕业生，认真阅读以下内容，按要求完成相关手续。\n一、哪些同学需要办理？\n在校期间办理过国家助学贷款的2026届毕业生，均需关注并按要求完成毕业确认。\n主要包括：\n国家开发银行生源地信用助学贷款；四川农商银行／四川农信助学贷款；中国银行国家助学贷款；其他银行承办的生源地信用助学贷款。\n如不确定自己的贷款银行，可查看贷款合同、登录贷款系统，或咨询生源地学生资助管理中心。\n二、国家开发银行助学贷款毕业确认\n办理国家开发银行生源地信用助学贷款的同学，于规定时间内请登录国家开发银行生源地助学贷款学生在线系统：\nhttps://sls.cdb.com.cn\n1. 登录系统\n选择“生源地助学贷款学生在线系统”。忘记密码的同学，可通过系统提示找回密码，若学生修改初始密码后忘记新密码，需联系生源地县级资助管理中心申请重置密码。\n操作流程：进入系统首页 → 选择“生源地助学贷款” → 输入身份证号、密码和验证码 → 点击登录。\n2. 完善个人信息",
+            "url": "https://xsc.cdut.edu.cn/info/1033/4603.htm",
+            "source_title": "2026届毕业生｜国家助学贷款毕业确认，请及时完成！",
+            "publisher": "学生处（信息来源：学生资助管理中心）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/pages/2026届毕业生｜国家助学贷款毕业确认，请及时完成！-成都理工大学学生处.html 正文第1段（共4段）",
+            "text_sha256": "5af089f159313cfd160ba91bc0b3faec89a234e67cfca7431d26777a8759283f",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "在校期间办理过国家助学贷款的2026届毕业生"
+            },
+            "score": 0.113628,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:dagtransfer2023:bs01",
+            "source_id": "cdut:source:dagtransfer2023",
+            "title": "关于做好2023年毕业生 档案转递数据审核工作的通知（1/2）",
+            "text": "各学院及相关单位：\n为确保及时、准确、安全地将毕业生档案转递到档案接收单位，现针对2023年毕业生档案转递数据审核工作的相关事宜通知如下：\n一、数据采集\n今年毕业生档案转递数据由毕业生本人通过砚湖易办或学生就业指导中心网页，进入“毕业生档案邮寄信息”板块中填报，请各学院向每一位毕业生强调数据填报的重要性，并重点注意以下几点：\n1、档案接收单位要有档案保管权限（如机关、事业单位、国企、各级人才交流中心等，可与档案接收单位相关人员咨询确认）；\n2、准确填写档案接收单位地址及收件人信息，包括单位详细地址，收件人姓名（或收件部门）和收件电话；\n3、确认档案接收单位的接收条件，如：户口、工作证明等，确保接收单位不会退档。\n4、档案寄出后3个月内，到档案接收单位核实到档情况，如未收到或已退档，请及时联系辅导员或档案馆。\n二、数据审核\n毕业生填报的档案转递数据，须由学院指定负责人在系统中进行审核后确认提交，确保数据的真实性和准确性。档案馆以学院审核提交后的数据为准。\n数据导出前，学生可在系统中更改档案接收单位信息；学院通知档案馆导出数据后，对导出的数据不再进行更改。数据将交由邮政EMS打印快递单并通知各学院领取，请各学院及时将档案寄出。若快递单打印后，档案寄出前，毕业生有更改需求，可由学院登记更改信息，直接发送邮政EMS打印新的快递单，同时将数据发送给档案馆以便上传网页，提供查询。",
+            "url": "https://dag.cdut.edu.cn/info/1076/1753.htm",
+            "source_title": "关于做好2023年毕业生 档案转递数据审核工作的通知",
+            "publisher": "档案馆（校史馆）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/pages/关于做好2023年毕业生 档案转递数据审核工作的通知-成都理工大学档案馆（校史馆）.html 正文第1段（共2段）",
+            "text_sha256": "4a62f984a4b092ef3b5cb0854c43b1f277371f99a83ef448cb02e5e425a8ad3c",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "各学院及相关单位（2023年毕业生档案转递）"
+            },
+            "score": 0.098295,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:loanconfirm2026:bs02",
+            "source_id": "cdut:source:loanconfirm2026",
+            "title": "2026届毕业生｜国家助学贷款毕业确认，请及时完成！（2/4）",
+            "text": "点击“个人信息变更”按钮，对个人基本信息、联系方式、账户信息、贷款情况等进行确认、更改，并填写联系人信息、就业信息等（如尚未落实，可暂不填写）。有些信息无法由学生进行更改，如姓名、身份证号、出生日期等身份信息有误，只能由学生本人联系生源地县级资助管理中心进行修改；如果学校名称、学制、入学年份等学籍信息有误，也请学生本人联系生源地县级资助管理中心进行修改。\n操作流程：点击左侧“个人资料维护” → 逐项核对个人信息 → 需要更新时点击“修改”并保存。\n3. 提交毕业确认申请\n学生本人填写个人信息完毕后，点击“毕业确认申请”按钮，核实相关信息。如无错误，提交“申请”。（如信息有误或需更新信息，可再到“个人信息变更”中先修改，然后回到该页面完成申请。）\n操作流程：点击左侧“毕业确认申请” → 核对贷款与学籍信息 → 点击页面下方“毕业确认申请”。\n4. 导出并确认毕业确认表\n提交后按要求导出相关表格，确认信息准确无误，并按照学校或学院通知要求完成后续手续。\n三、四川农商银行／四川农信助学贷款毕业确认\n办理四川农商银行、四川农信相关助学贷款的同学，四川农信会在6月份将毕业确认消息推送至贷款毕业生四川农信APP“代办事项”中，请根据经办银行要求完成毕业确认。\n一般可通过以下方式办理：",
+            "url": "https://xsc.cdut.edu.cn/info/1033/4603.htm",
+            "source_title": "2026届毕业生｜国家助学贷款毕业确认，请及时完成！",
+            "publisher": "学生处（信息来源：学生资助管理中心）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "locator": "browser-raw/pages/2026届毕业生｜国家助学贷款毕业确认，请及时完成！-成都理工大学学生处.html 正文第2段（共4段）",
+            "text_sha256": "2223413ed3d47c7a68651a0975d203e8c8b02fb449b6826e077de2ae4ab46b99",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "在校期间办理过国家助学贷款的2026届毕业生"
+            },
+            "score": 0.096397,
+            "grounded": false
+          }
+        ],
+        "knowledge_version": "kb-229ee34eba99ef34",
+        "retrieval_mode": "hybrid",
+        "degraded": false,
+        "grounding": {
+          "policy": "local-grounding-v1",
+          "mode": "flag",
+          "decision": "grounded"
+        }
+      }
+    },
+    {
+      "query": "期末考试成绩复核在成绩公布后多久申请？",
+      "filters": {
+        "audience": "undergraduate",
+        "academic_year": null
+      },
+      "result": {
+        "result_status": "success",
+        "answer": "期末考试课程成绩复核的申请流程\n\n      学生期末课程考试成绩公布后，若学生对考试成绩有异议，可在成绩公布2周内（过期不再受理），由学生本人在教务管理系统中“考试管理”菜单栏中，提交查卷申请并上传本人成绩复核书面申请材料，经教务处审核同意后，可进行相关成绩复核。教务系统具体操作流程如下：\n\n适用条件：成绩公布2周内（过期不再受理）；由学生本人\n适用限制（采集校验标注）：本办事指引写2周，既有2019年制度写10个工作日并可因节假日顺延；未找到明确替代或废止依据。保留两来源差异，不把本页日期较新当作废止依据，应请教务处确认期限。\n成都理工大学教务处官网办事指南栏目列有“期末考试课程成绩复核的申请流程”，目前只能确认栏目入口，未确认准确申请时限和具体操作步骤。\n（一）五级制成绩按下列标准换算为百分制成绩：优-95分，良-85分，中-75分，及格-65分，不及格-55分。（二）百分制成绩按下列标准换算为五级制成绩：100-90为优，89-80为良，79-70为中，69-60为及格，59分及以下为不及格。（三）学生的课程绩点按以下公式计算：课程绩点＝（成绩／10）-5；绩点数小于1的，按0计算。课程成绩为五级制成绩的，转换为百分制成绩后计算绩点。（四）学生的平均学分绩点按以下公示计算：平均学分绩点=Σ（学分*绩点）/Σ学分。免修课程、自由选修课程不参与平均学分绩点计算。第二十五条在考试结束两周后，学生可以通过教务管理系统查询课程成绩。学生对课程成绩有异议的，可在成绩公布后10个工作日（节假日顺延）内填写《成绩复核申请表》，向教务处书面提出成绩复核申请。",
+        "hits": [
+          {
+            "chunk_id": "cdut:chunk:official:gradesindex:review-guide",
+            "source_id": "cdut:source:official:gradesindex",
+            "title": "期末成绩复核网页操作指引与期限差异",
+            "text": "期末考试课程成绩复核的申请流程\n\n      学生期末课程考试成绩公布后，若学生对考试成绩有异议，可在成绩公布2周内（过期不再受理），由学生本人在教务管理系统中“考试管理”菜单栏中，提交查卷申请并上传本人成绩复核书面申请材料，经教务处审核同意后，可进行相关成绩复核。教务系统具体操作流程如下：\n\n适用条件：成绩公布2周内（过期不再受理）；由学生本人\n适用限制（采集校验标注）：本办事指引写2周，既有2019年制度写10个工作日并可因节假日顺延；未找到明确替代或废止依据。保留两来源差异，不把本页日期较新当作废止依据，应请教务处确认期限。",
+            "url": "https://aao.cdut.edu.cn/info/1187/6963.htm",
+            "source_title": "期末考试课程成绩复核的申请流程",
+            "publisher": "成都理工大学教务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "bodies/gradesindex.txt:chars[0:147] sha256=3112f7de14d67c1f115e5079f1fb997608f9e186cd1541c11d0aff52aca9eb48",
+            "text_sha256": "8121e55023a8d5fbe235162bb543c27c654d5346223d68cd7669341d5a97be50",
+            "verification_status": "official_document",
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生期末课程考试成绩\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"成绩公布2周内（过期不再受理）\", \"由学生本人\"], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 0.204545,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:gradesindex:01",
+            "source_id": "cdut:source:gradesindex",
+            "title": "期末课程成绩复核指南入口",
+            "text": "成都理工大学教务处官网办事指南栏目列有“期末考试课程成绩复核的申请流程”，目前只能确认栏目入口，未确认准确申请时限和具体操作步骤。",
+            "url": "https://aao.cdut.edu.cn/",
+            "source_title": "教务处办事指南：期末考试课程成绩复核的申请流程",
+            "publisher": "教务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "教务处首页/办事指南栏目",
+            "text_sha256": "9b750a65b292cddbb5cd663ce5bc045a809e50f66e6a156f4c2b698d72d2475e",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "仅确认指南名称；未取得完整申请流程、期限"
+            },
+            "score": 0.18109,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:xjgl2019:07",
+            "source_id": "cdut:source:xjgl2019",
+            "title": "考核、成绩与绩点（2）",
+            "text": "（一）五级制成绩按下列标准换算为百分制成绩：优-95分，良-85分，中-75分，及格-65分，不及格-55分。（二）百分制成绩按下列标准换算为五级制成绩：100-90为优，89-80为良，79-70为中，69-60为及格，59分及以下为不及格。（三）学生的课程绩点按以下公式计算：课程绩点＝（成绩／10）-5；绩点数小于1的，按0计算。课程成绩为五级制成绩的，转换为百分制成绩后计算绩点。（四）学生的平均学分绩点按以下公示计算：平均学分绩点=Σ（学分*绩点）/Σ学分。免修课程、自由选修课程不参与平均学分绩点计算。第二十五条在考试结束两周后，学生可以通过教务管理系统查询课程成绩。学生对课程成绩有异议的，可在成绩公布后10个工作日（节假日顺延）内填写《成绩复核申请表》，向教务处书面提出成绩复核申请。",
+            "url": "https://dbxb.cdut.edu.cn/__local/7/B6/E5/006AC04D88A214D1AD8B1F5E540_16B4A5B7_C543C.pdf",
+            "source_title": "关于印发《成都理工大学全日制普通本科学生学籍管理办法》的通知（成理校教〔2019〕18号）",
+            "publisher": "成都理工大学（教务处负责解释）",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "第二十三条至第二十五条",
+            "text_sha256": "a09b89dee63e5a184421fe8e4191ee2a4cbb03bbb55a78fd9acf7a0d9b823c77",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "全日制普通本科生"
+            },
+            "score": 0.179487,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:xjgl2019:04",
+            "source_id": "cdut:source:xjgl2019",
+            "title": "课程替代、免修与请假",
+            "text": "第十七条非英语专业学生至开课时止，两年内参加全国大学英语四级考试成绩折合成百分制达到75分及以上者，持相关考试成绩单原件可申请替代公共英语课程，其英语课程成绩以所持成绩单标称的成绩计入学籍档案（折合成百分制），同时获得英语课程的学分。非英语专业学生至开课时止，两年内参加全国大学英语六级考试的成绩折合成百分制达到65分及以上者，持相关考试成绩单原件可申请替代公共英语课程，其英语课程成绩以所持成绩单标称的成绩上浮5%计入学籍档案（折合成百分制，取整；最高为100分），同时获得英语课程的学分。非外国语言类专业学生其他外语课程的免修参照英语课程的免修执行。第十八条学生因学籍异动等原因，培养方案发生变化的，应按照新专业的培养方案修读课程。学籍异动前已修课程可按以下要求予以认定：（一）原已修合格课程与新专业培养方案中学分相同、课程名称相同或相近的，不需重新修读，直接认定；（二）原已修读合格的高学分课程可以冲抵新专业培养方案中低学分相近课程；（三）原已修读合格的低学分课程，能够达到新专业培养方案中相同或相近课程2/3要求的，可以冲抵高学分相近课程，其不足学分可以由其他已获的选课学分补足；（四）其他无法冲抵的课程，可作为选修课程学分予以认定。第十九条申请课程替代或免修的，应填写《成都理工大学课程替代及免修申请表》，经所在系部审核、学院审批后报教务处备案。",
+            "url": "https://dbxb.cdut.edu.cn/__local/7/B6/E5/006AC04D88A214D1AD8B1F5E540_16B4A5B7_C543C.pdf",
+            "source_title": "关于印发《成都理工大学全日制普通本科学生学籍管理办法》的通知（成理校教〔2019〕18号）",
+            "publisher": "成都理工大学（教务处负责解释）",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "第十七条至第二十一条",
+            "text_sha256": "c16a824af8da0fed346252a99add5ea3a38518713a639c3a6bc0e5a829ceea8d",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "全日制普通本科生"
+            },
+            "score": 0.15,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:xjgl2019:08",
+            "source_id": "cdut:source:xjgl2019",
+            "title": "缓考、补考与重修",
+            "text": "第二十六条学生因故不能参加考试，可以申请缓考。（一）申请缓考必须在考试前由学生本人提出书面申请，经所在学院批准后，由学院教务工作人员在教务管理系统中登记，并告知任课教师。（二）缓考与补考一并进行。（三）缓考成绩按照实际成绩记载，是否计算平时成绩，由任课教师确定。（四）缓考不及格的课程只能重修。（五）补考和重修考试均不能办理缓考。第二十七条课程成绩不合格、且达到35分及以上的，可以参加一次补考。补考成绩以实际分数计入学籍档案，并注明“补考”。实践类课程或考查课程不安排补考。第二十八条无补考资格或经补考仍未合格的课程，学生应该申请重修；对考核成绩不满意的，学生可以申请重修。（一）学生参加课程重修应通过教务管理系统报名、选课，并按照规定缴纳重修费。（二）重修一般采取跟班方式学习；对于人数较多的课程，学校根据情况单独开班重修；对于已经不再开设的课程，由课程负责系（部）确定其课程重修形式。（三）重修考核成绩以实际成绩记载，成绩不合格者参加重修的，注明“重修”；成绩合格者申请重修的，注明“再次修读”。（四）重修考核成绩仍不合格者，不能参加补考，应再次申请重修。（五）降级学生重新选修未通过的课程，考核成绩按正常成绩记载。",
+            "url": "https://dbxb.cdut.edu.cn/__local/7/B6/E5/006AC04D88A214D1AD8B1F5E540_16B4A5B7_C543C.pdf",
+            "source_title": "关于印发《成都理工大学全日制普通本科学生学籍管理办法》的通知（成理校教〔2019〕18号）",
+            "publisher": "成都理工大学（教务处负责解释）",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "第二十六条至第二十八条",
+            "text_sha256": "dcf12067f67b49fc3721ba1b67c711a06836e2a1f01774e64b903bfa2af73dde",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "全日制普通本科生"
+            },
+            "score": 0.148109,
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:aaooffices:01",
+            "source_id": "cdut:source:aaooffices",
+            "title": "教务处教学事务中心",
+            "text": "教务处教学事务中心负责本科课表与选课、考试组织、学生成绩管理、课程重修等事务。科室页面列出办公楼109室，电话028-84079520；地址与电话待现时复核。",
+            "url": "https://aao.cdut.edu.cn/jgsz/kssz.htm",
+            "source_title": "教务处科室设置",
+            "publisher": "教务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "科室设置/教学事务中心",
+            "text_sha256": "6cbdb07b56120e7465903012c7f7f1012e90faf33f059e4eaa66e3615a7bbb10",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "常规说明；实际办理状态待核对"
+            },
+            "score": 0.144958,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:xjgl2019:06",
+            "source_id": "cdut:source:xjgl2019",
+            "title": "考核、成绩与绩点",
+            "text": "第二十三条学生参加课程考核应严格遵守考核纪律。凡未经书面批准而不参加考核或不按时提交论文、报告等的，该课程的考核成绩记为“0”分，并注明“旷考”。学生违反考核纪律或者作弊的，该课程考核成绩记为“0”分，并应视其违纪或者作弊情节，按《成都理工大学学生考试违纪及作弊行为的认定和处理实施细则(试行）》（成理校教〔2017〕20号）给予相应的纪律处分。给予警告、严重警告、记过及留校察看处分的，经教育表现较好，可以对该课程给予重修机会。第二十四条课程考核分为考试和考查两种。衡量学生课程考核是否合格的成绩为课程总评成绩（简称“课程成绩”）。课程成绩由平时成绩、期末考试卷面成绩等按一定比例构成，构成比例依据课程教学大纲确定。课程成绩以百分制或五级制（优、良、中、及格、不及格）计量。成绩为60分（或及格）及以上的方可取得该课程的学分。",
+            "url": "https://dbxb.cdut.edu.cn/__local/7/B6/E5/006AC04D88A214D1AD8B1F5E540_16B4A5B7_C543C.pdf",
+            "source_title": "关于印发《成都理工大学全日制普通本科学生学籍管理办法》的通知（成理校教〔2019〕18号）",
+            "publisher": "成都理工大学（教务处负责解释）",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "第二十三条至第二十五条",
+            "text_sha256": "43a685af470b1bb83938af732cc56776be8b0e78631854474167597a046444af",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "全日制普通本科生"
+            },
+            "score": 0.105603,
+            "grounded": false
+          },
+          {
+            "chunk_id": "cdut:chunk:xjgl2019:09",
+            "source_id": "cdut:source:xjgl2019",
+            "title": "体质健康测评",
+            "text": "第二十九条学校按教育部规定的《大学生体质健康标准》对学生进行综合体能测评，测评结果记入学生本人《大学生体质健康标准登记卡》，在学生毕业时存入学生档案。第三十条学校真实、完整地记载、出具学生学业成绩，对通过补考、重修获得的成绩，予以标注。",
+            "url": "https://dbxb.cdut.edu.cn/__local/7/B6/E5/006AC04D88A214D1AD8B1F5E540_16B4A5B7_C543C.pdf",
+            "source_title": "关于印发《成都理工大学全日制普通本科学生学籍管理办法》的通知（成理校教〔2019〕18号）",
+            "publisher": "成都理工大学（教务处负责解释）",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "locator": "第二十九条至第三十条",
+            "text_sha256": "3627a40edc6082183fbfcce63b11688279510d17f212cb7534a56bf1cd9ef7a9",
+            "verification_status": "verified",
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "全日制普通本科生"
+            },
+            "score": 0.093855,
+            "grounded": false
+          }
+        ],
+        "knowledge_version": "kb-229ee34eba99ef34",
+        "retrieval_mode": "hybrid",
+        "degraded": false,
+        "grounding": {
+          "policy": "local-grounding-v1",
+          "mode": "flag",
+          "decision": "grounded"
+        }
+      }
+    }
+  ],
+  "date_boundaries": {
+    "2026-01-25": false,
+    "2026-01-26": true,
+    "2026-03-03": true,
+    "2026-03-04": false
+  },
+  "academic_year_mismatch_rejected": true,
+  "graduate_scope_enforced": true,
+  "unknown_scope_not_broadened": true,
+  "conflicting_deadlines_preserved_as_limitation": true,
+  "reimport_idempotent": true,
+  "stale_publish_rejected": true,
+  "held_request_version_consistent": true,
+  "rollback_then_republish_verified": true,
+  "current_sha256": "8cbd9adc4d54a741a197e64b9e81296f98c3ee05a875ce5e7fca543c9a31997f",
+  "source_date_is_not_repeal": "enforced; no replacement inferred",
+  "not_published_documents": [
+    "portal-1403",
+    "portal-1405"
+  ]
+}

@@ -1,0 +1,242 @@
+[
+  {
+    "id": "F01",
+    "arm": "jev_on",
+    "core_answer_completed": true,
+    "unknown_target_asserted": null,
+    "review_note": "完成邮箱激活所需步骤；链接由程序展示，正文未复制网址。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "F01",
+    "arm": "jev_web",
+    "core_answer_completed": true,
+    "unknown_target_asserted": null,
+    "review_note": "完成邮箱激活所需步骤；链接由程序展示，正文未复制网址。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "F01",
+    "arm": "off",
+    "core_answer_completed": true,
+    "unknown_target_asserted": null,
+    "review_note": "完成邮箱激活所需步骤；链接由程序展示，正文未复制网址。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "F02",
+    "arm": "jev_on",
+    "core_answer_completed": true,
+    "unknown_target_asserted": null,
+    "review_note": "完成新生账号激活及密码要求，保留页面流程和时效限制。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "F02",
+    "arm": "jev_web",
+    "core_answer_completed": true,
+    "unknown_target_asserted": null,
+    "review_note": "完成新生账号激活及密码要求，保留页面流程和时效限制。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "F02",
+    "arm": "off",
+    "core_answer_completed": true,
+    "unknown_target_asserted": null,
+    "review_note": "完成新生账号激活及密码要求，保留页面流程和时效限制。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "F07",
+    "arm": "jev_on",
+    "core_answer_completed": true,
+    "unknown_target_asserted": null,
+    "review_note": "完成微信、电话、QQ群报修渠道；时间范围保留，未保证上门时长。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "F07",
+    "arm": "jev_web",
+    "core_answer_completed": true,
+    "unknown_target_asserted": null,
+    "review_note": "完成微信、电话、QQ群报修渠道；时间范围保留，未保证上门时长。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "F07",
+    "arm": "off",
+    "core_answer_completed": true,
+    "unknown_target_asserted": null,
+    "review_note": "完成微信、电话、QQ群报修渠道；时间范围保留，未保证上门时长。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "N01",
+    "arm": "jev_on",
+    "core_answer_completed": null,
+    "unknown_target_asserted": false,
+    "review_note": "明确邮箱容量未证实，没有编造GB数值。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "N01",
+    "arm": "jev_web",
+    "core_answer_completed": null,
+    "unknown_target_asserted": false,
+    "review_note": "明确邮箱容量未证实，没有编造GB数值。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "N01",
+    "arm": "off",
+    "core_answer_completed": null,
+    "unknown_target_asserted": false,
+    "review_note": "明确邮箱容量未证实，没有编造GB数值。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "N02",
+    "arm": "jev_on",
+    "core_answer_completed": null,
+    "unknown_target_asserted": false,
+    "review_note": "明确激活后修改用户名规则/步骤未知，没有将初次设别名等同后续改名。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "N02",
+    "arm": "jev_web",
+    "core_answer_completed": null,
+    "unknown_target_asserted": false,
+    "review_note": "明确激活后修改用户名规则/步骤未知，没有将初次设别名等同后续改名。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "N02",
+    "arm": "off",
+    "core_answer_completed": null,
+    "unknown_target_asserted": false,
+    "review_note": "明确激活后修改用户名规则/步骤未知，没有将初次设别名等同后续改名。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "N09",
+    "arm": "jev_on",
+    "core_answer_completed": null,
+    "unknown_target_asserted": false,
+    "review_note": "明确本周六通宵安排未知，区分常规开馆与24小时线上服务，没有把未收录推为不存在。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "N09",
+    "arm": "jev_web",
+    "core_answer_completed": null,
+    "unknown_target_asserted": false,
+    "review_note": "明确本周六通宵安排未知，区分常规开馆与24小时线上服务，没有把未收录推为不存在。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "N09",
+    "arm": "off",
+    "core_answer_completed": null,
+    "unknown_target_asserted": false,
+    "review_note": "明确本周六通宵安排未知，区分常规开馆与24小时线上服务，没有把未收录推为不存在。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P02",
+    "arm": "jev_on",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "给出本科40本及可到期前续借，最大续借次数未知。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P02",
+    "arm": "jev_web",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "给出本科40本及可到期前续借，最大续借次数未知。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P02",
+    "arm": "off",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "给出本科40本及可到期前续借，最大续借次数未知。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P04",
+    "arm": "jev_on",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "给出借书步骤，赔偿金额未知；联网失败时仍保留步骤。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P04",
+    "arm": "jev_web",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "给出借书步骤，赔偿金额未知；联网失败时仍保留步骤。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P04",
+    "arm": "off",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "给出借书步骤，赔偿金额未知；联网失败时仍保留步骤。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P09",
+    "arm": "jev_on",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "给出复核入口，保留申请期限来源差异，结果时限未知；不将申请期限当办理承诺。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P09",
+    "arm": "jev_web",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "给出复核入口，保留申请期限来源差异，结果时限未知；不将申请期限当办理承诺。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P09",
+    "arm": "off",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "给出复核入口，保留申请期限来源差异，结果时限未知；不将申请期限当办理承诺。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P10",
+    "arm": "jev_on",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "在2023试运行通知范围给出线上费用/次数，线下每类免费份数仍未知。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P10",
+    "arm": "jev_web",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "在2023试运行通知范围给出线上费用/次数，线下每类免费份数仍未知。",
+    "reviewer": "Codex source review; no independent human labels"
+  },
+  {
+    "id": "P10",
+    "arm": "off",
+    "core_answer_completed": true,
+    "unknown_target_asserted": false,
+    "review_note": "在2023试运行通知范围给出线上费用/次数，线下每类免费份数仍未知。",
+    "reviewer": "Codex source review; no independent human labels"
+  }
+]

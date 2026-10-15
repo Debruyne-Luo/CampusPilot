@@ -1,0 +1,1218 @@
+{
+  "schema_version": 1,
+  "assembled_at": "2026-10-15T03:39:49.210717+00:00",
+  "scope": "Decision and passage-retention observations only, not final model-answer quality acceptance.",
+  "knowledge_version": "kb-229ee34eba99ef34",
+  "independent_holdout": false,
+  "generation_comparison_completed": false,
+  "observed_pilot_generations": 4,
+  "pilot_generation_failures": [
+    {
+      "id": "F01",
+      "arm": "off",
+      "reason": "upstream_timeout",
+      "generation_usage": []
+    },
+    {
+      "id": "F01",
+      "arm": "jev_on",
+      "reason": "upstream_timeout",
+      "generation_usage": []
+    },
+    {
+      "id": "P02",
+      "arm": "jev_on",
+      "reason": "upstream_timeout",
+      "generation_usage": []
+    },
+    {
+      "id": "P02",
+      "arm": "off",
+      "reason": "upstream_timeout",
+      "generation_usage": []
+    }
+  ],
+  "source_files": [
+    {
+      "path": ".test-runs/answer-experience-20261015/identity.json",
+      "sha256": "565eac37def6a71624d4134b4d70b2b09d532ae9fe1b2211b091abe6cb2ac8c0"
+    },
+    {
+      "path": ".test-runs/answer-experience-20261015/cases-and-evidence.json",
+      "sha256": "0063b9f833117fa6e5ed789ac5e7d7e33125306f2a120b095482e5dde131eecf"
+    },
+    {
+      "path": ".test-runs/answer-experience-20261015/judgment-rubric.json",
+      "sha256": "166fe174dbf69305712b7484872406cc0e33402f915114b914dfeccf4b83244c"
+    },
+    {
+      "path": ".test-runs/answer-experience-20261015/results.jsonl",
+      "sha256": "dc5392b14d9ead4a17563eda4a3ed263771a6a68c3de14fb2958f2d38dd54f82"
+    },
+    {
+      "path": ".test-runs/answer-experience-20261015/judge-remaining.json",
+      "sha256": "0dca5df4f85c18a1d5a729bb9c060156b3ed62dc1aef748e59dfe480a9233aac"
+    }
+  ],
+  "pilot_budget": {
+    "before_usd": "0.647951988",
+    "after_usd": "0.668021184",
+    "delta_usd": "0.020069196",
+    "calls_before": 96,
+    "calls_after": 102,
+    "search_flows_before": 14,
+    "search_flows_after": 14,
+    "source_hashes_unchanged": true
+  },
+  "remaining_decision_budget": {
+    "budget_before_usd": "0.669695484",
+    "budget_after_usd": "0.670389576",
+    "calls_before": 109,
+    "calls_after": 117
+  },
+  "retention_limit": "Preserving a labelled support chunk is an identifier-level observation; it does not prove factual correctness, completeness, or answer quality.",
+  "cases": [
+    {
+      "id": "F01",
+      "category": "full",
+      "question": "按学生邮箱指南，首次激活学生邮箱要完成哪些步骤？",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "evidence_sha256": "3772484e5f06b5b4b1757845764ae7681c4d3351f643aa825b3805d9edded45e",
+      "origin": "pilot-observations.jsonl",
+      "arm": "jev_on",
+      "individual_observed_at": null,
+      "batch_identity_created_at": "2026-10-15T03:23:41.553440+00:00",
+      "before_chunk_ids": [
+        "cdut:chunk:mail2022:02",
+        "cdut:chunk:mail2022:01",
+        "cdut:chunk:official:portal-06:checked-step-4",
+        "cdut:chunk:official:portal-06:checked-step-3"
+      ],
+      "raw_decision": {
+        "kind": "jev",
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "unsure",
+        "decision": "unknown",
+        "search_needed": null,
+        "local_grounding": "grounded",
+        "answer_mode": "unknown",
+        "sufficient_probability": 0.89,
+        "scores": {
+          "cdut:chunk:mail2022:02": 1.99,
+          "cdut:chunk:mail2022:01": 1.05,
+          "cdut:chunk:official:portal-06:checked-step-4": 1.54,
+          "cdut:chunk:official:portal-06:checked-step-3": 1.66
+        },
+        "ranked_ids": [],
+        "dropped_ids": [],
+        "applied": "none",
+        "latency_ms": 737.7,
+        "input_tokens": 1361,
+        "output_tokens": 137,
+        "reason": "",
+        "raw": {
+          "mode": "generate",
+          "mode_probabilities": {
+            "direct": 0.42,
+            "generate": 0.5700000000000001,
+            "clarify": 0.01
+          },
+          "mode_confidence": 0.36,
+          "search_needed": 0.19,
+          "sufficient": 0.89,
+          "ranks": [
+            {
+              "chunk_id": "cdut:chunk:mail2022:02",
+              "score": 1.99,
+              "confidence": 1.0,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.0,
+                "2": 1.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:mail2022:01",
+              "score": 1.05,
+              "confidence": 0.9,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.93,
+                "2": 0.06
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:official:portal-06:checked-step-4",
+              "score": 1.54,
+              "confidence": 0.29,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.45,
+                "2": 0.54
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:official:portal-06:checked-step-3",
+              "score": 1.66,
+              "confidence": 0.47,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.33,
+                "2": 0.66
+              }
+            }
+          ]
+        },
+        "other_evidence": false
+      },
+      "retained_chunk_ids": [
+        "cdut:chunk:mail2022:02",
+        "cdut:chunk:mail2022:01",
+        "cdut:chunk:official:portal-06:checked-step-4",
+        "cdut:chunk:official:portal-06:checked-step-3"
+      ],
+      "retention_basis": "observed after_chunk_ids from the pilot Agent turn; generation subsequently timed out",
+      "label_support_chunk_ids": [
+        "cdut:chunk:mail2022:01",
+        "cdut:chunk:mail2022:02"
+      ],
+      "retrieved_label_support_chunk_ids": [
+        "cdut:chunk:mail2022:01",
+        "cdut:chunk:mail2022:02"
+      ],
+      "retained_label_support_chunk_ids": [
+        "cdut:chunk:mail2022:01",
+        "cdut:chunk:mail2022:02"
+      ],
+      "pilot_generation_status": "limited",
+      "pilot_generation_failure": "upstream_timeout",
+      "quality_claim": null
+    },
+    {
+      "id": "F02",
+      "category": "full",
+      "question": "新生首次激活统一身份认证账号，应该怎样操作和设置密码？",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "evidence_sha256": "8ce3baaaf8e6fa5afe939bfed6a58e9e224a2ec44534006c71fe0e3cc7b5830f",
+      "origin": "judge-remaining.json",
+      "arm": "jev_decision_only",
+      "individual_observed_at": null,
+      "batch_recorded_at": "2026-10-15T03:32:26.973102+00:00",
+      "before_chunk_ids": [
+        "cdut:chunk:identity2021:01",
+        "cdut:chunk:official:portal-06:guide-body",
+        "cdut:chunk:official:portal-06:checked-step-5",
+        "cdut:chunk:official:portal-06:checked-step-3"
+      ],
+      "raw_decision": {
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "unsure",
+        "decision": "unknown",
+        "search_needed": null,
+        "local_grounding": "grounded",
+        "answer_mode": "unknown",
+        "sufficient_probability": 0.92,
+        "scores": {
+          "cdut:chunk:identity2021:01": 1.83,
+          "cdut:chunk:official:portal-06:guide-body": 2.0,
+          "cdut:chunk:official:portal-06:checked-step-5": 1.92,
+          "cdut:chunk:official:portal-06:checked-step-3": 1.33
+        },
+        "ranked_ids": [],
+        "dropped_ids": [],
+        "applied": "none",
+        "latency_ms": 888.9,
+        "input_tokens": 1830,
+        "output_tokens": 137,
+        "reason": "",
+        "raw": {
+          "mode": "generate",
+          "mode_probabilities": {
+            "direct": 0.49,
+            "generate": 0.5,
+            "clarify": 0.01
+          },
+          "mode_confidence": 0.25,
+          "search_needed": 0.16,
+          "sufficient": 0.92,
+          "ranks": [
+            {
+              "chunk_id": "cdut:chunk:identity2021:01",
+              "score": 1.83,
+              "confidence": 0.74,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.17,
+                "2": 0.83
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:official:portal-06:guide-body",
+              "score": 2.0,
+              "confidence": 1.0,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.0,
+                "2": 1.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:official:portal-06:checked-step-5",
+              "score": 1.92,
+              "confidence": 0.9,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.07,
+                "2": 0.93
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:official:portal-06:checked-step-3",
+              "score": 1.33,
+              "confidence": 0.47,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.65,
+                "2": 0.34
+              }
+            }
+          ]
+        }
+      },
+      "retained_chunk_ids": [
+        "cdut:chunk:identity2021:01",
+        "cdut:chunk:official:portal-06:guide-body",
+        "cdut:chunk:official:portal-06:checked-step-5",
+        "cdut:chunk:official:portal-06:checked-step-3"
+      ],
+      "retention_basis": "inferred from the usable-assessment rerank rule; no Agent answer was generated",
+      "label_support_chunk_ids": [
+        "cdut:chunk:official:portal-06:guide-body"
+      ],
+      "retrieved_label_support_chunk_ids": [
+        "cdut:chunk:official:portal-06:guide-body"
+      ],
+      "retained_label_support_chunk_ids": [
+        "cdut:chunk:official:portal-06:guide-body"
+      ],
+      "pilot_generation_status": null,
+      "pilot_generation_failure": null,
+      "quality_claim": null
+    },
+    {
+      "id": "F07",
+      "category": "full",
+      "question": "宿舍楼宇零星维修可以通过哪些官方渠道报修？",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "evidence_sha256": "01a5c7a9d135dc9e0b3f165aae15ddf967d7b278898e19c22e7a1ab09d4ace11",
+      "origin": "judge-remaining.json",
+      "arm": "jev_decision_only",
+      "individual_observed_at": null,
+      "batch_recorded_at": "2026-10-15T03:32:26.973102+00:00",
+      "before_chunk_ids": [
+        "cdut:chunk:repair:01",
+        "cdut:chunk:lyfwdorm:bs06",
+        "cdut:candidate-office:12",
+        "cdut:chunk:repair:02"
+      ],
+      "raw_decision": {
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "ok",
+        "decision": "sufficient",
+        "search_needed": false,
+        "local_grounding": "grounded",
+        "answer_mode": "direct",
+        "sufficient_probability": 0.93,
+        "scores": {
+          "cdut:chunk:repair:01": 2.0,
+          "cdut:chunk:lyfwdorm:bs06": 2.0,
+          "cdut:candidate-office:12": 1.62,
+          "cdut:chunk:repair:02": 1.03
+        },
+        "ranked_ids": [
+          "cdut:chunk:lyfwdorm:bs06",
+          "cdut:chunk:repair:01",
+          "cdut:candidate-office:12",
+          "cdut:chunk:repair:02"
+        ],
+        "dropped_ids": [],
+        "applied": "none",
+        "latency_ms": 717.6,
+        "input_tokens": 1951,
+        "output_tokens": 137,
+        "reason": "",
+        "raw": {
+          "mode": "direct",
+          "mode_probabilities": {
+            "direct": 0.89,
+            "generate": 0.11,
+            "clarify": 0.0
+          },
+          "mode_confidence": 0.83,
+          "search_needed": 0.16,
+          "sufficient": 0.93,
+          "ranks": [
+            {
+              "chunk_id": "cdut:chunk:repair:01",
+              "score": 2.0,
+              "confidence": 1.0,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.0,
+                "2": 1.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:lyfwdorm:bs06",
+              "score": 2.0,
+              "confidence": 1.0,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.0,
+                "2": 1.0
+              }
+            },
+            {
+              "chunk_id": "cdut:candidate-office:12",
+              "score": 1.62,
+              "confidence": 0.43,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.36,
+                "2": 0.63
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:repair:02",
+              "score": 1.03,
+              "confidence": 0.83,
+              "probabilities": {
+                "0": 0.04,
+                "1": 0.89,
+                "2": 0.07
+              }
+            }
+          ]
+        }
+      },
+      "retained_chunk_ids": [
+        "cdut:chunk:lyfwdorm:bs06",
+        "cdut:chunk:repair:01",
+        "cdut:candidate-office:12",
+        "cdut:chunk:repair:02"
+      ],
+      "retention_basis": "inferred from the usable-assessment rerank rule; no Agent answer was generated",
+      "label_support_chunk_ids": [
+        "cdut:chunk:repair:01"
+      ],
+      "retrieved_label_support_chunk_ids": [
+        "cdut:chunk:repair:01"
+      ],
+      "retained_label_support_chunk_ids": [
+        "cdut:chunk:repair:01"
+      ],
+      "pilot_generation_status": null,
+      "pilot_generation_failure": null,
+      "quality_claim": null
+    },
+    {
+      "id": "N01",
+      "category": "none",
+      "question": "学生邮箱的存储容量是多少GB？",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "evidence_sha256": "d4d27fbc3786253c977602f06ac540b1df426fce45bd0ee9b2140cbdc44d8952",
+      "origin": "judge-remaining.json",
+      "arm": "jev_decision_only",
+      "individual_observed_at": null,
+      "batch_recorded_at": "2026-10-15T03:32:26.973102+00:00",
+      "before_chunk_ids": [
+        "cdut:chunk:mail2022:02",
+        "cdut:chunk:mail2022:01",
+        "cdut:chunk:netfaq2023:01",
+        "cdut:chunk:official:portal-06:checked-step-4"
+      ],
+      "raw_decision": {
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "ok",
+        "decision": "clarify",
+        "search_needed": true,
+        "local_grounding": "grounded",
+        "answer_mode": "clarify",
+        "sufficient_probability": 0.03,
+        "scores": {
+          "cdut:chunk:mail2022:02": 0.93,
+          "cdut:chunk:mail2022:01": 0.92,
+          "cdut:chunk:netfaq2023:01": 0.15,
+          "cdut:chunk:official:portal-06:checked-step-4": 0.52
+        },
+        "ranked_ids": [
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:official:portal-06:checked-step-4"
+        ],
+        "dropped_ids": [
+          "cdut:chunk:netfaq2023:01"
+        ],
+        "applied": "none",
+        "latency_ms": 694.2,
+        "input_tokens": 1848,
+        "output_tokens": 138,
+        "reason": "",
+        "raw": {
+          "mode": "clarify",
+          "mode_probabilities": {
+            "direct": 0.01,
+            "generate": 0.04,
+            "clarify": 0.95
+          },
+          "mode_confidence": 0.92,
+          "search_needed": 0.88,
+          "sufficient": 0.03,
+          "ranks": [
+            {
+              "chunk_id": "cdut:chunk:mail2022:02",
+              "score": 0.93,
+              "confidence": 0.9,
+              "probabilities": {
+                "0": 0.07,
+                "1": 0.93,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:mail2022:01",
+              "score": 0.92,
+              "confidence": 0.88,
+              "probabilities": {
+                "0": 0.08,
+                "1": 0.92,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:netfaq2023:01",
+              "score": 0.15,
+              "confidence": 0.78,
+              "probabilities": {
+                "0": 0.85,
+                "1": 0.15,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:official:portal-06:checked-step-4",
+              "score": 0.52,
+              "confidence": 0.28,
+              "probabilities": {
+                "0": 0.48,
+                "1": 0.52,
+                "2": 0.0
+              }
+            }
+          ]
+        }
+      },
+      "retained_chunk_ids": [
+        "cdut:chunk:mail2022:02",
+        "cdut:chunk:mail2022:01",
+        "cdut:chunk:official:portal-06:checked-step-4"
+      ],
+      "retention_basis": "inferred from the usable-assessment rerank rule; no Agent answer was generated",
+      "label_support_chunk_ids": [],
+      "retrieved_label_support_chunk_ids": [],
+      "retained_label_support_chunk_ids": [],
+      "pilot_generation_status": null,
+      "pilot_generation_failure": null,
+      "quality_claim": null
+    },
+    {
+      "id": "N02",
+      "category": "none",
+      "question": "学生邮箱激活后可以修改用户名吗，具体如何改？",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "evidence_sha256": "9652badb4f2ca2e418bd70a39c34e35a258cb501ca4a4b80605fb699c2372414",
+      "origin": "judge-remaining.json",
+      "arm": "jev_decision_only",
+      "individual_observed_at": null,
+      "batch_recorded_at": "2026-10-15T03:32:26.973102+00:00",
+      "before_chunk_ids": [
+        "cdut:chunk:mail2022:02",
+        "cdut:chunk:mail2022:01",
+        "cdut:chunk:official:portal-06:checked-step-4",
+        "cdut:chunk:netfaq2023:03"
+      ],
+      "raw_decision": {
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "ok",
+        "decision": "clarify",
+        "search_needed": true,
+        "local_grounding": "grounded",
+        "answer_mode": "clarify",
+        "sufficient_probability": 0.08,
+        "scores": {
+          "cdut:chunk:mail2022:02": 1.01,
+          "cdut:chunk:mail2022:01": 0.9,
+          "cdut:chunk:official:portal-06:checked-step-4": 0.83,
+          "cdut:chunk:netfaq2023:03": 0.26
+        },
+        "ranked_ids": [
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:official:portal-06:checked-step-4"
+        ],
+        "dropped_ids": [
+          "cdut:chunk:netfaq2023:03"
+        ],
+        "applied": "none",
+        "latency_ms": 686.6,
+        "input_tokens": 1818,
+        "output_tokens": 138,
+        "reason": "",
+        "raw": {
+          "mode": "clarify",
+          "mode_probabilities": {
+            "direct": 0.03,
+            "generate": 0.12,
+            "clarify": 0.85
+          },
+          "mode_confidence": 0.77,
+          "search_needed": 0.75,
+          "sufficient": 0.08,
+          "ranks": [
+            {
+              "chunk_id": "cdut:chunk:mail2022:02",
+              "score": 1.01,
+              "confidence": 0.95,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.97,
+                "2": 0.02
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:mail2022:01",
+              "score": 0.9,
+              "confidence": 0.85,
+              "probabilities": {
+                "0": 0.1,
+                "1": 0.9,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:official:portal-06:checked-step-4",
+              "score": 0.83,
+              "confidence": 0.74,
+              "probabilities": {
+                "0": 0.17,
+                "1": 0.83,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:netfaq2023:03",
+              "score": 0.26,
+              "confidence": 0.61,
+              "probabilities": {
+                "0": 0.74,
+                "1": 0.26,
+                "2": 0.0
+              }
+            }
+          ]
+        }
+      },
+      "retained_chunk_ids": [
+        "cdut:chunk:mail2022:02",
+        "cdut:chunk:mail2022:01",
+        "cdut:chunk:official:portal-06:checked-step-4"
+      ],
+      "retention_basis": "inferred from the usable-assessment rerank rule; no Agent answer was generated",
+      "label_support_chunk_ids": [],
+      "retrieved_label_support_chunk_ids": [],
+      "retained_label_support_chunk_ids": [],
+      "pilot_generation_status": null,
+      "pilot_generation_failure": null,
+      "quality_claim": null
+    },
+    {
+      "id": "N09",
+      "category": "none",
+      "question": "本周六图书馆有没有开放通宵自习？",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "evidence_sha256": "b4c9e59c63420ba26be89e13616327c708b04f42ee3034b4342b57d1e071ebcc",
+      "origin": "judge-remaining.json",
+      "arm": "jev_decision_only",
+      "individual_observed_at": null,
+      "batch_recorded_at": "2026-10-15T03:32:26.973102+00:00",
+      "before_chunk_ids": [
+        "cdut:chunk:libhours:01",
+        "cdut:chunk:libfaq:03",
+        "cdut:chunk:libfaq:02",
+        "cdut:chunk:cistfresh2025:bs13"
+      ],
+      "raw_decision": {
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "unsure",
+        "decision": "unknown",
+        "search_needed": null,
+        "local_grounding": "grounded",
+        "answer_mode": "unknown",
+        "sufficient_probability": 0.49,
+        "scores": {
+          "cdut:chunk:libhours:01": 1.61,
+          "cdut:chunk:libfaq:03": 0.24,
+          "cdut:chunk:libfaq:02": 0.27,
+          "cdut:chunk:cistfresh2025:bs13": 0.01
+        },
+        "ranked_ids": [],
+        "dropped_ids": [],
+        "applied": "none",
+        "latency_ms": 692.0,
+        "input_tokens": 2071,
+        "output_tokens": 137,
+        "reason": "",
+        "raw": {
+          "mode": "direct",
+          "mode_probabilities": {
+            "direct": 0.53,
+            "generate": 0.1,
+            "clarify": 0.37
+          },
+          "mode_confidence": 0.3,
+          "search_needed": 0.58,
+          "sufficient": 0.49,
+          "ranks": [
+            {
+              "chunk_id": "cdut:chunk:libhours:01",
+              "score": 1.61,
+              "confidence": 0.41,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.39,
+                "2": 0.61
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:libfaq:03",
+              "score": 0.24,
+              "confidence": 0.64,
+              "probabilities": {
+                "0": 0.76,
+                "1": 0.24,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:libfaq:02",
+              "score": 0.27,
+              "confidence": 0.59,
+              "probabilities": {
+                "0": 0.73,
+                "1": 0.27,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:cistfresh2025:bs13",
+              "score": 0.01,
+              "confidence": 0.98,
+              "probabilities": {
+                "0": 0.99,
+                "1": 0.01,
+                "2": 0.0
+              }
+            }
+          ]
+        }
+      },
+      "retained_chunk_ids": [
+        "cdut:chunk:libhours:01",
+        "cdut:chunk:libfaq:03",
+        "cdut:chunk:libfaq:02",
+        "cdut:chunk:cistfresh2025:bs13"
+      ],
+      "retention_basis": "inferred from the usable-assessment rerank rule; no Agent answer was generated",
+      "label_support_chunk_ids": [],
+      "retrieved_label_support_chunk_ids": [],
+      "retained_label_support_chunk_ids": [],
+      "pilot_generation_status": null,
+      "pilot_generation_failure": null,
+      "quality_claim": null
+    },
+    {
+      "id": "P02",
+      "category": "partial",
+      "question": "本科生图书馆能借多少本书，最多能续借几次？",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "evidence_sha256": "437f86c73def7326485757ab5fa84ca4002af6d290d5e55cb43e872a67d06b69",
+      "origin": "pilot-observations.jsonl",
+      "arm": "jev_on",
+      "individual_observed_at": null,
+      "batch_identity_created_at": "2026-10-15T03:23:41.553440+00:00",
+      "before_chunk_ids": [
+        "cdut:chunk:libfaq:03",
+        "cdut:chunk:libfaq:01",
+        "cdut:chunk:libfresh:01",
+        "cdut:chunk:libprint:bs01"
+      ],
+      "raw_decision": {
+        "kind": "jev",
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "ok",
+        "decision": "clarify",
+        "search_needed": true,
+        "local_grounding": "grounded",
+        "answer_mode": "clarify",
+        "sufficient_probability": 0.29,
+        "scores": {
+          "cdut:chunk:libfaq:03": 1.31,
+          "cdut:chunk:libfaq:01": 0.94,
+          "cdut:chunk:libfresh:01": 0.71,
+          "cdut:chunk:libprint:bs01": 0.19
+        },
+        "ranked_ids": [
+          "cdut:chunk:libfaq:03",
+          "cdut:chunk:libfaq:01",
+          "cdut:chunk:libfresh:01"
+        ],
+        "dropped_ids": [
+          "cdut:chunk:libprint:bs01"
+        ],
+        "applied": "rerank",
+        "latency_ms": 693.2,
+        "input_tokens": 1377,
+        "output_tokens": 138,
+        "reason": "",
+        "raw": {
+          "mode": "clarify",
+          "mode_probabilities": {
+            "direct": 0.06,
+            "generate": 0.04,
+            "clarify": 0.9
+          },
+          "mode_confidence": 0.85,
+          "search_needed": 0.74,
+          "sufficient": 0.29,
+          "ranks": [
+            {
+              "chunk_id": "cdut:chunk:libfaq:03",
+              "score": 1.31,
+              "confidence": 0.53,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.69,
+                "2": 0.31
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:libfaq:01",
+              "score": 0.94,
+              "confidence": 0.91,
+              "probabilities": {
+                "0": 0.06,
+                "1": 0.94,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:libfresh:01",
+              "score": 0.71,
+              "confidence": 0.56,
+              "probabilities": {
+                "0": 0.29,
+                "1": 0.71,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:libprint:bs01",
+              "score": 0.19,
+              "confidence": 0.71,
+              "probabilities": {
+                "0": 0.81,
+                "1": 0.19,
+                "2": 0.0
+              }
+            }
+          ]
+        },
+        "other_evidence": false
+      },
+      "retained_chunk_ids": [
+        "cdut:chunk:libfaq:03",
+        "cdut:chunk:libfaq:01",
+        "cdut:chunk:libfresh:01"
+      ],
+      "retention_basis": "observed after_chunk_ids from the pilot Agent turn; generation subsequently timed out",
+      "label_support_chunk_ids": [
+        "cdut:chunk:libfaq:03"
+      ],
+      "retrieved_label_support_chunk_ids": [
+        "cdut:chunk:libfaq:03"
+      ],
+      "retained_label_support_chunk_ids": [
+        "cdut:chunk:libfaq:03"
+      ],
+      "pilot_generation_status": "limited",
+      "pilot_generation_failure": "upstream_timeout",
+      "quality_claim": null
+    },
+    {
+      "id": "P04",
+      "category": "partial",
+      "question": "新生第一次借书有哪些步骤，丢书具体要赔多少钱？",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "evidence_sha256": "cf4749f6ab76e8b825f50d0651598bd259b7d9e1ab7f299d4a499d049148194c",
+      "origin": "judge-remaining.json",
+      "arm": "jev_decision_only",
+      "individual_observed_at": null,
+      "batch_recorded_at": "2026-10-15T03:32:26.973102+00:00",
+      "before_chunk_ids": [
+        "cdut:chunk:libfresh:01",
+        "cdut:chunk:wx:fresh2026fee:04",
+        "cdut:chunk:cistfresh2025:bs10",
+        "cdut:chunk:loanconfirm2026:bs04"
+      ],
+      "raw_decision": {
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "ok",
+        "decision": "clarify",
+        "search_needed": true,
+        "local_grounding": "grounded",
+        "answer_mode": "clarify",
+        "sufficient_probability": 0.17,
+        "scores": {
+          "cdut:chunk:libfresh:01": 1.38,
+          "cdut:chunk:wx:fresh2026fee:04": 0.04,
+          "cdut:chunk:cistfresh2025:bs10": 0.02,
+          "cdut:chunk:loanconfirm2026:bs04": 0.01
+        },
+        "ranked_ids": [
+          "cdut:chunk:libfresh:01"
+        ],
+        "dropped_ids": [
+          "cdut:chunk:wx:fresh2026fee:04",
+          "cdut:chunk:cistfresh2025:bs10",
+          "cdut:chunk:loanconfirm2026:bs04"
+        ],
+        "applied": "none",
+        "latency_ms": 693.4,
+        "input_tokens": 3052,
+        "output_tokens": 138,
+        "reason": "",
+        "raw": {
+          "mode": "clarify",
+          "mode_probabilities": {
+            "direct": 0.05,
+            "generate": 0.05,
+            "clarify": 0.9
+          },
+          "mode_confidence": 0.85,
+          "search_needed": 0.85,
+          "sufficient": 0.17,
+          "ranks": [
+            {
+              "chunk_id": "cdut:chunk:libfresh:01",
+              "score": 1.38,
+              "confidence": 0.43,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.62,
+                "2": 0.38
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:wx:fresh2026fee:04",
+              "score": 0.04,
+              "confidence": 0.94,
+              "probabilities": {
+                "0": 0.96,
+                "1": 0.04,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:cistfresh2025:bs10",
+              "score": 0.02,
+              "confidence": 0.97,
+              "probabilities": {
+                "0": 0.98,
+                "1": 0.02,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:loanconfirm2026:bs04",
+              "score": 0.01,
+              "confidence": 0.98,
+              "probabilities": {
+                "0": 0.99,
+                "1": 0.01,
+                "2": 0.0
+              }
+            }
+          ]
+        }
+      },
+      "retained_chunk_ids": [
+        "cdut:chunk:libfresh:01"
+      ],
+      "retention_basis": "inferred from the usable-assessment rerank rule; no Agent answer was generated",
+      "label_support_chunk_ids": [
+        "cdut:chunk:libfresh:01"
+      ],
+      "retrieved_label_support_chunk_ids": [
+        "cdut:chunk:libfresh:01"
+      ],
+      "retained_label_support_chunk_ids": [
+        "cdut:chunk:libfresh:01"
+      ],
+      "pilot_generation_status": null,
+      "pilot_generation_failure": null,
+      "quality_claim": null
+    },
+    {
+      "id": "P09",
+      "category": "partial",
+      "question": "期末成绩复核在哪里提交申请，提交后保证几天出结果？",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "evidence_sha256": "49f55661e879b0d18af9aab4e2b8a9a35cadf21d2d2c7e662d6dc7594d2b522a",
+      "origin": "judge-remaining.json",
+      "arm": "jev_decision_only",
+      "individual_observed_at": null,
+      "batch_recorded_at": "2026-10-15T03:32:26.973102+00:00",
+      "before_chunk_ids": [
+        "cdut:chunk:official:gradesindex:review-guide",
+        "cdut:chunk:gradesindex:01",
+        "cdut:chunk:xjgl2019:07",
+        "cdut:chunk:aaooffices:01"
+      ],
+      "raw_decision": {
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "ok",
+        "decision": "clarify",
+        "search_needed": true,
+        "local_grounding": "grounded",
+        "answer_mode": "clarify",
+        "sufficient_probability": 0.2,
+        "scores": {
+          "cdut:chunk:official:gradesindex:review-guide": 1.21,
+          "cdut:chunk:gradesindex:01": 1.0,
+          "cdut:chunk:xjgl2019:07": 1.17,
+          "cdut:chunk:aaooffices:01": 0.77
+        },
+        "ranked_ids": [
+          "cdut:chunk:official:gradesindex:review-guide",
+          "cdut:chunk:xjgl2019:07",
+          "cdut:chunk:gradesindex:01",
+          "cdut:chunk:aaooffices:01"
+        ],
+        "dropped_ids": [],
+        "applied": "none",
+        "latency_ms": 705.0,
+        "input_tokens": 1899,
+        "output_tokens": 138,
+        "reason": "",
+        "raw": {
+          "mode": "clarify",
+          "mode_probabilities": {
+            "direct": 0.01,
+            "generate": 0.08,
+            "clarify": 0.91
+          },
+          "mode_confidence": 0.86,
+          "search_needed": 0.78,
+          "sufficient": 0.2,
+          "ranks": [
+            {
+              "chunk_id": "cdut:chunk:official:gradesindex:review-guide",
+              "score": 1.21,
+              "confidence": 0.69,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.79,
+                "2": 0.21
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:gradesindex:01",
+              "score": 1.0,
+              "confidence": 0.97,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.98,
+                "2": 0.01
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:xjgl2019:07",
+              "score": 1.17,
+              "confidence": 0.74,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.83,
+                "2": 0.17
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:aaooffices:01",
+              "score": 0.77,
+              "confidence": 0.66,
+              "probabilities": {
+                "0": 0.23,
+                "1": 0.77,
+                "2": 0.0
+              }
+            }
+          ]
+        }
+      },
+      "retained_chunk_ids": [
+        "cdut:chunk:official:gradesindex:review-guide",
+        "cdut:chunk:xjgl2019:07",
+        "cdut:chunk:gradesindex:01",
+        "cdut:chunk:aaooffices:01"
+      ],
+      "retention_basis": "inferred from the usable-assessment rerank rule; no Agent answer was generated",
+      "label_support_chunk_ids": [
+        "cdut:chunk:official:gradesindex:review-guide"
+      ],
+      "retrieved_label_support_chunk_ids": [
+        "cdut:chunk:official:gradesindex:review-guide"
+      ],
+      "retained_label_support_chunk_ids": [
+        "cdut:chunk:official:gradesindex:review-guide"
+      ],
+      "pilot_generation_status": null,
+      "pilot_generation_failure": null,
+      "quality_claim": null
+    },
+    {
+      "id": "P10",
+      "category": "partial",
+      "question": "2023年试运行通知里研究生在读证明线上费用和次数怎样规定，线下每类免费打印几份？",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "evidence_sha256": "b68c7c0bf561dbc0d1de4e7ca6ac2630944b6a916fa75859c1e6f8bd81ec3ea4",
+      "origin": "judge-remaining.json",
+      "arm": "jev_decision_only",
+      "individual_observed_at": null,
+      "batch_recorded_at": "2026-10-15T03:32:26.973102+00:00",
+      "before_chunk_ids": [
+        "cdut:chunk:official:graduate-proof-2023:frequency",
+        "cdut:chunk:official:graduate-proof-2023:application",
+        "cdut:chunk:official:graduate-proof-2023:contacts",
+        "cdut:chunk:official:portal-1212:guide-body"
+      ],
+      "raw_decision": {
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "ok",
+        "decision": "clarify",
+        "search_needed": null,
+        "local_grounding": "grounded",
+        "answer_mode": "clarify",
+        "sufficient_probability": 0.33,
+        "scores": {
+          "cdut:chunk:official:graduate-proof-2023:frequency": 1.32,
+          "cdut:chunk:official:graduate-proof-2023:application": 1.03,
+          "cdut:chunk:official:graduate-proof-2023:contacts": 0.61,
+          "cdut:chunk:official:portal-1212:guide-body": 0.0
+        },
+        "ranked_ids": [
+          "cdut:chunk:official:graduate-proof-2023:frequency",
+          "cdut:chunk:official:graduate-proof-2023:application",
+          "cdut:chunk:official:graduate-proof-2023:contacts"
+        ],
+        "dropped_ids": [
+          "cdut:chunk:official:portal-1212:guide-body"
+        ],
+        "applied": "none",
+        "latency_ms": 670.2,
+        "input_tokens": 2057,
+        "output_tokens": 138,
+        "reason": "",
+        "raw": {
+          "mode": "clarify",
+          "mode_probabilities": {
+            "direct": 0.06,
+            "generate": 0.04,
+            "clarify": 0.9
+          },
+          "mode_confidence": 0.85,
+          "search_needed": 0.63,
+          "sufficient": 0.33,
+          "ranks": [
+            {
+              "chunk_id": "cdut:chunk:official:graduate-proof-2023:frequency",
+              "score": 1.32,
+              "confidence": 0.52,
+              "probabilities": {
+                "0": 0.0,
+                "1": 0.68,
+                "2": 0.32
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:official:graduate-proof-2023:application",
+              "score": 1.03,
+              "confidence": 0.93,
+              "probabilities": {
+                "0": 0.01,
+                "1": 0.95,
+                "2": 0.04
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:official:graduate-proof-2023:contacts",
+              "score": 0.61,
+              "confidence": 0.4,
+              "probabilities": {
+                "0": 0.4,
+                "1": 0.6,
+                "2": 0.0
+              }
+            },
+            {
+              "chunk_id": "cdut:chunk:official:portal-1212:guide-body",
+              "score": 0.0,
+              "confidence": 1.0,
+              "probabilities": {
+                "0": 1.0,
+                "1": 0.0,
+                "2": 0.0
+              }
+            }
+          ]
+        }
+      },
+      "retained_chunk_ids": [
+        "cdut:chunk:official:graduate-proof-2023:frequency",
+        "cdut:chunk:official:graduate-proof-2023:application",
+        "cdut:chunk:official:graduate-proof-2023:contacts"
+      ],
+      "retention_basis": "inferred from the usable-assessment rerank rule; no Agent answer was generated",
+      "label_support_chunk_ids": [
+        "cdut:chunk:official:graduate-proof-2023:frequency"
+      ],
+      "retrieved_label_support_chunk_ids": [
+        "cdut:chunk:official:graduate-proof-2023:frequency"
+      ],
+      "retained_label_support_chunk_ids": [
+        "cdut:chunk:official:graduate-proof-2023:frequency"
+      ],
+      "pilot_generation_status": null,
+      "pilot_generation_failure": null,
+      "quality_claim": null
+    }
+  ]
+}

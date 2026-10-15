@@ -14,6 +14,7 @@ import math
 import re
 import time
 from dataclasses import dataclass, field
+from datetime import datetime
 from decimal import Decimal
 from typing import Any
 
@@ -27,6 +28,34 @@ from campuspilot.rag import RetrievalHit, canonical
 from campuspilot.web_evidence import TurnEvidenceContext
 
 OPENROUTER_ENDPOINT = "https://openrouter.ai/api/alpha/decisions"
+SOURCE_TIMESTAMP = re.compile(
+    r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?"
+)
+
+
+def _public_context(state: dict[str, Any]) -> bool:
+    """Check all context without mistaking a source timestamp's seconds for coordinates.
+
+    Only validated, complete timestamps in known web-source date fields get a
+    seconds-precision check representation. The original state sent to Jev is unchanged;
+    arbitrary metadata, user observations and page bodies retain the full privacy check.
+    """
+    checked = dict(state)
+    pages = []
+    for row in state.get("web_pages", []):
+        page = dict(row)
+        for field_name in ("retrieved_at", "published_at"):
+            value = page.get(field_name)
+            if not isinstance(value, str) or not SOURCE_TIMESTAMP.fullmatch(value):
+                continue
+            try:
+                timestamp = datetime.fromisoformat(value)
+            except ValueError:
+                continue
+            page[field_name] = timestamp.isoformat(timespec="seconds")
+        pages.append(page)
+    checked["web_pages"] = pages
+    return public_input(json.dumps(checked, ensure_ascii=False))
 
 
 def redacted(text: str) -> str:
@@ -111,7 +140,7 @@ class JevShadowClient:
             )
         )
         context_state = evidence_context.as_state() if evidence_context is not None else {}
-        if context_state and not public_input(json.dumps(context_state, ensure_ascii=False)):
+        if context_state and not _public_context(context_state):
             return ShadowResult("unknown", selected_ids=original_order, reason="private_context")
         # Redaction applies recursively to context as well as question/passages. Image
         # observations are kept separate, and coordinates have already been removed.

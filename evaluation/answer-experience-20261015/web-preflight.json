@@ -1,0 +1,55 @@
+{
+  "recorded_at_utc": "2026-10-15T03:17:23.670564+00:00",
+  "scope": "Read-only presence checks; only Tavily key-presence and free-plan confirmation booleans. No credentials captured, persisted or returned; no provider requests.",
+  "configuration_checks": {
+    "current_process_environment": {
+      "tavily_key_present": false,
+      "free_confirmed": false,
+      "tavily_key_file_variable_present": false
+    },
+    "known_local_migration": {
+      "path": "C:/Users/21207/AppData/Local/CampusPilot/migration.ps1",
+      "exists": true,
+      "tavily_key_assignment_present": false,
+      "free_confirmed": false,
+      "tavily_key_file_variable_present": false
+    },
+    "known_server_configuration": {
+      "path": "/etc/campuspilot/campuspilot.env",
+      "read_only_ssh_check_succeeded": true,
+      "tavily_key_present": false,
+      "free_confirmed": false,
+      "tavily_key_file_variable_present": false
+    }
+  },
+  "application_loading_contract": {
+    "source": "backend/src/campuspilot/config.py:Settings.from_env",
+    "reads_current_process_environment_only": true,
+    "key_variable": "TAVILY_API_KEY",
+    "free_confirmation_variable": "TAVILY_FREE_PLAN_CONFIRMED",
+    "accepted_confirmation_value": "true",
+    "tavily_key_file_supported": false,
+    "auto_loads_migration_ps1_or_dotenv": false
+  },
+  "cases": [
+    {
+      "id": "W01",
+      "question": "请联网核实，图书馆预约的图书到馆后为读者保留几天？",
+      "status": "not_run",
+      "reason": "missing_tavily_configuration",
+      "provider_calls": 0
+    },
+    {
+      "id": "W02",
+      "question": "请联网核实，随书光盘最多借几张、借多久，能续借吗？",
+      "status": "not_run",
+      "reason": "missing_tavily_configuration",
+      "provider_calls": 0
+    }
+  ],
+  "result": "blocked_at_preflight",
+  "reason": "missing_tavily_configuration",
+  "production_configuration_changed": false,
+  "free_or_paid_provider_calls": 0,
+  "minimum_next_action": "Provide an externally stored Tavily credential and independently confirm the account free-plan condition. Existing startup code must export TAVILY_API_KEY into the process environment and set TAVILY_FREE_PLAN_CONFIRMED=true before starting a local evaluation; no application-level TAVILY_KEY_FILE loader currently exists."
+}

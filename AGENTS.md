@@ -41,16 +41,16 @@ Read the relevant contracts and accepted [ADRs](docs/adr/README.md) before chang
   ownership, and scope. Do not initialize tooling solely to validate documentation.
 - For implementation, test meaningful contracts and failure behavior, not only happy paths.
   Record commands, results, limitations, and unresolved risks in the PR or handoff.
-- Follow the Issue → Codex / teammate implementation on a short-lived branch → PR
-  → Muse independent QA / source verification (for real data) → Codex fixes
-  → Muse regression → Tech Lead final review → Merge workflow when publication is authorized.
-- Muse owns Independent QA + DataOps + Security Validation / Release Gate. For important PRs,
-  use an independent environment, design boundary/negative/adversarial tests, lock the Tested
-  Commit SHA, and report PASS / FAIL with blocking / non-blocking findings. Changed commits
-  require regression; developer checks do not replace independent QA.
-- Muse may organize QA tests, DataOps tools, and test scripts, but must report production bugs
-  for Codex to fix, not modify core production code to make tests pass or unilaterally refactor Agent Core.
-  The Tech Lead retains final architecture authority and resolves disputed requirements.
+- CONFIRMED (2026-10-14): The user removed the mandatory Muse independent QA stage.
+  Codex owns implementation, automated regression, source verification and security checks,
+  and reports evidence directly to the Tech Lead. Historical documents assigning Muse a
+  required QA/release gate are superseded; do not wait for Muse or dispatch work to it.
+- Follow Issue → implementation and verification → PR when authorized → Tech Lead final
+  review → Merge when authorized. Product-effect experiments can run before PR preparation.
+- For important changes, test boundary/negative/adversarial behavior, identify the tested
+  commit or base commit plus working-tree changes, and report passes, failures and limitations.
+  Changed implementation requires relevant regression. The Tech Lead retains final
+  architecture and merge authority and resolves disputed requirements.
 - Official public sources may be collected, checked against their stated applicability, and
   adopted into `data/cdut` without asking the user to review every item. Record provenance,
   dates and limitations. Escalate only substantial uncertainty or unresolved contradictions
