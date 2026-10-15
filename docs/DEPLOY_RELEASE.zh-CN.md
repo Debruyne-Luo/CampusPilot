@@ -10,8 +10,12 @@
 - `backend/src/campuspilot/**` 整个包（含 `web_assets/`、`web_assets/v2/`、vendored Motion），去掉 `__pycache__`/`.pyc`
 - `pyproject.toml`、`uv.lock`
 - `data/cdut/*.json`、`data/cdut/rag/bootstrap.json`（+ `bootstrap.vectors.sqlite`，若有）
-- `--bundle approved-YYYYMMDD[x]` 指定的知识快照（`snapshot.json`、`manifest.json`、`vectors.sqlite`；不含 `raw/`，不含 `rag/packages/`）
+- `--bundle approved-YYYYMMDD[x]` 指定的知识快照（`snapshot.json`、`manifest.json`、`vectors.sqlite`，以及知识 manifest 的 `files_sha256` 明确绑定的 `raw/` 原始材料；未绑定的 `raw/` 和 `rag/packages/` 不收录）
 - `MANIFEST.json`：每个文件 sha256；版本号 `r-<内容哈希12位>`（同内容 = 同版本，重发为 UNCHANGED）
+
+打包前校验知识 manifest 必需文件的路径及 sha256；缺失、内容变化、路径越界或符号链接会使打包失败。
+保持运行时对来源材料、知识快照和向量索引的完整性校验，不通过删减知识 manifest 来缩小发布包。
+本地发布验证须解包后以所选 bundle 冷启动 `SnapshotStore`；发布归档的 `read_archive` 校验通过，只能说明归档字节与发布 manifest 一致。
 
 ## 服务器布局
 ```

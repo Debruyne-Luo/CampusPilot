@@ -11,6 +11,9 @@ from types import ModuleType
 from typing import Any
 
 import pytest
+from campuspilot.knowledge_release import embed_candidate, write_candidate
+from campuspilot.rag import SnapshotStore
+from test_snapshot_fallback import synthetic_snapshot
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -38,12 +41,17 @@ def fake_root(tmp: Path, marker: str = "1") -> Path:
         "data/cdut/places.json": "[]",
         "data/cdut/rag/bootstrap.json": "{}",
         "data/cdut/rag/approved-20991231/snapshot.json": "{}",
-        "data/cdut/rag/approved-20991231/raw/package/secret.json": "{}",
+        "data/cdut/rag/approved-20991231/raw/package/unbound.json": "SYNTHETIC unbound raw",
         "data/cdut/rag/packages/approved-20991231/chunks.jsonl": "",
     }.items():
         path = root / name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text)
+    bundle = root / "data/cdut/rag/approved-20991231"
+    (bundle / "manifest.json").write_text(json.dumps({
+        "schema_version": 1,
+        "files_sha256": {"snapshot.json": R.sha256((bundle / "snapshot.json").read_bytes())},
+    }))
     return root
 
 
@@ -72,9 +80,124 @@ def test_real_repo_package_ships_whole_package_v2_and_bundle() -> None:
     assert "backend/src/campuspilot/web_assets/v2/main.mjs" in files
     assert "backend/src/campuspilot/agent/executor.py" in files
     assert "data/cdut/rag/approved-20261011/vectors.sqlite" in files
-    assert not any("/raw/" in n or "/packages/" in n or "__pycache__" in n for n in files)
+    prefix = "data/cdut/rag/approved-20261011/"
+    manifest = json.loads((ROOT / prefix / "manifest.json").read_bytes())
+    required_raw = {prefix + n for n in manifest["files_sha256"] if n.startswith("raw/")}
+    assert {n for n in files if "/raw/" in n} == required_raw
+    assert not any(n.startswith("data/cdut/rag/packages/") or "__pycache__" in n for n in files)
     with pytest.raises(ValueError, match="bundle"):
         R.collect(ROOT, "../etc")
+
+
+def test_knowledge_bundle_archive_cold_starts_with_bound_raw_and_vector(tmp_path: Path) -> None:
+    root, bundle_name = fake_root(tmp_path), "approved-20991230"
+    bundle = root / "data/cdut/rag" / bundle_name
+    snapshot = synthetic_snapshot("release-contract")
+    raw = {
+        "APPROVAL_RECORD.json": b'{"SYNTHETIC": "approval fixture"}',
+        "package/guide.txt": b"SYNTHETIC approved source body",
+    }
+    write_candidate(bundle, snapshot, raw)
+    embed_candidate(bundle, lambda texts: [[1.0, 0.0] for _ in texts], "SYNTHETIC-vector", 2)
+    (bundle / "raw/unbound.txt").write_bytes(b"SYNTHETIC unbound material")
+    output = tmp_path / "SYNTHETIC-knowledge-release.tar.gz"
+    R.build(root, output, bundle_name)
+    _, files = R.read_archive(output.read_bytes())
+    unpacked = tmp_path / "unpacked"
+    for name, body in files.items():
+        target = unpacked / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(body)
+    store = SnapshotStore(unpacked / "data/cdut/rag", retrieval_mode="hybrid",
+                          embedding_model="SYNTHETIC-vector", bundled=bundle_name)
+    retriever = store.acquire()
+    assert retriever is not None and retriever.snapshot == snapshot
+    assert retriever.index is not None and not store.load_error and not store.index_error
+    assert retriever.index.model == "SYNTHETIC-vector" and retriever.index.dimensions == 2
+    for name, body in raw.items():
+        assert files[f"data/cdut/rag/{bundle_name}/raw/{name}"] == body
+    assert f"data/cdut/rag/{bundle_name}/raw/unbound.txt" not in files
+
+
+@pytest.mark.parametrize("name", [
+    "../outside.txt", "/outside.txt", "raw\\outside.txt", "raw/C:outside.txt",
+    "raw//outside.txt", "raw/./outside.txt", "raw/../outside.txt", "",
+])
+def test_knowledge_manifest_unsafe_paths_are_rejected(tmp_path: Path, name: str) -> None:
+    root = fake_root(tmp_path)
+    manifest_path = root / "data/cdut/rag/approved-20991231/manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    manifest["files_sha256"][name] = "0" * 64
+    manifest_path.write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="knowledge"):
+        R.collect(root, "approved-20991231")
+
+
+@pytest.mark.parametrize("fault", ["missing", "mismatch", "invalid_hash"])
+def test_knowledge_manifest_missing_or_invalid_bound_raw_is_rejected(
+    tmp_path: Path, fault: str,
+) -> None:
+    root = fake_root(tmp_path)
+    bundle = root / "data/cdut/rag/approved-20991231"
+    manifest = json.loads((bundle / "manifest.json").read_bytes())
+    name = "raw/SYNTHETIC-required.txt"
+    if fault != "missing":
+        (bundle / name).write_bytes(b"SYNTHETIC source")
+    manifest["files_sha256"][name] = "invalid" if fault == "invalid_hash" else "0" * 64
+    (bundle / "manifest.json").write_text(json.dumps(manifest))
+    output = tmp_path / "must-not-exist.tar.gz"
+    with pytest.raises(ValueError, match="knowledge"):
+        R.build(root, output, "approved-20991231")
+    assert not output.exists()
+
+
+@pytest.mark.parametrize("manifest", [
+    [], {}, {"schema_version": 2, "files_sha256": {"snapshot.json": "0" * 64}},
+    {"schema_version": 1, "files_sha256": []},
+    {"schema_version": 1, "files_sha256": {}},
+])
+def test_knowledge_incomplete_manifest_is_rejected(tmp_path: Path, manifest: object) -> None:
+    root = fake_root(tmp_path)
+    (root / "data/cdut/rag/approved-20991231/manifest.json").write_text(json.dumps(manifest))
+    with pytest.raises(ValueError, match="knowledge"):
+        R.collect(root, "approved-20991231")
+
+
+@pytest.mark.parametrize("linked", ["manifest", "raw_file", "raw_directory", "bundle"])
+def test_knowledge_bundle_symlinks_are_rejected(tmp_path: Path, linked: str) -> None:
+    root = fake_root(tmp_path)
+    bundle = root / "data/cdut/rag/approved-20991231"
+    manifest_path = bundle / "manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    raw = bundle / "raw/SYNTHETIC-required.txt"
+    raw.write_bytes(b"SYNTHETIC approved body")
+    manifest["files_sha256"]["raw/SYNTHETIC-required.txt"] = R.sha256(raw.read_bytes())
+    manifest_path.write_text(json.dumps(manifest))
+    target = {
+        "manifest": manifest_path, "raw_file": raw,
+        "raw_directory": raw.parent, "bundle": bundle,
+    }[linked]
+    saved = tmp_path / f"SYNTHETIC-{linked}"
+    target.rename(saved)
+    target.symlink_to(saved, target_is_directory=saved.is_dir())
+    with pytest.raises(ValueError, match="knowledge"):
+        R.collect(root, "approved-20991231")
+
+
+def test_knowledge_bound_raw_keeps_release_file_size_limit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = fake_root(tmp_path)
+    bundle = root / "data/cdut/rag/approved-20991231"
+    body = b"SYNTHETIC required raw " * 200
+    (bundle / "raw/SYNTHETIC-large.txt").write_bytes(body)
+    manifest_path = bundle / "manifest.json"
+    manifest = json.loads(manifest_path.read_bytes())
+    manifest["files_sha256"]["raw/SYNTHETIC-large.txt"] = R.sha256(body)
+    manifest_path.write_text(json.dumps(manifest))
+    monkeypatch.setattr(R, "MAX_FILE", 4096)
+    with pytest.raises(ValueError, match="file too large"):
+        R.collect(root, "approved-20991231")
 
 
 def test_manifest_covers_every_file_and_tampering_is_rejected(tmp_path: Path) -> None:
@@ -161,7 +284,12 @@ def test_old_releases_are_pruned_but_current_and_previous_kept(tmp_path: Path) -
 def test_remote_program_is_python312_and_carries_no_secrets(tmp_path: Path) -> None:
     publisher: Any = load("publish_release")
     program = publisher.remote_program(archive(tmp_path))
-    ast.parse(program, feature_version=(3, 12))
+    tree = ast.parse(program, feature_version=(3, 12))
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            assert all(alias.name.split(".")[0] in sys.stdlib_module_names for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            assert node.module is not None and node.module.split(".")[0] in sys.stdlib_module_names
     assert "install(Path('/opt/campuspilot')" in program and "API_KEY" not in program
 
 

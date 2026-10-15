@@ -47,8 +47,76 @@ def _files_under(root: Path, rel: str) -> list[str]:
     )
 
 
+def _knowledge_bytes(directory: Path, name: str) -> bytes:
+    if (
+        not isinstance(name, str)
+        or "\\" in name
+        or ":" in name
+        or any(part in {"", ".", ".."} for part in name.split("/"))
+    ):
+        raise ValueError("Unsafe knowledge bundle path")
+    path = directory
+    for part in name.split("/"):
+        path = path / part
+        if path.is_symlink():
+            raise ValueError("Unsafe knowledge bundle symlink")
+    if not path.resolve().is_relative_to(directory.resolve()):
+        raise ValueError("Unsafe knowledge bundle path")
+    try:
+        return path.read_bytes()
+    except OSError as exc:
+        raise ValueError("Missing or unreadable knowledge bundle file") from exc
+
+
+def _knowledge_files(root: Path, bundle: str) -> dict[str, bytes]:
+    directory = root / "data/cdut/rag" / bundle
+    if (
+        not bundle.startswith("approved-")
+        or any(c in bundle for c in "/\\:")
+        or not directory.is_dir()
+    ):
+        raise ValueError("Unknown knowledge bundle")
+    if not directory.resolve().is_relative_to(root):
+        raise ValueError("Unsafe knowledge bundle path")
+    for parent in (directory, *directory.parents):
+        if parent == root:
+            break
+        if parent.is_symlink():
+            raise ValueError("Unsafe knowledge bundle symlink")
+    manifest_bytes = _knowledge_bytes(directory, "manifest.json")
+    manifest = json.loads(manifest_bytes)
+    if (
+        not isinstance(manifest, dict)
+        or manifest.get("schema_version") != 1
+        or not isinstance(manifest.get("files_sha256"), dict)
+        or "snapshot.json" not in manifest["files_sha256"]
+    ):
+        raise ValueError("Incomplete knowledge bundle manifest")
+    prefix = directory.relative_to(root).as_posix() + "/"
+    required: dict[str, bytes] = {}
+    for name, checksum in manifest["files_sha256"].items():
+        if (
+            not isinstance(checksum, str)
+            or len(checksum) != 64
+            or any(c not in "0123456789abcdef" for c in checksum)
+        ):
+            raise ValueError("Invalid knowledge bundle checksum")
+        data = _knowledge_bytes(directory, name)
+        if sha256(data) != checksum:
+            raise ValueError("Invalid knowledge bundle checksum")
+        required[prefix + name] = data
+    for name in _files_under(root, prefix):
+        if "/raw/" not in name and name not in required:
+            required[name] = (
+                manifest_bytes if name == prefix + "manifest.json"
+                else _knowledge_bytes(directory, name.removeprefix(prefix))
+            )
+    return required
+
+
 def collect(root: Path, bundle: str = "") -> dict[str, bytes]:
     """Every file the service needs; data limited to directory JSON + the chosen knowledge."""
+    root = root.resolve()
     names = _files_under(root, PACKAGE)
     names += [n for n in TOP_FILES if (root / n).is_file()]
     data = root / "data" / "cdut"
@@ -59,13 +127,11 @@ def collect(root: Path, bundle: str = "") -> dict[str, bytes]:
         for p in (rag / "bootstrap.json", rag / "bootstrap.vectors.sqlite")
         if p.is_file()
     ]
-    if bundle:
-        if not bundle.startswith("approved-") or "/" in bundle or not (rag / bundle).is_dir():
-            raise ValueError("Unknown knowledge bundle")
-        names += [n for n in _files_under(root, f"data/cdut/rag/{bundle}") if "/raw/" not in n]
+    knowledge_files = _knowledge_files(root, bundle) if bundle else {}
     if not any(n.endswith("web_assets/v2/index.html") for n in names):
         raise ValueError("v2 front end missing from package")
     files = {n: (root / n).read_bytes() for n in names}
+    files.update(knowledge_files)
     if any(len(b) > MAX_FILE for b in files.values()):
         raise ValueError("Release file too large")
     return files
