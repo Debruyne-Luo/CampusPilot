@@ -1,0 +1,7 @@
+{
+  "browser": {
+    "browserName": "chromium",
+    "launchOptions": {"channel": "chrome", "headless": false},
+    "contextOptions": {"viewport": null}
+  }
+}

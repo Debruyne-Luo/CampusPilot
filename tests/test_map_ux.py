@@ -16,7 +16,7 @@ def test_shell_branding_and_removed_notices() -> None:
     with TestClient(create_web_app(data_dir=DATA)) as client:
         shell = client.get("/").text
         assert "<title>理小龙 CDUTdino</title>" in shell and "<b>理小龙</b>" in shell
-        assert 'rel="icon" href="/assets/v2/dino.svg"' in shell and 'rel="manifest"' in shell
+        assert 'rel="icon" href="/assets/v2/brand-icon.png"' in shell and 'rel="manifest"' in shell
         for removed in ("成都理工大学 · 校园行动助手", "资料来自学校公开页面", 'id="unlocated"'):
             assert removed not in shell
         # One search bar (categories live inside its panel) and one locate button.
@@ -24,8 +24,8 @@ def test_shell_branding_and_removed_notices() -> None:
             assert kept in shell
         for cluttered in ('id="origin-button"', 'class="origin-bar"', 'id="filter-list"'):
             assert cluttered not in shell
-        icon = client.get("/assets/v2/dino.svg")
-        assert icon.status_code == 200 and "<script" not in icon.text
+        icon = client.get("/assets/v2/brand-icon.png")
+        assert icon.status_code == 200 and icon.content.startswith(b"\x89PNG\r\n\x1a\n")
         manifest = json.loads(client.get("/assets/v2/manifest.webmanifest").content)
         assert manifest["short_name"] == "理小龙" and "CDUTdino" in manifest["name"]
 

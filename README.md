@@ -4,14 +4,14 @@
 
 ## 当前线上基线
 
-**2026-10-12 已只读核对线上发布包、进程配置及仓库内容。后续整理以此版本为准。**
+**2026-10-13 已从功能分支发布办理清单，main 未合并。后续改版以此发布版本为基础。**
 
 | 项目 | 当前值 |
 | --- | --- |
 | 网站 | <https://cdutdino.pages.dev/> |
-| 已部署代码 | `31ed5bb0264d927c7918046b66b2947c013e8205` |
-| 发布包 | `r-0f1805acf68e`，120 个文件哈希全部一致 |
-| 前端资源版本 | `a44289c47acf` |
+| 已部署代码 | `258ff205b73d6b2207d0234d26f04fcdec09134a` |
+| 发布包 | `r-994da5858c65`，122 个文件哈希全部一致 |
+| 前端资源版本 | `cc200f2fc48f` |
 | 知识库 | `approved-20261011b` / `kb-f08fa4fd8b583700` |
 | 运行模式 | `phase2`，Agent loop `on`，检索 `hybrid` |
 | 生成 / 嵌入模型 | `deepseek-flash` / `@cf/baai/bge-m3` |
@@ -20,15 +20,24 @@
 完整记录、配置来源、文件清单和待验边界见 **[线上基线](docs/LIVE_BASELINE.zh-CN.md)**。
 这是一份部署事实记录，不等同于独立 QA 或产品验收通过。
 
-GitHub `main` 是唯一长期主线，已通过 [PR #5](https://github.com/Debruyne-Luo/CampusPilot/pull/5)
-纳入当前线上代码。标签 `v0.1.0` 固定实际部署提交；后续说明与评测报告可以领先于部署。
+GitHub `main` 是唯一长期主线；当前线上办理清单来自 `feat/handling-checklist`，尚未合并。
+标签 `v0.1.0` 固定此前版本，不代表当前线上提交；发布事实见上述清单。
 临时 `feat/`、`fix/` 等分支在 PR 合入后清理，流程及历史分支记录见
-[仓库维护](docs/REPOSITORY_WORKFLOW.zh-CN.md)。本次整理不改变线上运行代码与数据。
+[仓库维护](docs/REPOSITORY_WORKFLOW.zh-CN.md)。本次只更新前端办理清单，知识与后端不变。
 
 用户于 2026-10-12 反馈手机地图使用正常，截图中的问题出现在电脑端。此前地图坐标修改仍单独保留在
 `fix/map-coordinate-acceptance-20261012` 工作区，未提交、未上线，不属于此基线；电脑端问题待单独复现。
 
 ## 代码入口
+
+2026-10-14 前后端已在 `feat/desktop-backend-integration` 融合，后续开发使用这一统一版本。
+整合结果、GitHub 审核依赖与待验边界见 [整合交接](docs/INTEGRATION.zh-CN.md)。
+这是可审查分支，尚未合入 main 或改变线上网站。
+
+2026-10-14 的地点补查、联网补证和图片实现保留为独立可审查增量，未改变上述线上版本。
+配置、接口、验证与待验边界见 [后端交接](docs/EVIDENCE_MEDIA.zh-CN.md)、
+[独立复查记录](docs/EVIDENCE_MEDIA_QA.zh-CN.md) 和
+[桌面兼容补丁](docs/EVIDENCE_MEDIA_FRONTEND_HANDOFF.zh-CN.md)。
 
 | 目录 / 文件 | 职责 |
 | --- | --- |

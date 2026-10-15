@@ -20,11 +20,12 @@ const HEADERS = { "Content-Type": "application/json", "X-CampusPilot-Request": "
 
 /** Ask a question. Streams via /api/chat/stream; falls back to /api/chat when the stream
  *  is unavailable (404/405/network) before any event arrived. Resolves to the final body. */
-export async function ask(message, onEvent, fetchImpl = fetch) {
+export async function ask(message, onEvent, fetchImpl = fetch, { attachmentIds = [], signal } = {}) {
   let got = false;
+  const payload = { message, ...(attachmentIds.length ? { attachment_ids: attachmentIds } : {}) };
   try {
     const res = await fetchImpl("/api/chat/stream", {
-      method: "POST", headers: HEADERS, credentials: "same-origin", body: JSON.stringify({ message }),
+      method: "POST", headers: HEADERS, credentials: "same-origin", body: JSON.stringify(payload), signal,
     });
     if (res.ok && res.body && (res.headers.get("content-type") || "").includes("text/event-stream")) {
       const reader = res.body.getReader();
@@ -46,11 +47,16 @@ export async function ask(message, onEvent, fetchImpl = fetch) {
       return { ok: false, status: res.status, body: await res.json().catch(() => ({})), streamed: false };
     }
   } catch {
+    if (signal?.aborted) return { ok: false, status: 0, body: { error_code: "cancelled", message: "对话已取消。" }, streamed: got };
     if (got) return { ok: false, status: 0, body: { message: "连接中断，请重试。" }, streamed: true };
   }
-  const res = await fetchImpl("/api/chat", {
-    method: "POST", headers: HEADERS, credentials: "same-origin", body: JSON.stringify({ message }),
-  });
-  const body = await res.json().catch(() => ({}));
-  return { ok: res.ok, status: res.status, body, streamed: false };
+  try {
+    const res = await fetchImpl("/api/chat", {
+      method: "POST", headers: HEADERS, credentials: "same-origin", body: JSON.stringify(payload), signal,
+    });
+    const body = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, body, streamed: false };
+  } catch {
+    return { ok: false, status: 0, body: { message: "网络连接失败，请检查网络后重试。" }, streamed: false };
+  }
 }

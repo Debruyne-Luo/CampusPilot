@@ -5,9 +5,9 @@ after the plan's tools ran and before the model answers:
 
 - ``shadow``: Jev is asked and its decision recorded (logs, response ``jev`` metadata);
   answers, citations and summaries are untouched.
-- ``on``: chunks Jev scores as irrelevant (rank 0) are dropped and the rest reordered; when
-  Jev judges the evidence insufficient (and the local grounding signal does not disagree) the
-  turn refuses or asks to clarify without showing unrelated citations.
+- ``on``: chunks Jev scores as irrelevant (rank 0) are dropped and the rest reordered.
+  Partial local evidence may still support an answer with explicit unknowns; full-task
+  insufficiency only refuses/clarifies when no retained passages or structured facts remain.
 
 Any timeout, error, exhausted budget, ``unsure`` or ``unknown`` answer fails open: the
 original flow continues unchanged. One Jev request per turn serves both the reranker and the
@@ -28,6 +28,7 @@ from pydantic import JsonValue
 from campuspilot.evaluation_budget import BudgetExhausted, OnlineBudget, SpendBudget
 from campuspilot.jev_shadow import ShadowResult
 from campuspilot.rag import RetrievalHit, SnapshotStore
+from campuspilot.web_evidence import TurnEvidenceContext
 
 logger = logging.getLogger(__name__)
 
@@ -115,6 +116,7 @@ class JevAssessment:
     output_tokens: int = 0
     reason: str = ""
     raw: dict[str, Any] = field(default_factory=dict)
+    search_needed: bool | None = None
 
     @property
     def usable(self) -> bool:
@@ -126,6 +128,7 @@ class JevAssessment:
             "mode": mode,
             "status": self.status,
             "decision": self.decision,
+            "search_needed": self.search_needed,
             "local_grounding": self.local,
             "answer_mode": self.answer_mode,
             "sufficient_probability": self.sufficient_probability,
@@ -165,6 +168,7 @@ def combine(
         input_tokens=result.input_tokens,
         output_tokens=result.output_tokens,
         reason=result.reason,
+        search_needed=result.search_needed if status == "ok" else None,
     )
     if status != "ok":
         return base
@@ -213,7 +217,7 @@ class JevPlugin:
     calibration: Calibration = DEFAULT_CALIBRATION
 
     def resolve(self, rows: Sequence[dict[str, JsonValue]]) -> tuple[RetrievalHit, ...]:
-        """Tool hit rows -> RetrievalHit from the current approved snapshot (unknown ids drop)."""
+        """Resolve against the request's snapshot; unknown or mismatched bodies drop."""
         retriever = self.snapshots.acquire() if self.snapshots is not None else None
         if retriever is None:
             return ()
@@ -224,6 +228,8 @@ class JevPlugin:
         for row in rows:
             chunk = chunks.get(str(row.get("chunk_id")))
             if chunk is None or chunk.source_id not in sources:
+                continue
+            if "text_sha256" in row and row["text_sha256"] != chunk.text_sha256:
                 continue
             score = row.get("score")
             hits.append(
@@ -245,26 +251,43 @@ class JevTurn:
     """Per-turn cache: the reranker and the policy share one Jev request."""
 
     plugin: JevPlugin
-    _cache: dict[tuple[str, tuple[str, ...], str], JevAssessment] = field(default_factory=dict)
+    _cache: dict[tuple[str, tuple[str, ...], str, str, str], JevAssessment] = field(
+        default_factory=dict
+    )
+    _requests: int = 0
 
     async def assess(
-        self, query: str, candidates: tuple[RetrievalHit, ...], local: str = "unassessed"
+        self, query: str, candidates: tuple[RetrievalHit, ...], local: str = "unassessed",
+        evidence_context: TurnEvidenceContext | None = None,
+        stage: str = "before_search",
     ) -> JevAssessment:
+        if stage not in {"before_search", "after_search"}:
+            raise ValueError("Invalid Jev stage")
         original = tuple(dict.fromkeys(h.chunk.chunk_id for h in candidates))
-        key = (query, original, local)
+        context_key = json.dumps(evidence_context.as_state(), sort_keys=True, ensure_ascii=False) \
+            if evidence_context is not None else ""
+        key = (query, original, local, stage, context_key)
         if key in self._cache:
             return self._cache[key]
+        if self._requests >= 2:
+            return JevAssessment("unknown", "unknown", local, original,
+                                 reason="turn_judge_limit")
+        self._requests += 1
         client = self.plugin.client
         try:
             async with asyncio.timeout(client.timeout_seconds + 0.5):
-                result = await client.evaluate(
-                    query,
-                    candidates,
-                    public_fixture=False,
-                    online=True,
-                    budget=self.plugin.budget,
-                    rule_summary=LOCAL_RULE,
-                )
+                extended = getattr(client, "evaluate_evidence", None)
+                if evidence_context is not None and callable(extended):
+                    result = await extended(
+                        query, candidates, public_fixture=False, online=True,
+                        budget=self.plugin.budget, rule_summary=LOCAL_RULE,
+                        evidence_context=evidence_context,
+                    )
+                else:
+                    result = await client.evaluate(
+                        query, candidates, public_fixture=False, online=True,
+                        budget=self.plugin.budget, rule_summary=LOCAL_RULE,
+                    )
             assessment = combine(result, local, original, self.plugin.calibration)
         except BudgetExhausted:
             assessment = JevAssessment("budget", "unknown", local, original, reason="budget")
@@ -322,6 +345,7 @@ def build_plugin(
     snapshots: SnapshotStore | None,
     daily_usd: str = "1",
     daily_calls: int = 2000,
+    budget: SpendBudget | None = None,
 ) -> JevPlugin | None:
     """Production wiring: key/price/model from CAMPUSPILOT_JEV_* (see migration_config).
 
@@ -338,7 +362,9 @@ def build_plugin(
 
     return JevPlugin(
         client=shadow_client(),
-        budget=OnlineBudget(Path(budget_dir), Decimal(daily_usd), daily_calls),
+        budget=budget if budget is not None else OnlineBudget(
+            Path(budget_dir), Decimal(daily_usd), daily_calls
+        ),
         mode=mode,
         snapshots=snapshots,
     )

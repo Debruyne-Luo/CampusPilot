@@ -1,5 +1,27 @@
 # Architecture and decision register
 
+## Architecture review corrections (2026-10-14)
+
+**CONFIRMED:** The user authorized the evidence-based architecture review corrections:
+metadata-only operational events, one knowledge version per Agent turn, application-owned
+execution controls for existing capabilities, and behavior-preserving evidence/response seams.
+Supported partial answers take precedence over a blanket refusal when structured evidence exists.
+The implementation and baseline comparison are in [the review handoff](ARCHITECTURE_REVIEW.zh-CN.md).
+This is local work; live configuration, deployment and real-model quality acceptance remain separate.
+
+**CONFIRMED (2026-10-14, subsequent direction):** The user removed the mandatory Muse independent
+QA stage. Codex performs verification and reports evidence directly; the Tech Lead retains final
+review/merge authority. The current workflow in [AGENTS](../AGENTS.md) supersedes historical QA gates.
+
+## Approved backend evidence increment (2026-10-14)
+
+**CONFIRMED:** [ADR 0006](adr/0006-online-evidence-and-user-images.md) authorizes online Jev
+before/after bounded web search, server-side transient Amap candidates, and session-owned
+user images. The implementation keeps one Agent, distinct source authority, provider adapters,
+read-only permissions and browser-only personal positions. It supersedes the historical
+shadow-only Jev and browser-only POI restrictions below. Implementation and current validation
+limits are in [the handoff](EVIDENCE_MEDIA.zh-CN.md); this increment is not deployed.
+
 ## Observed deployment (2026-10-12)
 
 For current runtime facts, use [the live baseline](LIVE_BASELINE.zh-CN.md): source `31ed5bb`,
@@ -136,7 +158,7 @@ a policy explanation can use Retrieval; a route uses GIS. One task may combine t
 | Backend Web framework / HTTP transport | CONFIRMED | FastAPI/Uvicorn shared backend for web and tools; ADR 0004 |
 | Frontend technology | CONFIRMED | Existing plain HTML/CSS/JS responsive web; ADR 0004 |
 | Specific LLM provider/model | OPEN | Evaluate capability, quality, permitted data handling, latency, cost |
-| Submission persistence | CONFIRMED | JSON directory and in-memory sessions; no database, restart resets conversations |
+| Submission persistence | CONFIRMED | JSON directory and in-memory sessions; no database, restart resets conversations. The 2026-10-13 [handling checklist](HANDLING_CHECKLIST.zh-CN.md) separately saves public service snapshots and user ticks in browser localStorage, independent of chat sessions |
 | Specific GIS/map provider | CONFIRMED | Amap base map, embedded one-shot walking reference routes over provider candidates, and separately gated external navigation; ADR 0004 |
 | MCP | DEFERRED | An actual integration must justify the protocol |
 | Embeddings / vector database | DEFERRED | Representative retrieval evaluation must justify them |

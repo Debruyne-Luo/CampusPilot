@@ -15,3 +15,5 @@ release-backups/
 .playwright-cli/
 output/
 .cache/
+
+.preview/

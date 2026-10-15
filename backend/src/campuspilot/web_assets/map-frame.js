@@ -7,9 +7,55 @@ let placeRecords = new Map();
 let routeId = 0, pickingOrigin = false, routeLayers = [], routeBottom = 200, requestedRouteBottom = 200;
 let discoveryId = 0, pickingDestination = false, hotspotSequence = 0;
 let routeGeometry = [], guide = null, dinoState = null, dinoRaf = 0, dinoToken = 0;
+let dinoPaused=false;
 let markerLayer = null, selectedId = null, handledAt = 0;
 const TOUCH = matchMedia("(pointer: coarse)").matches;
 let navigationId = null, locationLayer = null, followingLocation = true, locationSequence = 0;
+// Desktop camera ownership is separate from marker data and legacy mobile guidance.
+let desktopMode=false, reduceMotion=false, cameraMode='overview', cameraOperation=0, cameraUntil=0;
+let viewportChanging=false, pendingCamera=null;
+let viewportInsets={top:136,bottom:72,left:32,right:32}, routeAccent=null, accentRaf=0, markerAccent=null, markerTimer=0;
+const markerById=new Map();
+function takeCamera(data, mode) {
+  if(!desktopMode)return true;
+  if(!Number.isSafeInteger(data.operation_id)||data.operation_id<cameraOperation)return false;
+  cameraOperation=data.operation_id;cameraMode=mode;hotspotSequence++;return true;
+}
+function avoidEdges() {
+  const h=map.getSize().getHeight(),w=map.getSize().getWidth();
+  return [Math.min(viewportInsets.top,h*.35),Math.min(viewportInsets.bottom,h*.45),Math.min(viewportInsets.left,w*.25),Math.min(viewportInsets.right,w*.25)];
+}
+function cameraTo(fit) {
+  if(!fit||guide||navigationId!==null||cameraMode==='manual')return;
+  cameraUntil=performance.now()+(reduceMotion?0:380);
+  map.setZoomAndCenter(fit[0],fit[1],reduceMotion,reduceMotion?0:380);
+}
+function centerDesktop(position) {
+  if(viewportChanging){pendingCamera={kind:'selected',position,operation:cameraOperation};return;}
+  const lng=position.longitude,lat=position.latitude;
+  cameraTo(map.getFitZoomAndCenterByBounds(new AMap.Bounds([lng-.00001,lat-.00001],[lng+.00001,lat+.00001]),avoidEdges(),Math.max(17,map.getZoom())));
+}
+function stopAccent() {cancelAnimationFrame(accentRaf);accentRaf=0;if(routeAccent&&map)map.remove(routeAccent);routeAccent=null;}
+function manualCamera() {
+  if(!desktopMode||guide||navigationId!==null)return;
+  cameraMode='manual';pendingCamera=null;hotspotSequence++;stopAccent();
+  if(performance.now()<cameraUntil){map.setZoomAndCenter(map.getZoom(),map.getCenter(),true);cameraUntil=0;}
+}
+function emphasizeRoute(path) {
+  stopAccent();if(!desktopMode||reduceMotion)return;
+  routeAccent=new AMap.Polyline({path:[path[0],path[0]],strokeColor:'#06b6d4',strokeWeight:6,zIndex:152,bubble:true});map.add(routeAccent);
+  const line=routeAccent,start=performance.now();
+  const frame=now=>{if(routeAccent!==line)return;const t=Math.min(1,(now-start)/450);line.setPath(path.slice(0,Math.max(2,Math.ceil(t*path.length))));if(t<1)accentRaf=requestAnimationFrame(frame);else stopAccent();};
+  accentRaf=requestAnimationFrame(frame);
+}
+function emphasizeMarker(position) {
+  clearTimeout(markerTimer);if(markerAccent)map.remove(markerAccent);markerAccent=null;
+  if(!desktopMode||reduceMotion)return;
+  const el=document.createElement('span');el.style.cssText='display:block;width:38px;height:38px;border:2px solid #4f46e5;border-radius:50%;pointer-events:none';
+  markerAccent=new AMap.Marker({position:[position.longitude,position.latitude],content:el,anchor:'center',zIndex:190,bubble:true});map.add(markerAccent);
+  el.animate([{transform:'scale(.65)',opacity:1},{transform:'scale(1.25)',opacity:0}],{duration:160,easing:'ease-out'});
+  markerTimer=setTimeout(()=>{if(markerAccent)map.remove(markerAccent);markerAccent=null;},160);
+}
 // Viewport only; not a service/office destination. Amap campus POI B001C7X6H7,
 // https://ditu.amap.com/place/B001C7X6H7, retrieved 2026-10-08 (GCJ02).
 const CAMPUS_CENTER = [104.147531, 30.675012];
@@ -57,7 +103,10 @@ async function init(config) {
     map.on("click", (event) => {if (event.lnglat && Date.now() - handledAt > 450) pickPoint(event.lnglat);});
     map.on("hotspotclick", (event) => {handledAt = Date.now(); selectHotspot(event);});
     watchTaps(document.getElementById("map-view"));
-    map.on("dragstart", () => {followingLocation = false;});
+    map.on("dragstart", () => {followingLocation = false;manualCamera();});
+    const surface=document.getElementById('map-view');
+    surface.addEventListener('pointerdown',manualCamera,{passive:true});surface.addEventListener('wheel',manualCamera,{passive:true});
+    surface.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','+','-'].includes(e.key))manualCamera();});
     map.on("resize", () => requestAnimationFrame(resizeRouteView));
     notify("ready");
   } catch {
@@ -80,8 +129,10 @@ function highlightMarker(placeId) {
   }
 }
 function fitMarkers() {
+  if(desktopMode&&viewportChanging){pendingCamera={kind:'overview',operation:cameraOperation};return;}
   // Keep points clear of the category chips (top) and the sheet / place card (bottom).
   const pts = markers.map((m) => m.getExtData().position);
+  if(desktopMode){if(!pts.length)return;const lng=pts.map(p=>p.longitude),lat=pts.map(p=>p.latitude);cameraTo(map.getFitZoomAndCenterByBounds(new AMap.Bounds([Math.min(...lng),Math.min(...lat)],[Math.max(...lng),Math.max(...lat)]),avoidEdges(),17));return;}
   if (pts.length === 1) {map.setZoomAndCenter(17, [pts[0].longitude, pts[0].latitude]); return;}
   const lng = pts.map((p) => p.longitude), lat = pts.map((p) => p.latitude);
   const bottom = Math.min(Math.max(80, requestedRouteBottom) + 20, map.getSize().getHeight() * 0.45);
@@ -95,26 +146,47 @@ window.addEventListener("message", (event) => {
   if (data.action === "ping") notify("frame-ready");
   else if (data.action === "init" && !started && typeof data.config?.key === "string") {
     frameGeneration=data.frame_generation; started = true; init(data.config);
+  } else if(data.action==='preferences') {
+    desktopMode=data.desktop===true;reduceMotion=data.reducedMotion===true;
+    if(reduceMotion&&map){stopAccent();if(performance.now()<cameraUntil){map.setZoomAndCenter(map.getZoom(),map.getCenter(),true);cameraUntil=0;}}
+  } else if(data.action==='viewport-insets'&&desktopMode) {
+    for(const side of ['top','bottom','left','right'])if(Number.isFinite(data[side]))viewportInsets[side]=Math.max(0,data[side]);
+  } else if(data.action==='layout'&&desktopMode) {
+    viewportChanging=data.changing===true;
+    if(!viewportChanging&&pendingCamera){
+      const next=pendingCamera;pendingCamera=null;
+      if(next.operation===cameraOperation&&cameraMode!=='manual'){
+        if(next.kind==='selected')centerDesktop(next.position);
+        else if(next.kind==='route')fitRoute();
+        else fitMarkers();
+      }
+    }
   } else if (data.action === "places" && map && Array.isArray(data.places)) {
     placeRecords = new Map(data.places.map((p) => [p.place_id, p]));
-    markerLayer.clear(); markers = [];
+    if(!desktopMode){markerLayer.clear();markerById.clear();} markers = [];
     selectedId = data.selected_place_id || null;
     for (const place of data.places.slice(0, 100).filter((p) => validPosition(p.position))) {
       const selected = place.place_id === selectedId;
-      const marker = new AMap.LabelMarker({position: [place.position.longitude, place.position.latitude],
+      let marker=desktopMode?markerById.get(place.place_id):null;
+      if(marker){marker.setPosition([place.position.longitude,place.position.latitude]);marker.setExtData(place);}
+      else {marker = new AMap.LabelMarker({position: [place.position.longitude, place.position.latitude],
         zIndex: selected ? 200 : 100, extData: place, icon: pinIcon(place, selected), text: markerText(place, selected)});
-      const tap = () => {if (Date.now() - handledAt > 450) {handledAt = Date.now(); selectMarker(place);}};
+      const tap = () => {if (Date.now() - handledAt > 450) {handledAt = Date.now(); selectMarker(marker.getExtData());}};
       marker.on("click", tap); marker.on("touchend", tap);
+      markerById.set(place.place_id,marker);markerLayer.add(marker);}
       markers.push(marker);
     }
-    markerLayer.add(markers); document.body.dataset.markers = String(markers.length);
+    for(const [id,marker] of markerById)if(!markers.includes(marker)){markerLayer.remove(marker);markerById.delete(id);}
+    document.body.dataset.markers = String(markers.length);
     if (markers.length && data.fit !== false) fitMarkers();
     highlightMarker(data.selected_place_id);
   } else if (data.action === "center" && map && validPosition(data.position)) {
+    if(desktopMode){if(!takeCamera(data,'selected'))return;highlightMarker(data.place_id);centerDesktop(data.position);emphasizeMarker(data.position);return;}
     highlightMarker(data.place_id);
     map.setZoomAndCenter(17, [data.position.longitude, data.position.latitude]);
     map.panBy(0, -Math.min(110, window.innerHeight * .16));
   } else if (data.action === "selection" && map) {
+    if(desktopMode&&!takeCamera(data,'manual'))return;
     highlightMarker(data.place_id);
   } else if (data.action === "route-clear" && Number.isSafeInteger(data.request_id)) {
     routeId = data.request_id; clearRoute();
@@ -123,6 +195,7 @@ window.addEventListener("message", (event) => {
   } else if (data.action === "route-pick" && map && Number.isSafeInteger(data.request_id)) {
     routeId = data.request_id; pickingOrigin = true; map.setDefaultCursor("crosshair");
   } else if (data.action === "route-request" && map && Number.isSafeInteger(data.request_id)) {
+    if(desktopMode&&!takeCamera(data,'route'))return;
     routeId = data.request_id; clearRoute(); planWalking(data);
   } else if (data.action === 'nearby-origin' && map && Number.isSafeInteger(data.request_id)) {
     convertPosition(data.position).then(position => notify('nearby-origin-result', {request_id:data.request_id,status:'success',position}))
@@ -142,6 +215,9 @@ window.addEventListener("message", (event) => {
     stopDino();
   } else if (data.action === "dino-mode" && guide && typeof data.demo === "boolean") {
     setDinoDemo(data.demo, data.speed);
+  } else if (data.action === "dino-pause") {
+    dinoPaused=data.paused===true;
+    if(dinoState)dinoState.paused=dinoPaused;
   } else if (data.action === "guidance-stop" && data.navigation_id === navigationId) {
     clearLocation();
   } else if (data.action === "guidance-update" && data.request_id === routeId && data.navigation_id === navigationId && navigationId !== null) {
@@ -154,6 +230,7 @@ window.addEventListener("message", (event) => {
   } else if (data.action === "zoom" && map && (data.delta === 1 || data.delta === -1)) {
     map.setZoom(Math.max(3, Math.min(20, map.getZoom() + data.delta)));
   } else if (data.action === "overview" && map) {
+    if(desktopMode&&!takeCamera(data,routeLayers.length?'route':'overview'))return;
     if (routeLayers.length) fitRoute();
     else if (markers.length) fitMarkers();
     else map.setZoomAndCenter(CAMPUS_ZOOM, CAMPUS_CENTER);
@@ -162,20 +239,25 @@ window.addEventListener("message", (event) => {
   } else if (data.action === "north-up" && map) {
     map.setRotation(0);
   } else if (data.action === "resize" && map) {
+    if(desktopMode){map.resize();return;}
     window.dispatchEvent(new Event("resize"));
   }
 });
 function clearRoute() {
+  stopAccent();
   clearLocation(); stopDino(); routeGeometry = [];
   pickingOrigin = false;
   if (map) {map.setDefaultCursor("default"); if (routeLayers.length) map.remove(routeLayers);}
   routeLayers = [];
 }
 function fitRoute() {
+  if(desktopMode&&viewportChanging){pendingCamera={kind:'route',operation:cameraOperation};return;}
+  if(desktopMode){if(map&&routeLayers.length&&navigationId===null)cameraTo(map.getFitZoomAndCenterByOverlays(routeLayers,avoidEdges(),18));return;}
   if (map && routeLayers.length && navigationId === null) map.setFitView(routeLayers, true, [70, routeBottom, 40, 60], 18);
 }
 function resizeRouteView() {
   if (!map) return;
+  if(desktopMode&&navigationId===null)return;
   routeBottom = Math.min(Math.max(80, requestedRouteBottom), Math.max(80,map.getSize().getHeight()-60));
   if (guide) return;
   if (navigationId !== null && followingLocation && locationLayer) followPosition(locationLayer.getPosition());
@@ -218,12 +300,13 @@ async function planWalking(data) {
     };
     routeLayers = [line, endpoint(path[0], "起"), endpoint(path[path.length - 1], "终")];
     routeGeometry = path.map((point) => [point.lng, point.lat]);
-    map.add(routeLayers); fitRoute();
+    map.add(routeLayers);if(!desktopMode)fitRoute();
     let count = 0;
     const stepEnds = route.steps.map(step => {count += (step.path || []).length; return Math.max(0,count - 1);});
     notify("route-result", {request_id:id, status:"success", distance:route.distance, time:route.time,
       steps:route.steps.map(step => String(step.instruction || "继续沿路线步行")),
       geometry:path.map(point => [point.lng,point.lat]), step_ends:stepEnds});
+    if(desktopMode)requestAnimationFrame(()=>requestAnimationFrame(()=>{if(id===routeId){fitRoute();if(cameraMode!=='manual')emphasizeRoute(path);}}));
   } catch {
     if (id === routeId) {clearRoute(); notify("route-result", {request_id: id, status: "error"});}
   }
@@ -341,13 +424,13 @@ function glyphOf(place) {
 }
 const iconCache = new Map();
 function pinIcon(place, selected) {
-  const glyph = glyphOf(place), key = glyph + (selected ? "!" : "");
+  const glyph = glyphOf(place), key = glyph + (selected ? "!" : "")+(desktopMode?'desktop':'');
   if (!iconCache.has(key)) {
-    const [color, path] = GLYPHS[glyph], r = selected ? 15 : 12, cy = selected ? 17 : 19;
+    const [color,path]=GLYPHS[glyph],r=selected?15:12,cy=selected?17:19;
     // 44x48 image: the transparent margin is the (invisible) tap target around a small pin.
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="48" viewBox="0 0 44 48">`
       + `<path d="M22 ${cy + r + 9} l-5-${7} h10z" fill="${color}"/>`
-      + `<circle cx="22" cy="${cy}" r="${r + 1.5}" fill="#fff"/><circle cx="22" cy="${cy}" r="${r}" fill="${selected ? "#1f3d2b" : color}"/>`
+      + `<circle cx="22" cy="${cy}" r="${r + 1.5}" fill="#fff"/><circle cx="22" cy="${cy}" r="${r}" fill="${selected&&!desktopMode ? "#1f3d2b" : color}"/>`
       + `<g transform="translate(${22 - r * .62} ${cy - r * .62}) scale(${r * 1.24 / 24})" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></g></svg>`;
     iconCache.set(key, {type: "image", image: "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg), size: [44, 48], anchor: "bottom-center"});
   }
@@ -358,6 +441,7 @@ function markerText(place, selected) {
     style: {fontSize: 12, fontWeight: selected ? "bold" : "normal", fillColor: "#1d2a22", strokeColor: "#ffffff", strokeWidth: 3, padding: [0, 0]}};
 }
 function selectMarker(place) {
+  if(desktopMode)hotspotSequence++;
   if (pickingOrigin) {
     pickingOrigin = false; map.setDefaultCursor("default");
     notify("route-origin", {request_id: routeId, position: place.position, name: place.name});
@@ -424,7 +508,9 @@ async function nearestPoi(lnglat) {
 // ---- 理小龙 guide: pitched 3D camera following a dinosaur along the route -------------
 async function startDino(data) {
   stopDino();
+  dinoPaused=false;
   const token = ++dinoToken;
+  try {
   const [{createGuide}, walk] = await Promise.all([import("/assets/dino3d.mjs"), import("/assets/v2/route-walk.mjs")]);
   if (token !== dinoToken) return;
   const track = walk.buildTrack(routeGeometry);
@@ -437,14 +523,15 @@ async function startDino(data) {
   guide = created;
   const start = walk.pointAt(track, 0);
   dinoState = {walk, track, demo: data.demo === true, speed: clampSpeed(data.speed), d: 0, shown: {...start},
-    bearing: start.bearing, compass: null, gps: null, arrived: false, last: performance.now(), introUntil: performance.now() + 950};
+    bearing: start.bearing, compass: null, gps: null, arrived: false, paused:dinoPaused, last: performance.now(), introUntil: performance.now() + 950};
   document.body.dataset.guide = guide.kind;
   map.setStatus({dragEnable: false, zoomEnable: true, rotateEnable: true, pitchEnable: true}); // pitch/rotation are no-ops while disabled
-  map.setZoomAndCenter(18.6, [start.lng, start.lat], false, 900);
-  map.setRotation((360 - start.bearing) % 360, false, 900);
-  if (guide.kind === "3d") map.setPitch(58, false, 900);
+  map.setZoomAndCenter(18.6, [start.lng, start.lat], reduceMotion, reduceMotion ? 0 : 900);
+  map.setRotation((360 - start.bearing) % 360, reduceMotion, reduceMotion ? 0 : 900);
+  if (guide.kind === "3d") map.setPitch(58, reduceMotion, reduceMotion ? 0 : 900);
   notify("dino-ready", {kind: guide.kind});
   dinoRaf = requestAnimationFrame(dinoFrame);
+  } catch {if(token===dinoToken){stopDino();notify('dino-failed');}}
 }
 const clampSpeed = (v) => (Number.isFinite(v) ? Math.min(30, Math.max(1, v)) : 9);
 function setDinoDemo(demo, speed) {
@@ -456,7 +543,7 @@ function dinoFrame(now) {
   const s = dinoState, {walk, track} = s, dt = Math.min(0.1, (now - s.last) / 1000); s.last = now;
   let target, walking = false;
   if (s.demo) {
-    if (!s.arrived) {s.d = Math.min(track.total, s.d + s.speed * dt); walking = s.d < track.total;}
+    if (!s.arrived && !s.paused) {s.d = Math.min(track.total, s.d + s.speed * dt); walking = s.d < track.total;}
     target = walk.pointAt(track, s.d);
   } else if (s.gps) {
     // Snap the GPS fix onto the route when it is close; otherwise use the raw fix.
@@ -465,7 +552,10 @@ function dinoFrame(now) {
     if (near.off < 25) s.d = near.d;
     const moved = walk.meters([s.shown.lng, s.shown.lat], [target.lng, target.lat]);
     walking = moved > 0.4;
-  } else target = s.shown;
+  } else {
+    // Position smoothing stores only lng/lat; retain heading while waiting for GPS.
+    target = {...s.shown, bearing: s.bearing};
+  }
   // Ease the shown position toward the target (GPS jumps glide), heading toward the travel
   // direction or the compass when standing still.
   const k = s.demo ? 1 : 1 - Math.exp(-dt / 0.6);
@@ -473,8 +563,9 @@ function dinoFrame(now) {
   const want = !s.demo && !walking && Number.isFinite(s.compass) ? s.compass : target.bearing;
   s.bearing = walk.easeBearing(s.bearing, want, dt, s.demo ? 0.3 : 0.5);
   guide.setPose({lng: s.shown.lng, lat: s.shown.lat, bearing: s.bearing}, walking, dt);
+  if(s.demo && now-(s.lastProgress||0)>500) {s.lastProgress=now;notify('dino-progress',{request_id:routeId,fraction:s.d/track.total});}
   // Camera behind and above: the dino stays a little below the screen centre, heading up.
-  if (now > s.introUntil) {
+  if (now > s.introUntil && !s.paused && !reduceMotion) {
     map.setRotation((360 - s.bearing) % 360, true);
     map.setCenter(aheadOf(s.shown, s.bearing, 22), true);
   }
@@ -491,11 +582,16 @@ function stopDino() {
   dinoToken++;
   if (dinoRaf) cancelAnimationFrame(dinoRaf);
   dinoRaf = 0;
-  if (guide) {
-    guide.destroy(); guide = null; dinoState = null; delete document.body.dataset.guide;
-    if (map) {
-      map.setPitch(0, true); map.setRotation(0, true);
-      map.setStatus({dragEnable: true, zoomEnable: true, rotateEnable: true, pitchEnable: false});
+  const old=guide, active=!!guide || !!dinoState;
+  guide = null; dinoState = null; delete document.body.dataset.guide;
+  try {old?.destroy();} catch { /* shared WebGL disposal must never trap map controls */ }
+  finally {
+    if (map && active) {
+      // Replace in-flight SDK tweens too: immediately=true alone leaves the old
+      // introductory pitch tween alive, which would overwrite the restored view.
+      map.setStatus({dragEnable: true, zoomEnable: true, rotateEnable: true, pitchEnable: true});
+      map.setPitch(0, false, 0); map.setRotation(0, false, 0);
+      map.setZoomAndCenter(map.getZoom(),map.getCenter(),false,0);
     }
   }
 }

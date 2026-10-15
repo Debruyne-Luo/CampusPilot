@@ -1,9 +1,12 @@
 """Assemble the same-origin web app from its route modules."""
 
+import asyncio
 import hashlib
 import re
 import secrets
 import time
+from contextlib import asynccontextmanager
+from decimal import Decimal
 from pathlib import Path
 from urllib.parse import urlsplit
 
@@ -16,7 +19,7 @@ from starlette.responses import Response
 
 from campuspilot.agent.executor import AgentRunner
 from campuspilot.api import create_app
-from campuspilot.app import amap, routes_chat, routes_data
+from campuspilot.app import amap, routes_attachments, routes_chat, routes_data
 from campuspilot.app.state import (
     ASSETS,
     COOKIE,
@@ -24,19 +27,28 @@ from campuspilot.app.state import (
     NOTICE,
     BrowserSession,
     ChatBudget,
+    SlidingWindow,
     WebState,
 )
 from campuspilot.chat_runtime import ChatRuntime, Mode
 from campuspilot.config import parse_retrieval_mode
 from campuspilot.dify import DifyClient
 from campuspilot.directory.repository import DirectoryRepository
+from campuspilot.evaluation_budget import OnlineBudget, TokenPrice
 from campuspilot.jev_plugin import JevMode, build_plugin
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.llm.chat_model import ProductionModel, ToolCallingModel
 from campuspilot.llm.embedding import CloudflareEmbedder
+from campuspilot.observability import configure_logging
+from campuspilot.places_discovery import PlaceDiscovery
 from campuspilot.rag import SnapshotStore
 from campuspilot.retrieval.grounding import GroundingMode
 from campuspilot.tools import agent_registry
+from campuspilot.web_evidence import (
+    DeepSeekSearchProvider,
+    TavilySearchProvider,
+    WebEvidenceService,
+)
 
 
 def _allowed_hosts(public_origin: str | None, api_token: str | None) -> list[str]:
@@ -79,6 +91,18 @@ def create_web_app(
     public_origin: str | None = None,
     amap_key: str = "",
     amap_security_code: str = "",
+    amap_web_service_key: str = "",
+    amap_discovery: bool = False,
+    images_enabled: bool = False,
+    web_search: bool = False,
+    web_search_provider: str = "deepseek",
+    evidence_budget_dir: str = "",
+    evidence_daily_usd: str = "1",
+    evidence_daily_flows: int = 100,
+    search_input_price: str = "",
+    search_output_price: str = "",
+    tavily_api_key: str = "",
+    tavily_free_plan_confirmed: bool = False,
     daily_chat_limit: int = 100,
     runtime_mode: Mode = "legacy",
     model: ProductionModel | None = None,
@@ -95,6 +119,7 @@ def create_web_app(
     knowledge_bundle: str = "",
     asset_version: str = "",
 ) -> FastAPI:
+    configure_logging()
     # Directory tools keep their own service credential, never exposed to the browser.
     repository = DirectoryRepository.load(data_dir)
     knowledge = KnowledgeStore.load(data_dir / "knowledge.json")
@@ -110,6 +135,62 @@ def create_web_app(
         embedding_model=embedding_model,
         bundled=knowledge_bundle,
     )
+    web_service = None
+    shared_budget = None
+    if web_search:
+        if not evidence_budget_dir or web_search_provider not in {"deepseek", "tavily"}:
+            raise ValueError(
+                "Web search requires an evidence budget directory and a supported provider"
+            )
+        approved_limit = Decimal(evidence_daily_usd)
+        if (
+            not approved_limit.is_finite()
+            or not 0 < approved_limit <= 1
+            or not 1 <= evidence_daily_flows <= 100
+        ):
+            raise ValueError("Evidence limits must stay within USD 1 and 100 daily search flows")
+        shared_budget = OnlineBudget(
+            Path(evidence_budget_dir),
+            approved_limit,
+            2000,
+            max_search_flows=evidence_daily_flows,
+        )
+        price = (
+            TokenPrice(Decimal(search_input_price), Decimal(search_output_price))
+            if search_input_price and search_output_price
+            else None
+        )
+        native = DeepSeekSearchProvider(
+            api_key=str(getattr(model, "api_key", ""))
+            if getattr(model, "base_url", "").rstrip("/")
+            in {"https://api.deepseek.com", "https://api.deepseek.com/v1"}
+            else "",
+            price=price,
+            search_cost_per_use=Decimal("0") if price is not None else None,
+            model=str(getattr(model, "model", "deepseek-flash")),
+        )
+        alternative = TavilySearchProvider(
+            tavily_api_key, free_plan_confirmed=tavily_free_plan_confirmed
+        )
+        web_service = WebEvidenceService(
+            shared_budget,
+            native if web_search_provider == "deepseek" else alternative,
+            alternative if web_search_provider == "deepseek" else None,
+        )
+    try:
+        plugin = build_plugin(
+            jev,
+            evidence_budget_dir if web_search else jev_budget_dir,
+            snapshots,
+            jev_daily_usd,
+            jev_daily_calls,
+            budget=shared_budget,
+        )
+    except (OSError, ValueError):
+        if not web_search:
+            raise
+        # Missing judge configuration is explicit at response time; local functions stay usable.
+        plugin = None
     runtime = ChatRuntime(
         repository,
         knowledge,
@@ -131,6 +212,14 @@ def create_web_app(
     )
     app.title = "理小龙 CDUTdino 校园办事与地图"
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=hosts)
+    map_window = SlidingWindow(60, 120)
+    discovery = (
+        PlaceDiscovery(
+            repository, key=amap_web_service_key, enabled=True, acquire=map_window.try_record
+        )
+        if amap_discovery
+        else None
+    )
     state = WebState(
         repository=repository,
         knowledge=knowledge,
@@ -143,6 +232,8 @@ def create_web_app(
         amap_security_code=amap_security_code,
         budget=budget,
         embedder=embedder if retrieval_mode != "lexical" else None,
+        place_discovery=discovery,
+        map_window=map_window,
         agent=(
             AgentRunner(
                 agent_registry(
@@ -152,19 +243,56 @@ def create_web_app(
                     embedder,
                     roster=data_dir / "teachers_roster.json",
                     grounding=grounding,
+                    discovery=discovery,
                 ),
                 repository,
                 model if isinstance(model, ToolCallingModel) else None,
                 grounding=grounding,
-                jev=build_plugin(jev, jev_budget_dir, snapshots, jev_daily_usd, jev_daily_calls),
+                jev=plugin,
+                web_service=web_service,
+                snapshots=snapshots,
             )
             if agent_loop and runtime_mode == "phase2"
             else None
         ),
     )
+    if images_enabled:
+        from campuspilot.attachments import AttachmentStore
+
+        state.attachments = AttachmentStore()
+
+    previous_lifespan = app.router.lifespan_context
+
+    @asynccontextmanager
+    async def lifespan(application: FastAPI):  # type: ignore[no-untyped-def]
+        async def cleanup() -> None:
+            while True:
+                await asyncio.sleep(60)
+                now = time.monotonic()
+                active = {s.user for s in state.sessions.values() if s.expires > now or s.busy}
+                if state.attachments is not None:
+                    state.attachments.prune(active)
+                for token, session in tuple(state.sessions.items()):
+                    if session.expires <= now and not session.busy:
+                        state.sessions.pop(token, None)
+
+        async with previous_lifespan(application):
+            task = asyncio.create_task(cleanup())
+            try:
+                yield
+            finally:
+                task.cancel()
+                await asyncio.gather(task, return_exceptions=True)
+                if state.agent is not None:
+                    await state.agent.drain()
+                if state.attachments is not None:
+                    state.attachments.close()
+
+    app.router.lifespan_context = lifespan
     _register_shell(app, state, version)
     routes_chat.register(app, state)
     routes_data.register(app, state)
+    routes_attachments.register(app, state)
     amap.register(app, state)
     return app
 
@@ -185,8 +313,16 @@ def _register_shell(app: FastAPI, state: WebState, version: str = "") -> None:
             data = bytearray()
             async for chunk in request.stream():
                 data.extend(chunk)
-                if len(data) > 16_384:
-                    return JSONResponse({"message": "请求过长，请缩短问题。"}, status_code=413)
+                limit = 10 * 1024 * 1024 if request.url.path == "/api/attachments" else 16_384
+                if len(data) > limit:
+                    return JSONResponse(
+                        {
+                            "message": "图片不能超过10MB。"
+                            if limit > 16_384
+                            else "请求过长，请缩短问题。"
+                        },
+                        status_code=413,
+                    )
             request._body = bytes(data)
         response = await call_next(request)
         map_view = request.url.path == "/map-view"
@@ -249,6 +385,8 @@ def _register_shell(app: FastAPI, state: WebState, version: str = "") -> None:
         now = time.monotonic()
         for key in list(state.sessions):
             if state.sessions[key].expires < now and not state.sessions[key].busy:
+                if state.attachments is not None:
+                    state.attachments.cleanup_session(state.sessions[key].user)
                 del state.sessions[key]
         token = request.cookies.get(COOKIE, "")
         if token not in state.sessions:
@@ -261,6 +399,10 @@ def _register_shell(app: FastAPI, state: WebState, version: str = "") -> None:
                 "configured": runtime_mode != "legacy" or dify is not None,
                 "knowledge_available": bool(knowledge.records),
                 "runtime_mode": runtime_mode,
+                "images_enabled": state.attachments is not None
+                and state.agent is not None
+                and state.agent.model is not None,
+                "place_discovery_enabled": state.place_discovery is not None,
                 "model_configured": (
                     model is not None if runtime_mode != "legacy" else dify is not None
                 ),
@@ -287,5 +429,7 @@ def _register_shell(app: FastAPI, state: WebState, version: str = "") -> None:
         session = state.sessions.get(token)
         if session and session.busy:
             return state.problem(request, "busy", "上一条问题正在处理。", 409)
+        if session is not None and state.attachments is not None:
+            state.attachments.cleanup_session(session.user)
         state.sessions.pop(token, None)
         return await start(request)

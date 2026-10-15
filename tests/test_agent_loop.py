@@ -202,10 +202,10 @@ def test_tool_rounds_are_capped_then_degrade_to_summary() -> None:
     loop = Completion(
         tool_calls=(ToolCall(call_id="x", name="search_place", arguments='{"query":"香樟"}'),)
     )
-    model = FakeLLM(understood("找地点"), *[loop] * 10)
-    out = run(runner(model), "香樟食堂在哪")
+    model = FakeLLM(understood("政策问答"), *[loop] * 10)
+    out = run(runner(model), "香樟那边有什么")
     assert out["result_status"] == "limited" and out["degraded_reason"] == "tool_rounds_exceeded"
-    assert out["answer"].startswith("暂时只能提供已收录的资料摘要")
+    assert out["answer"].startswith("已找到地点")
     assert len(model.calls) == 1 + MAX_TOOL_ROUNDS + 1
     assert model.calls[-1]["tools"] is None  # last round forces an answer
 
@@ -213,12 +213,12 @@ def test_tool_rounds_are_capped_then_degrade_to_summary() -> None:
 @pytest.mark.parametrize(
     "reply,reason",
     [
-        (answer(GOOD_CARD, ["cdut:evidence:invented"]), "invalid_response"),
-        (answer(GOOD_CARD, []), "invalid_response"),
-        (answer(GOOD_CARD + "详见 https://example.com", ["E"]), "invalid_response"),
-        (answer("余额大于20元，费用99999元。", ["E"]), "invalid_response"),
+        (answer(GOOD_CARD, ["cdut:evidence:invented"]), "answer_validation"),
+        (answer(GOOD_CARD, []), "answer_validation"),
+        (answer(GOOD_CARD + "详见 https://example.com", ["E"]), "answer_validation"),
+        (answer("余额大于20元，费用99999元。", ["E"]), "answer_validation"),
         (answer("带好本人身份证到食堂自助服务区办理。", ["E"]), "required_premise_missing"),
-        (Completion(content="{bad"), "invalid_response"),
+        (Completion(content="{bad"), "model_format"),
         (ChatUnavailable("upstream_limit"), "upstream_limit"),
     ],
 )
@@ -251,7 +251,8 @@ def test_missing_identity_asks_and_context_answers_next_turn() -> None:
     assert (
         first["result_status"] == "needs_clarification" and first["answer_mode"] == "agent_clarify"
     )
-    assert first["answer"] == "你是本科生还是研究生？" and first["plan"] == []
+    assert "本科生" in first["answer"] and "研究生" in first["answer"]
+    assert first["answer"].count("？") == 1 and first["plan"] == []
     assert len(model.calls) == 1
     # Identity given in text is authoritative, remembered in context, and removes the gap.
     second_model = FakeLLM(understood(missing=["identity"]), answer("请走研究生流程。", []))
@@ -403,7 +404,7 @@ def test_checklist_item_keys_are_not_counted_as_citations() -> None:
     out = run(runner(model), "校园卡补办需要什么")
     assert out["result_status"] == "success" and out["source_ids"] == [CARD_EVIDENCE[0]]
     only_local = FakeLLM(understood(service="校园卡补办"), answer(GOOD_CARD, ["limit-3"]))
-    assert run(runner(only_local), "校园卡补办需要什么")["degraded_reason"] == "invalid_response"
+    assert run(runner(only_local), "校园卡补办需要什么")["degraded_reason"] == "answer_validation"
 
 
 def test_identity_clarification_only_when_data_has_variants() -> None:

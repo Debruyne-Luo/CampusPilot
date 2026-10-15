@@ -2,16 +2,27 @@
 
 import math
 import re
-from typing import Annotated
+from typing import Annotated, Self
 
 from fastapi import HTTPException
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from campuspilot.contracts import Contract
 
 
 class ChatInput(Contract):
-    message: Annotated[str, Field(min_length=1, max_length=2000, pattern=r"\S")]
+    message: Annotated[str, Field(max_length=2000)] = ""
+    attachment_ids: list[
+        Annotated[str, Field(min_length=20, max_length=80, pattern=r"^[A-Za-z0-9_-]+$")]
+    ] = Field(default_factory=list, max_length=3)
+
+    @model_validator(mode="after")
+    def usable_input(self) -> Self:
+        if not self.message.strip() and not self.attachment_ids:
+            raise ValueError("A message or image is required")
+        if len(set(self.attachment_ids)) != len(self.attachment_ids):
+            raise ValueError("Duplicate attachment IDs")
+        return self
 
 
 def validate_route_params(path: str, params: dict[str, str]) -> None:

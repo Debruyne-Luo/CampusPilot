@@ -10,11 +10,17 @@ const svgEl = (tag, attrs) => { const e = document.createElementNS(NS, tag); for
 export function createMap({ frame, fallback, status, onSelect, onOrigin = () => {}, onPoi = () => {}, onArrive = () => {}, onGuide = () => {} }) {
   const generation = Math.floor(Math.random() * 1e9);
   let mode = "loading", places = [], filter = "all", selected = null, routeSeq = 0, pendingRoute = null;
-  let extra = new Set(), searchSeq = 0, pendingSearch = null, fit = true;
+  let extra = new Set(), searchSeq = 0, pendingSearch = null, fit = true, cameraSeq = 0;
+  let preferences = {desktop:matchMedia('(min-width:1280px)').matches,reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches}, viewport = null;
+  let destinationSeq = 0, pickingDestination = false;
   const send = (data) => frame.contentWindow?.postMessage({ type: "campuspilot-map", ...data, frame_generation: generation }, location.origin);
   window.sendToMap = send; // guidance.js (classic script) talks to the frame through this global
 
-  const visible = () => visiblePlaces(places, filter, extra, selected);
+  const visible = () => {
+    const list = visiblePlaces(places, filter, extra, selected);
+    const current = places.find(p=>p.place_id===selected);
+    return preferences.desktop && current && !list.includes(current) ? [...list,current] : list;
+  };
   function drawFallback() {
     const W = 1000, H = 700, list = visible(), project = projector(places, W, H, 70);
     const svg = svgEl("svg", { viewBox: `0 0 ${W} ${H}`, class: "schematic", role: "img", "aria-label": "校园地点示意图（未接入高德地图）" });
@@ -31,7 +37,7 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     fallback.replaceChildren(svg);
   }
   function push() {
-    if (mode === "amap") send({ action: "places", places: visible().map((p) => ({ place_id: p.place_id, name: p.name, category: p.category, tags: p.tags || [], position: p.position, glyph: glyphFor(p) })), selected_place_id: selected, fit });
+    if (mode === "amap") send({ action: "places", places: visible().map((p) => ({ place_id: p.place_id, name: p.name, category: p.category, tags: p.tags || [], position: p.position, glyph: glyphFor(p) })), selected_place_id: selected, fit:preferences.desktop?false:fit });
     else if (mode === "fallback") drawFallback();
     fit = true;
   }
@@ -40,21 +46,34 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     const d = event.data;
     if (d.action !== "frame-ready" && d.frame_generation !== generation) return;
     if (d.action === "frame-ready" && mode === "loading" && config) send({ action: "init", config });
-    else if (d.action === "ready") { mode = "amap"; status(""); push(); }
+    else if (d.action === "ready") { mode = "amap"; status(""); send({action:'preferences',...preferences});if(viewport)send({action:'viewport-insets',...viewport}); push(); }
     else if (d.action === "failed") useFallback("底图加载失败，显示示意图");
     else if (d.action === "select") { const p = places.find((x) => x.place_id === d.place_id); if (p) onSelect(p); }
     else if (d.action === "route-origin" && d.request_id === routeSeq) onOrigin(d.position, d.name);
     else if (d.action === "poi-selection" && d.place) onPoi(d.place);
+    else if (d.action === "map-destination" && pickingDestination && d.request_id === destinationSeq && hasPosition({ position: d.position })) {
+      pickingDestination = false; send({ action: "discovery-cancel", request_id: ++destinationSeq });
+      onPoi({ name: "地图选定地点", position: d.position });
+    }
     else if (d.action === "place-search-result" && pendingSearch && d.request_id === searchSeq) { pendingSearch(d.status === "success" ? d.places : []); pendingSearch = null; }
     else if (d.action === "route-result" && pendingRoute && d.request_id === routeSeq) { pendingRoute(d); pendingRoute = null; }
     else if (d.action === "guidance-position") window.Guidance?.receive(d);
     else if (d.action === "dino-arrived") onArrive();
     else if (d.action === "dino-ready") onGuide(d.kind);
+    else if (d.action === "dino-progress") window.Guidance?.receiveDemo(d);
+    else if (d.action === "dino-failed") {window.Guidance?.stop();status("引导模型暂不可用，可重新开始路线演示。");}
   });
   let config = null;
+  function cancelPending() {if(pendingRoute){pendingRoute({status:'cancelled'});pendingRoute=null;}}
   function useFallback(message) { mode = "fallback"; frame.hidden = true; fallback.hidden = false; status(message); push(); }
 
   return {
+    preferences(value) {preferences=value;if(mode==='amap')send({action:'preferences',...value});},
+    viewportInsets(value) {viewport=value;if(mode==='amap')send({action:'viewport-insets',...value});},
+    resize() {if(mode==='amap')send({action:'resize'});},
+    layout(changing) {if(mode==='amap')send({action:'layout',changing});},
+    overview() {if(mode==='amap')send({action:'overview',operation_id:++cameraSeq});},
+    clearSelection() {selected=null;cameraSeq++;cancelPending();routeSeq++;if(mode==='amap'){send({action:'selection',place_id:null,operation_id:cameraSeq});send({action:'route-clear',request_id:routeSeq});}else push();},
     async init(list) {
       places = list;
       try {
@@ -67,6 +86,11 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
     setFilter(id) { filter = id; push(); },
     /** Places referenced by the current answer or a search are drawn in addition to hotspots. */
     reveal(ids) { for (const id of ids) extra.add(id); push(); },
+    /** Session-only provider cards remain separate from the permanent catalogue. */
+    addPlaces(list) {
+      const known = new Set(places.map((p) => p.place_id));
+      places = [...places, ...list.filter((p) => p?.place_id && !known.has(p.place_id))];
+    },
     /** AMap POI search near campus (frame-side); resolves [] when the map is unavailable. */
     searchPoi(query) {
       if (mode !== "amap") return Promise.resolve([]);
@@ -74,35 +98,41 @@ export function createMap({ frame, fallback, status, onSelect, onOrigin = () => 
       return new Promise((resolve) => { searchSeq += 1; pendingSearch = resolve; send({ action: "place-search", request_id: searchSeq, query }); setTimeout(() => { if (pendingSearch === resolve) { pendingSearch = null; resolve([]); } }, 8000); });
     },
     focus(place) {
+      if(preferences.desktop){cancelPending();routeSeq++;if(mode==='amap')send({action:'route-clear',request_id:routeSeq});}
+      if(place.place_id&&!places.some(p=>p.place_id===place.place_id)&&hasPosition(place))places.push(place);
       const known = extra.has(place.place_id) || place.hotspot === true;
       selected = place.place_id; extra.add(place.place_id);
       if (mode === "amap" && hasPosition(place)) {
-        if (!known) { fit = false; push(); } // draw it first; "center" then highlights the new marker
-        send({ action: "center", place_id: place.place_id, position: place.position });
+        if (!known || preferences.desktop) { fit = false; push(); }
+        send({ action: "center", place_id: place.place_id, position: place.position, operation_id:++cameraSeq });
       } else push();
     },
     get ready() { return mode === "amap"; },
     /** Walking route from an explicit origin (GPS or user-chosen) to a place or a POI/point. */
     route(target, origin) {
       return new Promise((resolve) => {
+        cancelPending();
         if (mode !== "amap") { if (target.place_id) { selected = target.place_id; push(); } return resolve({ status: "unavailable", message: "步行路线需要高德地图；已在示意图上标出目的地" }); }
         if (!origin) return resolve({ status: "need_origin" });
         routeSeq += 1; pendingRoute = resolve;
-        send({ action: "route-request", request_id: routeSeq, origin,
+        const requestId=routeSeq;
+        setTimeout(()=>{if(pendingRoute===resolve&&routeSeq===requestId){pendingRoute=null;routeSeq++;send({action:'route-clear',request_id:routeSeq});resolve({status:'error',message:'路线请求超时，请重试。'});}},20000);
+        send({ action: "route-request", request_id: routeSeq, origin, operation_id:++cameraSeq,
           ...(target.place_id ? { destination_place_id: target.place_id } : { destination_position: target.position }) });
       });
     },
     /** Next map click (or marker) becomes the route origin; answered through onOrigin. */
-    pickOrigin() { if (mode !== "amap") return false; routeSeq += 1; send({ action: "route-pick", request_id: routeSeq }); return true; },
+    pickOrigin() { if (mode !== "amap") return false; cancelPending();routeSeq += 1; send({ action: "route-pick", request_id: routeSeq }); return true; },
+    pickDestination() { if (mode !== "amap") return false; pickingDestination = true; send({ action: "destination-pick", request_id: ++destinationSeq }); return true; },
     /** Use the map point under the on-screen crosshair (frame pixels) as the origin. */
     pickAt(x, y) { if (mode === "amap") send({ action: "route-pick-point", request_id: routeSeq, x, y }); },
-    cancelPick() { routeSeq += 1; send({ action: "route-clear", request_id: routeSeq }); },
+    cancelPick() { cancelPending();routeSeq += 1; send({ action: "route-clear", request_id: routeSeq }); },
     heading(rotation) { if (mode === "amap") send({ action: "heading", ...rotation, arrow: rotation.arrow, rotation: rotation.map, heading_value: rotation.value }); },
     /** Start the 理小龙 guide on the current route: demo walks by itself, else follows GPS. */
     dino(demo, speed, guide) { if (mode === "amap") send({ action: "dino-start", demo, speed, guide }); },
     dinoStop() { if (mode === "amap") send({ action: "dino-stop" }); },
     dinoMode(demo, speed) { if (mode === "amap") send({ action: "dino-mode", demo, speed }); },
-    centerOn(position) { if (mode === "amap" && position) send({ action: "center", place_id: null, position }); },
+    centerOn(position) { if (mode === "amap" && position) send({ action: "center", place_id: null, position, operation_id:++cameraSeq }); },
     northUp() { if (mode === "amap") send({ action: "north-up" }); },
     insets(bottom) { if (mode === "amap") send({ action: "route-insets", bottom }); },
     get routeId() { return routeSeq; },

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal, cast
 
 from pydantic import JsonValue
@@ -36,6 +36,14 @@ TOPIC_WORDS = (
 
 
 @dataclass
+class ImageTask:
+    """A user-requested image task, never an inferred campus fact or authority."""
+
+    objective: str = ""
+    kind: Literal["reading", "campus"] = "reading"
+
+
+@dataclass
 class ConversationContext:
     history: tuple[ChatTurn, ...] = ()
     focus: str = ""
@@ -43,6 +51,9 @@ class ConversationContext:
     audience: str = "unknown"
     academic_year: str | None = None
     knowledge_titles: tuple[str, ...] = ()
+    destination_candidates: list[dict[str, JsonValue]] = field(default_factory=list)
+    image_task: ImageTask | None = None
+    image_attachment_ids: tuple[str, ...] = ()
 
     def remember(self, question: str, answer: str) -> None:
         self.history = (

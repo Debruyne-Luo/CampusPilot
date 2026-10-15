@@ -1,0 +1,114 @@
+[
+  {
+    "scene": "01-home",
+    "width": 1440,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "02-answer",
+    "width": 1440,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "03-evidence",
+    "width": 1440,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "04-map",
+    "width": 1440,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "05-settings",
+    "width": 1440,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "06-streaming",
+    "width": 1440,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "07-no-evidence",
+    "width": 1440,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "08-interrupted",
+    "width": 1440,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "01-home",
+    "width": 1280,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "02-answer",
+    "width": 1280,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "03-evidence",
+    "width": 1280,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "04-map",
+    "width": 1280,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "05-settings",
+    "width": 1280,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "06-streaming",
+    "width": 1280,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "07-no-evidence",
+    "width": 1280,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  },
+  {
+    "scene": "08-interrupted",
+    "width": 1280,
+    "height": 900,
+    "outside": [],
+    "overlaps": []
+  }
+]

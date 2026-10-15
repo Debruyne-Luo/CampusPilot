@@ -12,6 +12,13 @@ service has completed their request.
 
 ## V1 boundary
 
+**CONFIRMED (2026-10-14):** The backend evidence increment adds chat access to transient
+campus map places, Jev-controlled web supplementation and session-owned campus images.
+Unique exact map matches offer a navigation card; uncertain candidates require selection.
+User image text remains attributed input, never official policy. See
+[ADR 0006](adr/0006-online-evidence-and-user-images.md) and
+[implementation handoff](EVIDENCE_MEDIA.zh-CN.md) for limits and acceptance evidence.
+
 **CONFIRMED (2026-10-08, latest user request):** Provide campus-map and task-assistant
 spaces, improve mobile touch use, extend place interaction beyond the curated directory,
 and address the gap between route planning and navigation. The current web increment adds
@@ -60,6 +67,20 @@ authorization requirements are in [SECURITY](SECURITY.md).
 **REJECTED FOR V1:** A multi-agent product architecture and foundation-model
 training. The approved component boundaries are in
 [ARCHITECTURE](ARCHITECTURE.md); engineering team roles do not create runtime Agents.
+
+## Browser handling checklist
+
+**CONFIRMED (2026-10-13, user-approved plan):** Students explicitly save a whole structured
+service from a chat answer into a browser-local handling checklist. A compact entry opens the
+list and service details in the existing assistant panel. Preparation checks are distinct from
+the student's own “finished” record; finishing removes the item with a brief undo, with no
+completion history. Same-service additions reuse the saved snapshot without overwriting
+progress. Saved public instructions, applicability, sources and service-linked places remain
+available after a new conversation. Storage is independent of the anonymous chat session.
+
+**REJECTED FOR V1:** Account sync, custom task editing, deadlines and notification reminders
+for this increment. No school-system write or verified institutional completion is introduced.
+See the [implementation and verification handoff](HANDLING_CHECKLIST.zh-CN.md).
 
 ## Source authority and applicability
 

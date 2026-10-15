@@ -148,7 +148,8 @@ def test_withheld_knowledge_keeps_list_places_citations(tmp_path: Path) -> None:
     )
     fake = FakeJev(sufficient=0.03, mode="clarify")
     out = run_jev(jev_runner(OFF_TOPIC, model, fake, "on", tmp_path), "东区图书馆在哪")
-    assert out["jev"]["applied"] == "withhold"
+    assert out["answer_mode"] == "agent_place"
+    assert len(model.calls) == 1  # exact map query does not need a generation/knowledge loop
     assert out["result_status"] != "needs_clarification" and out["answer_mode"] != "agent_jev"
     assert out["citations"] and all(c["id"] != MAIL.source_id for c in out["citations"])
     assert out["excerpts"] == []

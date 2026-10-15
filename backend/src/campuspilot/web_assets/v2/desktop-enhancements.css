@@ -1,0 +1,54 @@
+/* Desktop interaction layer. Released app.css remains the visual source of truth. */
+.desktop-only{display:none}
+.reading-settings:not([open]){display:none}
+@media(min-width:1280px){
+  .desktop-only{display:inline-flex}
+  .app{grid-template-columns:var(--read-width,540px) minmax(0,1fr)}
+  .chat{min-width:0}
+  .chat>header{flex-shrink:0}
+  .thread{overscroll-behavior:contain;scrollbar-width:thin}
+  .thread>*{flex-shrink:0}
+  .settings-trigger{padding:3px 8px;font-size:17px;line-height:24px}
+  .desktop-map-tools{position:absolute;right:14px;top:14px;gap:8px;z-index:3}
+  .desktop-map-tools .text-button{min-height:37px;box-shadow:var(--shadow)}
+  .map-dock{position:absolute;left:14px;right:64px;bottom:14px;display:flex;align-items:flex-end;gap:10px;z-index:var(--map-ui-z);pointer-events:none;max-height:45%;overflow:auto}
+  .map-dock>*{pointer-events:auto}
+  .map-dock .place-card,.map-dock .route-note{position:relative;inset:auto;width:auto;max-width:none;flex:1;margin:0}
+  .map-dock .route-note{flex:1.4}
+  .map-dock .place-card{min-width:210px}
+  .route-note b{display:block;margin-bottom:4px}
+  .route-note .chooser{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .origin-select{max-width:100%}
+  .map-status{max-width:calc(100% - 32px)}
+  #desktop-context{display:none}
+  body[data-workspace="map"] .chat>#thread,body[data-workspace="map"] .chat>#handling-panel,body[data-workspace="map"] .composer{display:none!important}
+  body[data-workspace="map"] .chat>header .status{display:none}
+  body[data-workspace="map"] #desktop-context{display:flex;flex-direction:column;gap:20px;flex:1;min-height:0;overflow:auto;padding:24px 8px 8px}
+  #desktop-context h2{font-size:20px;line-height:1.5;margin:0}
+  #context-answer{font-size:14px;line-height:1.8;color:var(--muted);white-space:pre-wrap;margin:0}
+  .context-destination{padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .context-destination small{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
+  #context-place{font-size:16px;color:var(--brand)}
+  .context-destination p{font-size:12px;color:var(--muted);margin:8px 0 0}
+  #return-reading{margin-top:auto;min-height:40px;text-align:left;padding:8px 16px}
+  body[data-workspace="map"] #desktop-map{background:var(--brand-soft);color:var(--brand);border-color:var(--brand)}
+  .reading-settings{width:560px;max-width:calc(100vw - 64px);max-height:calc(100dvh - 64px);overflow:auto;padding:28px;border:1px solid var(--line);border-radius:var(--radius-l);background:var(--panel);color:var(--ink);box-shadow:var(--shadow)}
+  .reading-settings::backdrop{background:#14161b55}
+  .settings-heading{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:13px}
+  .reading-settings h2{font-size:24px;margin:20px 0 8px}
+  .reading-settings>p{font-size:13px;color:var(--muted)}
+  .setting-row{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:20px 0;border-bottom:1px solid var(--line)}
+  .setting-row small{display:block;font-size:12px;color:var(--muted);margin-top:4px;max-width:290px}
+  .setting-row select{padding:8px;border:1px solid var(--line);border-radius:var(--radius-s);background:var(--panel);color:var(--ink)}
+  .setting-row input{width:20px;height:20px;accent-color:var(--brand);flex:none}
+  .reading-sample{margin-top:20px;padding:16px;background:var(--brand-soft);border-radius:var(--radius)}
+  .reading-sample>span{font-size:12px;color:var(--muted)}
+  .reading-sample p{font-size:16px;line-height:1.75;margin:8px 0 0}
+  body[data-reading-size="large"] .conclusion,body[data-reading-size="large"] .handling-items li,body[data-reading-size="large"] .citations,body[data-reading-size="large"] .reading-sample p{font-size:18px}
+  .handling-toast{left:calc(16px + var(--read-width,540px) / 2);max-width:calc(var(--read-width,540px) - 32px);bottom:98px}
+  .step.running{animation:none;background:var(--brand-soft)}
+  .step.running .dot{background:var(--brand);border-color:var(--brand);animation:pulse 1s ease-in-out infinite}
+  .app{will-change:grid-template-columns}
+  .mapwrap .card{box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.6)}
+  body[data-reduce-motion="true"] *,body[data-reduce-motion="true"] *::before,body[data-reduce-motion="true"] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}

@@ -1,0 +1,618 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-14",
+  "review_note": "逐条核对指南正文与表格；必需三篇共8张图片（含6张账号激活图）已视觉核对，部分图片只转写流程标签；其余图片保留原件但不采纳未核对识别内容。",
+  "documents": [
+    {
+      "document_id": "portal-rakaxabe4inxkxyakznn2ahs3zxdxa68",
+      "clauses": [
+        {
+          "clause_id": "guide-body",
+          "topic_id": "campus",
+          "title": "校级预算项目细化预算调整申请正文与服务条件",
+          "quote": "校级预算项目细化预算调整申请\n\n事项编号：\n\n基本信息\n\n办理方式\t线下办理\t事项性质\t审批事项\n\n办理途径\t\t办理时间\n\n咨询电话\t暂无\t监督电话\t暂无\n\n办理流程\n\n1.发起事项\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,兼职教师,学生\n\n所属部门：\n\n财务处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n校级预算项目细化预算调整申请\n",
+          "locator": {
+            "file": "documents/portal-rakaxabe4inxkxyakznn2ahs3zxdxa68/body.txt",
+            "start": 0,
+            "end": 182
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "977041b6f2a29d9b363e9d22ab3e774a186aead4ce17fe32187369d487a73e2d"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "校级预算项目细化预算调整申请 砚湖易办 服务指南",
+          "disposition": "limitation",
+          "limitation": "发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-06",
+      "clauses": [
+        {
+          "clause_id": "checked-step-3",
+          "topic_id": "identity",
+          "title": "新生账号激活图示第3步",
+          "quote": "填写信息\n绑定手机/邮箱\n设置密码\n激活结果\n姓名\n证件号码\n下一步\n",
+          "locator": {
+            "file": "documents/portal-06/assets/image-6c56b3bfa4305feee47065a9-checked.txt",
+            "start": 0,
+            "end": 35
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "66baa2b618611d58dcb0d13a3e9101ae47594dab6af373bffd03e84f25edf475",
+            "content_sha256": "10770543157d77d4bf51163b6e4e67e01049b1b4ef62509ff9a41cdbb1bda386",
+            "attachment_sha256": "6c56b3bfa4305feee47065a911dfdad6966403913bae71000887ad7747cb4762"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [
+              "新生"
+            ],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "",
+          "disposition": "adopt"
+        },
+        {
+          "clause_id": "checked-step-4",
+          "topic_id": "identity",
+          "title": "新生账号激活图示第4步",
+          "quote": "绑定手机/邮箱\n绑定方式：安全手机\n为保障账号安全，请至少完成安全手机或邮箱绑定！\n验证码\n下一步\n",
+          "locator": {
+            "file": "documents/portal-06/assets/image-570af44f66b33caecdad147f-checked.txt",
+            "start": 0,
+            "end": 50
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "66baa2b618611d58dcb0d13a3e9101ae47594dab6af373bffd03e84f25edf475",
+            "content_sha256": "125c0a3897b1b039172dc09149e512ce358815e7e6fba73ee334b54cf48cb33b",
+            "attachment_sha256": "570af44f66b33caecdad147fa7e05fbad21a7a51883a8bb70954454bae40a81d"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [
+              "新生"
+            ],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "",
+          "disposition": "adopt"
+        },
+        {
+          "clause_id": "checked-step-5",
+          "topic_id": "identity",
+          "title": "新生账号激活图示第5步",
+          "quote": "设置密码\n密码必须是包含数字、小写字母、大写字母，8位以上、20位以下的组合\n确认密码\n下一步\n",
+          "locator": {
+            "file": "documents/portal-06/assets/image-5455db5e58f789e3efc94a1a-checked.txt",
+            "start": 0,
+            "end": 48
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "66baa2b618611d58dcb0d13a3e9101ae47594dab6af373bffd03e84f25edf475",
+            "content_sha256": "bdd178ce245ce392a80a56b9d9579e5c711b3ba9a4d001c11274cb7e829ff8f1",
+            "attachment_sha256": "5455db5e58f789e3efc94a1a510e84dfd6d7d55fba89f1581f7f57b206c0e0a8"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [
+              "新生"
+            ],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "",
+          "disposition": "limitation",
+          "limitation": "仅新生激活流程；图片和文字的密码长度表述不同，图片8位以上20位以下，文字不少于8位，实际以当前激活页面校验为准。"
+        },
+        {
+          "clause_id": "checked-step-6",
+          "topic_id": "identity",
+          "title": "新生账号激活图示第6步",
+          "quote": "激活结果\n恭喜您！\n您的账号已经激活成功！\n返回登录页面\n",
+          "locator": {
+            "file": "documents/portal-06/assets/image-5e97fcf0ef1d4cfb441875ef-checked.txt",
+            "start": 0,
+            "end": 29
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "66baa2b618611d58dcb0d13a3e9101ae47594dab6af373bffd03e84f25edf475",
+            "content_sha256": "001b01aa5689f2e3f11ef45e4acec4050abd754c9bc965ac3525087aea9b0df5",
+            "attachment_sha256": "5e97fcf0ef1d4cfb441875ef4016edc9b302b900f22c0c52041624432ff616b7"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [
+              "新生"
+            ],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "",
+          "disposition": "adopt"
+        },
+        {
+          "clause_id": "guide-body",
+          "topic_id": "identity",
+          "title": "新生统一身份认证账号激活说明正文与服务条件",
+          "quote": "新生统一身份认证账号激活说明\n\n事项编号：06\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t服务事项\n\n办理途径\t线上\t办理时间\n\n咨询电话\t028-84079530\t监督电话\t暂无\n\n其它说明\n\n新生进入迎新网：yx.cdut.edu.cn，点击“在线报道”后\n\n1、在登陆页面选择“激活账号”：\n\n2、在激活账号页面输入您的姓名和证件号码：\n\n3、如果您输入的姓名和证件号码与系统记录的一致，进入绑定安全手机页面：\n\n（注意：安全手机是您未来找回密码的依据，请使用自己本人的手机号）\n\n4、输入手机号后，请单击获取验证码，将手机收到验证码输入后点击下一步，设置好密码（密码必须包含大小写字母和 数字并长度不少于8位）\n\n5、显示下页后，账号激活成功，你可以使用账号继续访问学校系统了。\n\n服务人群：\n\n研究生,学校管理员,教师,兼职教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n",
+          "locator": {
+            "file": "documents/portal-06/body.txt",
+            "start": 0,
+            "end": 403
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "66baa2b618611d58dcb0d13a3e9101ae47594dab6af373bffd03e84f25edf475"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [
+              "新生"
+            ],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "新生统一身份认证账号激活说明 砚湖易办 服务指南",
+          "disposition": "limitation",
+          "limitation": "发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-1042",
+      "clauses": [
+        {
+          "clause_id": "guide-body",
+          "topic_id": "campus",
+          "title": "心理咨询预约正文与服务条件",
+          "quote": "心理咨询预约\n\n事项编号：1042\n\n基本信息\n\n办理方式\t线上线下结合办理\t事项性质\t服务事项\n\n办理途径\t线上线下结合\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t028-84075525\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n离退休人员,退休校友教职工,研究生,学校管理员,教师,学生\n\n所属部门：\n\n心理健康教育中心\n\n服务日期：\n\n长期有效\n\n办理入口\n\n心理咨询预约\n",
+          "locator": {
+            "file": "documents/portal-1042/body.txt",
+            "start": 0,
+            "end": 228
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "2dc6428055bd5b7b97d980d5c3bfc90c191590cb8f94cef47f89763c676f4f9a"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "心理咨询预约 砚湖易办 服务指南",
+          "disposition": "limitation",
+          "limitation": "发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-1046",
+      "clauses": [
+        {
+          "clause_id": "guide-body",
+          "topic_id": "archive",
+          "title": "学籍档案查询（毕业生）正文与服务条件",
+          "quote": "学籍档案查询（毕业生）\n\n事项编号：1046\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午：08:00—12:00，下午：14:30—18:00\n\n咨询电话\t028-84074249\t监督电话\t暂无\n\n办理流程\n\n1.提交申请\n\n2.申请人登录平台，发起申请\n\n3.填写申请表\n\n4.等待办理结果通知\n\n5.审核\n\n6.档案馆经办人\n\n7.流程办结\n\n8.申请人查看审核结果，确认结果并办结流程\n\n9.领取资料\n\n10.档案馆邮寄复印件或发送电子版档案\n\n其它说明\n\n注意事项\t1.有效身份证明包括：居民身份证（含有效期内临时身份证）、军官证、户口簿、护照等。 2.请先勾选所查档案对应学历，再勾选具体查档内容； 3.查阅高考录取名单，务必提供生源地（参加高考省份）信息； 4.如需复制件（纸质）请提供收件地址，我们会采用顺丰到付方式寄出；如需电子版请填写电子邮箱； 5.办理周期一般为三个工作日。\n\n服务人群：\n\n校友研究生,校友本专科生,研究生,学校管理员,教师,学生\n\n所属部门：\n\n档案馆\n\n服务日期：\n\n长期有效\n\n办理入口\n\n学籍档案查询（毕业生）\n",
+          "locator": {
+            "file": "documents/portal-1046/body.txt",
+            "start": 0,
+            "end": 502
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "0f2a40b52199dcb812a60abef4679583db1262b7e39cd8d2f7797001f91bf5cf"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [
+              "毕业生"
+            ],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "学籍档案查询（毕业生） 砚湖易办 服务指南",
+          "disposition": "limitation",
+          "limitation": "发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-1053",
+      "clauses": [
+        {
+          "clause_id": "checked-flow",
+          "topic_id": "network",
+          "title": "网络故障报修流程图核对",
+          "quote": "登录“砚湖易办”\n进入“事务中心”\n选择网络与信息化处\n填写《网络故障保修》并提交审批\n审批通过后维修\n",
+          "locator": {
+            "file": "documents/portal-1053/assets/image-198883ffa554aaa5639e731d-checked.txt",
+            "start": 0,
+            "end": 52
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "d9b4b7be538b981d38a9e94b9256cf83e6249e7350282b95b65991ad524769ee",
+            "content_sha256": "e8b4ef8df7b0f269a95dbd43b53ad2051b26ea567b5abf74c191ecac7137386a",
+            "attachment_sha256": "198883ffa554aaa5639e731d5bd3a72c38fd0f823107450776e23ef8bbe94be9"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "",
+          "disposition": "limitation",
+          "limitation": "图片中的“保修”字样按原图保留，正文事项名为“报修”。"
+        },
+        {
+          "clause_id": "guide-body",
+          "topic_id": "network",
+          "title": "网络故障报修正文与服务条件",
+          "quote": "网络故障报修\n\n事项编号：1053\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t.028-84079467\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n2.提交申请\n\n3.申请人登录平台，发起申请\n\n4.填写申请表\n\n5.等待办理结果通知\n\n6.审核\n\n7.网络与信息化处经办人\n\n8.流程办结\n\n9.申请人查看审核结果，确认结果并办结流程\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n网络故障报修\n",
+          "locator": {
+            "file": "documents/portal-1053/body.txt",
+            "start": 0,
+            "end": 302
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "d9b4b7be538b981d38a9e94b9256cf83e6249e7350282b95b65991ad524769ee"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "网络故障报修 砚湖易办 服务指南",
+          "disposition": "limitation",
+          "limitation": "发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-11",
+      "clauses": [
+        {
+          "clause_id": "guide-body",
+          "topic_id": "campus",
+          "title": "非机动车牌注册流程正文与服务条件",
+          "quote": "非机动车牌注册流程\n\n事项编号：11\n\n基本信息\n\n办理方式\t线下办理\t事项性质\t服务事项\n\n办理途径\t线上\t办理时间\n\n咨询电话\t暂无\t监督电话\t暂无\n\n附件\n\n附件1：成理电动车车牌注册流程.docx\n\n办理流程\n\n1.如下：\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,兼职教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n",
+          "locator": {
+            "file": "documents/portal-11/body.txt",
+            "start": 0,
+            "end": 188
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "08df81d40c3007df9c8ab6c5f4be71e7e972ee45266b1bd0ba35df14371490b4"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "非机动车牌注册流程 砚湖易办 服务指南",
+          "disposition": "limitation",
+          "limitation": "发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。 办理方式写线下、办理途径写线上，尚有字段矛盾；附件docx未取得，不推测实际路径。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-1165",
+      "clauses": [
+        {
+          "clause_id": "checked-flow",
+          "topic_id": "finance",
+          "title": "生源地贷款流程图核对",
+          "quote": "学生向生源地学生资助管理中心咨询具体贷款政策，并提出贷款申请\n生源地学生资助管理中心负责对学生提交的贷款申请进行资格初审，金融机构负责终审，审查合格，签订贷款合同\n学生持贷款合同及贷款确认回执单到学校报到并交给所属学院，学院汇总后交给学校学生资助管理中心\n学校学生资助管理中心完成贷款合同信息确认后将回执单返还学生所在学院→申请贷款的学生将回执单邮寄到生源地的学生资助管理中心\n生源地学生资助管理中心接收回执，并联系相关金融机构发放贷款→学生到学校计划财务确认款项到账\n",
+          "locator": {
+            "file": "documents/portal-1165/assets/image-9cadad0fefdfeadacb676485-checked.txt",
+            "start": 0,
+            "end": 235
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "63445a6958ac7c6f4b650322b1d52a574b54c880d3d2df69cfee4024f23ef2f8",
+            "content_sha256": "8632db7c7c6d3c67fe9878e89a490229c2f93c97aaf42a617f7214d8e7ab6e15",
+            "attachment_sha256": "9cadad0fefdfeadacb676485151924356fe3e681e268fba31475906cf05276a9"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "",
+          "disposition": "limitation",
+          "limitation": "具体贷款政策和报送截止由生源地资助中心与学校当年通知确认。"
+        },
+        {
+          "clause_id": "guide-body",
+          "topic_id": "finance",
+          "title": "生源地贷款正文与服务条件",
+          "quote": "生源地贷款\n\n事项编号：1165\n\n基本信息\n\n办理方式\t线下办理\t事项性质\t服务事项\n\n办理途径\t线下\t办理时间\t报送时间截止前\n\n咨询电话\t028-84078912\t监督电话\t暂无\n\n办理流程\n\n1.学生向生源地学生资助管理中心咨询具体贷款政策，并提出贷款申请→生源地学生资助管理中心负责对学生提交的贷款申请进行资格初审，金融机构负责终审，审查合格，签订贷款合同→学生持贷款合同及贷款确认回执单到学校报到并交给所属学院，学院汇总后交给学校学生资助管理中心→学校学生资助管理中心完成贷款合同信息确认后将回执单返还学生所在学院→申请贷款的学生将回执单邮寄到生源地的学生资助管理中心→生源地学生资助管理中心接收回执，并联系相关金融机构发放贷款→学生到学校计划财务确认款项到账\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,兼职教师,学生\n\n所属部门：\n\n党委学生工作部、学生工作处、学生资助管理中心（副处级）\n\n服务日期：\n\n长期有效\n\n办理入口\n\n生源地贷款\n",
+          "locator": {
+            "file": "documents/portal-1165/body.txt",
+            "start": 0,
+            "end": 442
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "63445a6958ac7c6f4b650322b1d52a574b54c880d3d2df69cfee4024f23ef2f8"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [
+              "报送时间截止前"
+            ],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "生源地贷款 砚湖易办 服务指南",
+          "disposition": "limitation",
+          "limitation": "发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。 页面未给出具体报送截止日期。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-1212",
+      "clauses": [
+        {
+          "clause_id": "guide-body",
+          "topic_id": "finance",
+          "title": "学杂费退费申请正文与服务条件",
+          "quote": "学杂费退费申请\n\n事项编号：1212\n\n基本信息\n\n办理方式\t线上线下结合办理\t事项性质\t审批事项\n\n办理途径\t线上线下结合\t办理时间\n\n咨询电话\t028-84079589\t监督电话\t暂无\n\n前置条件\n\n1.退费事由，主办会计和信息管理中心的审核意见\n\n其它说明\n\n办理地点：\n\n线下即为信息管理中心\n\n服务人群：\n\n研究生,学校管理员,教师,兼职教师,学生\n\n所属部门：\n\n财务处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n学杂费退费申请\n",
+          "locator": {
+            "file": "documents/portal-1212/body.txt",
+            "start": 0,
+            "end": 220
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "98d7084e91bdbc31a6bc07722ae6710609a25355aed5424fe3b2e6cf9bcd261b"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "学杂费退费申请 砚湖易办 服务指南",
+          "disposition": "limitation",
+          "limitation": "发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-1266",
+      "clauses": [
+        {
+          "clause_id": "guide-body",
+          "topic_id": "campus",
+          "title": "借户口本申请正文与服务条件",
+          "quote": "借户口本申请\n\n事项编号：1266\n\n基本信息\n\n办理方式\t线上线下结合办理\t事项性质\t审批事项\n\n办理途径\t线上线下结合\t办理时间\t上午8:30-12:00，下午2:30-6:00\n\n咨询电话\t028-84076063\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n其它说明\n\n注意事项：\n\n学生申请者需是户口在学校的学生，才能办理\n\n服务人群：\n\n研究生,学校管理员,教师,学生\n\n服务仅限：\n\n党委武装部、保卫处,管理员组,学生,研究生使用\n\n所属部门：\n\n党委武装部、保卫处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n借户口本申请\n",
+          "locator": {
+            "file": "documents/portal-1266/body.txt",
+            "start": 0,
+            "end": 268
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "6cf8cf844ef35b368aa191c8a10597e170e4274297c302b11660cdb1b4f6f8ac"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [
+              "学生申请者需是户口在学校的学生，才能办理"
+            ],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "借户口本申请 砚湖易办 服务指南",
+          "disposition": "limitation",
+          "limitation": "发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-1267",
+      "clauses": [
+        {
+          "clause_id": "guide-body",
+          "topic_id": "finance",
+          "title": "预收教材款结算事项申请正文与服务条件",
+          "quote": "预收教材款结算事项申请\n\n事项编号：1267\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午8:00-12:00，下午14:30-18:00\n\n咨询电话\t028-84078905\t监督电话\t暂无\n\n附件\n\n2024级预收教材费结算表模版.xlsx\n\n办理流程\n\n1.如下：\n\n申请材料\n\n1.退费需提交《预收教材费结算表》班级所有同学签字的PDF文件及Excel表格\n\n2.补交费请以班级为单位存入学校账户，上传交费凭据，并提交《预收教材费结算表》所有同学签字的PDF文件及Excel表格。\n\n其它说明\n\n办事依据：\n\n《成都理工大学教材建设与管理办法》（成理校教〔2021〕8号)\n\n注意事项\t1、请辅导员务必填写承办人联系电话。 2、请承办人对预收教材款明细、领用教材明细核对无误后填写退费委托上卡人姓名和卡号，并上传相应的附件，全班所有同学都要在结算表内填例信息；如对预收教材款明细有疑问，请联系财务处信息管理中心；如对领用教材明细有疑问，请联系教材建设与管理科，84078905。 3、退（补）费请提交《预收教材费结算表》班级所有同学签字的PDF文件及Excel表格为申请附件；补交费请以班级为单位存入如下学校账户，上传交费凭据，并上传《预收教材费结算表》Excel表格。 开户行：中国建设银行股份有限公司成都双建路支行 银行账号：5100 1885 3360 50716993 建行行号：1056 5100 1148\n\n服务人群：\n\n学校管理员,教师,学生\n\n所属部门：\n\n教务处、大学生创新创业中心\n\n服务日期：\n\n长期有效\n\n办理入口\n\n班级教材款结算明细(学生)\n\n班级预收教材款明细（学生）\n",
+          "locator": {
+            "file": "documents/portal-1267/body.txt",
+            "start": 0,
+            "end": 725
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-14",
+            "body_sha256": "01d7da394d8e337c2e8ffc0c084402304fbfce0b1395de82051240791b4668e1"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "campuses": [],
+            "conditions": [],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {},
+            "audience_quote": "学生"
+          },
+          "aliases": "预收教材款结算事项申请 砚湖易办 服务指南",
+          "disposition": "limitation",
+          "limitation": "发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。 附件名为2024级模板，模板正文未取得，不能推断适用于全部年级。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-1403",
+      "clauses": []
+    },
+    {
+      "document_id": "portal-1405",
+      "clauses": []
+    }
+  ]
+}

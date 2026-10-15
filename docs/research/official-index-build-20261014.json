@@ -1,0 +1,13 @@
+{
+  "knowledge_version": "kb-229ee34eba99ef34",
+  "index_rows": 322,
+  "chunks": 322,
+  "sources": 176,
+  "model": "@cf/baai/bge-m3",
+  "dimensions": 1024,
+  "reused": 278,
+  "provider_embedded": 44,
+  "reused_vectors": "only identical title+aliases+text from checksum-validated baseline index",
+  "index_sha256": "3c3e7a5a7c5b3f77a7d3453b7d2c5486c5a4308c054c298eec9301979b3458a5",
+  "published": false
+}

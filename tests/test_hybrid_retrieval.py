@@ -296,7 +296,7 @@ def test_settings_retrieval_fields_are_masked() -> None:
         Settings.from_env({"CAMPUSPILOT_RETRIEVAL_MODE": "dense"})
 
 
-def test_search_knowledge_tool_uses_hybrid_snapshot() -> None:
+def test_search_knowledge_tool_uses_hybrid_snapshot(tmp_path: Path) -> None:
     from campuspilot.directory.repository import DirectoryRepository
     from campuspilot.knowledge import KnowledgeStore
     from campuspilot.tools import default_registry
@@ -312,10 +312,15 @@ def test_search_knowledge_tool_uses_hybrid_snapshot() -> None:
         )
 
     embedder = CloudflareEmbedder(ACCOUNT, TOKEN, transport=httpx.MockTransport(handler))
+    # This test targets the immutable bootstrap fixture, independent of local releases.
+    (tmp_path / "bootstrap.json").write_bytes((DATA / "rag/bootstrap.json").read_bytes())
+    (tmp_path / ("bootstrap." + INDEX_NAME)).write_bytes(
+        (DATA / "rag" / ("bootstrap." + INDEX_NAME)).read_bytes()
+    )
     registry = default_registry(
         DirectoryRepository.load(DATA),
         KnowledgeStore.load(DATA / "knowledge.json"),
-        SnapshotStore(DATA / "rag", retrieval_mode="hybrid", embedder=embedder),
+        SnapshotStore(tmp_path, retrieval_mode="hybrid", embedder=embedder),
         embedder,
     )
     result = registry.call("search_knowledge", {"query": "学生邮箱怎么激活"})
@@ -324,6 +329,15 @@ def test_search_knowledge_tool_uses_hybrid_snapshot() -> None:
     hits = result["hits"]
     assert isinstance(hits, list) and isinstance(hits[0], dict)
     assert hits[0]["chunk_id"] == target.chunk_id and str(hits[0]["url"]).startswith("https://")
+    assert hits[0]["locator"] == target.locator
+    assert hits[0]["text_sha256"] == target.text_sha256
+    assert hits[0]["verification_status"] == target.verification_status
+    applicability = hits[0]["applicability"]
+    assert isinstance(applicability, dict)
+    assert applicability["audiences"] == list(target.audiences)
+    assert applicability["valid_until"] == (
+        target.valid_until.isoformat() if target.valid_until else None
+    )
 
 
 def test_phase2_chat_prefetches_embedding_and_survives_provider_outage() -> None:

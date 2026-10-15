@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-14",
+  "tested_code_commit": "893abcb062253f66d5a91e5b199db49d96903371",
+  "method": "git -c core.autocrlf=false archive; Python 3.14.7 / Windows; unchanged Git object bytes",
+  "python_tests": {
+    "passed": 618,
+    "failed": 3,
+    "failures": [
+      {
+        "class": "tests.test_release",
+        "test": "test_failed_health_check_rolls_back_to_previous_release",
+        "category": "POSIX atomic directory switch unsupported on Windows"
+      },
+      {
+        "class": "tests.test_release",
+        "test": "test_legacy_directory_layout_is_migrated_and_used_for_rollback",
+        "category": "POSIX atomic directory switch unsupported on Windows"
+      },
+      {
+        "class": "tests.test_release",
+        "test": "test_old_releases_are_pruned_but_current_and_previous_kept",
+        "category": "POSIX atomic directory switch unsupported on Windows"
+      }
+    ]
+  },
+  "node_tests": {
+    "passed": 64,
+    "failed": 0
+  },
+  "ruff": "passed",
+  "mypy_strict_files": 109,
+  "product_acceptance": "pending",
+  "github_actions": "not configured"
+}

@@ -67,11 +67,14 @@ const Guidance = typeof document === "undefined" ? null : (() => {
     if (context) sendToMap({action:"guidance-stop",request_id:context.requestId,navigation_id:sequence});
   }
   function stop() {
+    const ended=context;
     clearWatch(); sequence++; context=null; tracker=null; progress=null; phase="idle"; note=""; render();
+    ended?.onStop?.();
   }
   function pause(message="页面已离开前台，步行引导已暂停。") {
     if (!context || ["paused","error","arrived"].includes(phase)) return;
     clearWatch(); sequence++; tracker?.resetContinuity(); phase="paused"; note=message; render();
+    if(context.demo) sendToMap({action:'dino-pause',paused:true});
   }
   function start(options) {
     stop(); context=options;
@@ -85,6 +88,10 @@ const Guidance = typeof document === "undefined" ? null : (() => {
   }
   function watch() {
     const id=++sequence; lastSent=-Infinity;
+    if(context.demo) {
+      phase='walking'; note='路线演示 · 不使用设备定位，不代表你的实时位置。'; render();
+      sendToMap({action:'dino-pause',paused:false}); return;
+    }
     if (!navigator.geolocation || !window.isSecureContext) {phase="error"; note="当前浏览器无法持续定位，可展开分步指引。"; render(); return;}
     phase="locating"; note="正在获取当前位置…"; render();
     sendToMap({action:"guidance-start",request_id:context.requestId,navigation_id:id});
@@ -124,6 +131,26 @@ const Guidance = typeof document === "undefined" ? null : (() => {
     if (!context || !rawPosition) return;
     const origin={...rawPosition}, callback=context.replan; stop(); callback(origin);
   }
+  function receiveDemo(data) {
+    if(!context?.demo || data.request_id!==context.requestId || phase!=='walking') return;
+    const distance=context.route.distance;
+    const travelled=Math.max(0,Math.min(distance,data.fraction*distance));
+    const geometry=context.route.geometry, cumulative=[0];
+    for(let i=1;i<geometry.length;i++) cumulative.push(cumulative[i-1]+WalkingProgress.metres(geometry[i-1],geometry[i]));
+    const ends=context.route.stepEnds || [], along=data.fraction*cumulative.at(-1);
+    let step=ends.findIndex(i=>cumulative[i]>=along);
+    if(step<0)step=context.route.steps.length-1;
+    step=Math.max(0,step);
+    progress={status:'walking',step,remaining:distance-travelled};
+    // Keep controls mounted during progress updates so pointer-down/up and focus survive.
+    const slot=document.querySelector('.guidance-slot');
+    if(!slot?.querySelector('.guidance-progress')) {render();return;}
+    slot.querySelector('.guidance-step-label').textContent=`下一步 · 第 ${step+1} / ${context.route.steps.length} 步`;
+    slot.querySelector('h3').textContent=context.route.steps[step] || '继续沿路线步行';
+    slot.querySelector('.guidance-progress').textContent=`剩余约 ${Math.round(progress.remaining)} 米`;
+    const bar=slot.querySelector('.g-progress i');
+    if (bar && distance > 0) bar.style.width=`${Math.max(0,Math.min(100,(travelled/distance)*100))}%`;
+  }
   function render() {
     const slot=document.querySelector('.guidance-slot'); if (!slot) return;
     slot.replaceChildren();
@@ -138,26 +165,46 @@ const Guidance = typeof document === "undefined" ? null : (() => {
     box.append(element('p','前往 ' + context.target.name,'guidance-target'));
     if (context.detail) box.append(element('p',context.detail,'guidance-detail'));
     const status=element('p',note,note === '按参考路线步行，留意现场道路与入口。' ? 'guidance-normal-note' : ''); status.setAttribute('role','status'); box.append(status);
-    if (phase === 'arrived') box.append(element('h3','已到达目的地附近'));
+    // Honest progress: fraction of the real route already covered (GPS or demo position).
+    const total=Number(context.route.distance) || 0;
+    function progressBar(remaining) {
+      const wrap=element('div',undefined,'g-progress'); wrap.setAttribute('aria-hidden','true');
+      const fill=element('i'); wrap.append(fill);
+      if (total > 0) fill.style.width=`${Math.max(0,Math.min(100,(1-remaining/total)*100))}%`;
+      return wrap;
+    }
+    if (phase === 'arrived') {
+      const done=element('div',undefined,'g-arrived');
+      done.append(element('span','✓','tick'),element('h3','已到达目的地附近'));
+      box.append(done);
+      box.append(element('p','请核对建筑入口与楼层指引。','guidance-arrived-note'));
+    }
     else if (progress?.status === 'walking') {
       box.append(element('p',`下一步 · 第 ${progress.step+1} / ${context.route.steps.length} 步`,'guidance-step-label'));
       box.append(element('h3',context.route.steps[progress.step] || '继续沿路线步行'));
       const remaining=Math.round(progress.remaining), time=Math.max(1,Math.ceil(context.route.time*progress.remaining/context.route.distance/60));
-      box.append(element('p',`剩余约 ${remaining} 米 · ${time} 分钟`,'guidance-progress'));
+      box.append(progressBar(progress.remaining));
+      const meta=element('div',undefined,'g-progress-meta');
+      meta.append(element('span',`剩余约 ${remaining} 米`,'guidance-progress'),element('span',`约 ${time} 分钟`));
+      box.append(meta);
     }
-    if (['paused','error'].includes(phase)) box.append(button(phase === 'paused' ? '继续引导' : '重试定位',resume));
+    if (['paused','error'].includes(phase)) box.append(button(context.demo ? '继续演示' : phase === 'paused' ? '继续引导' : '重试定位',resume));
     else if (phase !== 'arrived') {
       const follow=button('跟随位置',() => sendToMap({action:'guidance-follow',navigation_id:sequence})); follow.classList.add('guidance-follow-button');
-      box.append(button('暂停引导',() => pause('步行引导已暂停。')),follow);
+      box.append(button(context.demo ? '暂停演示' : '暂停引导',() => pause(context.demo ? '路线演示已暂停。' : '步行引导已暂停。')));
+      if(!context.demo) box.append(follow);
       if (rawPosition && progress?.status === 'off_route') box.append(button('从当前位置重新规划',replan));
     }
-    const end=button('结束引导',stop), exit=button('退出路线',() => (typeof Journey !== 'undefined' ? Journey.exitRoute() : stop()));
+    const end=button(context.demo ? '结束演示' : '结束引导',stop), exit=button('退出路线',() => {
+      if(context?.onExit) {const exit=context.onExit;stop();exit();}
+      else if(typeof Journey !== 'undefined') Journey.exitRoute(); else stop();
+    });
     end.classList.add('guidance-end-button'); exit.classList.add('guidance-exit-button');
     box.append(end,exit); slot.append(box);
   }
   document.addEventListener('visibilitychange',() => {if (document.hidden) pause();});
   window.addEventListener('pagehide',stop);
-  return {start,stop,pause,receive,render,active:() => !!context};
+  return {start,stop,pause,receive,receiveDemo,render,active:() => !!context};
 })();
 // Top-level const is not a window property; ES modules (v2 UI) reach it through window.
 if (Guidance) window.Guidance = Guidance;

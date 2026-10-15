@@ -8,6 +8,7 @@ from pydantic import Field, JsonValue
 
 from campuspilot.app.state import NOTICE, WebState
 from campuspilot.knowledge import KnowledgeQuery, campus_today
+from campuspilot.places_discovery import DiscoveryQuery, PlaceDiscovery
 from campuspilot.presentation import place_card, service_card
 
 
@@ -51,6 +52,17 @@ def register(app: FastAPI, state: WebState) -> None:
             "sources": [s.model_dump(mode="json") for s in state.repository.evidence_for(records)],
             "notice": NOTICE,
         }
+
+    @app.post("/api/places/search")
+    def discover_places(body: DiscoveryQuery, request: Request) -> JSONResponse:
+        state.session_for(request)
+        discovery = state.place_discovery or PlaceDiscovery(state.repository)
+        return JSONResponse(
+            {
+                **discovery.search(body.query, body.category),
+                "request_id": request.state.request_id,
+            }
+        )
 
     @app.get("/api/map-config")
     def map_config() -> dict[str, JsonValue]:
