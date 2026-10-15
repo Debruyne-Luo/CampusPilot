@@ -162,3 +162,31 @@ Chrome 的浏览器控制集成，其对受控标签的影响尚不能排除。�
   用户仍需在 Chrome 扩展管理页选择“移除”。此残留须明确报告，不能宣称全部清空。
 
 仅验证清理状态，没有重新运行浏览器或用账号发送测试消息，ChatGPT 是否恢复仍未验证。
+
+## 同日外部案例核查与诊断纠正
+
+用户报告恢复 Google/Chrome 同步后复现，随后按可见确认框重置 Chrome 设置仍失败。
+“恢复同步后复现”只能作为触发关联，不能确认同步配置就是根因。此前将它表述为已确定
+原因过强，现予纠正。停止反复重装、重置、删除用户资料。
+
+2026 年 10 月 15 日只读核查下列第一手报告，未发帖、未提交用户资料、未操作浏览器：
+
+- [openai/codex #54197](https://github.com/openai/codex/issues/54197)：同一路径
+  `/backend-api/f/conversation`、HTTP 404、相同错误正文及 `codex_browser` 字段。
+  发帖者报告清站点数据、全新资料、重装等无效，普通 Chat 与 Work/移动端结果存在差异。
+  载荷模型与本案并非完全相同，不能认定同一根因。
+- [UA 对照评论](https://github.com/openai/codex/issues/54197#issuecomment-6188819821)：
+  普通用户报告 Chrome/Edge 155 失败、Chromium 148 可用；只通过 DevTools 临时覆盖
+  User-Agent，保留请求体不变后恢复。与本机 Chrome 155 的版本条件吻合，仍需本机验证。
+- [同日 Reddit 报告](https://www.reddit.com/r/ChatGPT/comments/1x64mft/model_not_found/)：
+  多人报告相似故障；手机模拟有人成功，有人失败或仅首轮有效，不能当作可靠修复。
+- [Chrome 官方 DevTools 说明](https://developer.chrome.com/docs/devtools/device-mode/override-user-agent?hl=zh-cn)：
+  Network conditions 可临时覆盖当前页面 User-Agent 并刷新验证，改变的是向网站报告的
+  浏览器标识，不是安装旧版本。若试验失败，恢复 Use browser default 后刷新即可。
+
+所查 GitHub 问题仍为 Open，未见维护者确认根因或给出修复版本；自动标签不算官方确认。
+官方状态页当前可见的是与聊天使用无关的 Compliance Costs 数据延迟，未发现本次错误的
+对应事故条目。更合理的待验证方向是特定网页客户端/浏览器标识与模型路由的兼容差异，
+不是已证明的账号同步损坏。社区办法仅建议作单次、可撤销、当前标签的受控实验，
+不重新安装自动化工具、不改全局快捷方式、不降级浏览器、不安装时区或 UA 扩展。
+尚未在用户机器验证此办法，问题仍未报告修复。

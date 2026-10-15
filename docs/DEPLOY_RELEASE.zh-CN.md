@@ -30,6 +30,37 @@
 5. Caddy：用 `deploy/Caddyfile.release` 替换站点块，`caddy validate` 后 `systemctl reload caddy`。
 6. 高德控制台把正式域名加入 JS key 白名单。
 
+## 升级已有服务器前必须核对（2026-10-15 事故记录）
+
+发布包只带代码，**不带 Python 依赖**。已有服务器不会自动重跑 `02-venv-and-deps.sh`，
+所以凡是新增 import 的依赖，都必须先在服务器 venv 补装，否则服务起不来。
+
+2026-10-15 发布整合版本时正是这个原因失败：新代码在
+`campuspilot/app/state.py → attachments.py` 启动时 import `PIL`，而服务器 venv 建于
+依赖脚本加入 `pillow` 之前，于是 `ModuleNotFoundError: No module named 'PIL'`。
+发布脚本按设计自动回滚到上一版本（`restored_healthy: true`），线上未受影响。
+
+注意 `pillow` **与图片开关无关**：`attachments.py` 在模块加载时就 import `PIL`，
+即使 `CAMPUSPILOT_IMAGES=off` 也必须安装。
+
+发布前最小核对（在服务器上执行）：
+
+```bash
+sudo /opt/campuspilot/venv/bin/python -c "import fastapi, uvicorn, httpx, pydantic, PIL; print('api deps ok')"
+sudo /opt/campuspilot/venv/bin/python -c "import sqlite_vec, numpy; print('vector deps ok')"  # 使用 hybrid 检索时需要
+```
+
+缺失时按 `pyproject.toml` 的 `api` / `vector` extra 约束补装，再发布。
+
+同一轮还发现网关配置未同步：服务器 `/opt/campuspilot/gateway/Caddyfile.release` 是旧版，
+只有单一 `request_body { max_size 16KB }`，没有 `/api/attachments` 的 10MiB 例外，
+导致 37KB 的图片上传返回 **413**。仓库内的 `deploy/Caddyfile.release` 已含该例外。
+网关改配置后需 `caddy validate` 再 `systemctl restart campuspilot-gateway`（该单元不支持 reload）。
+
+**不要直接照搬仓库的 `deploy/Caddyfile.release` 覆盖线上网关**：仓库版本含 `basic_auth`，
+而当前线上网关没有该块（访问鉴权在 Cloudflare Pages 入口侧）。直接覆盖会引入重复认证。
+线上已应用的是"仅新增附件体积例外"的最小改动，其余保持不变。
+
 ## 每次发布（本地）
 ```bash
 uv run --extra api pytest -q && uv run mypy && uv run ruff check .
