@@ -100,7 +100,9 @@ def write_atomic(path, data, metadata):
             stream.flush()
             os.fsync(stream.fileno())
         os.chmod(temporary, metadata["mode"])
-        if hasattr(os, "chown"):
+        # Changing ownership needs privilege (CI and other unprivileged runs cannot do it);
+        # the real deployment writes this config as root, where the call succeeds.
+        if hasattr(os, "chown") and getattr(os, "geteuid", lambda: 0)() == 0:
             os.chown(temporary, metadata["uid"], metadata["gid"])
         os.replace(temporary, path)
     finally:
