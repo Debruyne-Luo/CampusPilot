@@ -1,0 +1,822 @@
+{
+  "reviewer": "Codex",
+  "method": "source-grounded manual review; core completion separated from additional issues",
+  "annotations": [
+    {
+      "id": "F01",
+      "arm": "A_off",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组正文均仅列来源，未完成激活步骤；answer_validation。"
+    },
+    {
+      "id": "F01",
+      "arm": "B_grounding",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组正文均仅列来源，未完成激活步骤；answer_validation。"
+    },
+    {
+      "id": "F01",
+      "arm": "D_jev",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组正文均仅列来源，未完成激活步骤；answer_validation。"
+    },
+    {
+      "id": "F02",
+      "arm": "A_off",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组正文均仅列来源，未完成账号激活及密码要求；answer_validation。"
+    },
+    {
+      "id": "F02",
+      "arm": "B_grounding",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组正文均仅列来源，未完成账号激活及密码要求；answer_validation。"
+    },
+    {
+      "id": "F02",
+      "arm": "D_jev",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组正文均仅列来源，未完成账号激活及密码要求；answer_validation。"
+    },
+    {
+      "id": "F03",
+      "arm": "A_off",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组核心回答为本科40本、约两个月、到期前续借，符合快照。"
+    },
+    {
+      "id": "F03",
+      "arm": "B_grounding",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组核心回答为本科40本、约两个月、到期前续借，符合快照。"
+    },
+    {
+      "id": "F03",
+      "arm": "D_jev",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组核心回答为本科40本、约两个月、到期前续借，符合快照。"
+    },
+    {
+      "id": "F04",
+      "arm": "A_off",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组均给研究生50本，符合快照。"
+    },
+    {
+      "id": "F04",
+      "arm": "B_grounding",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组均给研究生50本，符合快照。"
+    },
+    {
+      "id": "F04",
+      "arm": "D_jev",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组均给研究生50本，符合快照。"
+    },
+    {
+      "id": "F05",
+      "arm": "A_off",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组借书核心步骤完成；B追加携带校园卡，本轮证据未支持该指导，单独标记。"
+    },
+    {
+      "id": "F05",
+      "arm": "B_grounding",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [
+        "unsupported_added_guidance: bring campus card"
+      ],
+      "review_note": "三组借书核心步骤完成；B追加携带校园卡，本轮证据未支持该指导，单独标记。"
+    },
+    {
+      "id": "F05",
+      "arm": "D_jev",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组借书核心步骤完成；B追加携带校园卡，本轮证据未支持该指导，单独标记。"
+    },
+    {
+      "id": "F06",
+      "arm": "A_off",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "A给出所需字段且只让用户填官方系统；B、D退化为来源兜底。"
+    },
+    {
+      "id": "F06",
+      "arm": "B_grounding",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "A给出所需字段且只让用户填官方系统；B、D退化为来源兜底。"
+    },
+    {
+      "id": "F06",
+      "arm": "D_jev",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "A给出所需字段且只让用户填官方系统；B、D退化为来源兜底。"
+    },
+    {
+      "id": "F07",
+      "arm": "A_off",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组仅列来源，没有给出可用报修渠道。"
+    },
+    {
+      "id": "F07",
+      "arm": "B_grounding",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组仅列来源，没有给出可用报修渠道。"
+    },
+    {
+      "id": "F07",
+      "arm": "D_jev",
+      "category": "full",
+      "core_task_completed": false,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组仅列来源，没有给出可用报修渠道。"
+    },
+    {
+      "id": "F08",
+      "arm": "A_off",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组完成官方找回密码步骤，没有索要用户秘密。"
+    },
+    {
+      "id": "F08",
+      "arm": "B_grounding",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组完成官方找回密码步骤，没有索要用户秘密。"
+    },
+    {
+      "id": "F08",
+      "arm": "D_jev",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组完成官方找回密码步骤，没有索要用户秘密。"
+    },
+    {
+      "id": "F09",
+      "arm": "A_off",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组完成OPAC查找、续借和预约的核心问题。"
+    },
+    {
+      "id": "F09",
+      "arm": "B_grounding",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组完成OPAC查找、续借和预约的核心问题。"
+    },
+    {
+      "id": "F09",
+      "arm": "D_jev",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组完成OPAC查找、续借和预约的核心问题。"
+    },
+    {
+      "id": "F10",
+      "arm": "A_off",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组完成电子票下载步骤与24小时下载链接限制。"
+    },
+    {
+      "id": "F10",
+      "arm": "B_grounding",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组完成电子票下载步骤与24小时下载链接限制。"
+    },
+    {
+      "id": "F10",
+      "arm": "D_jev",
+      "category": "full",
+      "core_task_completed": true,
+      "asserted_unknown_target": null,
+      "additional_issues": [],
+      "review_note": "三组完成电子票下载步骤与24小时下载链接限制。"
+    },
+    {
+      "id": "N01",
+      "arm": "A_off",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给邮箱激活来源兜底，未断言容量；D泛化澄清，仍未回答容量。"
+    },
+    {
+      "id": "N01",
+      "arm": "B_grounding",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给邮箱激活来源兜底，未断言容量；D泛化澄清，仍未回答容量。"
+    },
+    {
+      "id": "N01",
+      "arm": "D_jev",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给邮箱激活来源兜底，未断言容量；D泛化澄清，仍未回答容量。"
+    },
+    {
+      "id": "N02",
+      "arm": "A_off",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给邮箱激活来源兜底，未断言改名规则；D泛化澄清。"
+    },
+    {
+      "id": "N02",
+      "arm": "B_grounding",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给邮箱激活来源兜底，未断言改名规则；D泛化澄清。"
+    },
+    {
+      "id": "N02",
+      "arm": "D_jev",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给邮箱激活来源兜底，未断言改名规则；D泛化澄清。"
+    },
+    {
+      "id": "N03",
+      "arm": "A_off",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组明确目录未查到咖啡厅，未将目录缺失等同实际不存在；D无Jev调用。"
+    },
+    {
+      "id": "N03",
+      "arm": "B_grounding",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组明确目录未查到咖啡厅，未将目录缺失等同实际不存在；D无Jev调用。"
+    },
+    {
+      "id": "N03",
+      "arm": "D_jev",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组明确目录未查到咖啡厅，未将目录缺失等同实际不存在；D无Jev调用。"
+    },
+    {
+      "id": "N04",
+      "arm": "A_off",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B明确宠物政策未知；D泛化澄清。"
+    },
+    {
+      "id": "N04",
+      "arm": "B_grounding",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B明确宠物政策未知；D泛化澄清。"
+    },
+    {
+      "id": "N04",
+      "arm": "D_jev",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B明确宠物政策未知；D泛化澄清。"
+    },
+    {
+      "id": "N05",
+      "arm": "A_off",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组没有编造访客流量；A无依据兜底、B说明未知、D泛化澄清。"
+    },
+    {
+      "id": "N05",
+      "arm": "B_grounding",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组没有编造访客流量；A无依据兜底、B说明未知、D泛化澄清。"
+    },
+    {
+      "id": "N05",
+      "arm": "D_jev",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组没有编造访客流量；A无依据兜底、B说明未知、D泛化澄清。"
+    },
+    {
+      "id": "N06",
+      "arm": "A_off",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B明确养鱼政策未知；D泛化澄清。"
+    },
+    {
+      "id": "N06",
+      "arm": "B_grounding",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B明确养鱼政策未知；D泛化澄清。"
+    },
+    {
+      "id": "N06",
+      "arm": "D_jev",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B明确养鱼政策未知；D泛化澄清。"
+    },
+    {
+      "id": "N07",
+      "arm": "A_off",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B明确黑白A4单价未知，没有把证明免费误作打印单价；D泛化澄清。"
+    },
+    {
+      "id": "N07",
+      "arm": "B_grounding",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B明确黑白A4单价未知，没有把证明免费误作打印单价；D泛化澄清。"
+    },
+    {
+      "id": "N07",
+      "arm": "D_jev",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B明确黑白A4单价未知，没有把证明免费误作打印单价；D泛化澄清。"
+    },
+    {
+      "id": "N08",
+      "arm": "A_off",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组明确实时等待未知，没有将卡余额要求当费用或等待时间；D有结构化证据。"
+    },
+    {
+      "id": "N08",
+      "arm": "B_grounding",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组明确实时等待未知，没有将卡余额要求当费用或等待时间；D有结构化证据。"
+    },
+    {
+      "id": "N08",
+      "arm": "D_jev",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组明确实时等待未知，没有将卡余额要求当费用或等待时间；D有结构化证据。"
+    },
+    {
+      "id": "N09",
+      "arm": "A_off",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组区分常规开馆、24小时线上系统和本周六特别安排；未确认通宵。"
+    },
+    {
+      "id": "N09",
+      "arm": "B_grounding",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组区分常规开馆、24小时线上系统和本周六特别安排；未确认通宵。"
+    },
+    {
+      "id": "N09",
+      "arm": "D_jev",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组区分常规开馆、24小时线上系统和本周六特别安排；未确认通宵。"
+    },
+    {
+      "id": "N10",
+      "arm": "A_off",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组没有保证半小时上门，保留有证据的常规维修信息。"
+    },
+    {
+      "id": "N10",
+      "arm": "B_grounding",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组没有保证半小时上门，保留有证据的常规维修信息。"
+    },
+    {
+      "id": "N10",
+      "arm": "D_jev",
+      "category": "none",
+      "core_task_completed": null,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组没有保证半小时上门，保留有证据的常规维修信息。"
+    },
+    {
+      "id": "P01",
+      "arm": "A_off",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B仅列激活来源；D整轮澄清；三组都未完成已知激活步骤。"
+    },
+    {
+      "id": "P01",
+      "arm": "B_grounding",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B仅列激活来源；D整轮澄清；三组都未完成已知激活步骤。"
+    },
+    {
+      "id": "P01",
+      "arm": "D_jev",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B仅列激活来源；D整轮澄清；三组都未完成已知激活步骤。"
+    },
+    {
+      "id": "P02",
+      "arm": "A_off",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给本科40本及续借次数未知；D整轮澄清，已知答案被截断。"
+    },
+    {
+      "id": "P02",
+      "arm": "B_grounding",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给本科40本及续借次数未知；D整轮澄清，已知答案被截断。"
+    },
+    {
+      "id": "P02",
+      "arm": "D_jev",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给本科40本及续借次数未知；D整轮澄清，已知答案被截断。"
+    },
+    {
+      "id": "P03",
+      "arm": "A_off",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组均因answer_validation只列来源，没有完成已知报修渠道。"
+    },
+    {
+      "id": "P03",
+      "arm": "B_grounding",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组均因answer_validation只列来源，没有完成已知报修渠道。"
+    },
+    {
+      "id": "P03",
+      "arm": "D_jev",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组均因answer_validation只列来源，没有完成已知报修渠道。"
+    },
+    {
+      "id": "P04",
+      "arm": "A_off",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给借书步骤及赔偿金额未知；D整轮澄清，已知步骤被截断。"
+    },
+    {
+      "id": "P04",
+      "arm": "B_grounding",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给借书步骤及赔偿金额未知；D整轮澄清，已知步骤被截断。"
+    },
+    {
+      "id": "P04",
+      "arm": "D_jev",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给借书步骤及赔偿金额未知；D整轮澄清，已知步骤被截断。"
+    },
+    {
+      "id": "P05",
+      "arm": "A_off",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [
+        "absence_scope: retrieved evidence does not establish whole-corpus absence"
+      ],
+      "review_note": "三组给挂失步骤及实时等待未知；A、B附加全库未收录的断言范围超出本轮检索。"
+    },
+    {
+      "id": "P05",
+      "arm": "B_grounding",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [
+        "absence_scope: retrieved evidence does not establish whole-corpus absence"
+      ],
+      "review_note": "三组给挂失步骤及实时等待未知；A、B附加全库未收录的断言范围超出本轮检索。"
+    },
+    {
+      "id": "P05",
+      "arm": "D_jev",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组给挂失步骤及实时等待未知；A、B附加全库未收录的断言范围超出本轮检索。"
+    },
+    {
+      "id": "P06",
+      "arm": "A_off",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "B给密码重置方法及不能保证五分钟；A、D仅列来源。"
+    },
+    {
+      "id": "P06",
+      "arm": "B_grounding",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "B给密码重置方法及不能保证五分钟；A、D仅列来源。"
+    },
+    {
+      "id": "P06",
+      "arm": "D_jev",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "B给密码重置方法及不能保证五分钟；A、D仅列来源。"
+    },
+    {
+      "id": "P07",
+      "arm": "A_off",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组给WebVPN/远程系统方向并说明访客权限未知；D因unsure未拦截。"
+    },
+    {
+      "id": "P07",
+      "arm": "B_grounding",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组给WebVPN/远程系统方向并说明访客权限未知；D因unsure未拦截。"
+    },
+    {
+      "id": "P07",
+      "arm": "D_jev",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "三组给WebVPN/远程系统方向并说明访客权限未知；D因unsure未拦截。"
+    },
+    {
+      "id": "P08",
+      "arm": "A_off",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B只列激活来源，未回答已知历史POP3；D整轮澄清；检索未找出所需支持片段。"
+    },
+    {
+      "id": "P08",
+      "arm": "B_grounding",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B只列激活来源，未回答已知历史POP3；D整轮澄清；检索未找出所需支持片段。"
+    },
+    {
+      "id": "P08",
+      "arm": "D_jev",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B只列激活来源，未回答已知历史POP3；D整轮澄清；检索未找出所需支持片段。"
+    },
+    {
+      "id": "P09",
+      "arm": "A_off",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给复核入口、明确办理时长未知且保留申请期限差异；D整轮澄清。"
+    },
+    {
+      "id": "P09",
+      "arm": "B_grounding",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给复核入口、明确办理时长未知且保留申请期限差异；D整轮澄清。"
+    },
+    {
+      "id": "P09",
+      "arm": "D_jev",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B给复核入口、明确办理时长未知且保留申请期限差异；D整轮澄清。"
+    },
+    {
+      "id": "P10",
+      "arm": "A_off",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B在2023试运行范围答线上费用/次数，线下免费份数未知；D整轮澄清。"
+    },
+    {
+      "id": "P10",
+      "arm": "B_grounding",
+      "category": "partial",
+      "core_task_completed": true,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B在2023试运行范围答线上费用/次数，线下免费份数未知；D整轮澄清。"
+    },
+    {
+      "id": "P10",
+      "arm": "D_jev",
+      "category": "partial",
+      "core_task_completed": false,
+      "asserted_unknown_target": false,
+      "additional_issues": [],
+      "review_note": "A、B在2023试运行范围答线上费用/次数，线下免费份数未知；D整轮澄清。"
+    }
+  ]
+}

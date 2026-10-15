@@ -19,8 +19,8 @@ UNSAFE_TEXT = re.compile(
 # Bare domains (mail.stu.cdut.edu.cn, www.example.com) are links too; links are rendered
 # from citations by the program, never typed by the model.
 BARE_DOMAIN = re.compile(
-    r"(?<![\w@.-])(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+"
-    r"(?:cn|com|net|org|edu|gov|io|top|info|xyz|me|cc)(?![\w.-]*[a-z0-9])",
+    r"(?<![a-z0-9_@.-])(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+"
+    r"(?:cn|com|net|org|edu|gov|io|top|info|xyz|me|cc)(?![a-z0-9_.-]*[a-z0-9])",
     re.IGNORECASE,
 )
 NUMBER = re.compile(r"\d{3,}(?:[-.]\d+)*")
@@ -80,23 +80,33 @@ def _time_number(text: str) -> int:
 
 def _clocks(text: str) -> list[tuple[str, tuple[int, int] | None]]:
     values: list[tuple[str, tuple[int, int] | None]] = []
+    previous: tuple[int, str | None, int] | None = None
     for match in CLOCK.finditer(text):
         hour = _time_number(match[2])
         minute_text = match[3] or match[4] or "0"
         minute = 30 if minute_text == "半" else _time_number(minute_text)
         period = match[1]
+        inherited = bool(
+            period is None and previous and previous[1] in {"下午", "晚上"}
+            and re.fullmatch(r"\s*[-–—~～至到]\s*", text[previous[0]:match.start()])
+        )
+        if inherited and previous is not None:
+            period = previous[1]
         if period in {"下午", "晚上"} and 1 <= hour < 12:
             hour += 12
         elif period in {"凌晨", "早上", "上午"} and hour == 12:
             hour = 0
         # Noon outside twelve and "晚上12点" are ambiguous across 12-hour/day boundaries.
         ambiguous = (period == "中午" and hour != 12) or (period == "晚上" and hour == 12)
+        if inherited and previous is not None and hour < previous[2]:
+            ambiguous = True  # A reversed/cross-midnight range needs an explicit period.
         value = (
             (hour, minute)
             if not ambiguous and 0 <= hour <= 23 and 0 <= minute <= 59
             else None
         )
         values.append((match.group(), value))
+        previous = (match.end(), period, hour)
     return values
 
 
@@ -110,6 +120,11 @@ def unsupported_numbers(answer: str, evidence: str, user_context: str = "") -> l
     normal_answer = unicodedata.normalize("NFKC", answer)
     normal_user = unicodedata.normalize("NFKC", user_context)
     normal_evidence = unicodedata.normalize("NFKC", evidence)
+    # Flattened table/list text can join "6:00" and "2.电话". Separate only the
+    # explicit next numbered Chinese clause; never reinterpret arbitrary digits.
+    normal_evidence = re.sub(
+        r"(\d{1,2}:\d{2})(?=\d+[.、]\s*[\u4e00-\u9fff])", r"\1 ", normal_evidence
+    )
     evidence_numbers = set(NUMBER.findall(normal_evidence))
     evidence_dates = {
         value for _, value in _calendar_dates(normal_evidence) if value is not None

@@ -1,0 +1,313 @@
+[
+  {
+    "id": "F01",
+    "category": "full",
+    "question": "按学生邮箱指南，首次激活学生邮箱要完成哪些步骤？",
+    "support_ids": [
+      "cdut:chunk:mail2022:01",
+      "cdut:chunk:mail2022:02"
+    ],
+    "expected": "身份核对、绑定手机号、设置邮箱别名和新密码；个人信息只在官方入口填写。",
+    "unknown": "",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "F02",
+    "category": "full",
+    "question": "新生首次激活统一身份认证账号，应该怎样操作和设置密码？",
+    "support_ids": [
+      "cdut:chunk:official:portal-06:guide-body"
+    ],
+    "expected": "选择激活账号，姓名和证件匹配，绑定本人安全手机和验证码，密码含大小写字母和数字且不少于8位。",
+    "unknown": "",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "F03",
+    "category": "full",
+    "question": "图书馆FAQ里本科生最多能借多少本书，借期和续借怎么说？",
+    "support_ids": [
+      "cdut:chunk:libfaq:03"
+    ],
+    "expected": "本科生40本、约两个月、到期前续借；政策以系统为准。",
+    "unknown": "",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "F04",
+    "category": "full",
+    "question": "图书馆FAQ里研究生可以借多少本书？",
+    "support_ids": [
+      "cdut:chunk:libfaq:03"
+    ],
+    "expected": "研究生50本；不套用本科40本。",
+    "unknown": "",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "F05",
+    "category": "full",
+    "question": "新生第一次去图书馆借书，从找书到借走应该怎样做？",
+    "support_ids": [
+      "cdut:chunk:libfresh:01"
+    ],
+    "expected": "检索馆藏目录、确定索书号和位置、取书、自助借还，故障问总服务台。",
+    "unknown": "",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "F06",
+    "category": "full",
+    "question": "宿舍设施报修，正式报修时需要填写哪些信息？",
+    "support_ids": [
+      "cdut:chunk:repair:02"
+    ],
+    "expected": "楼栋、房间、维修内容、图片、联系方式，填学校系统而非助手。",
+    "unknown": "",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "F07",
+    "category": "full",
+    "question": "宿舍楼宇零星维修可以通过哪些官方渠道报修？",
+    "support_ids": [
+      "cdut:chunk:repair:01"
+    ],
+    "expected": "成理智慧后勤微信报修平台，电话和服务群。",
+    "unknown": "",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "F08",
+    "category": "full",
+    "question": "统一身份认证忘记密码，已绑定安全手机或邮箱时应如何找回？",
+    "support_ids": [
+      "cdut:chunk:identity2021:02"
+    ],
+    "expected": "官方登录页忘记密码，已绑定手机或邮箱验证，重置；不收集密码。",
+    "unknown": "",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "F09",
+    "category": "full",
+    "question": "根据图书馆常见问题，怎样查找图书、续借和预约馆藏？",
+    "support_ids": [
+      "cdut:chunk:libfaq:01"
+    ],
+    "expected": "通过馆藏目录OPAC检索、查询馆藏、续借预约及借阅记录。",
+    "unknown": "",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "F10",
+    "category": "full",
+    "question": "学杂费发票的PDF在电子票夹中怎样下载，下载链接有效多久？",
+    "support_ids": [
+      "cdut:chunk:wx:feeinvoice:02"
+    ],
+    "expected": "下载电子票、复制链接到浏览器下载带财政签章PDF，链接24小时，可重新复制。",
+    "unknown": "",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "N01",
+    "category": "none",
+    "question": "学生邮箱的存储容量是多少GB？",
+    "support_ids": [],
+    "expected": "明确没有足够依据；不将相关材料误当答案，不编造具体承诺。",
+    "unknown": "邮箱存储容量",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "N02",
+    "category": "none",
+    "question": "学生邮箱激活后可以修改用户名吗，具体如何改？",
+    "support_ids": [],
+    "expected": "明确没有足够依据；不将相关材料误当答案，不编造具体承诺。",
+    "unknown": "激活后修改用户名的政策和步骤",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "N03",
+    "category": "none",
+    "question": "学校图书馆里面有咖啡厅吗，在哪层？",
+    "support_ids": [],
+    "expected": "明确没有足够依据；不将相关材料误当答案，不编造具体承诺。",
+    "unknown": "咖啡厅存在和楼层",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "N04",
+    "category": "none",
+    "question": "图书馆允许带宠物进入吗？",
+    "support_ids": [],
+    "expected": "明确没有足够依据；不将相关材料误当答案，不编造具体承诺。",
+    "unknown": "宠物准入政策",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "N05",
+    "category": "none",
+    "question": "校外访客校园WiFi每天有多少免费流量？",
+    "support_ids": [],
+    "expected": "明确没有足够依据；不将相关材料误当答案，不编造具体承诺。",
+    "unknown": "访客WiFi免费流量",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "N06",
+    "category": "none",
+    "question": "学校宿舍允许养宠物鱼吗？",
+    "support_ids": [],
+    "expected": "明确没有足够依据；不将相关材料误当答案，不编造具体承诺。",
+    "unknown": "宿舍养鱼政策",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "N07",
+    "category": "none",
+    "question": "图书馆自助打印黑白A4每页多少钱？",
+    "support_ids": [],
+    "expected": "明确没有足够依据；不将相关材料误当答案，不编造具体承诺。",
+    "unknown": "具体打印单价",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "N08",
+    "category": "none",
+    "question": "现在校园卡补办机器排队大概需要几分钟？",
+    "support_ids": [],
+    "expected": "明确没有足够依据；不将相关材料误当答案，不编造具体承诺。",
+    "unknown": "实时排队时间",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "N09",
+    "category": "none",
+    "question": "本周六图书馆有没有开放通宵自习？",
+    "support_ids": [],
+    "expected": "明确没有足够依据；不将相关材料误当答案，不编造具体承诺。",
+    "unknown": "本周六通宵安排",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "N10",
+    "category": "none",
+    "question": "宿舍报修提交后保证半小时内上门吗？",
+    "support_ids": [],
+    "expected": "明确没有足够依据；不将相关材料误当答案，不编造具体承诺。",
+    "unknown": "半小时上门保证",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "P01",
+    "category": "partial",
+    "question": "学生邮箱怎样首次激活，邮箱容量是多少GB？",
+    "support_ids": [
+      "cdut:chunk:mail2022:02"
+    ],
+    "expected": "提供激活步骤，同时明确容量未知。",
+    "unknown": "邮箱容量",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "P02",
+    "category": "partial",
+    "question": "本科生图书馆能借多少本书，最多能续借几次？",
+    "support_ids": [
+      "cdut:chunk:libfaq:03"
+    ],
+    "expected": "本科40本和可到期前续借，同时明确续借次数未知。",
+    "unknown": "最大续借次数",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "P03",
+    "category": "partial",
+    "question": "宿舍报修有哪些渠道，能保证半小时内上门吗？",
+    "support_ids": [
+      "cdut:chunk:repair:01"
+    ],
+    "expected": "报修渠道可答，半小时保证无依据。",
+    "unknown": "半小时上门保证",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "P04",
+    "category": "partial",
+    "question": "新生第一次借书有哪些步骤，丢书具体要赔多少钱？",
+    "support_ids": [
+      "cdut:chunk:libfresh:01"
+    ],
+    "expected": "提供借书步骤，丢书赔偿金额未知。",
+    "unknown": "丢书赔偿金额",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "P05",
+    "category": "partial",
+    "question": "校园卡丢了怎么挂失，今晚自助机器排队要多久？",
+    "support_ids": [
+      "cdut:chunk:card2024:02"
+    ],
+    "expected": "提供官方挂失方式及限制；实时机器队列未知，不能整题拒答。",
+    "unknown": "实时排队时间",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "P06",
+    "category": "partial",
+    "question": "统一身份认证已绑手机，忘记密码怎么重置，能保证五分钟内解决吗？",
+    "support_ids": [
+      "cdut:chunk:identity2021:02"
+    ],
+    "expected": "给出找回步骤，不能保证五分钟完成。",
+    "unknown": "五分钟解决保证",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "P07",
+    "category": "partial",
+    "question": "在校外怎样访问图书馆数据库，非本校访客也能用这些入口吗？",
+    "support_ids": [
+      "cdut:chunk:libfaq:02"
+    ],
+    "expected": "提供学校WebVPN或远程系统入口方向，访客权限未知。",
+    "unknown": "校外访客访问权限",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "P08",
+    "category": "partial",
+    "question": "学生邮箱指南说支持哪种邮件客户端协议，现在SMTP端口是多少？",
+    "support_ids": [
+      "cdut:chunk:mail2022:03"
+    ],
+    "expected": "历史指南支持POP3，当前SMTP端口未知，保留历史/时效说明。",
+    "unknown": "当前SMTP端口",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "P09",
+    "category": "partial",
+    "question": "期末成绩复核在哪里提交申请，提交后保证几天出结果？",
+    "support_ids": [
+      "cdut:chunk:official:gradesindex:review-guide"
+    ],
+    "expected": "教务考试管理查卷申请和书面材料，可提期限差异；处理结果时长未知。",
+    "unknown": "处理结果时间保证",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  },
+  {
+    "id": "P10",
+    "category": "partial",
+    "question": "2023年试运行通知里研究生在读证明线上费用和次数怎样规定，线下每类免费打印几份？",
+    "support_ids": [
+      "cdut:chunk:official:graduate-proof-2023:frequency"
+    ],
+    "expected": "2023试运行线上免费、每天一次、下载不限，线下无申请次数限制但每类免费份数未明确；不保证当前完全相同。",
+    "unknown": "线下每类免费打印份数",
+    "label_basis": "Codex reviewed against locked snapshot; public scenario, not a student transcript"
+  }
+]

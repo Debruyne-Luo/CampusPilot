@@ -8,6 +8,7 @@ The page reader pins validated public DNS addresses and revalidates every redire
 from __future__ import annotations
 
 import asyncio
+import codecs
 import hashlib
 import ipaddress
 import re
@@ -289,7 +290,15 @@ class DeepSeekSearchProvider:
             ):
                 # Charge the full configured tool-use cap even when provider tool usage
                 # is omitted. No uncertain request may receive an optimistic refund.
-                actual = self.price.cost(usage["input_tokens"], usage["output_tokens"])
+                cached_input = 0
+                for key in ("cache_read_input_tokens", "cache_creation_input_tokens"):
+                    value = usage.get(key, 0)
+                    if type(value) is not int or value < 0:
+                        raise ValueError
+                    cached_input += value
+                actual = self.price.cost(
+                    usage["input_tokens"] + cached_input, usage["output_tokens"]
+                )
                 actual += self.search_cost_per_use * max_uses
                 if "cost" in usage:
                     billed = Decimal(str(usage["cost"]))
@@ -304,11 +313,15 @@ class DeepSeekSearchProvider:
                 return ProviderSearchResult("unavailable", reason="native_search_block_missing")
             found: list[SearchSource] = []
             seen: set[str] = set()
+            tool_error = False
             for block in blocks:
                 content = block.get("content", [])
                 if not isinstance(content, list):
-                    return ProviderSearchResult("unavailable", reason="native_search_tool_error")
+                    tool_error = True
+                    continue
                 for row in content:
+                    if isinstance(row, dict) and row.get("type") == "web_search_tool_result_error":
+                        tool_error = True
                     if not isinstance(row, dict) or row.get("type") != "web_search_result":
                         continue
                     url = row.get("url")
@@ -319,6 +332,8 @@ class DeepSeekSearchProvider:
                     age = row.get("page_age")
                     found.append(SearchSource(url, title if isinstance(title, str) else url,
                                               age if isinstance(age, str) else None))
+            if not found and tool_error:
+                return ProviderSearchResult("unavailable", reason="native_search_tool_error")
             return ProviderSearchResult("success" if found else "empty", tuple(found[:10]))
         except (BudgetExhausted, ChatUnavailable, httpx.HTTPError, TimeoutError,
                 ValueError, KeyError, TypeError) as exc:
@@ -457,27 +472,88 @@ class _PageText(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.parts: list[str] = []
         self.skip = 0
+        self.in_title = False
+        self.title: list[str] = []
+        self.has_form = False
+        self.has_password = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag == "title":
+            self.in_title = True
+        if tag == "form":
+            self.has_form = True
+        if tag == "input" and any(
+            key == "type" and (value or "").lower() == "password" for key, value in attrs
+        ):
+            self.has_password = True
         if tag in {"script", "style", "noscript", "svg"}:
             self.skip += 1
         if not self.skip and tag in {"br", "p", "div", "li", "tr", "h1", "h2", "h3"}:
             self.parts.append("\n")
 
     def handle_endtag(self, tag: str) -> None:
+        if tag == "title":
+            self.in_title = False
         if tag in {"script", "style", "noscript", "svg"} and self.skip:
             self.skip -= 1
 
     def handle_data(self, data: str) -> None:
-        if not self.skip:
+        if self.in_title:
+            self.title.append(data)
+        if not self.skip and not self.in_title:
             self.parts.append(data)
 
 
+def decode_page(body: bytes, content_type: str) -> str:
+    """Honor declared Chinese encodings; never turn corrupt bytes into evidence."""
+    charset = re.search(r"charset\s*=\s*[\"']?([^\s;\"']+)", content_type, re.I)
+    if body.startswith(codecs.BOM_UTF8):
+        encoding = "utf-8-sig"
+    elif body.startswith((codecs.BOM_UTF32_LE, codecs.BOM_UTF32_BE)):
+        encoding = "utf-32"
+    elif body.startswith((codecs.BOM_UTF16_LE, codecs.BOM_UTF16_BE)):
+        encoding = "utf-16"
+    elif charset:
+        encoding = charset[1]
+    else:
+        # HTML's charset declaration is ASCII even when the document body is not.
+        meta = re.search(
+            rb"<meta\b[^>]*charset\s*=\s*[\"']?([^\s;\"'/>]+)", body[:8192], re.I
+        ) if "html" in content_type else None
+        try:
+            encoding = meta[1].decode("ascii") if meta else "utf-8"
+        except UnicodeError:
+            raise PageReadError("page_encoding_invalid") from None
+    try:
+        return body.decode(encoding, errors="strict")
+    except (LookupError, UnicodeError, TypeError):
+        raise PageReadError("page_encoding_invalid") from None
+
+
 def body_text(body: str, *, html: bool = False) -> str:
+    if "\ufffd" in body:
+        raise PageReadError("page_encoding_invalid")
+    # Sites can return their login/JS challenge with status 200, including through
+    # provider extraction. Such a response is not the requested document body.
+    if re.search(r"\$_ts\s*(?:[.\[]|=)", body):
+        raise PageReadError("page_protection_required")
     if html:
         parser = _PageText()
         parser.feed(body)
+        title = " ".join(parser.title).strip()
+        if parser.has_form and parser.has_password:
+            raise PageReadError("page_login_required")
+        if re.search(
+            r"^(?:access denied|just a moment|checking your browser|security verification|"
+            r"安全验证|访问验证|人机验证)\b", title, re.I
+        ):
+            raise PageReadError("page_protection_required")
         body = "".join(parser.parts)
+    if re.search(
+        r"^\s*(?:access denied|checking your browser|please enable javascript and cookies|"
+        r"verify you are human)(?:\b|$)", body, re.I
+    ):
+        raise PageReadError("page_protection_required")
     text = re.sub(r"[ \t\r\f\v]+", " ", body)
     text = re.sub(r"\n\s*\n+", "\n", text).strip()[:8000]
     if not text:
@@ -529,7 +605,9 @@ class SafePageReader:
                 raise PageReadError("provider_raw_body_missing")
             if len(raw.encode("utf-8")) > self.max_bytes:
                 raise PageReadError("page_too_large")
-            text = body_text(raw, html=bool(re.search(r"<(?:html|body|p|div|script)\b", raw, re.I)))
+            text = body_text(raw, html=bool(re.search(
+                r"<(?:html|body|p|div|script|title|form|input)\b", raw, re.I
+            )))
             return WebPageEvidence(
                 source_id="web:" + hashlib.sha256(url.encode()).hexdigest()[:24],
                 title=source.title[:300], url=url, text=text,
@@ -567,6 +645,8 @@ class SafePageReader:
                                 raise PageReadError("page_redirect_limit")
                             current = page_url(urljoin(current, response.headers["location"]))
                             continue
+                        if response.status_code == 412:
+                            raise PageReadError("page_protection_required")
                         if response.status_code != 200:
                             raise PageReadError("page_unavailable")
                         content_type = response.headers.get("content-type", "").lower()
@@ -582,8 +662,7 @@ class SafePageReader:
                             body.extend(part)
                             if len(body) > self.max_bytes:
                                 raise PageReadError("page_too_large")
-                        encoding = response.encoding or "utf-8"
-                        decoded = bytes(body).decode(encoding, errors="replace")
+                        decoded = decode_page(bytes(body), content_type)
                         text = body_text(decoded, html="html" in content_type)
                         # A redirect onto a third-party host must not retain official authority.
                         return WebPageEvidence(
@@ -639,23 +718,23 @@ class WebEvidenceService:
                     if page_budget <= 0:
                         break
                     result = await provider.search(
-                        question, self.budget, deadline, max_uses=1, max_pages=page_budget
+                        "成都理工大学 site:cdut.edu.cn " + question,
+                        self.budget, deadline, max_uses=1, max_pages=page_budget
                     )
                     reads += min(result.extracted_reads, page_budget)
                     if result.status == "budget":
                         break
                     if result.status != "success":
                         continue
-                    sources = sorted(result.sources, key=lambda s: (
-                        source_authority(s.url) != "official_university", s.url
-                    ))
+                    sources = sorted(result.sources, key=lambda s:
+                                     source_authority(s.url) != "official_university")
                     seen: set[str] = set()
                     selected: list[SearchSource] = []
                     for source in sources:
                         try:
                             normalized = page_url(source.url)
-                        except PageReadError:
-                            failures.append("PageReadError")
+                        except PageReadError as exc:
+                            failures.append(str(exc))
                             continue
                         if normalized in seen:
                             continue
@@ -669,17 +748,33 @@ class WebEvidenceService:
                     if not result.extracted_reads:
                         reads += len(selected)
 
-                    async def read_one(source: SearchSource) -> None:
+                    fetched: dict[int, WebPageEvidence] = {}
+
+                    async def read_one(
+                        index: int, source: SearchSource, bodies: dict[int, WebPageEvidence]
+                    ) -> None:
                         try:
-                            pages.append(await self.reader.read(source, deadline))
-                        except (PageReadError, httpx.HTTPError, ValueError) as exc:
+                            bodies[index] = await self.reader.read(source, deadline)
+                        except PageReadError as exc:
+                            failures.append(str(exc))
+                        except (httpx.HTTPError, ValueError) as exc:
                             failures.append(type(exc).__name__)
-                    await asyncio.gather(*(read_one(source) for source in selected))
+                    try:
+                        await asyncio.gather(*(
+                            read_one(i, s, fetched) for i, s in enumerate(selected)
+                        ))
+                    finally:
+                        # A slow sibling must not discard a body already read within
+                        # the shared deadline. Retain provider order on timeout too.
+                        pages.extend(fetched[i] for i in sorted(fetched))
                     if pages:
                         break
                     # Structured native results with blocked/empty bodies do not fulfill
                     # the evidence contract. Try the one fallback within the same deadline.
-                    result = ProviderSearchResult("limited", reason="no_readable_page_body")
+                    result = ProviderSearchResult("limited", reason=(
+                        failures[0] if failures and all(f == failures[0] for f in failures)
+                        else "no_readable_page_body"
+                    ))
         except BudgetExhausted as exc:
             result = ProviderSearchResult("budget", reason=str(exc))
         except (TimeoutError, httpx.TimeoutException):
@@ -691,6 +786,6 @@ class WebEvidenceService:
             reason = "partial_page_reads" if failures or result.status == "timeout" else ""
         elif status == "success":
             status, reason = "limited", "no_readable_page_body"
-        pages.sort(key=lambda p: (p.source_authority != "official_university", p.url))
+        pages.sort(key=lambda p: p.source_authority != "official_university")
         return WebSearchResult(status, tuple(pages), provider_name, reason,
                                attempts, reads, (time.monotonic() - started) * 1000)

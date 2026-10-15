@@ -5,9 +5,9 @@ after the plan's tools ran and before the model answers:
 
 - ``shadow``: Jev is asked and its decision recorded (logs, response ``jev`` metadata);
   answers, citations and summaries are untouched.
-- ``on``: chunks Jev scores as irrelevant (rank 0) are dropped and the rest reordered; when
-  Jev judges the evidence insufficient (and the local grounding signal does not disagree) the
-  turn refuses or asks to clarify without showing unrelated citations.
+- ``on``: chunks Jev scores as irrelevant (rank 0) are dropped and the rest reordered.
+  Partial local evidence may still support an answer with explicit unknowns; full-task
+  insufficiency only refuses/clarifies when no retained passages or structured facts remain.
 
 Any timeout, error, exhausted budget, ``unsure`` or ``unknown`` answer fails open: the
 original flow continues unchanged. One Jev request per turn serves both the reranker and the
@@ -217,7 +217,7 @@ class JevPlugin:
     calibration: Calibration = DEFAULT_CALIBRATION
 
     def resolve(self, rows: Sequence[dict[str, JsonValue]]) -> tuple[RetrievalHit, ...]:
-        """Tool hit rows -> RetrievalHit from the current approved snapshot (unknown ids drop)."""
+        """Resolve against the request's snapshot; unknown or mismatched bodies drop."""
         retriever = self.snapshots.acquire() if self.snapshots is not None else None
         if retriever is None:
             return ()
@@ -228,6 +228,8 @@ class JevPlugin:
         for row in rows:
             chunk = chunks.get(str(row.get("chunk_id")))
             if chunk is None or chunk.source_id not in sources:
+                continue
+            if "text_sha256" in row and row["text_sha256"] != chunk.text_sha256:
                 continue
             score = row.get("score")
             hits.append(

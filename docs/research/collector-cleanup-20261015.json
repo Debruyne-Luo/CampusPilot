@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-15",
+  "method": "SendToRecycleBin",
+  "recycle_bin_emptied": false,
+  "removed_paths": [
+    "output/official-tools",
+    "scripts/probe_official_collectors.py",
+    "scripts/package_official_captures.py",
+    "tests/test_official_collectors.py",
+    "output/annotate_official_round.py",
+    "output/embed_official_round.py",
+    "output/verify_official_round.py",
+    "C:/Users/21207/.crawl4ai"
+  ],
+  "removed_bytes": 1301221723,
+  "chrome_profile_modified": false,
+  "system_proxy_dns_modified": false,
+  "browser_extension_state": "User disabled; still installed; user reports error persists",
+  "browser_management_limitation": "chrome protocol access rejected; no bypass attempted",
+  "knowledge_version": "kb-229ee34eba99ef34",
+  "knowledge_integrity_passed": true,
+  "chatgpt_fixed": false,
+  "guest_chatgpt_test": "first reply succeeds but subsequent turn fails with Model not found; user report and screenshot",
+  "same_account_control": "latest regular and working guest screenshots show the same account name; credentials not inspected",
+  "next_diagnostic_step": "pause cache clearing; compare first-turn and failing follow-up request model and failure status/code/message; do not collect headers, tokens, message content or raw conversation IDs",
+  "edge_multi_turn_test": "user corrected earlier failure answer; latest screenshot shows all three turns successful",
+  "installed_browser_versions": {"chrome": "155.0.8059.40", "edge": "155.0.4283.45"},
+  "unverified_hypothesis": "follow-up selects an unavailable model from conversation metadata; static extension client evidence only, not yet established for guest website",
+  "reinstall_recommended": false
+}

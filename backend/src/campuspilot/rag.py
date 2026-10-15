@@ -7,6 +7,9 @@ import json
 import re
 import sqlite3
 import struct
+from collections.abc import Iterator
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import date
 from pathlib import Path
 from typing import TYPE_CHECKING, Annotated, Any, Literal, Protocol, Self
@@ -226,8 +229,25 @@ class SnapshotStore:
         self._cached: HybridRetriever | None = None
         self._key = ""
         self._had_current = False
+        # A tuple distinguishes a pinned empty store from no request scope. ContextVar
+        # isolates concurrent requests and follows asyncio.to_thread's copied context.
+        self._pinned: ContextVar[tuple[HybridRetriever | None] | None] = ContextVar(
+            "campuspilot_snapshot_pin", default=None
+        )
+
+    @contextmanager
+    def pin(self, retriever: HybridRetriever | None) -> Iterator[None]:
+        """Keep one acquired version for this request; reload checks resume on exit."""
+        token = self._pinned.set((retriever,))
+        try:
+            yield
+        finally:
+            self._pinned.reset(token)
 
     def acquire(self) -> HybridRetriever | None:
+        pinned = self._pinned.get()
+        if pinned is not None:
+            return pinned[0]
         pointer = self.root / "current.json"
         fallback = self.root / "last_good.json"
         try:

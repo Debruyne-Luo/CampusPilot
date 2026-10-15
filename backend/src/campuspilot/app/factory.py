@@ -27,6 +27,7 @@ from campuspilot.app.state import (
     NOTICE,
     BrowserSession,
     ChatBudget,
+    SlidingWindow,
     WebState,
 )
 from campuspilot.chat_runtime import ChatRuntime, Mode
@@ -38,6 +39,7 @@ from campuspilot.jev_plugin import JevMode, build_plugin
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.llm.chat_model import ProductionModel, ToolCallingModel
 from campuspilot.llm.embedding import CloudflareEmbedder
+from campuspilot.observability import configure_logging
 from campuspilot.places_discovery import PlaceDiscovery
 from campuspilot.rag import SnapshotStore
 from campuspilot.retrieval.grounding import GroundingMode
@@ -117,6 +119,7 @@ def create_web_app(
     knowledge_bundle: str = "",
     asset_version: str = "",
 ) -> FastAPI:
+    configure_logging()
     # Directory tools keep their own service credential, never exposed to the browser.
     repository = DirectoryRepository.load(data_dir)
     knowledge = KnowledgeStore.load(data_dir / "knowledge.json")
@@ -209,6 +212,14 @@ def create_web_app(
     )
     app.title = "理小龙 CDUTdino 校园办事与地图"
     app.add_middleware(TrustedHostMiddleware, allowed_hosts=hosts)
+    map_window = SlidingWindow(60, 120)
+    discovery = (
+        PlaceDiscovery(
+            repository, key=amap_web_service_key, enabled=True, acquire=map_window.try_record
+        )
+        if amap_discovery
+        else None
+    )
     state = WebState(
         repository=repository,
         knowledge=knowledge,
@@ -221,6 +232,8 @@ def create_web_app(
         amap_security_code=amap_security_code,
         budget=budget,
         embedder=embedder if retrieval_mode != "lexical" else None,
+        place_discovery=discovery,
+        map_window=map_window,
         agent=(
             AgentRunner(
                 agent_registry(
@@ -230,35 +243,19 @@ def create_web_app(
                     embedder,
                     roster=data_dir / "teachers_roster.json",
                     grounding=grounding,
+                    discovery=discovery,
                 ),
                 repository,
                 model if isinstance(model, ToolCallingModel) else None,
                 grounding=grounding,
                 jev=plugin,
                 web_service=web_service,
+                snapshots=snapshots,
             )
             if agent_loop and runtime_mode == "phase2"
             else None
         ),
     )
-    if amap_discovery:
-
-        def map_acquire() -> bool:
-            return state.map_window.try_record()
-
-        state.place_discovery = PlaceDiscovery(
-            repository, key=amap_web_service_key, enabled=True, acquire=map_acquire
-        )
-        if state.agent is not None:
-            state.agent.registry = agent_registry(
-                repository,
-                knowledge,
-                snapshots,
-                embedder,
-                roster=data_dir / "teachers_roster.json",
-                grounding=grounding,
-                discovery=state.place_discovery,
-            )
     if images_enabled:
         from campuspilot.attachments import AttachmentStore
 

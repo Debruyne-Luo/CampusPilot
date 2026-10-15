@@ -1,0 +1,329 @@
+{
+  "recorded_at": "2026-10-15T03:40:00.243255+00:00",
+  "experiment": "Real fetched-paper post-search Jev diagnostic; no answer generation",
+  "input_tavily_pilot_sha256": "1d5f7118e868aa89e64eab891bdc2f00f2c1bd9d8170cc8dec62c994fde07921",
+  "budget_file": ".test-runs\\jev-validation-20261014\\budget\\online\\budget-20261015.json",
+  "budget_limit_usd": "1",
+  "budget_charged_before_usd": "0.670389576",
+  "budget_charged_after_usd": "0.671458056",
+  "no_new_ledger": true,
+  "generation_calls": 0,
+  "cases": [
+    {
+      "id": "W01",
+      "question": "请联网核实，图书馆预约的图书到馆后为读者保留几天？",
+      "actual_hits": [
+        {
+          "source_id": "web:7010315cd1ff74406791377e",
+          "chunk_id": "web:7010315cd1ff74406791377e:body",
+          "title": "[PDF] 高校数字图书馆网络安全解决方略",
+          "source_title": "[PDF] 高校数字图书馆网络安全解决方略",
+          "publisher": "xbzrkx.cdut.edu.cn",
+          "url": "https://xbzrkx.cdut.edu.cn/cn/article/pdf/preview/1ae7be45-de51-4ad6-aed4-964954a6d27f.pdf",
+          "source_authority": "official_university",
+          "retrieved_at": "2026-10-15T03:28:17.829643+00:00",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "temporal_status": "unknown",
+          "grounded": false,
+          "web": true,
+          "score": 0.0,
+          "kind": "fact",
+          "applicability": "本轮联网材料；时效和适用范围需复核",
+          "verification_status": "unreviewed_web",
+          "limitation": "官方公开页面；未完成永久知识库审查，时效需复核",
+          "text_chars": 8000,
+          "text_sha256": "4eb962fcfe555f02a07373fa26f178364b9c9a03da1c77804b71618855b52c07"
+        },
+        {
+          "source_id": "web:82e2a022eb41823e89ea1a5d",
+          "chunk_id": "web:82e2a022eb41823e89ea1a5d:body",
+          "title": "[PDF] 基于BIM 技术和BP 神经网络的成都理工大学图书馆天然采光研究",
+          "source_title": "[PDF] 基于BIM 技术和BP 神经网络的成都理工大学图书馆天然采光研究",
+          "publisher": "www.cdut.edu.cn",
+          "url": "https://www.cdut.edu.cn/__local/F/5E/38/377CF6E327616FC169404A97B35_68885D90_4ECDB1.pdf",
+          "source_authority": "official_university",
+          "retrieved_at": "2026-10-15T03:28:17.830147+00:00",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "temporal_status": "unknown",
+          "grounded": false,
+          "web": true,
+          "score": 0.0,
+          "kind": "fact",
+          "applicability": "本轮联网材料；时效和适用范围需复核",
+          "verification_status": "unreviewed_web",
+          "limitation": "官方公开页面；未完成永久知识库审查，时效需复核",
+          "text_chars": 8000,
+          "text_sha256": "d9016d34e1b56824dca5dadc087b6532ade440621c3b79bf7a0786900e0ac5b6"
+        }
+      ],
+      "search_completed": true,
+      "local_candidates": [],
+      "unmodified_original_page_text": true,
+      "expected_source_review": "The fetched academic papers do not establish the asked library reservation days or attached-CD borrowing rules.",
+      "result": {
+        "status": "ok",
+        "answer_mode": "clarify",
+        "search_needed": null,
+        "sufficient": false,
+        "selected_ids": [],
+        "latency_ms": 930.4909000002226,
+        "input_tokens": 16360,
+        "output_tokens": 78,
+        "model": "typesafe/jev-1.13-20260917",
+        "reason": "",
+        "choice_confidence": 0.85,
+        "choice_probabilities": {
+          "direct": 0.01,
+          "generate": 0.09,
+          "clarify": 0.9
+        },
+        "chunk_scores": [],
+        "sufficient_probability": 0.03,
+        "raw": {
+          "mode": "clarify",
+          "mode_probabilities": {
+            "direct": 0.01,
+            "generate": 0.09,
+            "clarify": 0.9
+          },
+          "mode_confidence": 0.85,
+          "search_needed": 0.44,
+          "sufficient": 0.03,
+          "ranks": []
+        }
+      },
+      "ordinary_plugin_assessment": {
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "ok",
+        "decision": "clarify",
+        "search_needed": null,
+        "local_grounding": "unassessed",
+        "answer_mode": "clarify",
+        "sufficient_probability": 0.03,
+        "scores": {},
+        "ranked_ids": [],
+        "dropped_ids": [],
+        "applied": "none",
+        "latency_ms": 930.5,
+        "input_tokens": 16360,
+        "output_tokens": 78,
+        "reason": "",
+        "raw": {
+          "mode": "clarify",
+          "mode_probabilities": {
+            "direct": 0.01,
+            "generate": 0.09,
+            "clarify": 0.9
+          },
+          "mode_confidence": 0.85,
+          "search_needed": 0.44,
+          "sufficient": 0.03,
+          "ranks": []
+        }
+      },
+      "usage_price_estimate_usd": "0.00068712",
+      "http_attempts": [
+        {
+          "http_attempted": true,
+          "request_body_sha256": "bff70f319596902ea4d4446133f1cfa5e694d396add4810dfc5b1bbac3ac0493",
+          "request_page_text_lengths": [
+            8000,
+            8000
+          ],
+          "http_status": 200,
+          "structured_response": {
+            "model": "typesafe/jev-1.13-20260917",
+            "answers": {
+              "answer_mode": {
+                "type": "choice",
+                "choice": "clarify",
+                "probabilities": {
+                  "direct": 0.01,
+                  "generate": 0.09,
+                  "clarify": 0.9
+                },
+                "confidence": 0.85
+              },
+              "search_needed": {
+                "type": "noul",
+                "noul": 0.44
+              },
+              "sufficient": {
+                "type": "noul",
+                "noul": 0.03
+              }
+            },
+            "usage": {
+              "input_tokens": 16360,
+              "output_tokens": 78,
+              "cost": 0.00068712
+            }
+          }
+        }
+      ],
+      "budget_charged_before_usd": "0.670389576",
+      "budget_charged_after_usd": "0.671076696",
+      "budget_charge_delta_usd": "0.000687120",
+      "new_reservations": {
+        "budget-20261015:bbfe912f-04ac-4a15-87b4-fe48e179641a": {
+          "actual_usd": "0.00068712",
+          "label": "jev",
+          "maximum_usd": "0.001710324",
+          "status": "settled"
+        }
+      }
+    },
+    {
+      "id": "W02",
+      "question": "请联网核实，随书光盘最多借几张、借多久，能续借吗？",
+      "actual_hits": [
+        {
+          "source_id": "web:82e2a022eb41823e89ea1a5d",
+          "chunk_id": "web:82e2a022eb41823e89ea1a5d:body",
+          "title": "[PDF] 基于BIM 技术和BP 神经网络的成都理工大学图书馆天然采光研究",
+          "source_title": "[PDF] 基于BIM 技术和BP 神经网络的成都理工大学图书馆天然采光研究",
+          "publisher": "www.cdut.edu.cn",
+          "url": "https://www.cdut.edu.cn/__local/F/5E/38/377CF6E327616FC169404A97B35_68885D90_4ECDB1.pdf",
+          "source_authority": "official_university",
+          "retrieved_at": "2026-10-15T03:28:21.030902+00:00",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "temporal_status": "unknown",
+          "grounded": false,
+          "web": true,
+          "score": 0.0,
+          "kind": "fact",
+          "applicability": "本轮联网材料；时效和适用范围需复核",
+          "verification_status": "unreviewed_web",
+          "limitation": "官方公开页面；未完成永久知识库审查，时效需复核",
+          "text_chars": 8000,
+          "text_sha256": "d9016d34e1b56824dca5dadc087b6532ade440621c3b79bf7a0786900e0ac5b6"
+        }
+      ],
+      "search_completed": true,
+      "local_candidates": [],
+      "unmodified_original_page_text": true,
+      "expected_source_review": "The fetched academic papers do not establish the asked library reservation days or attached-CD borrowing rules.",
+      "result": {
+        "status": "ok",
+        "answer_mode": "clarify",
+        "search_needed": null,
+        "sufficient": false,
+        "selected_ids": [],
+        "latency_ms": 702.8227000009792,
+        "input_tokens": 9080,
+        "output_tokens": 78,
+        "model": "typesafe/jev-1.13-20260917",
+        "reason": "",
+        "choice_confidence": 0.79,
+        "choice_probabilities": {
+          "direct": 0.01,
+          "generate": 0.13,
+          "clarify": 0.86
+        },
+        "chunk_scores": [],
+        "sufficient_probability": 0.02,
+        "raw": {
+          "mode": "clarify",
+          "mode_probabilities": {
+            "direct": 0.01,
+            "generate": 0.13,
+            "clarify": 0.86
+          },
+          "mode_confidence": 0.79,
+          "search_needed": 0.44,
+          "sufficient": 0.02,
+          "ranks": []
+        }
+      },
+      "ordinary_plugin_assessment": {
+        "plugin": "jev-plugin-v1",
+        "mode": "on",
+        "status": "ok",
+        "decision": "clarify",
+        "search_needed": null,
+        "local_grounding": "unassessed",
+        "answer_mode": "clarify",
+        "sufficient_probability": 0.02,
+        "scores": {},
+        "ranked_ids": [],
+        "dropped_ids": [],
+        "applied": "none",
+        "latency_ms": 702.8,
+        "input_tokens": 9080,
+        "output_tokens": 78,
+        "reason": "",
+        "raw": {
+          "mode": "clarify",
+          "mode_probabilities": {
+            "direct": 0.01,
+            "generate": 0.13,
+            "clarify": 0.86
+          },
+          "mode_confidence": 0.79,
+          "search_needed": 0.44,
+          "sufficient": 0.02,
+          "ranks": []
+        }
+      },
+      "usage_price_estimate_usd": "0.00038136",
+      "http_attempts": [
+        {
+          "http_attempted": true,
+          "request_body_sha256": "c14d87d86c1ec02ff167d10e39854035e397b7eaad34811e61d41bc0f7d0fc49",
+          "request_page_text_lengths": [
+            8000
+          ],
+          "http_status": 200,
+          "structured_response": {
+            "model": "typesafe/jev-1.13-20260917",
+            "answers": {
+              "answer_mode": {
+                "type": "choice",
+                "choice": "clarify",
+                "probabilities": {
+                  "direct": 0.01,
+                  "generate": 0.13,
+                  "clarify": 0.86
+                },
+                "confidence": 0.79
+              },
+              "search_needed": {
+                "type": "noul",
+                "noul": 0.44
+              },
+              "sufficient": {
+                "type": "noul",
+                "noul": 0.02
+              }
+            },
+            "usage": {
+              "input_tokens": 9080,
+              "output_tokens": 78,
+              "cost": 0.00038136
+            }
+          }
+        }
+      ],
+      "budget_charged_before_usd": "0.671076696",
+      "budget_charged_after_usd": "0.671458056",
+      "budget_charge_delta_usd": "0.000381360",
+      "new_reservations": {
+        "budget-20261015:ecfcf53e-1c4a-4a3b-9150-04d3a192fb27": {
+          "actual_usd": "0.00038136",
+          "label": "jev",
+          "maximum_usd": "0.000925512",
+          "status": "settled"
+        }
+      }
+    }
+  ],
+  "source_jev_shadow_sha256": "f6dc191942e6e4bd459719b66f51a1169f672b425bb92fc79e77629e894f592a",
+  "limitation": "Provider or application precheck failure is not evidence of semantic judgment quality; unsure results are not applied as confident decisions.",
+  "full_unrelated_paper_bodies_included": false,
+  "original_local_record": ".test-runs/answer-experience-20261015/fresh-web-jev-after-fix.json",
+  "original_local_record_sha256": "782ff10ca7660dc2580185594791c5297c2def0426372affef6f06a6aeeb3f64"
+}

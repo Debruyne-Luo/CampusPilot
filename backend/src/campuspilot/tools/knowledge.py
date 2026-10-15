@@ -56,6 +56,11 @@ class HybridKnowledgeTool:
         self._embedder = embedder
         self.grounding = grounding
 
+    @property
+    def snapshot_store(self) -> SnapshotStore:
+        """The application-owned store shared with the turn and optional judge."""
+        return self._snapshots
+
     def run(self, params: Any) -> dict[str, JsonValue]:
         retriever = self._snapshots.acquire()
         if retriever is None:

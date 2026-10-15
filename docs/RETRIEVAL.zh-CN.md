@@ -80,7 +80,19 @@ uv run python scripts/knowledge_release.py embed-bootstrap --store data/cdut/rag
 
 `evaluation/refusal-20261011/` 的 50 题由 agent（Grok Bot）于 2026-10-11 撰写，模拟成理学生提问，非真实学生数据，未经人工复核（`label_status: authored_unreviewed`）。
 
-## 可选 Jev 插件（2026-10-11，rag/04-jev-plugin）
+## 当前 Jev 与部分回答行为（2026-10-15）
+
+**CONFIRMED（本地实现，未部署）**：Jev 的整题充分性判断与局部片段排序分别使用。
+保留的文档可以支持部分答案；不能因为问题中另有未知事项，隐藏已证实的步骤、条件或地点。
+生成前和模型追加检索均按排序剔除无用片段；没有保留片段、也没有结构化证据时才按原判断拒答或澄清。
+置信度阈值、shadow、超时和预算耗尽的既有回退不变，没有开启全局 block 或更改默认开关。
+
+联网补证失败或新网页未通过判断时，仍生成本地有依据的部分，并保留联网失败/未核实提示。
+新网页只有在学校官方来源且搜索后判断可用、充分时才进入答案证据；第三方仍只作线索。
+真实回归与限制见 [Jev 实测及修正记录](../evaluation/reports/jev-practical-20261014.md)。
+以下 10 月 11 日内容保留历史配置和实验截面，不能代表当前接法或当前线上质量。
+
+## 历史 Jev 插件（2026-10-11，rag/04-jev-plugin）
 
 进程内插件（不走 MCP）：`backend/src/campuspilot/jev_plugin.py`，复用 `jev_shadow.JevShadowClient`
 （OpenRouter `alpha/decisions`、`typesafe/jev-1.13`、3 秒超时、脱敏、注入过滤、严格校验、`EvaluationBudget`）。

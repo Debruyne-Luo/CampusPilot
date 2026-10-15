@@ -16,8 +16,10 @@ from campuspilot.chat_runtime import PreparedQuery, public_input
 from campuspilot.dify import ChatUnavailable
 from campuspilot.knowledge import KnowledgeQuery, campus_today
 from campuspilot.llm.chat_model import ImageInput
+from campuspilot.observability import TurnObservation, turn_scope
 from campuspilot.presentation import guide_answer, resolve_cards
 from campuspilot.retrieval import campus_answer
+from campuspilot.tools.base import ToolError
 
 BUSY = "上一条问题正在处理，请等待回答。"
 SESSION_LIMIT_LOCAL = "本次提问较多，请开启新对话。"
@@ -36,6 +38,17 @@ STREAM_UNAVAILABLE = "流式回答未启用，请使用普通对话。"
 def register(app: FastAPI, state: WebState) -> None:
     @app.post("/api/chat")
     async def chat(body: ChatInput, request: Request) -> JSONResponse:
+        with turn_scope(request.state.request_id) as turn:
+            response = await dispatch_chat(body, request)
+            metadata = json.loads(bytes(response.body))
+            turn.result(
+                metadata.get("result_status"),
+                metadata.get("degraded_reason") or metadata.get("error_code"),
+                http_status=response.status_code,
+            )
+            return response
+
+    async def dispatch_chat(body: ChatInput, request: Request) -> JSONResponse:
         session = state.session_for(request)
         if session.busy:
             return state.problem(request, "busy", BUSY, 409)
@@ -50,7 +63,7 @@ def register(app: FastAPI, state: WebState) -> None:
                 and public_input(query_text)
             ):
                 # Fill the query-vector cache off the sync path; failure means BM25-only.
-                await state.embedder.prefetch(query_text)
+                await _prefetch_embedding(state, query_text)
             if state.agent is not None:
                 return await _agent_turn(state, request, session, body, state.agent)
             prepared = state.runtime.prepare(query_text, session.context, request.state.request_id)
@@ -89,6 +102,7 @@ def register(app: FastAPI, state: WebState) -> None:
         question = body.message.strip()
         request_id = request.state.request_id
         released = False
+        started = False
 
         def release_claim() -> None:
             nonlocal released
@@ -103,9 +117,21 @@ def register(app: FastAPI, state: WebState) -> None:
             await queue.put((event, data))
 
         async def work() -> None:
+            # StreamingResponse runs after this handler returns. Establish correlation in
+            # the producer task, so tools and delayed Jev callbacks inherit this turn.
+            nonlocal started
+            started = True
+            try:
+                with turn_scope(request_id) as turn:
+                    await dispatch_stream(turn)
+            finally:
+                release_claim()
+                await queue.put(None)
+
+        async def dispatch_stream(turn: TurnObservation) -> None:
             try:
                 if state.embedder is not None and question and public_input(question):
-                    await state.embedder.prefetch(question)
+                    await _prefetch_embedding(state, question)
                 async with asyncio.timeout(AGENT_TIMEOUT_SECONDS):
                     if images:
                         response = await agent.run(question, session.context, emit, images=images)
@@ -118,6 +144,7 @@ def register(app: FastAPI, state: WebState) -> None:
                 response["degraded_reason"] = "agent_error"
             finally:
                 release_claim()
+            turn.result(response.get("result_status"), response.get("degraded_reason"))
             answer_text = response.get("answer")
             if isinstance(answer_text, str):
                 _remember_answer(session, body, answer_text)
@@ -125,7 +152,6 @@ def register(app: FastAPI, state: WebState) -> None:
                 for i in range(0, len(answer_text), 24):
                     await queue.put(("answer_delta", {"text": answer_text[i : i + 24]}))
             await queue.put(("final", {**response, "request_id": request_id, "notice": NOTICE}))
-            await queue.put(None)
 
         task = asyncio.create_task(work())
 
@@ -142,6 +168,9 @@ def register(app: FastAPI, state: WebState) -> None:
                 await asyncio.gather(task, return_exceptions=True)
                 # Cancelling a task before its coroutine starts cannot run work's finally.
                 release_claim()
+                if not started:
+                    with turn_scope(request_id) as turn:
+                        turn.result("cancelled")
 
         return StreamingResponse(
             events(),
@@ -179,6 +208,22 @@ async def _runtime_turn(
 
 
 AGENT_TIMEOUT_SECONDS = 45
+
+
+async def _prefetch_embedding(state: WebState, question: str) -> None:
+    """Cache warming has the same authorization as the knowledge capability it serves."""
+    embedder = state.embedder
+    assert embedder is not None
+    if state.agent is None:
+        await embedder.prefetch(question)
+    else:
+        try:
+            await state.agent.execution.run(
+                "search_knowledge", lambda: embedder.prefetch(question)
+            )
+        except ToolError:
+            # The boundary recorded the refusal; other permitted directory tools still work.
+            return
 
 
 def timeout_response() -> dict[str, JsonValue]:

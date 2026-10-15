@@ -1,0 +1,58 @@
+{
+  "scope": "one call per public scenario per arm; Codex source review, no independent human labels; no web",
+  "case_count": 30,
+  "answer_count": 90,
+  "arms": {
+    "A_off": {
+      "full_core_completed": 7,
+      "partial_completed": 6,
+      "none_withheld_unknown_target": 10,
+      "full_and_partial_additional_issues": 1,
+      "partial_whole_turn_clarifications": 0,
+      "latency_median_ms": 2985.55,
+      "latency_p95_nearest_rank_ms": 3755.2,
+      "generation_calls": 62,
+      "generation_estimated_usd": "0.018790068",
+      "jev_calls": 0,
+      "jev_estimated_usd": "0",
+      "jev_statuses": {},
+      "jev_latency_median_ms": null
+    },
+    "B_grounding": {
+      "full_core_completed": 6,
+      "partial_completed": 7,
+      "none_withheld_unknown_target": 10,
+      "full_and_partial_additional_issues": 2,
+      "partial_whole_turn_clarifications": 0,
+      "latency_median_ms": 2926.25,
+      "latency_p95_nearest_rank_ms": 3664.1,
+      "generation_calls": 60,
+      "generation_estimated_usd": "0.017225316",
+      "jev_calls": 0,
+      "jev_estimated_usd": "0",
+      "jev_statuses": {},
+      "jev_latency_median_ms": null
+    },
+    "D_jev": {
+      "full_core_completed": 6,
+      "partial_completed": 2,
+      "none_withheld_unknown_target": 10,
+      "full_and_partial_additional_issues": 0,
+      "partial_whole_turn_clarifications": 6,
+      "latency_median_ms": 3342.5,
+      "latency_p95_nearest_rank_ms": 4478.9,
+      "generation_calls": 48,
+      "generation_estimated_usd": "0.008817810",
+      "jev_calls": 29,
+      "jev_estimated_usd": "0.002492490",
+      "jev_statuses": {
+        "unsure": 11,
+        "ok": 18
+      },
+      "jev_latency_median_ms": 770.4
+    }
+  },
+  "valid_generation_and_jev_estimated_usd": "0.047325684",
+  "budget_max_usd": "1",
+  "conservative_budget_charged_usd": "0.1338242152"
+}

@@ -1,0 +1,424 @@
+{
+  "schema_version": 1,
+  "scope": "Historical backup-provider/body feasibility probes only; no production configuration changes and no end-to-end answer-quality result.",
+  "source_files": [
+    {
+      "path": ".test-runs/answer-experience-20261015/tavily-pilot.json",
+      "sha256": "1d5f7118e868aa89e64eab891bdc2f00f2c1bd9d8170cc8dec62c994fde07921"
+    },
+    {
+      "path": ".test-runs/answer-experience-20261015/tavily-body-diagnostics.json",
+      "sha256": "f8e812b68766a58907e0a830ef959ed63ca16e85a7966ebbaa098a4cb42891a1"
+    }
+  ],
+  "full_unrelated_paper_bodies_included": false,
+  "body_hash_encoding": "SHA-256 over the exact recorded UTF-8 text; provider raw bodies and processed/truncated bodies are distinct.",
+  "free_no_payg_confirmed_by_user": true,
+  "provider_calls": {
+    "total": 5,
+    "search": 4,
+    "extract": 1,
+    "pilot_search": 2,
+    "body_diagnostic_search": 2,
+    "body_diagnostic_extract": 1
+  },
+  "quota_and_cost": {
+    "pilot_budget_before_usd": "0.668436684",
+    "pilot_budget_after_usd": "0.668436684",
+    "pilot_ledger_calls_before": 103,
+    "pilot_ledger_calls_after": 105,
+    "pilot_flows_before": 14,
+    "pilot_flows_after": 16,
+    "diagnostic_provider_reported_credits": 2,
+    "pilot_provider_reported_credits": null,
+    "note": "The two pilot searches omitted provider usage in their saved observations. The diagnostics reported one credit per search and zero credits for the failed extract. Zero recorded dollar charge does not mean zero free-quota usage. Three direct diagnostics are separate from the two application search flows."
+  },
+  "requested_official_information_obtained_cases": 0,
+  "cases": [
+    {
+      "id": "W01",
+      "question": "请联网核实，图书馆预约的图书到馆后为读者保留几天？",
+      "submitted_query": "成都理工大学 site:cdut.edu.cn 请联网核实，图书馆预约的图书到馆后为读者保留几天？",
+      "recorded_at": "2026-10-15T03:28:21.037956+00:00",
+      "latency_ms": 3801.0,
+      "provider_status": "success",
+      "provider_reason": "",
+      "flow_status": "success",
+      "flow_reason": "partial_page_reads",
+      "search_attempts": 1,
+      "page_reads": 3,
+      "requested_official_information_obtained": false,
+      "provider_sources": [
+        {
+          "url": "https://lib.cdut.edu.cn/fw/wxfw/ydyd.htm",
+          "title": "移动阅读-成都理工大学--图书馆",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:28:21.037956+00:00",
+          "timestamp_scope": "provider-source row has no individual retrieval timestamp",
+          "provider_raw_body": {
+            "available": false,
+            "characters": 0,
+            "sha256_utf8": null
+          }
+        },
+        {
+          "url": "https://xbzrkx.cdut.edu.cn/cn/article/pdf/preview/1ae7be45-de51-4ad6-aed4-964954a6d27f.pdf",
+          "title": "[PDF] 高校数字图书馆网络安全解决方略",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:28:21.037956+00:00",
+          "timestamp_scope": "provider-source row has no individual retrieval timestamp",
+          "provider_raw_body": {
+            "available": true,
+            "characters": 8025,
+            "sha256_utf8": "a5a2d7cdeefffa54bfbcedf1acde9001c7321078459be520024f3de92baba185"
+          }
+        },
+        {
+          "url": "https://www.cdut.edu.cn/__local/F/5E/38/377CF6E327616FC169404A97B35_68885D90_4ECDB1.pdf",
+          "title": "[PDF] 基于BIM 技术和BP 神经网络的成都理工大学图书馆天然采光研究",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:28:21.037956+00:00",
+          "timestamp_scope": "provider-source row has no individual retrieval timestamp",
+          "provider_raw_body": {
+            "available": true,
+            "characters": 15983,
+            "sha256_utf8": "216a96ec59de58d874fb43583391310bf1ac6bdf41d8c07d70c16630cd73974e"
+          }
+        }
+      ],
+      "processed_pages": [
+        {
+          "source_id": "web:7010315cd1ff74406791377e",
+          "chunk_id": "web:7010315cd1ff74406791377e:body",
+          "title": "[PDF] 高校数字图书馆网络安全解决方略",
+          "url": "https://xbzrkx.cdut.edu.cn/cn/article/pdf/preview/1ae7be45-de51-4ad6-aed4-964954a6d27f.pdf",
+          "source_authority": "official_university",
+          "retrieved_at": "2026-10-15T03:28:17.829643+00:00",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "temporal_status": "unknown",
+          "grounded": false,
+          "verification_status": "unreviewed_web",
+          "processed_body": {
+            "available": true,
+            "characters": 8000,
+            "sha256_utf8": "4eb962fcfe555f02a07373fa26f178364b9c9a03da1c77804b71618855b52c07"
+          },
+          "question_relevance": "Does not provide the requested reservation/CD borrowing policy; official-domain hosting alone does not establish relevance."
+        },
+        {
+          "source_id": "web:82e2a022eb41823e89ea1a5d",
+          "chunk_id": "web:82e2a022eb41823e89ea1a5d:body",
+          "title": "[PDF] 基于BIM 技术和BP 神经网络的成都理工大学图书馆天然采光研究",
+          "url": "https://www.cdut.edu.cn/__local/F/5E/38/377CF6E327616FC169404A97B35_68885D90_4ECDB1.pdf",
+          "source_authority": "official_university",
+          "retrieved_at": "2026-10-15T03:28:17.830147+00:00",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "temporal_status": "unknown",
+          "grounded": false,
+          "verification_status": "unreviewed_web",
+          "processed_body": {
+            "available": true,
+            "characters": 8000,
+            "sha256_utf8": "d9016d34e1b56824dca5dadc087b6532ade440621c3b79bf7a0786900e0ac5b6"
+          },
+          "question_relevance": "Does not provide the requested reservation/CD borrowing policy; official-domain hosting alone does not establish relevance."
+        }
+      ],
+      "provider_reported_credits": null,
+      "relevance_limit": "No requested official policy was obtained. Flow success describes body acquisition, not task completion."
+    },
+    {
+      "id": "W02",
+      "question": "请联网核实，随书光盘最多借几张、借多久，能续借吗？",
+      "submitted_query": "成都理工大学 site:cdut.edu.cn 请联网核实，随书光盘最多借几张、借多久，能续借吗？",
+      "recorded_at": "2026-10-15T03:28:21.037956+00:00",
+      "latency_ms": 3200.7,
+      "provider_status": "success",
+      "provider_reason": "",
+      "flow_status": "success",
+      "flow_reason": "partial_page_reads",
+      "search_attempts": 1,
+      "page_reads": 3,
+      "requested_official_information_obtained": false,
+      "provider_sources": [
+        {
+          "url": "https://lib.cdut.edu.cn/fw/ssfw/RFIDzzjhsj.htm",
+          "title": "RFID自助借还书机-成都理工大学--图书馆",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:28:21.037956+00:00",
+          "timestamp_scope": "provider-source row has no individual retrieval timestamp",
+          "provider_raw_body": {
+            "available": false,
+            "characters": 0,
+            "sha256_utf8": null
+          }
+        },
+        {
+          "url": "https://lib.cdut.edu.cn/info/1049/4622.htm",
+          "title": "成都理工大学2025年11月ESI学科建设速报-成都理工大学--图书馆",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:28:21.037956+00:00",
+          "timestamp_scope": "provider-source row has no individual retrieval timestamp",
+          "provider_raw_body": {
+            "available": false,
+            "characters": 0,
+            "sha256_utf8": null
+          }
+        },
+        {
+          "url": "https://www.cdut.edu.cn/__local/F/5E/38/377CF6E327616FC169404A97B35_68885D90_4ECDB1.pdf",
+          "title": "[PDF] 基于BIM 技术和BP 神经网络的成都理工大学图书馆天然采光研究",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:28:21.037956+00:00",
+          "timestamp_scope": "provider-source row has no individual retrieval timestamp",
+          "provider_raw_body": {
+            "available": true,
+            "characters": 15983,
+            "sha256_utf8": "216a96ec59de58d874fb43583391310bf1ac6bdf41d8c07d70c16630cd73974e"
+          }
+        }
+      ],
+      "processed_pages": [
+        {
+          "source_id": "web:82e2a022eb41823e89ea1a5d",
+          "chunk_id": "web:82e2a022eb41823e89ea1a5d:body",
+          "title": "[PDF] 基于BIM 技术和BP 神经网络的成都理工大学图书馆天然采光研究",
+          "url": "https://www.cdut.edu.cn/__local/F/5E/38/377CF6E327616FC169404A97B35_68885D90_4ECDB1.pdf",
+          "source_authority": "official_university",
+          "retrieved_at": "2026-10-15T03:28:21.030902+00:00",
+          "published_at": null,
+          "access_method": "provider_extraction",
+          "temporal_status": "unknown",
+          "grounded": false,
+          "verification_status": "unreviewed_web",
+          "processed_body": {
+            "available": true,
+            "characters": 8000,
+            "sha256_utf8": "d9016d34e1b56824dca5dadc087b6532ade440621c3b79bf7a0786900e0ac5b6"
+          },
+          "question_relevance": "Does not provide the requested reservation/CD borrowing policy; official-domain hosting alone does not establish relevance."
+        }
+      ],
+      "provider_reported_credits": null,
+      "relevance_limit": "No requested official policy was obtained. Flow success describes body acquisition, not task completion."
+    }
+  ],
+  "body_diagnostics": [
+    {
+      "diagnostic_id": "tavily-diagnostic-1",
+      "endpoint": "extract",
+      "request": {
+        "urls": [
+          "https://lib.cdut.edu.cn/fw/qtfw/cjwt.htm",
+          "https://lib.cdut.edu.cn/info/1103/1689.htm"
+        ],
+        "extract_depth": "basic",
+        "format": "markdown",
+        "timeout": 8,
+        "include_usage": true
+      },
+      "status": "response",
+      "latency_ms": 3224.4,
+      "batch_recorded_at": "2026-10-15T03:30:39.247360+00:00",
+      "timestamp_scope": "The source file records a batch timestamp, not individual call completion times.",
+      "response_time_seconds": 1.86,
+      "usage": {
+        "credits": 0
+      },
+      "failed_results": [
+        {
+          "url": "https://lib.cdut.edu.cn/info/1103/1689.htm",
+          "error": "Failed to fetch url"
+        },
+        {
+          "url": "https://lib.cdut.edu.cn/fw/qtfw/cjwt.htm",
+          "error": "Failed to fetch url"
+        }
+      ],
+      "body_checks": [],
+      "sources": []
+    },
+    {
+      "diagnostic_id": "tavily-diagnostic-2",
+      "endpoint": "search",
+      "request": {
+        "query": "成都理工大学图书馆 预约图书 到馆 保留时间",
+        "search_depth": "basic",
+        "max_results": 3,
+        "include_domains": [
+          "lib.cdut.edu.cn",
+          "libs.cdut.edu.cn"
+        ],
+        "include_raw_content": true,
+        "include_answer": false,
+        "auto_parameters": false,
+        "include_usage": true
+      },
+      "status": "response",
+      "latency_ms": 3639.2,
+      "batch_recorded_at": "2026-10-15T03:30:39.247360+00:00",
+      "timestamp_scope": "The source file records a batch timestamp, not individual call completion times.",
+      "response_time_seconds": 3.39,
+      "usage": {
+        "credits": 1
+      },
+      "failed_results": [],
+      "body_checks": [
+        {
+          "url": "https://lib.cdut.edu.cn/info/1022/4740.htm",
+          "readable": false,
+          "reason": "provider_raw_body_missing"
+        },
+        {
+          "url": "https://lib.cdut.edu.cn/fw/ssfw/gzzyjszd.htm",
+          "readable": false,
+          "reason": "provider_raw_body_missing"
+        },
+        {
+          "url": "https://lib.cdut.edu.cn/info/1014/1265.htm",
+          "readable": false,
+          "reason": "provider_raw_body_missing"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://lib.cdut.edu.cn/info/1022/4740.htm",
+          "title": "成都理工大学图书馆关于社会读者入馆事宜的公告-成都理工大学--图书馆",
+          "score": 0.67192334,
+          "access_method": "provider_extraction",
+          "individual_retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:30:39.247360+00:00",
+          "provider_raw_body": {
+            "available": false,
+            "characters": 0,
+            "sha256_utf8": null
+          }
+        },
+        {
+          "url": "https://lib.cdut.edu.cn/fw/ssfw/gzzyjszd.htm",
+          "title": "馆藏资源检索终端-成都理工大学--图书馆",
+          "score": 0.521886,
+          "access_method": "provider_extraction",
+          "individual_retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:30:39.247360+00:00",
+          "provider_raw_body": {
+            "available": false,
+            "characters": 0,
+            "sha256_utf8": null
+          }
+        },
+        {
+          "url": "https://lib.cdut.edu.cn/info/1014/1265.htm",
+          "title": "关于疫情防控期间图书馆部分服务调整的通知-成都理工大学--图书馆",
+          "score": 0.35588735,
+          "access_method": "provider_extraction",
+          "individual_retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:30:39.247360+00:00",
+          "provider_raw_body": {
+            "available": false,
+            "characters": 0,
+            "sha256_utf8": null
+          }
+        }
+      ]
+    },
+    {
+      "diagnostic_id": "tavily-diagnostic-3",
+      "endpoint": "search",
+      "request": {
+        "query": "成都理工大学图书馆 随书光盘 借阅期限 续借",
+        "search_depth": "basic",
+        "max_results": 3,
+        "include_domains": [
+          "lib.cdut.edu.cn",
+          "libs.cdut.edu.cn"
+        ],
+        "include_raw_content": true,
+        "include_answer": false,
+        "auto_parameters": false,
+        "include_usage": true
+      },
+      "status": "response",
+      "latency_ms": 2563.9,
+      "batch_recorded_at": "2026-10-15T03:30:39.247360+00:00",
+      "timestamp_scope": "The source file records a batch timestamp, not individual call completion times.",
+      "response_time_seconds": 2.32,
+      "usage": {
+        "credits": 1
+      },
+      "failed_results": [],
+      "body_checks": [
+        {
+          "url": "https://lib.cdut.edu.cn/fw/ssfw/RFIDzzjhsj.htm",
+          "readable": false,
+          "reason": "provider_raw_body_missing"
+        },
+        {
+          "url": "https://lib.cdut.edu.cn/info/1049/4622.htm",
+          "readable": false,
+          "reason": "provider_raw_body_missing"
+        },
+        {
+          "url": "https://lib.cdut.edu.cn/fw/wxfw/ydyd.htm",
+          "readable": false,
+          "reason": "provider_raw_body_missing"
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://lib.cdut.edu.cn/fw/ssfw/RFIDzzjhsj.htm",
+          "title": "RFID自助借还书机-成都理工大学--图书馆",
+          "score": 0.5617203,
+          "access_method": "provider_extraction",
+          "individual_retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:30:39.247360+00:00",
+          "provider_raw_body": {
+            "available": false,
+            "characters": 0,
+            "sha256_utf8": null
+          }
+        },
+        {
+          "url": "https://lib.cdut.edu.cn/info/1049/4622.htm",
+          "title": "成都理工大学2025年11月ESI学科建设速报-成都理工大学--图书馆",
+          "score": 0.44420364,
+          "access_method": "provider_extraction",
+          "individual_retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:30:39.247360+00:00",
+          "provider_raw_body": {
+            "available": false,
+            "characters": 0,
+            "sha256_utf8": null
+          }
+        },
+        {
+          "url": "https://lib.cdut.edu.cn/fw/wxfw/ydyd.htm",
+          "title": "移动阅读-成都理工大学--图书馆",
+          "score": 0.22528063,
+          "access_method": "provider_extraction",
+          "individual_retrieved_at": null,
+          "batch_recorded_at": "2026-10-15T03:30:39.247360+00:00",
+          "provider_raw_body": {
+            "available": false,
+            "characters": 0,
+            "sha256_utf8": null
+          }
+        }
+      ]
+    }
+  ]
+}

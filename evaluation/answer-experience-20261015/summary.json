@@ -1,0 +1,269 @@
+{
+  "recorded_at": "2026-10-15T03:42:18.199654+00:00",
+  "status": "OPEN",
+  "implemented": [
+    "direct_answer_prompt",
+    "material_user_condition_clarification",
+    "supported_partial_answers",
+    "distinct_generation_failure",
+    "fixed_evidence_replay",
+    "source_timestamp_privacy_false_positive_fix"
+  ],
+  "real_answer_quality": {
+    "status": "OPEN",
+    "planned_cases": 10,
+    "planned_arms": 2,
+    "attempted_cases": 2,
+    "generation_attempts": 4,
+    "valid_model_answers": 0,
+    "generation_timeouts": 4,
+    "remaining_generation_attempts_not_run": 16,
+    "hallucination_change": null,
+    "wrong_refusal_change": null,
+    "supported_partial_answer_change": null
+  },
+  "fixed_evidence_jev": {
+    "cases": 10,
+    "statuses": {
+      "unsure": 3,
+      "ok": 7
+    },
+    "decisions": {
+      "unknown": 3,
+      "sufficient": 1,
+      "clarify": 6
+    },
+    "before_chunks": 40,
+    "effective_retained_chunks": 33,
+    "retrieved_support_chunks": 8,
+    "retained_support_chunks": 8,
+    "retention_limit": "2 observed Agent reranks; 8 inferred using existing usable-assessment rule; no answer quality claim"
+  },
+  "tavily": {
+    "external_key_configured": true,
+    "free_no_payg_confirmed_by_user": true,
+    "search_calls": 4,
+    "extract_calls": 1,
+    "pilot_cases": 2,
+    "requested_relevant_official_body_cases": 0,
+    "remaining_eight_not_run": true,
+    "conservative_free_quota_reservations": 5,
+    "complete_provider_credit_usage_known": false
+  },
+  "fresh_web_jev": {
+    "pre_fix_http_attempts": 0,
+    "post_fix_http_attempts": 2,
+    "unmodified_evidence": true,
+    "unrelated_papers_judged_insufficient": 2,
+    "answer_quality_verified": false
+  },
+  "budget": {
+    "daily_cap_usd": "1",
+    "same_original_ledger": true,
+    "ledger": ".test-runs/jev-validation-20261014/budget/online/budget-20261015.json",
+    "before_usd": "0.647951988",
+    "after_usd": "0.671458056",
+    "stage_delta_usd": "0.023506068",
+    "known_usage_estimate_usd": "0.001877568",
+    "unknown_usage_reserve_usd": "0.0216285",
+    "before_calls": 96,
+    "after_calls": 119,
+    "stage_calls": 23,
+    "calls_by_label": {
+      "generation": 5,
+      "jev": 12,
+      "diagnostic:tavily:search": 2,
+      "diagnostic:tavily:extract": 1,
+      "diagnostic:model-vps": 1,
+      "web:tavily:free": 2
+    },
+    "status_counts": {
+      "usage_unknown": 6,
+      "settled": 17
+    },
+    "unknown_usage_not_refunded": true,
+    "is_provider_invoice": false,
+    "stage_reservations": {
+      "budget-20261015:0134c2b3-8dc6-4f9d-8f75-dbf05a4dcf53": {
+        "label": "generation",
+        "maximum_usd": "0.0043146",
+        "status": "usage_unknown"
+      },
+      "budget-20261015:03833d25-eed2-40cc-a939-a46b89197883": {
+        "actual_usd": "0.00007686",
+        "label": "jev",
+        "maximum_usd": "0.00026691",
+        "status": "settled"
+      },
+      "budget-20261015:14be92c9-9976-440d-855b-6bd65b988650": {
+        "actual_usd": "0.000086394",
+        "label": "jev",
+        "maximum_usd": "0.00029778",
+        "status": "settled"
+      },
+      "budget-20261015:18e9aa39-8433-4747-8879-8fa9fa5c3725": {
+        "actual_usd": "0.000057834",
+        "label": "jev",
+        "maximum_usd": "0.000210756",
+        "status": "settled"
+      },
+      "budget-20261015:23f838c7-e503-41b4-bd6d-9f8438194c9a": {
+        "actual_usd": "0.000077616",
+        "label": "jev",
+        "maximum_usd": "0.000262332",
+        "status": "settled"
+      },
+      "budget-20261015:2fc7adab-2b32-41e2-b9c7-8644bd76572d": {
+        "label": "generation",
+        "maximum_usd": "0.0058155",
+        "status": "usage_unknown"
+      },
+      "budget-20261015:4b3f8132-a5b6-42bc-8953-69423000b2b1": {
+        "actual_usd": "0.000086982",
+        "label": "jev",
+        "maximum_usd": "0.000291732",
+        "status": "settled"
+      },
+      "budget-20261015:6e51db17-c469-484b-b41f-ea5acc0fbe09": {
+        "actual_usd": "0",
+        "label": "diagnostic:tavily:search",
+        "maximum_usd": "0",
+        "status": "settled"
+      },
+      "budget-20261015:6e6cefff-e70c-48a7-8a0b-4f675bf465c4": {
+        "actual_usd": "0",
+        "label": "diagnostic:tavily:extract",
+        "maximum_usd": "0",
+        "status": "settled"
+      },
+      "budget-20261015:73c61ec0-483f-434e-89b4-b42495cad4ff": {
+        "label": "diagnostic:model-vps",
+        "maximum_usd": "0.0012588",
+        "status": "usage_unknown"
+      },
+      "budget-20261015:7f5eaa0c-4bfe-47da-9a07-5334b6efed94": {
+        "actual_usd": "0",
+        "label": "web:tavily:free",
+        "maximum_usd": "0",
+        "status": "settled"
+      },
+      "budget-20261015:9dbb613b-0bd1-4707-ae38-1f9f1b252b04": {
+        "actual_usd": "0.000079758",
+        "label": "jev",
+        "maximum_usd": "0.000272706",
+        "status": "settled"
+      },
+      "budget-20261015:a1682888-1166-4400-b402-12766b9c7bd0": {
+        "actual_usd": "0",
+        "label": "web:tavily:free",
+        "maximum_usd": "0",
+        "status": "settled"
+      },
+      "budget-20261015:af3154b6-7953-4a6d-886d-c1e4b83a1988": {
+        "label": "generation",
+        "maximum_usd": "0.0058155",
+        "status": "usage_unknown"
+      },
+      "budget-20261015:afe703c3-15d6-4860-8609-16eaaeac92d2": {
+        "actual_usd": "0",
+        "label": "diagnostic:tavily:search",
+        "maximum_usd": "0",
+        "status": "settled"
+      },
+      "budget-20261015:bbfe912f-04ac-4a15-87b4-fe48e179641a": {
+        "actual_usd": "0.00068712",
+        "label": "jev",
+        "maximum_usd": "0.001710324",
+        "status": "settled"
+      },
+      "budget-20261015:be5673eb-a685-483f-9d36-2e7380972d08": {
+        "actual_usd": "0.000057162",
+        "label": "jev",
+        "maximum_usd": "0.000208908",
+        "status": "settled"
+      },
+      "budget-20261015:c197ca35-7bd0-4f0b-bdbb-a6ffc04fe097": {
+        "label": "generation",
+        "maximum_usd": "0.0040086",
+        "status": "usage_unknown"
+      },
+      "budget-20261015:c91aa20d-8913-4c87-9b0c-2a1193d6f89d": {
+        "actual_usd": "0.000128184",
+        "label": "jev",
+        "maximum_usd": "0.000414918",
+        "status": "settled"
+      },
+      "budget-20261015:d13384f9-697e-4d74-a95a-e4d3267f395d": {
+        "label": "generation",
+        "maximum_usd": "0.0004155",
+        "status": "usage_unknown"
+      },
+      "budget-20261015:d7d9902b-046a-41a2-899b-ea99f89b466b": {
+        "actual_usd": "0.000081942",
+        "label": "jev",
+        "maximum_usd": "0.0002751",
+        "status": "settled"
+      },
+      "budget-20261015:e222cf41-d1bd-468d-88dc-81779abe719d": {
+        "actual_usd": "0.000076356",
+        "label": "jev",
+        "maximum_usd": "0.000265734",
+        "status": "settled"
+      },
+      "budget-20261015:ecfcf53e-1c4a-4a3b-9150-04d3a192fb27": {
+        "actual_usd": "0.00038136",
+        "label": "jev",
+        "maximum_usd": "0.000925512",
+        "status": "settled"
+      }
+    }
+  },
+  "verification": {
+    "pytest": {
+      "passed": 954,
+      "failed": 3,
+      "known_windows_baseline_failures": [
+        "tests/test_release.py::test_failed_health_check_rolls_back_to_previous_release",
+        "tests/test_release.py::test_legacy_directory_layout_is_migrated_and_used_for_rollback",
+        "tests/test_release.py::test_old_releases_are_pruned_but_current_and_previous_kept"
+      ],
+      "log_local": ".test-runs/answer-experience-20261015/pytest-final.log",
+      "log_sha256": "552078bb954bd20fcfba2c6bd7505e87e4e043a7b1cf35d8bcfa7a29556fca90",
+      "env": {
+        "PYTHONUTF8": "1"
+      },
+      "basetemp": "D:/Projects/.campuspilot-test-runs/answer-experience-20261015-final"
+    },
+    "ruff": {
+      "scope": ".",
+      "status": "passed"
+    },
+    "mypy": {
+      "scope": [
+        "backend/src",
+        "tests"
+      ],
+      "source_files": 132,
+      "status": "passed"
+    },
+    "new_regressions": {
+      "answer_experience": 8,
+      "frozen_replay": 10,
+      "tavily_contracts": 3,
+      "timestamp_and_privacy": 17,
+      "answer_experience_before_fix": {
+        "failed": 7,
+        "passed": 1
+      },
+      "timestamp_before_fix": {
+        "failed": 2,
+        "passed": 15
+      }
+    },
+    "counts_do_not_add_overlapping_test_runs": true
+  },
+  "production_switches_changed": false,
+  "deployed": false,
+  "committed": false,
+  "independent_muse_qa_added": false
+}
