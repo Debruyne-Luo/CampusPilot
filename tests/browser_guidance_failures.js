@@ -25,10 +25,10 @@ async (page) => {
     navigator.geolocation.clearWatch=()=>guidanceFixture.cleared++;
   });
   await frame.evaluate(()=>{
-    window.guidanceConvert=AMap.convertFrom;window.guidanceConversions=0;
-    AMap.convertFrom=(point,_system,callback)=>{
+    window.guidanceConvert=convertPosition;window.guidanceConversions=0;
+    convertPosition=async(point)=>{
       window.guidanceConversions++;
-      callback('complete',{locations:[new AMap.LngLat(...point)]});
+      return {...point,coordinate_system:'GCJ02'};
     };
   });
   const fix=async(point=geometry[0],accuracy=5,advance=7000,index=-1,age=0)=>{
@@ -111,11 +111,11 @@ async (page) => {
     await page.getByText('参考路线 · 步行至建筑',{exact:true}).waitFor({timeout:25000});
     check(await page.locator('.route-status').isVisible() && !await page.locator('#journey-card').evaluate(node=>node.classList.contains('route-compact')),'replanning expands the card and exposes the result');
     await start();
-    await frame.evaluate(()=>{AMap.convertFrom=(_point,_system,callback)=>window.guidanceDelayed=callback;});
+    await frame.evaluate(()=>{convertPosition=()=>new Promise(resolve=>window.guidanceDelayed=resolve);});
     await fix();await frame.waitForFunction(()=>typeof window.guidanceDelayed === 'function');
     await page.getByRole('button',{name:'退出路线',exact:true}).click();
     await frame.waitForFunction(()=>navigationId === null && !locationLayer && !map.getAllOverlays('polyline').length);
-    await frame.evaluate(point=>window.guidanceDelayed('complete',{locations:[new AMap.LngLat(...point)]}),geometry[0]);
+    await frame.evaluate(point=>window.guidanceDelayed({longitude:point[0],latitude:point[1],coordinate_system:'GCJ02'}),geometry[0]);
     await fix();await fail(-1);
     check(!await page.evaluate(()=>Guidance.active()),'exit ignores delayed conversion, fixes and errors');
     check(await frame.evaluate(()=>navigationId === null && !locationLayer && !map.getAllOverlays('polyline').length),'exit never redraws stale location or route');
@@ -128,7 +128,7 @@ async (page) => {
       Guidance.stop();navigator.geolocation.watchPosition=guidanceFixture.watch;
       navigator.geolocation.clearWatch=guidanceFixture.clear;Date.now=guidanceFixture.now;delete window.guidanceFixture;
     });
-    await frame.evaluate(()=>{AMap.convertFrom=window.guidanceConvert;['guidanceConvert','guidanceConversions','guidanceDelayed'].forEach(k=>delete window[k]);});
+    await frame.evaluate(()=>{convertPosition=window.guidanceConvert;['guidanceConvert','guidanceConversions','guidanceDelayed'].forEach(k=>delete window[k]);});
     page.off('pageerror',onError);
   }
 }

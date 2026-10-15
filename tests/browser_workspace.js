@@ -73,7 +73,7 @@ async (page) => {
     navigator.geolocation.watchPosition=(ok,fail)=>{window.syntheticFix=ok;window.syntheticFail=fail;window.watchCount++;return 77;};
     navigator.geolocation.clearWatch=()=>{window.clearCount++;};
   });
-  await frame.evaluate(()=>{window.savedConvert=AMap.convertFrom; AMap.convertFrom=(point,_system,callback)=>callback('complete',{locations:[new AMap.LngLat(...point)]});});
+  await frame.evaluate(()=>{window.savedConvert=convertPosition; convertPosition=async(point)=>({...point,coordinate_system:'GCJ02'});});
   const fix=async(point,accuracy=5,advance=7000)=>{
     await page.evaluate(({point,accuracy,advance})=>{window.syntheticNow+=advance; window.syntheticFix({timestamp:Date.now(),coords:{longitude:point[0],latitude:point[1],accuracy}});},{point,accuracy,advance});
   };
@@ -104,16 +104,16 @@ async (page) => {
   await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true}); document.dispatchEvent(new Event('visibilitychange')); delete document.hidden;});
   await page.getByText('页面已离开前台，步行引导已暂停。',{exact:true}).waitFor();
   await page.getByRole('button',{name:'继续引导',exact:true}).click();
-  await frame.evaluate(()=>{AMap.convertFrom=(_point,_system,callback)=>{window.delayedSyntheticConversion=callback;};});
+  await frame.evaluate(()=>{convertPosition=()=>new Promise(resolve=>{window.delayedSyntheticConversion=resolve;});});
   await fix(geometry[0]);
   await frame.waitForFunction(()=>typeof window.delayedSyntheticConversion === 'function');
   await page.getByRole('button',{name:'退出路线',exact:true}).click();
   await frame.waitForFunction(()=>navigationId === null && !locationLayer && map.getAllOverlays('polyline').length === 0);
-  await frame.evaluate(point=>{window.delayedSyntheticConversion('complete',{locations:[new AMap.LngLat(...point)]});delete window.delayedSyntheticConversion;},geometry[0]);
+  await frame.evaluate(point=>{window.delayedSyntheticConversion({longitude:point[0],latitude:point[1],coordinate_system:'GCJ02'});delete window.delayedSyntheticConversion;},geometry[0]);
   await fix(geometry[0]);
   check(await frame.evaluate(()=>navigationId === null && !locationLayer && map.getAllOverlays('polyline').length === 0),'exit ignores late GPS and clears location');
   await page.evaluate(()=>{navigator.geolocation.watchPosition=window.savedWatch;navigator.geolocation.clearWatch=window.savedClear;Date.now=window.savedNow;['savedWatch','savedClear','savedNow','syntheticNow','syntheticFix','syntheticFail'].forEach(k=>delete window[k]);});
-  await frame.evaluate(()=>{AMap.convertFrom=window.savedConvert;delete window.savedConvert;});
+  await frame.evaluate(()=>{convertPosition=window.savedConvert;delete window.savedConvert;});
   await page.setViewportSize({width:360,height:640});
   check(await page.evaluate(()=>document.documentElement.scrollWidth <= innerWidth),'small phone no overflow');
   await mode('assistant').click();

@@ -266,11 +266,12 @@ function resizeRouteView() {
 async function convertPosition(origin) {
   if (validPosition(origin)) return origin;
   if (origin?.coordinate_system !== "WGS84" || !Number.isFinite(origin.longitude) || !Number.isFinite(origin.latitude) || Math.abs(origin.longitude) > 180 || Math.abs(origin.latitude) > 90) throw new Error("origin");
-  return timed(new Promise((resolve, reject) => AMap.convertFrom([origin.longitude,origin.latitude], "gps", (status, value) => {
-    const point = value?.locations?.[0];
-    if (status === "complete" && point) resolve({longitude:point.lng,latitude:point.lat,coordinate_system:"GCJ02"});
-    else reject(new Error("conversion"));
-  })), "conversion timeout");
+  // Share the distance-ranking conversion: no network call for each GPS fix.
+  // A stationary device may never emit the next fix needed to retry a failed SDK request.
+  const {toGcj02} = await timed(import("./v2/geo.mjs"), "coordinate module timeout");
+  const position = toGcj02(origin);
+  if (!validPosition(position)) throw new Error("conversion");
+  return position;
 }
 async function planWalking(data) {
   const id = data.request_id;

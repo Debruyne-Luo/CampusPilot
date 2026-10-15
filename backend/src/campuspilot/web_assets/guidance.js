@@ -114,7 +114,10 @@ const Guidance = typeof document === "undefined" ? null : (() => {
   }
   function receive(data) {
     if (!context || data.navigation_id !== sequence || data.request_id !== context.requestId || !["locating","walking"].includes(phase)) return;
-    if (data.status !== "success") {note="坐标转换暂不可用，等待下一次定位…"; render(); return;}
+    if (data.status !== "success") {
+      clearWatch(); sequence++; tracker.resetContinuity(); phase="error";
+      note="当前位置暂时无法更新，请重试定位或查看分步指引。"; render(); return;
+    }
     const p=data.position;
     if (p?.coordinate_system !== "GCJ02") return;
     const next=tracker.update([p.longitude,p.latitude],data.accuracy,Date.now());
