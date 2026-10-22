@@ -11,7 +11,7 @@
       "uv": "0.12.19",
       "fresh_directory_dependency_install": "passed",
       "offline_suite": {
-        "passed": 13,
+        "passed": 17,
         "failed": 0
       }
     },
@@ -21,7 +21,7 @@
       "uv": "0.12.19",
       "fresh_directory_dependency_install": "passed",
       "offline_suite": {
-        "passed": 13,
+        "passed": 17,
         "failed": 0
       }
     },
@@ -54,7 +54,34 @@
       "svg_rendered_and_visually_reviewed": true,
       "clean_knowledge_versions": 1
     },
-    "new_launcher_and_verifier_ruff": "passed"
+    "new_launcher_and_verifier_ruff": "passed",
+    "windows_compressed_folder": {
+      "old_zip_enumeration": "failed, zero root items",
+      "new_zip_enumeration": "passed, one root folder",
+      "native_extracted_files": 339,
+      "native_extracted_hashes": "all matched",
+      "old_longest_entry": 271,
+      "new_longest_entry": 100
+    },
+    "knowledge_payload": {
+      "source_members": 259,
+      "source_bytes_preserved": true,
+      "checksums": "passed",
+      "automatic_restore": "passed",
+      "modified_existing_files": "rejected",
+      "unsafe_paths": "rejected"
+    },
+    "hybrid_index_extended_path": {
+      "before_uri_fix": "failed: Invalid candidate vector index",
+      "after_uri_fix": "passed"
+    },
+    "related_linux_regressions": {
+      "passed": 45,
+      "failed": 0,
+      "scope": "test_knowledge_release.py + test_final_rag.py, complete fixed-source overlay with the two URI escaping fixes",
+      "duration_seconds": 91.15,
+      "initial_standalone_attempt": "collection error because excluded maintenance-only modules were unavailable; rerun in full-source overlay passed"
+    }
   },
   "first_verifier_run": {
     "failed": 3,
@@ -62,11 +89,24 @@
     "production_source_changed": false
   },
   "verified_components": {
-    "run_agent.py": "ac186a296d5d93df9502373d4cd6fc98c36f1b1de1f1021a78746f187d0ccae1",
-    "verify_agent.py": "0f546f95d3cead2f0daa2b8781dcbaa08bf541838b02b06e9302f7d16c54c8a6",
+    "run_agent.py": "f2d0c4b40cf543924adba64dab732dd3d2d96aedaefc1d62dc7df7ee7ab4bf35",
+    "verify_agent.py": "40c9b2f6d478c5e03a9e1b6a7107774304d8df16b55d97b58fb54d69b421fe2b",
+    "knowledge_bundle.py": "5cd04a1109548990dc966bb4c9e1237f3b767d7ee07afda95f8845142baea9e1",
     "uv.lock": "2e76b96cae26d3161cc03846be60bf2327c1e21636e5b06b830337bfe60c572e",
-    "source_files": 581
+    "unchanged_source_files": 579
   },
   "external_paid_calls_this_packaging_pass": 0,
-  "scope": "These checks validate this standalone subset. Existing fixed-60 real-model results and full-repository checks are documented separately; no production switch or physical-device GPS acceptance is claimed."
+  "scope": "These checks validate this standalone subset. Existing fixed-60 real-model results and full-repository checks are documented separately; no production switch or physical-device GPS acceptance is claimed.",
+  "source_modifications": {
+    "backend/src/campuspilot/retrieval/vector.py": {
+      "source_sha256": "ad9ac38e3ff9afb0e4d6b19ce62a147b9874babea5a37ccb492ab3da4f2298ec",
+      "packaged_sha256": "37dcb63e705d9c955fa87da7a29ad154aa3e8bcb3b8cccc7964420c7506c9287",
+      "reason": "Escape SQLite file URI delimiters, including ? in Windows extended paths; no index contents or query policy changes."
+    },
+    "backend/src/campuspilot/knowledge_release.py": {
+      "source_sha256": "b18a0710569942217ee5bd366c48df144a45fa9104ae931cfee2adced2c79477",
+      "packaged_sha256": "9741550f98e761c8a42cd8f7531fd1d5a9eb626399c0b1ca2582b8cd918070be",
+      "reason": "Escape SQLite file URI delimiters, including ? in Windows extended paths; no index contents or query policy changes."
+    }
+  }
 }

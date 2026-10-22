@@ -10,9 +10,11 @@ import hashlib
 import importlib
 import json
 import os
+import shutil
 import socket
 import tempfile
 import unittest
+import zipfile
 from pathlib import Path
 from unittest.mock import patch
 
@@ -35,9 +37,9 @@ class AgentPackageChecks(unittest.TestCase):
 
         cls.settings = settings_for_package(offline=True)
         cls.package = json.loads((ROOT / "PACKAGE.json").read_text(encoding="utf-8"))
-        cls.store = SnapshotStore(ROOT / "data/cdut/rag", retrieval_mode="lexical")
+        cls.store = SnapshotStore(cls.settings.data_dir / "rag", retrieval_mode="lexical")
         cls.reader = cls.store.acquire()
-        cls.directory = cls.store.bind_directory(ROOT / "data/cdut")
+        cls.directory = cls.store.bind_directory(cls.settings.data_dir)
         cls.repository = DirectoryRepository.load(cls.directory)
         cls.knowledge = KnowledgeStore.load(cls.directory / "knowledge.json")
         cls.registry = agent_registry(
@@ -53,9 +55,13 @@ class AgentPackageChecks(unittest.TestCase):
             self.assertEqual(digest(target), expected, name)
 
     def test_02_source_identity(self):
+        from knowledge_bundle import _long_path
+
         self.assertEqual(self.package["source_commit"], "15c3b9e91c9f9bde74654c1756c3158b91e363c0")
         for name, expected in self.package["unchanged_source_files_sha256"].items():
-            self.assertEqual(digest(ROOT / name), expected, name)
+            self.assertEqual(digest(_long_path(ROOT / name)), expected, name)
+        for name, modification in self.package.get("source_modifications", {}).items():
+            self.assertEqual(digest(ROOT / name), modification["packaged_sha256"], name)
 
     def test_03_runtime_imports(self):
         base = ROOT / "backend/src"
@@ -253,6 +259,93 @@ class AgentPackageChecks(unittest.TestCase):
             self.assertIn("model_not_configured", stream.text)
             self.assertIn("campus-card-replacement", stream.text)
             self.assertFalse(client.get("/api/map-config").json()["configured"])
+
+    def test_14_bundled_knowledge_preserves_every_source_byte(self):
+        expected = {
+            n.removeprefix("data/cdut/"): checksum
+            for n, checksum in self.package["unchanged_source_files_sha256"].items()
+            if n.startswith("data/cdut/")
+        }
+        self.assertEqual(len(expected), 259)
+        with zipfile.ZipFile(ROOT / "data/knowledge.zip") as archive:
+            self.assertEqual(set(archive.namelist()), set(expected))
+            for name, checksum in expected.items():
+                self.assertEqual(hashlib.sha256(archive.read(name)).hexdigest(), checksum)
+
+    def test_15_knowledge_bootstrap_rejects_corruption_and_unsafe_paths(self):
+        from knowledge_bundle import prepare_knowledge
+
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "data").mkdir()
+
+            def fixture(name, content):
+                with zipfile.ZipFile(root / "data/knowledge.zip", "w") as archive:
+                    archive.writestr(name, content)
+                (root / "PACKAGE.json").write_text(
+                    json.dumps(
+                        {
+                            "unchanged_source_files_sha256": {
+                                "data/cdut/" + name: hashlib.sha256(content).hexdigest()
+                            }
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                (root / "MANIFEST.json").write_text(
+                    json.dumps(
+                        {"files": {"data/knowledge.zip": digest(root / "data/knowledge.zip")}}
+                    ),
+                    encoding="utf-8",
+                )
+
+            # Synthetic archive contract fixture, not a university record.
+            fixture("rag/current.json", b'{"synthetic_test":true}')
+            restored = prepare_knowledge(root)
+            self.assertEqual(
+                (restored / "rag/current.json").read_bytes(), b'{"synthetic_test":true}'
+            )
+            self.assertEqual(prepare_knowledge(root), restored)
+            (restored / "rag/current.json").write_bytes(b"modified")
+            with self.assertRaisesRegex(ValueError, "Existing knowledge was modified"):
+                prepare_knowledge(root)
+            fixture("../escape.txt", b"synthetic unsafe path test")
+            with self.assertRaisesRegex(ValueError, "Unsafe knowledge archive member"):
+                prepare_knowledge(root)
+            self.assertFalse((root / "data/escape.txt").exists())
+            (root / "data/knowledge.zip").write_bytes(b"corrupt archive")
+            with self.assertRaisesRegex(ValueError, "Knowledge bundle checksum mismatch"):
+                prepare_knowledge(root)
+
+    def test_16_restored_hybrid_index_is_usable(self):
+        from campuspilot.rag import SnapshotStore
+
+        store = SnapshotStore(self.settings.data_dir / "rag", retrieval_mode="hybrid")
+        reader = store.acquire()
+        self.assertEqual(reader.snapshot.version, self.package["knowledge_version"])
+        self.assertEqual(store.index_error, "")
+        self.assertIsNotNone(reader.index)
+        reader.index.close()
+
+    def test_17_sqlite_file_uri_escapes_filename_delimiters(self):
+        from campuspilot.knowledge_release import load_candidate_index
+        from campuspilot.retrieval.vector import VectorIndex
+
+        version = self.settings.data_dir / "rag/versions" / self.package["knowledge_version"]
+        manifest = json.loads((version / "manifest.json").read_text(encoding="utf-8"))
+        with tempfile.TemporaryDirectory() as temp:
+            # A literal #, percent sign and spaces are valid filename characters.
+            target = Path(temp) / "synthetic URI path #100%"
+            target.mkdir()
+            shutil.copyfile(version / "vectors.sqlite", target / "vectors.sqlite")
+            checked = load_candidate_index(target, self.reader.snapshot, manifest)
+            self.assertEqual(len(checked.vectors), 402)
+            checked.close()
+            loaded = VectorIndex.load(
+                target / "vectors.sqlite", self.reader.snapshot, manifest["vector_index"]["model"]
+            )
+            self.assertEqual(len(loaded.vectors), 402)
+            loaded.close()
 
 
 def main() -> None:

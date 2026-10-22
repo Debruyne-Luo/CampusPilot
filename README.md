@@ -22,6 +22,8 @@ uv run --locked --no-sync python run_agent.py --offline
 
 打开 **http://127.0.0.1:8766/**。首次安装需要网络下载依赖；随后离线模式可检查公开目录、来源、地点卡片和清单。离线模式明确显示模型未配置，不能替代完整 AI 回答、读图、联网和地图服务。完整 AI 运行只需按[运行说明](docs/run.md)配置自己的外部服务，再启动同一个入口。
 
+Windows 可直接使用“全部提取”。知识原文封装在 `data/knowledge.zip`，首次自检或启动会自动校验并还原到 `data/cdut/`，无需手动解开内层资源包，也无需更改 Windows 长路径设置。
+
 ## 建议演示
 
 配置 AI 后依次提问“校园卡补办需要什么材料”“水上图书馆在哪里”，查看答案引用、办理清单及地点入口；有视觉模型时再上传一张不含个人信息的图片。高德配置后可打开地图与恐龙引导。模型、联网、地图未配置时页面会给出相应状态，不把占位结果当作功能成功。
@@ -34,7 +36,7 @@ uv run --locked --no-sync python run_agent.py --offline
 | 主 Agent 与提示词 | `backend/src/campuspilot/agent/` |
 | 受权限约束的工具 | `backend/src/campuspilot/tools/` |
 | 模型、检索、Web 与地图接入 | `backend/src/campuspilot/llm/`、`retrieval/`、`app/` |
-| 当前知识与来源原文 | `data/cdut/rag/versions/kb-1d15bf97b31c0d90/` |
+| 当前知识与来源原文 | `data/knowledge.zip`；启动后还原至 `data/cdut/rag/versions/kb-1d15bf97b31c0d90/` |
 | 可重跑的离线包验收 | `verify_agent.py` |
 | 本轮验证与已知限制 | [docs/validation.md](docs/validation.md) |
 | 可选离线研究扩展 | [integrations/harness2/README.md](integrations/harness2/README.md)，默认不启用 |

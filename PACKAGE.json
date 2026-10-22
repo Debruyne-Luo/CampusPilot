@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
   "name": "理小龙 CDUTdino Agent 文件包",
-  "package_id": "cdutdino-agent-20261022-15c3b9e",
+  "package_id": "cdutdino-agent-20261022-15c3b9e-winfix1",
   "kind": "standalone Python single-agent application",
   "source_commit": "15c3b9e91c9f9bde74654c1756c3158b91e363c0",
   "source_repository": "https://github.com/Debruyne-Luo/CampusPilot",
   "source_zip_sha256": "9c58a7cf7596f7ed8ea4dfc7c8502d2876e8da50135dc9d0f4f6a5e6ffc7ba4d",
-  "source_scope": "Unmodified import closure and assets, active knowledge release, bounded optional integration and one validation run; not the complete repository or production runtime archive.",
+  "source_scope": "Fixed runtime import closure, frontend, active immutable knowledge in a restorable bundle, optional bounded integration, and one validation run. Two SQLite file URI escaping fixes are explicitly recorded separately.",
   "entrypoint": "run_agent.py",
   "knowledge_version": "kb-1d15bf97b31c0d90",
   "knowledge_manifest_sha256": "cf9cabf2e7d7a4defa20f32abf0a3aaf0ef2273c551c370e59f1ebea5248cc7c",
@@ -65,7 +65,6 @@
     "backend/src/campuspilot/jev_plugin.py": "f0447343724e4a3790e31bf75eaf459cd56e4c5f1fcdf768543b7b20b62577de",
     "backend/src/campuspilot/jev_shadow.py": "4bcab83f26d4343b54d43fca9c887a00dd5dc6c8f45d28aff26ecaf71079cd2d",
     "backend/src/campuspilot/knowledge.py": "4a282ed8523e8a6261be55e698e4588140c08cde953cd04080aada2ead15d9df",
-    "backend/src/campuspilot/knowledge_release.py": "b18a0710569942217ee5bd366c48df144a45fa9104ae931cfee2adced2c79477",
     "backend/src/campuspilot/llm/__init__.py": "d470bbcf9c21b9c26597c88e71b139f3d343a913a479d6528f2d85b22e949941",
     "backend/src/campuspilot/llm/chat_model.py": "a010a276cbdd1ad0513921ccf22c9593083202b08a7d7f44e856831669e97948",
     "backend/src/campuspilot/llm/embedding.py": "ad64501cd7b13b85f5cc7e1513c169894ac840ee9cf130fb99f3939e193d2f5b",
@@ -83,7 +82,6 @@
     "backend/src/campuspilot/retrieval/directory_answer.py": "76bad0b6b65d60a5ebca0b15f6b0c099a0a8717aa962ef0d5979b8e337ba2a6f",
     "backend/src/campuspilot/retrieval/grounding.py": "6668553e8bd5d23c85ac5ca45bac1ddd01907a674df61e720e46e171ec781955",
     "backend/src/campuspilot/retrieval/hybrid.py": "e351780ad85c634aba5ff7acfa27b99b97f788b98a0f7de9ab07e07c8fa0a9ba",
-    "backend/src/campuspilot/retrieval/vector.py": "ad9ac38e3ff9afb0e4d6b19ce62a147b9874babea5a37ccb492ab3da4f2298ec",
     "backend/src/campuspilot/service_links.py": "5a36a162e805d722280cb592edda94bfd77dc717f5851c9cbcfcc37db3a21d3f",
     "backend/src/campuspilot/skills.py": "ebc25b2b06903d21a262fb47ea114e635de5aba7281f2a19d1576efa32df4297",
     "backend/src/campuspilot/state.py": "9a2ac9883bdcd036e03ebe0e1aa9ed7c68be572b319bfac1f2eb55ce386862ee",
@@ -614,13 +612,33 @@
     "docs/validation.md",
     "docs/third-party.md",
     "integrations/harness2/README.md",
-    "docs/package-checks.json"
+    "docs/package-checks.json",
+    "knowledge_bundle.py"
   ],
   "metadata_changes": "pyproject description and removal of obsolete synthetic-demo console entry only; dependency specifications and uv.lock unchanged.",
   "github_artifact": {
     "branch": "submission/agent-package-20261022",
-    "release_tag": "agent-package-20261022",
+    "release_tag": "agent-package-20261022.1",
     "kind": "prerelease",
     "production_deployment": false
+  },
+  "knowledge_storage": {
+    "archive": "data/knowledge.zip",
+    "restored_directory": "data/cdut",
+    "source_files": 259,
+    "restoration": "Verified automatically by run_agent.py and verify_agent.py; extended Windows paths, no registry change.",
+    "source_bytes_changed": false
+  },
+  "source_modifications": {
+    "backend/src/campuspilot/retrieval/vector.py": {
+      "source_sha256": "ad9ac38e3ff9afb0e4d6b19ce62a147b9874babea5a37ccb492ab3da4f2298ec",
+      "packaged_sha256": "37dcb63e705d9c955fa87da7a29ad154aa3e8bcb3b8cccc7964420c7506c9287",
+      "reason": "Escape SQLite file URI delimiters, including ? in Windows extended paths; no index contents or query policy changes."
+    },
+    "backend/src/campuspilot/knowledge_release.py": {
+      "source_sha256": "b18a0710569942217ee5bd366c48df144a45fa9104ae931cfee2adced2c79477",
+      "packaged_sha256": "9741550f98e761c8a42cd8f7531fd1d5a9eb626399c0b1ca2582b8cd918070be",
+      "reason": "Escape SQLite file URI delimiters, including ? in Windows extended paths; no index contents or query policy changes."
+    }
   }
 }

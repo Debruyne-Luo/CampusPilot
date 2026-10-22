@@ -15,6 +15,7 @@ import tempfile
 from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Literal
+from urllib.parse import quote
 
 from campuspilot.rag import KnowledgeSnapshot, RetrievalFilters, RetrievalHit
 from campuspilot.retrieval.bm25 import eligible_chunks
@@ -123,7 +124,9 @@ class VectorIndex:
     ) -> VectorIndex:
         if not path.is_file() or path.is_symlink():
             raise ValueError("Vector index missing")
-        conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True, check_same_thread=False)
+        conn = sqlite3.connect(
+            "file:" + quote(str(path), safe=":/\\") + "?mode=ro", uri=True, check_same_thread=False
+        )
         meta = dict(conn.execute("SELECT key, value FROM meta").fetchall())
         if meta.get("knowledge_version") != snapshot.version:
             raise ValueError("Vector index bound to another knowledge version")

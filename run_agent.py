@@ -31,6 +31,7 @@ def read_config(path: Path) -> dict[str, str]:
 def settings_for_package(*, offline: bool = False):
     """Keep one application path, local binding, and the package's fixed knowledge."""
     from campuspilot.config import Settings
+    from knowledge_bundle import prepare_knowledge
 
     if offline:
         for name in tuple(os.environ):
@@ -50,7 +51,7 @@ def settings_for_package(*, offline: bool = False):
             os.environ[name] = value
     return replace(
         Settings.from_env(),
-        data_dir=ROOT / "data" / "cdut",
+        data_dir=prepare_knowledge(ROOT),
         runtime_mode="phase2",
         agent_loop=True,
         harness_profile="",

@@ -12,6 +12,8 @@ uv run --locked --no-sync python run_agent.py --offline
 
 打开 http://127.0.0.1:8766/，退出用 `Ctrl+C`；端口占用可加 `--port 8770`。首次安装需要下载依赖，虚拟环境由 uv 在本地生成，不随提交包分发。后续 `--offline` 运行不调用生成模型、Jev、Search 或高德服务，能力限于已有资料与本地界面。
 
+本版支持 Windows 自带“全部提取”。知识原文保存在 `data/knowledge.zip`，由 `knowledge_bundle.py` 在首次自检或启动时校验全部原始哈希并还原，保持原知识发布身份。Windows 还原和读取使用扩展路径，避免原文深层目录触发资源管理器限制；不要求改注册表或额外安装解压软件。不要手动展开或删除内层资源包。
+
 ## 配置完整 AI
 
 将 `config.example.json` 复制到**包目录以外**的位置，填写自己的模型名称、HTTPS API 基址及密钥。启动器只接受模板中列出的配置项，明确读取指定文件，不自动加载不明 `.env`。

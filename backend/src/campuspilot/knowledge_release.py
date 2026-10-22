@@ -15,6 +15,7 @@ from contextlib import closing, contextmanager
 from datetime import UTC, datetime
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Any, Literal
+from urllib.parse import quote
 from zipfile import ZipFile
 
 from campuspilot.rag import KnowledgeSnapshot, RagChunk, RagSource, canonical, digest, make_snapshot
@@ -314,7 +315,9 @@ def load_candidate_index(
         raise ValueError("Vector index checksum mismatch")
     try:
         # Close even malformed SQLite files before publication renames the staged directory.
-        with closing(sqlite3.connect(f"file:{path.as_posix()}?mode=ro", uri=True)) as connection:
+        with closing(
+            sqlite3.connect("file:" + quote(str(path), safe=":/\\") + "?mode=ro", uri=True)
+        ) as connection:
             metadata = dict(connection.execute("SELECT key, value FROM meta").fetchall())
             rows = connection.execute(
                 "SELECT chunk_id, text_sha256, embedding FROM vectors"

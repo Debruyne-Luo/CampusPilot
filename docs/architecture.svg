@@ -75,5 +75,5 @@
   <text class="head" x="716" y="644">Harness²：可选离线研究</text>
   <text class="body" x="716" y="674">保留源码与实验说明，默认不加载策略</text>
   <text class="small" x="716" y="699">不属于普通聊天必经调用链</text>
-  <text class="small" x="44" y="748">启动入口：run_agent.py　｜　角色与边界：AGENT.md　｜　核心运行源码保留固定提交原字节</text>
+  <text class="small" x="44" y="748">启动入口：run_agent.py　｜　角色与边界：AGENT.md　｜　主 Agent 保留原实现；知识按原哈希校验后还原</text>
 </svg>
