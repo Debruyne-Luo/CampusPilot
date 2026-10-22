@@ -68,16 +68,12 @@ async (page) => {
   check(await page.locator('.handling-items input').first().isChecked(),'undo restores progress');
   await page.locator('.handling-place-actions button').first().click();
   check((await page.locator('#place-card').innerText()).includes(place.name),'checklist to map');await shot('desktop-map-1440');
-  await page.locator('#desktop-settings').click();await page.locator('#reading-size').selectOption('large');await page.locator('#reduce-motion').check();
-  check(await page.evaluate(()=>getComputedStyle(document.querySelector('.handling-items li')).fontSize)==='18px','reading preference applies');
-  await shot('desktop-settings-1440');await page.keyboard.press('Escape');
-  check(await page.locator('#reading-settings').isHidden(),'settings Escape');
+  check(await page.locator('#desktop-settings, #reading-settings').count()===0,'settings removed');
   await page.locator('#new-chat').click();await loaded();await page.locator('#handling-entry').click();
   check(await page.locator('.handling-row').count()===1,'new conversation keeps saved tasks');
   await page.setViewportSize({width:1280,height:900});await fits('1280 list');await shot('desktop-checklist-list-1280');
   await page.locator('.handling-row').click();await fits('1280 detail');await shot('desktop-checklist-detail-1280');
   await page.locator('#desktop-chat').click();await shot('desktop-home-1280');
-  await page.locator('#desktop-settings').click();await page.locator('#reading-size').selectOption('normal');await page.locator('#reduce-motion').uncheck();await page.keyboard.press('Escape');
   mode='interrupted';await send('合成中断测试');
   check((await page.locator('#thread').innerText()).includes('尚未核对引用'),'partial answer preserved');
   await shot('desktop-interrupted-1280');

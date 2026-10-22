@@ -2,7 +2,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { normalizeServiceLinks, safeServiceUrl, serviceLinkHints } from "../backend/src/campuspilot/web_assets/v2/service-links.mjs";
-import { answerCards, serviceLinksCard } from "../backend/src/campuspilot/web_assets/v2/render.mjs";
+import { answerCards, planCard, serviceLinksCard } from "../backend/src/campuspilot/web_assets/v2/render.mjs";
 
 const fixture = (kind = "online", extra = {}) => ({
   id: "synthetic-link", title: "合成测试事项", kind,
@@ -54,9 +54,37 @@ class TestNode {
   setAttribute(key, value) { this.attributes[key] = value; }
   addEventListener() {}
   append(...nodes) { this.children.push(...nodes); }
+  replaceChildren(...nodes) { this.children = nodes; }
   get textContent() { return this.children.map((c) => c instanceof TestNode ? c.textContent : c).join(""); }
 }
 const descendants = (node) => [node, ...node.children.filter((c) => c instanceof TestNode).flatMap(descendants)];
+
+test("external platforms need a school source; direct URL helper remains school-only", () => {
+  const url = "https://cet-bm.neea.edu.cn/";
+  assert.equal(safeServiceUrl(url), null);
+  assert.equal(normalizeServiceLinks({ service_links: [fixture("platform", { url })] })[0].url, url);
+  assert.deepEqual(normalizeServiceLinks({ service_links: [fixture("platform", { url, source_url: "https://evil.example/" })] }), []);
+});
+
+test("steps and completed progress are folded; material expansion is explicitly offered", () => {
+  const previousNode = globalThis.Node, previousDocument = globalThis.document;
+  globalThis.Node = TestNode; globalThis.document = { createElement: (tag) => new TestNode(tag) };
+  try {
+    const body = { answer: "SYNTHETIC next action", result_status: "success", services: [{
+      service_id: "synthetic:service", name: "SYNTHETIC service", information_level: "procedure",
+      steps: [{ instruction: "SYNTHETIC detail" }],
+    }], places: [{ name: "SYNTHETIC place" }] };
+    const cards = answerCards(body, { onDetails: () => {} });
+    const heading = descendants(cards[0]).find((n) => n.tag === "h2");
+    assert.equal(heading.textContent, "SYNTHETIC service");
+    assert.ok(cards.some((n) => n.tag === "button" && n.textContent === "查看材料与步骤"));
+    const steps = cards.find((n) => n.textContent.includes("SYNTHETIC detail"));
+    assert.equal(steps.tag, "details");
+    assert.equal(steps.attributes.open, undefined);
+    assert.equal(planCard({ done: true, steps: [] }).tag, "details");
+    assert.equal(planCard({ done: false, steps: [] }).tag, "section");
+  } finally { globalThis.Node = previousNode; globalThis.document = previousDocument; }
+});
 
 test("independent card shows actions, provenance and unverified availability without claiming completion", () => {
   const previousNode = globalThis.Node, previousDocument = globalThis.document;

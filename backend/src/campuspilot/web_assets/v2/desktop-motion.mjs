@@ -1,6 +1,6 @@
 // GSAP owns desktop DOM motion. AMap owns its camera; narrow screens keep Motion Mini.
 export const isDesktop = () => matchMedia('(min-width:1280px)').matches;
-export const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches || document.body.dataset.reduceMotion === 'true';
+export const reducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 let engine;
 export function getGsap() {
   return engine ||= new Promise(resolve => {

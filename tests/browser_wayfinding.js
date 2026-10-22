@@ -66,16 +66,12 @@ async (page) => {
   check(await page.locator('.handling-items input').first().isChecked(),'undo restores progress');
   await page.locator('.handling-place-actions button').first().click();
   check((await page.locator('#place-card').innerText()).includes(place.name),'checklist to map');await shot('rounded-map-1440');await page.locator('#return-reading').click();
-  await page.locator('#desktop-settings').click();await page.locator('#reading-size').selectOption('large');await page.locator('#reduce-motion').check();
-  check(await page.evaluate(()=>getComputedStyle(document.querySelector('.handling-items li')).fontSize)==='18px','reading preference applies');
-  await shot('rounded-settings-1440');await page.keyboard.press('Escape');
-  check(await page.locator('#reading-settings').isHidden(),'settings Escape');
+  check(await page.locator('#desktop-settings, #reading-settings').count()===0,'settings removed');
   await page.locator('#new-chat').click();await loaded();await page.locator('#handling-entry').click();
   check(await page.locator('.handling-row').count()===1,'new conversation keeps saved tasks');
   await page.setViewportSize({width:1280,height:900});await fits('1280 list');await shot('rounded-checklist-list-1280');
   await page.locator('.handling-row').click();await fits('1280 detail');await shot('rounded-checklist-detail-1280');
   await showChat();await shot('rounded-home-1280');
-  await page.locator('#desktop-settings').click();await page.locator('#reading-size').selectOption('normal');await page.locator('#reduce-motion').uncheck();await page.keyboard.press('Escape');
   mode='interrupted';await send('合成中断测试');
   check((await page.locator('#thread').innerText()).includes('尚未核对引用'),'partial answer preserved');
   await shot('rounded-interrupted-1280');
@@ -89,7 +85,7 @@ async (page) => {
     await page.setViewportSize({width,height:width<500?844:900});
     await page.locator('#handling-entry').click();await fits(`${width} list`);await page.locator('.handling-row').click();
     await fits(`${width} detail`);await shot(`rounded-regression-detail-${width}`);
-    check(await page.locator('#desktop-settings').isHidden(),'desktop chrome hidden on narrow viewport');
+    check(await page.locator('#desktop-settings').count()===0,'settings absent on narrow viewport');
     check(await page.evaluate(()=>getComputedStyle(document.querySelector('.handling-items li')).fontSize)==='14px','mobile typography unchanged');
     await page.keyboard.press('Escape');await page.keyboard.press('Escape');
     await shot(`rounded-regression-chat-${width}`);

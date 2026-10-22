@@ -12,7 +12,7 @@ export function taskSnapshot(body, places = [], now = Date.now()) {
   const list = body?.checklist;
   if (list?.status !== "success" || !Array.isArray(list.items)) return null;
   const service = body.services?.find((s) => s.service_id === list.service_id);
-  if (!service?.name || !service.steps?.length) return null;
+  if (!service?.name || service.information_level !== "procedure" || !service.steps?.length || list.checklist_available === false) return null;
   const steps = service.steps.map((s) => ({
     mode: text(s.mode), instruction: text(s.instruction), condition: text(s.condition), place_ids: strings(s.place_ids),
   }));

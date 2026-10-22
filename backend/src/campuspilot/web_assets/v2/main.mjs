@@ -48,7 +48,7 @@ function applyTheme(mode) {
   $("theme-dark")?.classList.toggle("on", !light);
   $("theme-light")?.setAttribute("aria-pressed", String(light));
   $("theme-dark")?.setAttribute("aria-pressed", String(!light));
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", light ? "#f4f8f8" : "#040708");
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", light ? "#f5f7f6" : "#141414");
 }
 try { applyTheme(localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light"); }
 catch { applyTheme("light"); }
@@ -157,14 +157,21 @@ function finishArrival() {
 function highlight(place) {
   if(isDesktop()) {routeIntent++;pendingTarget=null;note();desktopUI?.enterMap(place);}
   map.focus(place);
-  document.querySelectorAll(".place-row").forEach((c) => c.classList.toggle("active", c.dataset.placeId === place.place_id));
+  document.querySelectorAll(".place-row").forEach((c) => {
+    const selected = c.dataset.placeId === place.place_id;
+    c.classList.toggle("active", selected);
+    c.querySelector(".place-name")?.setAttribute("aria-pressed", String(selected));
+  });
   showCard({ name: place.name, position: hasPosition(place) ? place.position : null, place });
 }
 function selectPoi(poi) {
   if(isDesktop()) {
     routeIntent++;pendingTarget=null;note();desktopUI?.enterMap(poi);
     map.focus({...poi,place_id:`poi:${poi.poi_id||poi.position.longitude+','+poi.position.latitude}`});
-    document.querySelectorAll('.place-row.active').forEach(e=>e.classList.remove('active'));
+    document.querySelectorAll('.place-row.active').forEach(e=>{
+      e.classList.remove('active');
+      e.querySelector('.place-name')?.setAttribute('aria-pressed', 'false');
+    });
   }
   showCard({name:poi.name,position:poi.position,poi:true});collapseForMap();
 }
@@ -418,7 +425,7 @@ async function submit(text) {
     if (!result.streamed) planHost.remove();
     else { state = reducePlan(state, { event: "final", data: {} }); paint(); }
     attachments.sent();
-    const cards = answerCards(result.body, { checklistPreview: handling.preview, onFocus: highlight, onGo: go, onMapPick: pickDestination, onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
+    const cards = answerCards(result.body, { checklistPreview: handling.preview, onFocus: highlight, onGo: go, onMapPick: pickDestination, onDetails: (s) => submit(`请列出${s.name}需要的材料和办理步骤`), onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
     for (const c of cards) if (c.update) placeCards.add(c);
     thread.append(...cards); cardsIn(cards);
     map.addPlaces(result.body.places || []);

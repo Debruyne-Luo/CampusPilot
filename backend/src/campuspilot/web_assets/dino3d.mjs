@@ -10,18 +10,22 @@ async function create3d(map) {
   const {GLTFLoader}=await import('/assets/vendor/GLTFLoader.js');
   // 学士帽小恐龙（revision-03 assembly/scene.glb）。旧的 cdutdino-guide.glb
   // 保留为加载失败时的后备，详见 DESIGN.md。
-  let gltf = null;
-  for (const url of ['/assets/models/graduate-dino.glb', '/assets/models/cdutdino-guide.glb']) {
+  let gltf = null, modelYaw = 0;
+  const models = [
+    {url: '/assets/models/graduate-dino.glb', yaw: Math.PI / 2},
+    {url: '/assets/models/cdutdino-guide.glb', yaw: 0},
+  ];
+  for (const {url, yaw} of models) {
     try {
       const response = await fetch(url, {signal: AbortSignal.timeout(url.includes('graduate') ? 60000 : 15000)});
-      if (response.ok) { gltf = await new GLTFLoader().parseAsync(await response.arrayBuffer(), ''); break; }
+      if (response.ok) { gltf = await new GLTFLoader().parseAsync(await response.arrayBuffer(), ''); modelYaw = yaw; break; }
     } catch { /* try the next url (timeout or network) */ }
   }
   if (!gltf) throw new Error('Guide model unavailable');
-  // glTF is Y-up; AMap custom coordinates are Z-up. gltf.scene 本体朝向 +Z
-  //（revision-03 头部在 +Z、Y 为上），先绕自身 Y（偏航）转 +90° 让前方对齐 +X，
-  // 再整体 X 翻 +90° 立起，与旧模型“前方 +X”的约定保持一致。
-  gltf.scene.rotation.y = Math.PI / 2;
+  // glTF is Y-up; AMap custom coordinates are Z-up. 新模型前方 +Z，
+  // 先绕 Y 转 +90° 对齐 +X；旧模型本就朝 +X，保持其原始偏航。
+  // 再整体 X 翻 +90° 立起，两个模型均沿地图坐标 +X 前进。
+  gltf.scene.rotateY(modelYaw);
   const model = new THREE.Group(); model.rotation.x = Math.PI / 2; model.add(gltf.scene);
   // 模型局部最低点落到地面 z=0，避免半个身子埋进地图。
   const lifted = new THREE.Group(); lifted.add(model);
@@ -37,7 +41,7 @@ async function create3d(map) {
   let bobPhase = 0;
   const coords = map.customCoords;
   let center = map.getCenter().toArray(), renderer = null, camera = null, scene = null, dino = null, unit = 1;
-  let pose = null;
+  let pose = null, destroyed = false;
   const layer = new AMap.GLCustomLayer({
     zIndex: 140,
     init(gl) {
@@ -51,7 +55,7 @@ async function create3d(map) {
       dino = {group:anchor}; scene.add(anchor);
     },
     render() {
-      if (!renderer || !pose) return;
+      if (destroyed || !renderer || !pose) return;
       renderer.resetState();
       coords.setCenter(center);
       const { near, far, fov, up, lookAt, position } = coords.getCameraParams();
@@ -73,6 +77,7 @@ async function create3d(map) {
   return {
     kind: "3d",
     setPose(next, isWalking, dt) {
+      if (destroyed) return;
       pose = next;
       if (mixer) { if (isWalking) mixer.update(dt); }
       else if (bobAmp) { // static dino: gentle vertical bob + sway only while walking
@@ -83,8 +88,26 @@ async function create3d(map) {
       map.render();
     },
     destroy() {
+      if (destroyed) return;
+      destroyed = true;
       map.remove(layer); if (mixer) { mixer.stopAllAction(); mixer.uncacheRoot(gltf.scene); }
-      gltf.scene.traverse(o=>{o.geometry?.dispose();if(o.material){for(const m of Array.isArray(o.material)?o.material:[o.material])m.dispose();}});
+      const geometries = new Set(), materials = new Set(), textures = new Set();
+      gltf.scene.traverse(o => {
+        if (o.geometry) geometries.add(o.geometry);
+        for (const material of o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : []) {
+          materials.add(material);
+          for (const value of Object.values(material)) if (value?.isTexture) textures.add(value);
+        }
+      });
+      const images = new Set();
+      for (const texture of textures) {
+        images.add(texture.image);
+        texture.dispose();
+      }
+      // Texture.dispose releases GPU memory; ImageBitmap pixel buffers need close().
+      for (const image of images) image?.close?.();
+      for (const material of materials) material.dispose();
+      for (const geometry of geometries) geometry.dispose();
       // The GL context belongs to AMap: never forceContextLoss or resize its canvas.
       renderer?.dispose?.();
     },

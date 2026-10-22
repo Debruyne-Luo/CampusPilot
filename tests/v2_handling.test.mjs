@@ -13,6 +13,7 @@ const fixture = () => ({
     { id: "step-4", kind: "step", text: "合成步骤" },
   ] },
   services: [{ service_id: "synthetic:service:a", name: "合成测试事务", audience: "测试对象",
+    information_level: "procedure",
     required_materials: ["合成材料 A"], required_inputs: ["合成信息 B"], entry_points: ["合成入口"],
     limits: ["合成限制"], fees: ["合成费用"], availability: [{ condition: "合成条件", wait: "合成等待" }],
     source_links: [{ title: "合成来源", url: "https://example.org/synthetic" }, { title: "不安全链接", url: "javascript:alert(1)" }],
@@ -152,4 +153,26 @@ test("one-time browser notice persists; listeners run only for successful mutati
   store.refresh(); assert.equal(changes, 2);
   assert.equal(sourceUrl("javascript:alert(1)"), null);
   assert.equal(sourceUrl("https://user:password@example.org"), null);
+});
+
+test("only explicitly classified procedures create new tasks; legacy and guides keep their facts", () => {
+  for (const level of [undefined, "directory", "guide"]) {
+    const body = fixture(); body.services[0].information_level = level;
+    assert.equal(taskSnapshot(body), null);
+  }
+  const body = fixture(); body.checklist.checklist_available = false;
+  assert.equal(taskSnapshot(body), null);
+});
+
+test("old v1 saved snapshots remain byte-for-byte readable with all progress", () => {
+  const storage = memory(), old = task(); old.checked = ["material-1"];
+  delete old.information_level; delete old.sourceNotes;
+  const serialized = JSON.stringify({ version: 1, noticed: true, tasks: [old] });
+  storage.setItem(HANDLING_KEY, serialized);
+  const store = createHandlingStore(storage);
+  assert.deepEqual(store.list(), [old]);
+  assert.equal(storage.getItem(HANDLING_KEY), serialized);
+  assert.deepEqual(createHandlingStore(storage).get(old.service_id).checked, ["material-1"]);
+  assert.equal(store.toggle(old.service_id, "input-2").ok, true);
+  assert.deepEqual(store.get(old.service_id).checked, ["material-1", "input-2"]);
 });

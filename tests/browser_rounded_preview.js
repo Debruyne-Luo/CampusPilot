@@ -8,6 +8,8 @@ async(page)=>{
     await route.fulfill({response:await page.request.get(local+path)});
   });
   await page.route(`${origin}/?*`,async route=>route.fulfill({response:await page.request.get(local+'/')}));
+  // The frame's response policy must match the candidate too (embedded GLB textures).
+  await page.route(`${origin}/map-view`,async route=>route.fulfill({response:await page.request.get(local+'/map-view')}));
   // The user preview follows its window. Fixed viewports belong only in QA scripts.
   const cdp=await page.context().newCDPSession(page);
   await cdp.send('Emulation.clearDeviceMetricsOverride');
