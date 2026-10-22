@@ -17,8 +17,9 @@ Chrome 独立窗口标题：`新版恐龙与引导修复 · 本地预览（未�
 - [真实地图交互录屏](guide-demo.webm)：开始、暂停、继续、结束和连续重新开始。
 - [1440](screenshots/map-demo-1440.png) · [1280](screenshots/map-demo-1280.png) · [1920](screenshots/map-demo-1920.png) · [390 窄屏回归](screenshots/map-demo-390.png)
 - [Blender 可编辑源文件](../../../tools/models/cdutdino-guide.blend)
-- [建模脚本](../../../tools/models/build_guide.py)，Blender 5.1.2，运行 `blender --background --python tools/models/build_guide.py`。
-- [运行时 GLB](../../../backend/src/campuspilot/web_assets/models/cdutdino-guide.glb)：962,432 bytes、44,055 三角形、50 meshes、8 条动画 clip。只在开始引导时加载。
+- [建模脚本](../../../tools/models/build_guide.py)，Blender 5.2.2，运行 `blender --background --python tools/models/build_guide.py`。2026-10-15 按用户提供的高清校园雕塑图重建造型，配色以 sRGB 十六进制写入脚本并转线性空间：饱和青蓝 `#4FAEAA`、象牙白 `#F5E9D2`、古铜斑 `#9E5732`、藏青点 `#22404E`、帽黑 `#121417`、穗金 `#E4B93E`。
+- [运行时 GLB](../../../backend/src/campuspilot/web_assets/models/graduate-dino.glb)（2026-10-17 起默认）：19,796,800 bytes、200,160 三角形、8 网格、静态无动画，来自 `graduate-dinosaur-20261017/revision-03/assembly/scene.glb`。只在开始引导时加载。
+- [后备 GLB](../../../backend/src/campuspilot/web_assets/models/cdutdino-guide.glb)：598,552 bytes、三角形在 50,000 预算内、8 条动画 clip；默认模型加载失败时自动回退。
 - [设计规范](../../../DESIGN.md) · [上一轮真实 Skill 使用记录](../rounded-interactions-v1/SKILLS.md)
 
 ![Blender 三分之四视角](screenshots/three-quarter.png)
@@ -33,8 +34,8 @@ Chrome 独立窗口标题：`新版恐龙与引导修复 · 本地预览（未�
 4. 桌面只允许手选起点及路线演示，不申请 GPS 或方向传感器；持续显示「不代表你的实时位置」。窄屏保留原定位入口。
 5. 演示进度原位更新文本，保持按钮 DOM，避免进度刷新发生在按下与抬起之间而吞掉点击。
 6. 动画控制暂停／继续／结束；「退出路线」同时清除路线。「结束演示」保留路线供重新演示。
-7. 青绿、奶油腹部、学士帽和金色流苏沿用用户参考；四足与尾巴服务地图背面观看，不用首页大图挤占阅读空间。
-8. 雕刻胸腹投射贴合表面、移开遮眼流苏、减少网格密度；牺牲地图尺寸无法辨认的细节以降低下载和渲染负担。
+7. 饱和青蓝机身、象牙白胸腹、方形学士帽和粗金色帽穗沿用用户高清雕塑图参考；四足与尾巴服务地图背面观看，不用首页大图挤占阅读空间。
+8. 脊背大斑点与胸腹均为贴合表面的凸起几何（非贴图），并保留完整地图下载与渲染预算；牺牲地图尺寸无法辨认的细节以降低下载和渲染负担。
 9. 图标直接使用用户提供的透明 PNG；统一页头、favicon、touch icon、manifest、二维兼容模式。
 
 ## 验证证据与限制

@@ -1,5 +1,34 @@
 # Architecture and decision register
 
+## Final knowledge activation (2026-10-21)
+
+**CONFIRMED:** The user's final knowledge/RAG plan is implemented locally as
+`kb-1d15bf97b31c0d90`: one immutable snapshot, matching BGE-M3 SQLite index, evidence and
+bound structured directory. Publication requires the existing quality acceptance and an
+expected-current comparison; the application binds the directory and retriever together until
+restart. Teacher roster chunks stay in the complete index but are excluded before ordinary
+retrieval; teacher lookup retains its existing tool. No public API or second database was added.
+Measured development comparisons select BM25 for this local launch; vector/hybrid remain usable,
+with grounding `flag`. Local activation does not imply deployment or latency target achievement.
+Evidence, residual failures and rollback are in the [delivery report](qa/final-knowledge-20261021.md).
+
+## Competition strategy optimization and routing (2026-10-20)
+
+**CONFIRMED:** [ADR 0008](adr/0008-harness-optimization-and-jev-routing.md) approves the
+isolated Harness² optimizer, immutable profile injection, bounded Jev route recipes and
+read-only desktop experiment viewer. The production Agent stays single and application
+permission/knowledge contracts remain fixed. Design and current validation are in the
+[competition design](SUBMISSION_DESIGN.zh-CN.md); approval does not imply deployment.
+
+## Knowledge-quality increment (2026-10-17)
+
+**CONFIRMED:** [ADR 0007](adr/0007-knowledge-quality-and-recollection.md) approves the current
+recollection and quality work. Extend the existing official-document pipeline with bounded
+provider captures, v2 evidence/applicability metadata and jointly bound directory/RAG candidates.
+Keep the existing mixed retrieval, SQLite and immutable publication design. A built candidate
+is not a released or quality-accepted version. Current measured results and remaining gaps are
+recorded in [the delivery report](KNOWLEDGE_REBUILD.zh-CN.md).
+
 ## Architecture review corrections (2026-10-14)
 
 **CONFIRMED:** The user authorized the evidence-based architecture review corrections:

@@ -1,0 +1,20 @@
+{
+  "answers": 60,
+  "latency_median_ms": 5395.25145000016,
+  "latency_p95_ms": 7744.804699999804,
+  "cost_usd": 0.12498642,
+  "source": "final-answers/observations.jsonl",
+  "classified_observations": "reviewed-observations.jsonl",
+  "raw_observations_sha256": "c5b5686fe373a45aa86fba26a70c8a0adf7563022d30bd1131e091b13bb17692",
+  "manual_behavior_labels": true,
+  "critical_errors": 0,
+  "failed_cases": [
+    "kq-074",
+    "kq-112",
+    "kq-115"
+  ],
+  "limitations": [
+    "Fixed RAG acceptance has networking disabled; production Search/Fetch needs separate smoke acceptance.",
+    "Agent source check does not replace Tech Lead final review."
+  ]
+}

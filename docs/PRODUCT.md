@@ -12,6 +12,25 @@ service has completed their request.
 
 ## V1 boundary
 
+**CONFIRMED (2026-10-21, user-approved implementation plan):** Prioritize Chengdu-campus
+undergraduate arrival and campus orientation, followed by continuing-student services. Give
+the official entry for online services and the supported place for offline services. Default
+answers are brief; preserve material conditions and expand materials, steps and saved
+checklists only on request. Known entries and exact directory places can return directly;
+insufficient, conflicting or time-sensitive evidence uses bounded web supplementation.
+CampusPilot provides public guidance without logging in, paying or applying for the user.
+The main interface has no laboratory entry or reading settings, and answers do not append
+a fixed applicability notice; material business conditions remain part of the answer itself.
+Harness² stays offline. Video recording, push, merge and production deployment are deferred.
+See the [implementation handoff](STUDENT_EXPERIENCE.zh-CN.md) for behavior and measured limits.
+
+**CONFIRMED (2026-10-17):** The knowledge-quality increment covers public Chengdu-campus and
+university-wide guidance for enrolled undergraduate and graduate students. Directory entries,
+partial guides and evidence-backed complete procedures have distinct completeness levels;
+only explicit complete procedures create new step checklists. Historical evidence remains
+archived, with no new history-query feature in this increment. See
+[ADR 0007](adr/0007-knowledge-quality-and-recollection.md) for source governance and acceptance.
+
 **CONFIRMED (2026-10-14):** The backend evidence increment adds chat access to transient
 campus map places, Jev-controlled web supplementation and session-owned campus images.
 Unique exact map matches offer a navigation card; uncertain candidates require selection.

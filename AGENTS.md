@@ -61,6 +61,24 @@ Read the relevant contracts and accepted [ADRs](docs/adr/README.md) before chang
 
 ## Current repository stage
 
+CONFIRMED (2026-10-21): The user authorized implementation of the release integration,
+module commits, GitHub PR preparation, and migration preparation for Ubuntu at 95.40.212.65.
+Use [the release handoff](docs/qa/release-20261021.md) for tested identities and remaining gates.
+Preserve the cdutdino.pages.dev project and URL. Promotional experiments stay local and must
+not enter Git, release attachments or packages. Keep Harness profiles unset until adoption;
+the student UI has no lab entry. Final review/merge authority remains with the Tech Lead.
+The older implementation-only authorization below is historical.
+
+2026-10-20 user direction: implement the approved competition increment in
+[ADR 0008](docs/adr/0008-harness-optimization-and-jev-routing.md). Read the
+[competition design](docs/SUBMISSION_DESIGN.zh-CN.md) before changing optimizer/profile,
+Jev routing, experiment exports or campaign budgets. Search/Fetch is owned by separate
+work. Preserve existing local knowledge and model changes. No push, merge or deployment
+is authorized by the implementation request. The dated paragraphs below are historical;
+use [the live baseline](docs/LIVE_BASELINE.zh-CN.md) for deployment evidence.
+
+### Historical deployment direction
+
 2026-10-13 user direction: deploy the handling checklist from its branch, without merging main,
 then hand off desktop redesign from this released baseline. Live source is
 `258ff205b73d6b2207d0234d26f04fcdec09134a`, release `r-994da5858c65`.
