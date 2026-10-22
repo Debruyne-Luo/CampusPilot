@@ -1,0 +1,284 @@
+{
+  "body": {
+    "services": [],
+    "teachers": [],
+    "places": [
+      {
+        "synthetic": false,
+        "verification_status": "needs_review",
+        "field_evidence": [
+          {
+            "field_path": "name",
+            "evidence_ids": [
+              "cdut:evidence:campus-plan"
+            ],
+            "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+          },
+          {
+            "field_path": "aliases",
+            "evidence_ids": [
+              "cdut:evidence:campus-plan"
+            ],
+            "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+          },
+          {
+            "field_path": "campus",
+            "evidence_ids": [
+              "cdut:evidence:campus-plan"
+            ],
+            "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+          },
+          {
+            "field_path": "category",
+            "evidence_ids": [
+              "cdut:evidence:campus-plan"
+            ],
+            "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+          }
+        ],
+        "notes": [
+          "公开资料候选，当前名称、具体建筑和位置尚待复核。",
+          "已收录高德建筑坐标候选，位置待核验；不表示这里可办理补卡或是老师办公室。"
+        ],
+        "place_id": "cdut:place:east-library",
+        "name": "东区图书馆",
+        "aliases": [
+          "东图"
+        ],
+        "campus": "成都校区",
+        "category": "library",
+        "address_detail": null,
+        "tags": null,
+        "hotspot": true,
+        "position": {
+          "longitude": 104.151472,
+          "latitude": 30.676143,
+          "coordinate_system": "GCJ02",
+          "source_kind": "map_provider",
+          "source_url": "https://ditu.amap.com/place/B0FFGHMVYO",
+          "retrieved_at": "2026-10-08",
+          "verification_status": "needs_review",
+          "confirmed_at": null,
+          "reviewer": null,
+          "note": "高德建筑候选：成都理工大学二仙桥校区东区图书馆（B0FFGHMVYO）。坐标对应建筑，不确认入口、补卡设备、办公室或当前接待位置；尚待负责人核对，不提供导航。"
+        },
+        "navigation_url": null
+      }
+    ],
+    "answer": "已找到东区图书馆，点击“带我去”可规划到该地点的步行路线。",
+    "result_status": "success",
+    "answer_mode": "agent_place",
+    "excerpts": [],
+    "source_ids": [
+      "cdut:evidence:campus-plan"
+    ],
+    "service_links": [],
+    "plan": [
+      {
+        "step": 1,
+        "tool": "search_place",
+        "label": "查找地点",
+        "status": "success"
+      }
+    ],
+    "checklist": null,
+    "citations": [
+      {
+        "id": "cdut:evidence:campus-plan",
+        "title": "成理平面图",
+        "url": "https://www.cdut.edu.cn/files/mapcl.pdf",
+        "publisher": "成都理工大学",
+        "audience": "仅支持页面明示字段，不推断校区、入口、坐标或接待时间。",
+        "date": "2026-10-09",
+        "date_kind": "retrieved"
+      }
+    ],
+    "map_actions": [
+      {
+        "type": "plan_route",
+        "place_id": "cdut:place:east-library",
+        "origin": "browser"
+      },
+      {
+        "type": "show_place",
+        "place_id": "cdut:place:east-library"
+      }
+    ],
+    "understanding": {
+      "intent": "路线",
+      "slots": {
+        "identity": "unknown",
+        "academic_year": null,
+        "service": null,
+        "destination": "东区图书馆"
+      }
+    },
+    "place_search": {
+      "provider_status": "",
+      "resolution": "exact"
+    },
+    "map_pick_available": false
+  },
+  "events": [
+    {
+      "event": "understanding",
+      "data": {
+        "intent": "路线",
+        "slots": {
+          "identity": "unknown",
+          "academic_year": null,
+          "service": null,
+          "destination": "东区图书馆"
+        },
+        "missing": []
+      }
+    },
+    {
+      "event": "plan",
+      "data": {
+        "steps": [
+          {
+            "step": 1,
+            "tool": "search_place",
+            "label": "查找地点"
+          }
+        ]
+      }
+    },
+    {
+      "event": "tool_start",
+      "data": {
+        "tool": "search_place",
+        "label": "查找地点"
+      }
+    },
+    {
+      "event": "tool_end",
+      "data": {
+        "tool": "search_place",
+        "label": "查找地点",
+        "status": "success"
+      }
+    }
+  ],
+  "latency_ms": 853.657751000128,
+  "tool_records": [
+    {
+      "tool": "search_place",
+      "arguments": {
+        "query": "东区图书馆"
+      },
+      "result": {
+        "status": "success",
+        "synthetic": false,
+        "evidence": [
+          {
+            "evidence_id": "cdut:evidence:campus-plan",
+            "source_id": "cdut:source:campus-plan",
+            "source_reference": "成理平面图",
+            "source_url": "https://www.cdut.edu.cn/files/mapcl.pdf",
+            "publisher": "成都理工大学",
+            "source_authority": "official_university",
+            "version": "公开页面；当前有效性待复核",
+            "locator": "地图图例编号；无可靠版次日期",
+            "applicability": "仅支持页面明示字段，不推断校区、入口、坐标或接待时间。",
+            "source_published_at": null,
+            "source_updated_at": null,
+            "retrieved_at": "2026-10-09",
+            "verification_status": "needs_review",
+            "verified_at": null,
+            "reviewer": null,
+            "access_method": "direct",
+            "source_file_sha256": "2d354d434f72657a77c8f2ec8d96f36735654e8623518ef6d636006c00a31481",
+            "limitations": [
+              "官方页面部分直连失败；使用官方搜索索引，需人工复核现行信息。",
+              "平面图用于名称候选，不作为坐标或当前院系办公地点证明。",
+              "2026-10-09 自官方 URL 直接下载核对：PDF 响应 200，字节哈希与记录一致；同一域名的 HTML 页面直连仍返回 412，因此引用页面正文时不能声称直接查看。",
+              "平面图没有发布日期；图例可按编号确认楼名，但不提供坐标，也不含“网安楼”。"
+            ],
+            "synthetic": false
+          }
+        ],
+        "notice": "Source-backed guidance; needs human review. No action was performed.",
+        "kind": "directory_places",
+        "matches": [
+          {
+            "synthetic": false,
+            "verification_status": "needs_review",
+            "field_evidence": [
+              {
+                "field_path": "name",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "aliases",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "campus",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "category",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              }
+            ],
+            "notes": [
+              "公开资料候选，当前名称、具体建筑和位置尚待复核。",
+              "已收录高德建筑坐标候选，位置待核验；不表示这里可办理补卡或是老师办公室。"
+            ],
+            "place_id": "cdut:place:east-library",
+            "name": "东区图书馆",
+            "aliases": [
+              "东图"
+            ],
+            "campus": "成都校区",
+            "category": "library",
+            "address_detail": null,
+            "tags": null,
+            "hotspot": true,
+            "position": {
+              "longitude": 104.151472,
+              "latitude": 30.676143,
+              "coordinate_system": "GCJ02",
+              "source_kind": "map_provider",
+              "source_url": "https://ditu.amap.com/place/B0FFGHMVYO",
+              "retrieved_at": "2026-10-08",
+              "verification_status": "needs_review",
+              "confirmed_at": null,
+              "reviewer": null,
+              "note": "高德建筑候选：成都理工大学二仙桥校区东区图书馆（B0FFGHMVYO）。坐标对应建筑，不确认入口、补卡设备、办公室或当前接待位置；尚待负责人核对，不提供导航。"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "knowledge_version": "kb-229ee34eba99ef34",
+  "retrieval_mode": "lexical",
+  "profile": null,
+  "directory_hashes": {
+    "knowledge.json": "24ceecff3b45cad9fd7ce3881539ec22327812fe877773a09486f9fd52979f13",
+    "offices.json": "0dee683e434468ecb1c64f9f0ad72bdece6f2e13973e0c63a3cdd118a5e4ddaf",
+    "places.json": "69a0b0ec94fe459386a595e9b058e9c94c8931999392f976041339255054efc1",
+    "services.json": "f3d532b2bcb430753191134693280d94cb983f88c53feb9d2fa082bc5d19e275",
+    "sources.json": "93bb58d5dc594c1418d4d88f356998bc8b489e00d486ffa45f0fb6f25d9330ee",
+    "teachers.json": "aa0646da42f79bf09550ecd7bd4dc3b7b76323eb2f0ca4a787a8f440e78d2ec0",
+    "teachers_roster.json": "906e2d339e2e1b31164a71eb45085a82c1ba6b77465276849436f60fb22a7184"
+  },
+  "cost_upper_usd": "0.0001491",
+  "task_id": "hol-place-24",
+  "arm": "baseline"
+}

@@ -1,0 +1,1051 @@
+{
+  "checked_by": "Codex-source-review-20261021",
+  "checked_on": "2026-10-21",
+  "adoption_id": "CDUT-SOURCE-ADOPTION-20261021",
+  "authority": "User-authorized official-source adoption; agent review, not human verification.",
+  "chunks": [
+    {
+      "chunk_id": "cdut:chunk:expand-archive:01",
+      "text_sha256": "b778097cd05cfcb6f76297f867dc9e798e4bd6d4ddff5f44e7f5c31ccecffff6",
+      "notes": "沿用本会话前轮原文核验及修正：在校生档案查阅；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/51-https_3A_2F_2Fdag.cdut.edu.cn_2Finfo_2F1038_2F1250.htm.txt",
+          "sha256": "0b59620911cbe91bfa3eb9dd57a54920d967a64cc14fbf4180589bbb20d15e23"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-archive:02",
+      "text_sha256": "88683082fa8f64c462b3e8a843e58d8c5392230e654371ae8a5b11682f84264c",
+      "notes": "沿用本会话前轮原文核验及修正：毕业生档案去向查询与材料复印；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/51-https_3A_2F_2Fdag.cdut.edu.cn_2Finfo_2F1038_2F1250.htm.txt",
+          "sha256": "0b59620911cbe91bfa3eb9dd57a54920d967a64cc14fbf4180589bbb20d15e23"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-archive:03",
+      "text_sha256": "072bc2f0ad47782b00be3dc3d98cb7847f02a687b91720ba9155912f6f2edec7",
+      "notes": "沿用本会话前轮原文核验及修正：调档与退学学生档案转递；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/51-https_3A_2F_2Fdag.cdut.edu.cn_2Finfo_2F1038_2F1250.htm.txt",
+          "sha256": "0b59620911cbe91bfa3eb9dd57a54920d967a64cc14fbf4180589bbb20d15e23"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-canteen:01",
+      "text_sha256": "3c3e21bb6f963d8f29184afb792eeda3472e673cc18857f9417ad811f940945f",
+      "notes": "沿用本会话前轮原文核验及修正：保障食堂及供餐时间；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/82-https_3A_2F_2Fclhq.cdut.edu.cn_2Finfo_2F1067_2F2468.htm.txt",
+          "sha256": "a75a1f0ded4393e5dad159166f6cf3ec7f8b1f4226e562a369017ef69652eb90"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-canteen:02",
+      "text_sha256": "81f148aecb6e787d6535cde4a3ed8fc4ee1b272cb2be85df42c9a572ef12a065",
+      "notes": "沿用本会话前轮原文核验及修正：教工就餐区与基地食堂时间；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/82-https_3A_2F_2Fclhq.cdut.edu.cn_2Finfo_2F1067_2F2468.htm.txt",
+          "sha256": "a75a1f0ded4393e5dad159166f6cf3ec7f8b1f4226e562a369017ef69652eb90"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-canteen:03",
+      "text_sha256": "9f2286018072f883ec742d686b69696a81d4ebff2372dc25da5e335c55cf583d",
+      "notes": "沿用本会话前轮原文核验及修正：特色餐饮、民族餐厅与北苑售卖点；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/82-https_3A_2F_2Fclhq.cdut.edu.cn_2Finfo_2F1067_2F2468.htm.txt",
+          "sha256": "a75a1f0ded4393e5dad159166f6cf3ec7f8b1f4226e562a369017ef69652eb90"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-canteen:04",
+      "text_sha256": "d093fb3023279335d8f9ab20817d1731dda40c5faa96c4f309da87cf03c50699",
+      "notes": "沿用本会话前轮原文核验及修正：餐饮订餐、团餐与包间服务；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/41-https_3A_2F_2Fclhq.cdut.edu.cn_2Ffwdt1_2Fcyfw.htm.txt",
+          "sha256": "ccbc843791e6d5deae128b7faa2786337fdcb5855ad70d463c10aa7ef5c9a3fe"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-card:01",
+      "text_sha256": "3c9fb8181c3a5d4b6fd6d86997d0672f0a61764a51ddd9ad2409504bcef2e109",
+      "notes": "沿用本会话前轮原文核验及修正：校园卡挂失与解挂；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/card2024.pdf",
+          "sha256": "825729937cfd2791c768c2682d1bc1ac41b57a4a6ded57033b0de63f419239b9"
+        },
+        {
+          "file": "student-life/raw/card2024.txt",
+          "sha256": "2c9bb89591eb5388138dac414810d6232d8e2ff16c760ee1633cc446fbca392f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-card:02",
+      "text_sha256": "f66fc95f9a17976f6f7d145f9658a20ec05249a59617fa266278b24878a59dcc",
+      "notes": "沿用本会话前轮原文核验及修正：校园卡自助补卡（余额需大于20元）；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/card2024.pdf",
+          "sha256": "825729937cfd2791c768c2682d1bc1ac41b57a4a6ded57033b0de63f419239b9"
+        },
+        {
+          "file": "student-life/raw/card2024.txt",
+          "sha256": "2c9bb89591eb5388138dac414810d6232d8e2ff16c760ee1633cc446fbca392f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-card:03",
+      "text_sha256": "15ffb4e00f300be72e3f4920a9b471a039ecb01119cbdb815cbf4149ab40186a",
+      "notes": "沿用本会话前轮原文核验及修正：校园卡充值方式；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/card2024.pdf",
+          "sha256": "825729937cfd2791c768c2682d1bc1ac41b57a4a6ded57033b0de63f419239b9"
+        },
+        {
+          "file": "student-life/raw/card2024.txt",
+          "sha256": "2c9bb89591eb5388138dac414810d6232d8e2ff16c760ee1633cc446fbca392f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-card:04",
+      "text_sha256": "75b1682e04632e50c044263ec4c0e4abbcd376564167dcf21338661a3938f211",
+      "notes": "沿用本会话前轮原文核验及修正：虚拟校园卡消费与消费限额；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/card2024.pdf",
+          "sha256": "825729937cfd2791c768c2682d1bc1ac41b57a4a6ded57033b0de63f419239b9"
+        },
+        {
+          "file": "student-life/raw/card2024.txt",
+          "sha256": "2c9bb89591eb5388138dac414810d6232d8e2ff16c760ee1633cc446fbca392f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-card:05",
+      "text_sha256": "a4a6b28c4f446a157651250b78c0950a14738a04afe989d7b6000283ac11a052",
+      "notes": "沿用本会话前轮原文核验及修正：空调、照明电费充值；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/card2024.pdf",
+          "sha256": "825729937cfd2791c768c2682d1bc1ac41b57a4a6ded57033b0de63f419239b9"
+        },
+        {
+          "file": "student-life/raw/card2024.txt",
+          "sha256": "2c9bb89591eb5388138dac414810d6232d8e2ff16c760ee1633cc446fbca392f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-card:06",
+      "text_sha256": "d75da07162d4282e6dd5bb07b29762d4cc84d4a1ba8534f122d84fc22bd47ca4",
+      "notes": "沿用本会话前轮原文核验及修正：校园卡小程序绑定、遗失卡查询与人脸采集；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/card2024.pdf",
+          "sha256": "825729937cfd2791c768c2682d1bc1ac41b57a4a6ded57033b0de63f419239b9"
+        },
+        {
+          "file": "student-life/raw/card2024.txt",
+          "sha256": "2c9bb89591eb5388138dac414810d6232d8e2ff16c760ee1633cc446fbca392f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-cet:01",
+      "text_sha256": "474599b2c2758eae6f4cbd5b53359c37a868d8a0833380f9425cfff2901fbf87",
+      "notes": "沿用本会话前轮原文核验及修正：2026年下半年四六级考试时间；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/65-https_3A_2F_2Fwww.cdut.edu.cn_2Finfo_2F1064_2F23905.htm.txt",
+          "sha256": "d2f866385a1fb255c09ffeef4d9df493f1a2ad845bddf3ab328fab35e48701aa"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-cet:02",
+      "text_sha256": "9d7f86601723f82efd38f322a795e5c74b74c1b2b97a2c5eb49578aae00b2e56",
+      "notes": "沿用本会话前轮原文核验及修正：2026年下半年四六级报名资格与报名时间；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/65-https_3A_2F_2Fwww.cdut.edu.cn_2Finfo_2F1064_2F23905.htm.txt",
+          "sha256": "d2f866385a1fb255c09ffeef4d9df493f1a2ad845bddf3ab328fab35e48701aa"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-cet:03",
+      "text_sha256": "b71940a55ab325ebf4fbcaa080cdcc712a855d27872cfbe58c9be54de6db380b",
+      "notes": "沿用本会话前轮原文核验及修正：2026年下半年四六级信息核对与准考证打印；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/65-https_3A_2F_2Fwww.cdut.edu.cn_2Finfo_2F1064_2F23905.htm.txt",
+          "sha256": "d2f866385a1fb255c09ffeef4d9df493f1a2ad845bddf3ab328fab35e48701aa"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-dorm:01",
+      "text_sha256": "a2cfbb42dc89b06f30d5953355c26735ed1901d371fb5b24c69dddfdb7ae4c3a",
+      "notes": "沿用本会话前轮原文核验及修正：调寝（住宿调整）办理流程；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/83-https_3A_2F_2Fclhq.cdut.edu.cn_2Finfo_2F1037_2F2472.htm.txt",
+          "sha256": "ecdf365e609b48d8afde615f518a1976f908d2d56d55735dc1ead6d2809b357f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-dorm:02",
+      "text_sha256": "b7a4d29c01d5aae9f3b90ebc19d90ff86230006ef50e5520a58799ca5a9c1e63",
+      "notes": "沿用本会话前轮原文核验及修正：校外住宿（走读）申请与材料；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/83-https_3A_2F_2Fclhq.cdut.edu.cn_2Finfo_2F1037_2F2472.htm.txt",
+          "sha256": "ecdf365e609b48d8afde615f518a1976f908d2d56d55735dc1ead6d2809b357f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-dorm:03",
+      "text_sha256": "f9c043ba42189cfd3ddfca4986d34274c5bee716a654272789ab82e33e3ac93c",
+      "notes": "沿用本会话前轮原文核验及修正：延期毕业研究生住宿申请；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/83-https_3A_2F_2Fclhq.cdut.edu.cn_2Finfo_2F1037_2F2472.htm.txt",
+          "sha256": "ecdf365e609b48d8afde615f518a1976f908d2d56d55735dc1ead6d2809b357f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-dorm:04",
+      "text_sha256": "41cf76f0aa81c4c0175cd1c5888c49b20033301342e276e07620584756ba814e",
+      "notes": "沿用本会话前轮原文核验及修正：寒暑假留校住宿申请；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/83-https_3A_2F_2Fclhq.cdut.edu.cn_2Finfo_2F1037_2F2472.htm.txt",
+          "sha256": "ecdf365e609b48d8afde615f518a1976f908d2d56d55735dc1ead6d2809b357f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-lib:01",
+      "text_sha256": "62fbd5602255aad5a892df1a447f2d93091abcee76986043709329b4ea131ee1",
+      "notes": "FAQ40/50与借阅指南25/30日期均未定，历史保留，不确定当前上限。",
+      "evidence": [
+        {
+          "file": "final/library-borrowing-guide-provider-extract.txt",
+          "sha256": "d7070c5b1fc0dba6533ac83b59fc4e621c1b6c3b6eb1ee3123cf3e982db99215"
+        },
+        {
+          "file": "student-life/raw/24-https_3A_2F_2Flib.cdut.edu.cn_2Fxszl_2Fnwwd_2Fxscjwd.htm.txt",
+          "sha256": "c68ab4ede11971c8dbaabde445a6cf85e2e275b0fb461319aedd77c4cbeafed8"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-lib:02",
+      "text_sha256": "a4bfe5a54a046deca7f4a2f4e7e6cc84314be3d5a87b4d0c0ab2740fdfde41a4",
+      "notes": "沿用本会话前轮原文核验及修正：图书逾期与遗失赔偿；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/21-https_3A_2F_2Flib.cdut.edu.cn_2Ffw_2Fqtfw_2Fcjwt.htm.txt",
+          "sha256": "d2f0871a7319093c4b507add53c47dd0fe0ade401987a68a429ce593cfe5b86a"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-lib:03",
+      "text_sha256": "d217f8d82347a237b7078c52758c374bb29b3cdd721009460e4b35bdbc312c61",
+      "notes": "沿用本会话前轮原文核验及修正：图书预约、续借与登录密码；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/21-https_3A_2F_2Flib.cdut.edu.cn_2Ffw_2Fqtfw_2Fcjwt.htm.txt",
+          "sha256": "d2f0871a7319093c4b507add53c47dd0fe0ade401987a68a429ce593cfe5b86a"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-lib:04",
+      "text_sha256": "4529c29ddbf5df7e52d69750f31e8c627efd60f5ffbd8f3eb739ac7151693c9f",
+      "notes": "沿用本会话前轮原文核验及修正：校外访问图书馆数据库；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/21-https_3A_2F_2Flib.cdut.edu.cn_2Ffw_2Fqtfw_2Fcjwt.htm.txt",
+          "sha256": "d2f0871a7319093c4b507add53c47dd0fe0ade401987a68a429ce593cfe5b86a"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-lib:05",
+      "text_sha256": "c8e30ecefeb7f11f1f867b3c634d0eafb4c88843456ec5bc88d74dc589ab4954",
+      "notes": "沿用本会话前轮原文核验及修正：图书馆 Wi-Fi 与电源插座；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/21-https_3A_2F_2Flib.cdut.edu.cn_2Ffw_2Fqtfw_2Fcjwt.htm.txt",
+          "sha256": "d2f0871a7319093c4b507add53c47dd0fe0ade401987a68a429ce593cfe5b86a"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-lib:06",
+      "text_sha256": "384cded4ca81313afeb2efde260edfe94300c699f361de0d90429faee9a0803b",
+      "notes": "沿用本会话前轮原文核验及修正：找不到书、负一楼图书与报刊复印；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/21-https_3A_2F_2Flib.cdut.edu.cn_2Ffw_2Fqtfw_2Fcjwt.htm.txt",
+          "sha256": "d2f0871a7319093c4b507add53c47dd0fe0ade401987a68a429ce593cfe5b86a"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-repair:01",
+      "text_sha256": "c6eb82a04fbab7c243e996442260f13206e0608a50a9c4b02dee945fb4b3c536",
+      "notes": "沿用本会话前轮原文核验及修正：南苑北苑等家属区报修与市政电话；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/35-https_3A_2F_2Fclhq.cdut.edu.cn_2Ffwdt1_2Flxwx.htm.txt",
+          "sha256": "d46e211a4068b533c04b35fbea6579940ecfdbbe575ec560e46376b3fcb66c72"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-schedule:01",
+      "text_sha256": "a53f234ee6e93a2577c6d0bb91926e3a89b7e95d72e33d24d0a00b51fb4cfff5",
+      "notes": "沿用本会话前轮原文核验及修正：教学作息时间（上午、下午、晚上）；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/25-https_3A_2F_2Fwww.aao.cdut.edu.cn_2Fxlzx_2Fzxsj.htm.txt",
+          "sha256": "44604414ad448a2ef8072a2757577e11473abbab6cdb897884fb626cb4ddf870"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-schedule:02",
+      "text_sha256": "903d9316e0344b99f48c5c5e94dcf121a14c61d89a8be02a40ceff45afc5a91e",
+      "notes": "沿用本会话前轮原文核验及修正：教职工上下班时间；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/25-https_3A_2F_2Fwww.aao.cdut.edu.cn_2Fxlzx_2Fzxsj.htm.txt",
+          "sha256": "44604414ad448a2ef8072a2757577e11473abbab6cdb897884fb626cb4ddf870"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-scholarship:01",
+      "text_sha256": "4ad6c404bae21bbabd3c0c76d3708b0e6e8267fe6c58965aa7bda0fa257f1439",
+      "notes": "沿用本会话前轮原文核验及修正：2026年国家奖学金、励志奖学金和助学金对象与标准；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/33-https_3A_2F_2Fmee.cdut.edu.cn_2Finfo_2F1049_2F3837.htm.txt",
+          "sha256": "ebfd013e337008a0c3f15c29363ef3e003c027783991400060180b460987b68e"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-scholarship:02",
+      "text_sha256": "f8c9da1b4ab222a00c9dcb187d2b57d3036826da319fa7d99979bc7849ff11b5",
+      "notes": "沿用本会话前轮原文核验及修正：2026年国家奖助学金评审条件；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/33-https_3A_2F_2Fmee.cdut.edu.cn_2Finfo_2F1049_2F3837.htm.txt",
+          "sha256": "ebfd013e337008a0c3f15c29363ef3e003c027783991400060180b460987b68e"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:expand-scholarship:03",
+      "text_sha256": "6e98a19055515db3854186728d021030e8b27c61fae5e4f836cd832ab793bc39",
+      "notes": "沿用本会话前轮原文核验及修正：2026年国家奖助学金申请与公示；逐项依据见student-experience-20261021核验报告，保留年份、人群、条件和例外。",
+      "evidence": [
+        {
+          "file": "student-life/raw/33-https_3A_2F_2Fmee.cdut.edu.cn_2Finfo_2F1049_2F3837.htm.txt",
+          "sha256": "ebfd013e337008a0c3f15c29363ef3e003c027783991400060180b460987b68e"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:01",
+      "text_sha256": "4d3101f575d2273b8bbd944d7bceea6b312687725d94185df1063b5af325e1ad",
+      "notes": "页8原图核对报到8月29—30日、8:30—21:00及请假例外，窗口已过。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/08.jpg",
+          "sha256": "6013426d79a2e9125ffd1d6af2e35e37ed3c9013f49845746dc4bd527ddf0e53"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:02",
+      "text_sha256": "9f3e48ce5345ef91843e82ef7d132f93fe11c22e3b117f32ffd2e9c809fb5af0",
+      "notes": "对照所列完整官方正文或OCR章节核对线上报到与迎新网；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/08.jpg",
+          "sha256": "6013426d79a2e9125ffd1d6af2e35e37ed3c9013f49845746dc4bd527ddf0e53"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:03",
+      "text_sha256": "c8518eda671ee57ea8a0ab282f444a2bb82d174e96d4428d1ff3c60e6c0a23f8",
+      "notes": "对照所列完整官方正文或OCR章节核对到校交通：机场与火车站路线；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/09.jpg",
+          "sha256": "d24bb0d9eeda282763d6d018d0ab309da4086a6076458f4c90c7094275174a40"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:04",
+      "text_sha256": "8e800cfdb259c28a17f034cbbdd449444388f60e6eeb50701bbfee44d7695929",
+      "notes": "对照所列完整官方正文或OCR章节核对报到时须携带的材料；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/10.jpg",
+          "sha256": "df242124ee980573b522c339fa59e8680713c005823754e0f197ef2c05eddb64"
+        },
+        {
+          "file": "freshman/flbook-pages/11.jpg",
+          "sha256": "b01a31be71f88f44c8b4710f582ba49df918e008143c850fb3d3bbbbca953e8d"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:05",
+      "text_sha256": "77479a8f008cec20c0dc43fab3f95e88d09714fe077e43792da5614a3d862cb9",
+      "notes": "户籍网上申请10月30日、学院交件11月6日分别保留。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/10.jpg",
+          "sha256": "df242124ee980573b522c339fa59e8680713c005823754e0f197ef2c05eddb64"
+        },
+        {
+          "file": "freshman/flbook-pages/11.jpg",
+          "sha256": "b01a31be71f88f44c8b4710f582ba49df918e008143c850fb3d3bbbbca953e8d"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:06",
+      "text_sha256": "bfce922fef68eb6c4a9cfd5b200f983a42d2bcd919b22b28eac0dda7796be6a9",
+      "notes": "对照所列完整官方正文或OCR章节核对团组织关系转入；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/11.jpg",
+          "sha256": "b01a31be71f88f44c8b4710f582ba49df918e008143c850fb3d3bbbbca953e8d"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:07",
+      "text_sha256": "ef4c8a9f5c210aa8fcb22c6585025d825a932d173afd757d45ea3d8dad9938d2",
+      "notes": "页11原图核对成都/宜宾档案地址电话及密封骑缝章。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/11.jpg",
+          "sha256": "b01a31be71f88f44c8b4710f582ba49df918e008143c850fb3d3bbbbca953e8d"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:08",
+      "text_sha256": "124ac1b1a5f7932a89f1a8e5be017872b206a43898ebef1275b813298b8121b4",
+      "notes": "对照所列完整官方正文或OCR章节核对新生缴费方式；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/13.jpg",
+          "sha256": "1d41560965487e5f1c7cac95666b8b838b4bf76d4f7522fe35fb20e89730bb16"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:09",
+      "text_sha256": "d98aea47bf8e2d6471ea65d17c8f0ab184b2843f9f6fe9a7c4dcc60610b00193",
+      "notes": "页12、14原图逐行核对学费住宿费；2027医保400+48仅为当时预估。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/12.jpg",
+          "sha256": "41a8775b670b35c4f57245e3f5d47487fd2a8da9a1a948cd2ed29ed268f43d21"
+        },
+        {
+          "file": "freshman/flbook-pages/14.jpg",
+          "sha256": "38e218ec835bc73cb4c42284157d3fd83865cb3e1eb7fea1c66ba39dbf12b4f5"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:10",
+      "text_sha256": "c412931f3aed69f0bc2175fc2b06f8176f46d3b06fecee01d6102db25ebd7e44",
+      "notes": "对照所列完整官方正文或OCR章节核对缴费票据；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/14.jpg",
+          "sha256": "38e218ec835bc73cb4c42284157d3fd83865cb3e1eb7fea1c66ba39dbf12b4f5"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:11",
+      "text_sha256": "4de75ec0433d34cac2c95e289087819b20b1206aec69d037836645e01312d763",
+      "notes": "对照所列完整官方正文或OCR章节核对生源地助学贷款；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/15.jpg",
+          "sha256": "1ca82d51bb3b839a1b40c157f0daa5baf651a04b5c96e62d74429f23d0e8aff3"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:12",
+      "text_sha256": "b5ca6164db366fa546252f068ee86fe7cc66c60858a42e68504ba21bf0655525",
+      "notes": "对照所列完整官方正文或OCR章节核对新生床上用品购买；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/16.jpg",
+          "sha256": "47dd8136e34ef498478b937fdfd3f213fed5dd31f00e7d6bbff1020a9e387775"
+        },
+        {
+          "file": "freshman/flbook-pages/17.jpg",
+          "sha256": "8d0d14d9186e3820afde67290897ee25858d20e9b4af57f50ec6b1d53be83420"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:13",
+      "text_sha256": "38b330a519cd6dfe8563f2ec2325a233a0b6078196dc1297168a8a2d73857acf",
+      "notes": "对照所列完整官方正文或OCR章节核对军训服装与军训注意事项；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/20.jpg",
+          "sha256": "2dc54c90b3a67864a4f113aa374f490a84c105157def65f6abbe17c81e84ee16"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:14",
+      "text_sha256": "b63186d809ab24ef6335b62481bed5978bf5c7070b307eb19fbba04d939b73c1",
+      "notes": "页21原图核对各学院名称和对应公开电话。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/21.jpg",
+          "sha256": "ac96fecd270d6a42ba55aa568c2fb919619ab489a6ceba28db8a4d34376a0d36"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:15",
+      "text_sha256": "c0b64eceae148e6b2ad6437ff6f4ffa0ece0427935224c73b5d0246ec6dc8e1f",
+      "notes": "页21原图核对牛津布鲁克斯各专业及宜宾公开电话。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/21.jpg",
+          "sha256": "ac96fecd270d6a42ba55aa568c2fb919619ab489a6ceba28db8a4d34376a0d36"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:16",
+      "text_sha256": "3f83a12a3687e4b055af464a579a20d219c99754cc4e7d92acca2ee811176ea9",
+      "notes": "对照所列完整官方正文或OCR章节核对奖助学金体系；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/30.jpg",
+          "sha256": "ccba65340989d2824ebe798c50fbd2826bff1862378f1f55d9c8a2b3406fa320"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:17",
+      "text_sha256": "cc8d59aa053beba6186df3d5a4a0ae8a423563ae668e823059b4efee7b07586f",
+      "notes": "对照所列完整官方正文或OCR章节核对图书馆概况；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/31.jpg",
+          "sha256": "7723648b9ae4a94bfd176b76e226de190ab8ef0736b508e91c9fd694db89b916"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:18",
+      "text_sha256": "7128d8b4b81c902aef1bed41b713d4f167fcdfd66ddb5163fc6d066ec41c6851",
+      "notes": "对照所列完整官方正文或OCR章节核对学生餐厅与特色餐饮；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/36.jpg",
+          "sha256": "ee9abb08339b38a8287d3cb4654a9d3743d92e2d166110b0ae511b497004568f"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:19",
+      "text_sha256": "1419743638ba6aa3aa5879f81e6d4576c5cbaebe2a2cf5d1a7c059e96202c4fc",
+      "notes": "对照所列完整官方正文或OCR章节核对校园一卡通功能；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/37.jpg",
+          "sha256": "52453c90d60adba239de01f43d1fb60fe62cafad15092f2a06825a97abc9ff32"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:20",
+      "text_sha256": "64a5bbeb000ed133cf618a773acb5600506d88eeaac3c19aab1b5702b414052b",
+      "notes": "页39原图核对三类熄灯时刻，本科4度/研究生5度免费基数。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/38.jpg",
+          "sha256": "1aace43bc41b1d700a09bbb7bf51d7076b260180d9f8c327556438528886d9c4"
+        },
+        {
+          "file": "freshman/flbook-pages/39.jpg",
+          "sha256": "5d4e812dc80aee99d87ca83f06d3fc0839b4a103977b0b82aadf6688b623b13a"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:21",
+      "text_sha256": "25e08adaba362c7cc6ca619969cca117a837f3f7101066f7502f8f27ec053b09",
+      "notes": "页39原图确认成理智慧后勤公众号报修，与家属区范围分开。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/39.jpg",
+          "sha256": "5d4e812dc80aee99d87ca83f06d3fc0839b4a103977b0b82aadf6688b623b13a"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:22",
+      "text_sha256": "e86911f320906fe1686c015b71d5a54d763b3ca4a98e3ff49f6972a007d7fbd8",
+      "notes": "页40原图保留教学时间及网球、羽毛球等收费例外。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/40.jpg",
+          "sha256": "16b34db788968647923527801ddb373164833a6f4a54aeb3fe4be3203a8b08f3"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:23",
+      "text_sha256": "71a2e536cc4ca7b519390f34d108ce1367d8993208fbe40e089e09d4b264d915",
+      "notes": "页40原图核对7:00首班、22:55及周五周六23:25末班，不保证实时运营。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/40.jpg",
+          "sha256": "16b34db788968647923527801ddb373164833a6f4a54aeb3fe4be3203a8b08f3"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:24",
+      "text_sha256": "8e9bda73ae57ccc2d72d1a679d0b20a18c0cc6658a7fd2ae5f219d165c69ba0b",
+      "notes": "页41原图核对60%、500/800、100及87%，保留成都、转诊和报销条件。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/41.jpg",
+          "sha256": "323720726d8f10d011d14eb2084b802cdcdad5ee91c09841d4ea962a72f1b16c"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:25",
+      "text_sha256": "f4bb3d7e12ff3b64f0746a4777c5aa1fa4c8a88ab283b687e420ac09429c4d1e",
+      "notes": "2026宣传方案200元自愿投保，保障期限不同，保留历史限制。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/42.jpg",
+          "sha256": "758e94b36d2b1edc666c0b9d349e77a4bdbc3153e50cda04fd8d78461f5fba99"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:26",
+      "text_sha256": "8f7cb7c56e3a0b082ced251d7cc0633e10a6fa6e30ed50c773d1f5d94b901359",
+      "notes": "对照所列完整官方正文或OCR章节核对安全提示与校园求助；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/43.jpg",
+          "sha256": "99a2bfc4160ebcf023b0352f2c333b54ce95414b0ddc8ba642abe73ffba52ac5"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:27",
+      "text_sha256": "2dc3d3d9abaa5734b7463cea9bc0ed9a1bb0e911ba5128df99808814d0295873",
+      "notes": "对照所列完整官方正文或OCR章节核对成理易班；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/32.jpg",
+          "sha256": "626538a6c7c96c7f1c3468639a16f36443956e6b5e25c17cb1b1f5d7665ef78d"
+        },
+        {
+          "file": "freshman/flbook-pages/33.jpg",
+          "sha256": "dac2418f87045ecd78d1b92bd1f16c0281b596e9f2ac5efadfcca751d083976e"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:28",
+      "text_sha256": "69065bc85749b3a1759467bfde19d477c8088998a9baa164283cc9ba1fd1e17a",
+      "notes": "对照所列完整官方正文或OCR章节核对团学组织与学生社团；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/35.jpg",
+          "sha256": "4c587bc29b162b5893bcea949eda66ccd6599167db7aadb1944fc6146141e7b2"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:29",
+      "text_sha256": "cf1daa7b0e94191a52a640f877413c737ee9bd81218d435da1399bed4fb22b48",
+      "notes": "对照所列完整官方正文或OCR章节核对校区位置与地铁；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/14-https_3A_2F_2Fwww.zs.cdut.edu.cn_2Finfo_2F1147_2F8354.htm.md",
+          "sha256": "1f2ede9ee040bfbad7646bbc7acc22f105b68948814e4294b11a0026275315e4"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:30",
+      "text_sha256": "bf6a943720d4df4e1556d4740589a16a5cb73e939236bf08b44a3fff7b6c7ccc",
+      "notes": "对照所列完整官方正文或OCR章节核对本科修业年限与证书；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/14-https_3A_2F_2Fwww.zs.cdut.edu.cn_2Finfo_2F1147_2F8354.htm.md",
+          "sha256": "1f2ede9ee040bfbad7646bbc7acc22f105b68948814e4294b11a0026275315e4"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:31",
+      "text_sha256": "5a6d1fcbb65c587db0be1b787e74e510bcbd760844c0e415de091de74bd5630c",
+      "notes": "对照所列完整官方正文或OCR章节核对新生入学资格复查；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/14-https_3A_2F_2Fwww.zs.cdut.edu.cn_2Finfo_2F1147_2F8354.htm.md",
+          "sha256": "1f2ede9ee040bfbad7646bbc7acc22f105b68948814e4294b11a0026275315e4"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:32",
+      "text_sha256": "e9990542e9ba9b6678e73d208ea7fd2350e0f69ef4fa96ddd6f86e6218ce428d",
+      "notes": "对照所列完整官方正文或OCR章节核对2026级新生绿色通道内容；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/11-https_3A_2F_2Fxsc.cdut.edu.cn_2Finfo_2F1025_2F4787.htm.md",
+          "sha256": "fa580fcf8bb9c529f491810b27fe767a5e4444a5aa37b0022b2ccdbe324bc1ec"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:33",
+      "text_sha256": "43dae77d9d1cd40ae469aa9a62e013d7a6a646551f713fe80b55e42f05cb3580",
+      "notes": "对照所列完整官方正文或OCR章节核对生源地贷款回执受理；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/11-https_3A_2F_2Fxsc.cdut.edu.cn_2Finfo_2F1025_2F4787.htm.md",
+          "sha256": "fa580fcf8bb9c529f491810b27fe767a5e4444a5aa37b0022b2ccdbe324bc1ec"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:34",
+      "text_sha256": "150834b3506ec1f302a2ea56caf0c7517ad4669083e8b146a615dfc1ec761602",
+      "notes": "对照所列完整官方正文或OCR章节核对爱心助学包与缓缴学费；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/11-https_3A_2F_2Fxsc.cdut.edu.cn_2Finfo_2F1025_2F4787.htm.md",
+          "sha256": "fa580fcf8bb9c529f491810b27fe767a5e4444a5aa37b0022b2ccdbe324bc1ec"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:35",
+      "text_sha256": "7838497d3fd264c6ebb82d76df2ce7836e712f6cbe3230fad7b910f954862374",
+      "notes": "对照所列完整官方正文或OCR章节核对砚湖易办入口与登录；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/01-https_3A_2F_2Fbsdt.cdut.edu.cn_2FEIP_2Fnonlogin_2FhomePage.htm.md",
+          "sha256": "6833a457c5a04f80416f4c09384cd1c689ba08cd85be855a12c3c3a7e52ec339"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:36",
+      "text_sha256": "026687e8246a7cc1711b6c89fd2eac38864536094b845645ba9c1fa4c6e6083a",
+      "notes": "对照所列完整官方正文或OCR章节核对砚湖易办高频服务与系统；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/01-https_3A_2F_2Fbsdt.cdut.edu.cn_2FEIP_2Fnonlogin_2FhomePage.htm.md",
+          "sha256": "6833a457c5a04f80416f4c09384cd1c689ba08cd85be855a12c3c3a7e52ec339"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:37",
+      "text_sha256": "68d5a58d3371e60d4aa4c6ff6c511f7fec4bd7f4abacfd8690a4662e0141b264",
+      "notes": "对照所列完整官方正文或OCR章节核对教师个人主页平台；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/03-https_3A_2F_2Ffaculty.cdut.edu.cn_2F.md",
+          "sha256": "31694b93668d7a4815f1981f21beb66fb4ae5ef3a4a61d987f80f2e24cd73526"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:38",
+      "text_sha256": "33fe2dba2b78bc4512833bac89d1743cf489d51e39d900e559bcaf10c7b558c8",
+      "notes": "公开目录JSON完整HTML核对激活流程与本人安全手机、验证码、密码要求。",
+      "evidence": [
+        {
+          "file": "freshman/service-guide-items.json",
+          "sha256": "8dbd1c48209d933f78016cda4e3bed8e6be6dad0d6d68d9849bbf5f71a077a37"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:39",
+      "text_sha256": "a6bd7e5345f49c179ddb1804e3dfdcaaa20076eb0daf4801a957844129fb7779",
+      "notes": "对照所列完整官方正文或OCR章节核对砚湖易办办事指南能查什么；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/41-https_3A_2F_2Fbsdt.cdut.edu.cn_2FEIP_2Fnonlogin_2FserviceGuide_2FserviceGuideToPage.htm.md",
+          "sha256": "a85e2fd45f6c8241a00670aee867c3261a2292a1ffe39287b36ee253efd971e2"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:40",
+      "text_sha256": "edaed78a28ee727482af1cf960c47c698c8ebad92fd5fc4383f88d2816a86a52",
+      "notes": "完整身份手册FAQ3/4确认通过安全邮箱改手机，无可用邮箱联系84079530。",
+      "evidence": [
+        {
+          "file": "final/identity-help-provider-extract.txt",
+          "sha256": "1676f8450c247bd7efcbc67e487cfff5c9217ee2560288babf9cd4621cd32e62"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:41",
+      "text_sha256": "267e9cacf4388d6f8e5f5b075924c8ff942e527dc25aa8a6fbcc7075ea615fc0",
+      "notes": "对照所列完整官方正文或OCR章节核对迎新网入口与在线报到；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/53-https_3A_2F_2Fyx.cdut.edu.cn_2Findex.htm.md",
+          "sha256": "223c0ce5ffc03c4bf391616902c2b043f6fd07f74ab74e934c60c8ee8482e974"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:42",
+      "text_sha256": "c8504ca8d970c8a81b013ce2a6e2e15975216c5f5b43b5bf46e0b4491939f6bf",
+      "notes": "对照所列完整官方正文或OCR章节核对新生体检复查与疫苗建议；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/12.jpg",
+          "sha256": "41a8775b670b35c4f57245e3f5d47487fd2a8da9a1a948cd2ed29ed268f43d21"
+        },
+        {
+          "file": "freshman/flbook-pages/41.jpg",
+          "sha256": "323720726d8f10d011d14eb2084b802cdcdad5ee91c09841d4ea962a72f1b16c"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:43",
+      "text_sha256": "bcad875ae5f8b3b077f8fe7646c96b31caef79e12844feafbe29809d86885632",
+      "notes": "对照所列完整官方正文或OCR章节核对2026年秋季学期心理咨询服务；保留2026届别、适用对象、必要条件、例外及未知事项，未认证实时开放。",
+      "evidence": [
+        {
+          "file": "freshman/61-https_3A_2F_2Fxljk.cdut.edu.cn_2Finfo_2F1072_2F3678.htm.md",
+          "sha256": "a6e12f29ede30c368f4973511c1c6469e6e82632dcf50d34fdb997ac1f6d2416"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:44",
+      "text_sha256": "e6a482d76d1d3e5b76db7c9b849879f14571875935e49665e11817b9a5cab708",
+      "notes": "保留2022激活说明，删除把POP3默认端口当现行配置的用途。",
+      "evidence": [
+        {
+          "file": "freshman/62-https_3A_2F_2Fwxc.cdut.edu.cn_2Finfo_2F1012_2F3873.htm.md",
+          "sha256": "c2d18af4c9dc497c59782916f2c1a894803dc38bca9e3747216f8831531756c1"
+        }
+      ]
+    },
+    {
+      "chunk_id": "cdut:chunk:fresh2026:45",
+      "text_sha256": "99dd00c9e076016c6fac17cb570c706c2aa4818de0e40f2cd12956934ea8a553",
+      "notes": "综合导航为本轮整理，标历史，不冒充逐字政策或推算下一届日期。",
+      "evidence": [
+        {
+          "file": "freshman/flbook-ocr.jsonl",
+          "sha256": "737e0b595efa894741d6b87896adbb8e381a43d881cf1fa57df6868b65f89964"
+        },
+        {
+          "file": "freshman/flbook-pages/08.jpg",
+          "sha256": "6013426d79a2e9125ffd1d6af2e35e37ed3c9013f49845746dc4bd527ddf0e53"
+        },
+        {
+          "file": "freshman/flbook-pages/10.jpg",
+          "sha256": "df242124ee980573b522c339fa59e8680713c005823754e0f197ef2c05eddb64"
+        },
+        {
+          "file": "freshman/flbook-pages/11.jpg",
+          "sha256": "b01a31be71f88f44c8b4710f582ba49df918e008143c850fb3d3bbbbca953e8d"
+        },
+        {
+          "file": "freshman/flbook-pages/13.jpg",
+          "sha256": "1d41560965487e5f1c7cac95666b8b838b4bf76d4f7522fe35fb20e89730bb16"
+        },
+        {
+          "file": "freshman/flbook-pages/15.jpg",
+          "sha256": "1ca82d51bb3b839a1b40c157f0daa5baf651a04b5c96e62d74429f23d0e8aff3"
+        },
+        {
+          "file": "freshman/flbook-pages/20.jpg",
+          "sha256": "2dc54c90b3a67864a4f113aa374f490a84c105157def65f6abbe17c81e84ee16"
+        }
+      ]
+    }
+  ]
+}

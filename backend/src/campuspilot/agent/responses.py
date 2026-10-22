@@ -12,11 +12,14 @@ from campuspilot.agent.plan import Plan
 from campuspilot.agent.understand import Understanding
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.observability import record_event
-from campuspilot.presentation import place_card, service_card
+from campuspilot.presentation import place_card, service_card, service_summary
 from campuspilot.retrieval.grounding import GroundingMode
 from campuspilot.service_links import answer_service_links
 
-NO_BASIS_ANSWER = "现有资料还不足以确认这个问题。"
+NO_BASIS_ANSWER = (
+    "现有资料还不足以确认这个问题。\n"
+    "历史通知请打开学校官方原文核对；现行办理请查最新通知或联系该事项主管部门。"
+)
 STALE_NOTE_MARK = "可能已过期"
 STALE_NOTE = "\n\n（注：所引用的部分资料可能已过期，请以学校最新通知为准。）"
 
@@ -27,10 +30,13 @@ class ResponseBuilder:
         repository: DirectoryRepository,
         grounding: GroundingMode,
         trace: Callable[[str, dict[str, JsonValue]], None],
+        *,
+        concise: bool = False,
     ) -> None:
         self.repository = repository
         self.grounding = grounding
         self._trace = trace
+        self.concise = concise
 
     def _cards(self, ev: Evidence) -> dict[str, JsonValue]:
         return {
@@ -71,9 +77,7 @@ class ResponseBuilder:
         # Never dump arbitrary retrieved text after a model or verification failure.
         lines: list[str] = []
         for service in list(ev.services.values())[:1]:
-            lines.insert(
-                0, f"{service.name}：" + "；".join(s.instruction for s in service.steps[:2])
-            )
+            lines.insert(0, service_summary(service))
         if ev.places and not lines:
             names = "、".join(
                 str(self.place_card(p).get("name")) for p in list(ev.places.values())[:4]
@@ -117,10 +121,18 @@ class ResponseBuilder:
                 "source_id": h.get("source_id"),
                 "chunk_id": h.get("chunk_id"),
                 "source_url": h.get("url"),
+                "document_id": h.get("document_id"),
+                "revision_id": h.get("revision_id"),
+                "locator": h.get("locator"),
+                "text_sha256": h.get("text_sha256"),
+                "scope_notes": h.get("scope_notes"),
             }
             for h in self._shown_hits(ev)[:4]
         ]
-        citations = [ev.citations[c] for c in cited if c in ev.citations]
+        cited_sources = set(cited) | {
+            str(h.get("source_id")) for h in ev.hits if str(h.get("chunk_id")) in cited
+        }
+        citations = [value for key, value in ev.citations.items() if key in cited_sources]
         if self.grounding != "block":
             # off / flag: pre-grounding behaviour (fallback to every citation), except that
             # an "empty" answer (e.g. the model found no basis) shows no unrelated sources.
@@ -148,6 +160,20 @@ class ResponseBuilder:
             and STALE_NOTE_MARK not in answer
         ):
             answer += STALE_NOTE
+        if not self.concise and status in {"success", "limited", "needs_clarification"}:
+            # Keep applicability visible even if a model omits it. Only cited evidence
+            # contributes restrictions; unrelated retrieved rows cannot qualify an answer.
+            limitations = []
+            for row in ev.hits:
+                if not {str(row.get("source_id")), str(row.get("chunk_id"))} & set(cited):
+                    continue
+                notes = row.get("scope_notes")
+                if isinstance(notes, list) and notes:
+                    limitation = str(row.get("title")) + "：" + "；".join(str(n) for n in notes)
+                    if limitation not in limitations:
+                        limitations.append(limitation)
+            if limitations:
+                answer = "适用限制：\n" + "\n".join(limitations) + "\n\n" + answer
         body: dict[str, JsonValue] = {
             **self._cards(ev),
             "answer": answer,
@@ -166,6 +192,8 @@ class ResponseBuilder:
                 else None
             ),
         }
+        if ev.decisions:
+            body["decisions"] = list(ev.decisions)
         if degraded:
             body["degraded_reason"] = degraded
         if ev.web_status:

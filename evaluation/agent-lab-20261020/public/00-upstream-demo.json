@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "00-upstream-demo",
+  "title": "原框架学习 · 无模型机制演示",
+  "kind": "upstream_demo",
+  "status": "completed",
+  "upstream_commit": "1cfe254e8d25b15f37048c3730134686abe60335",
+  "code_identity": "upstream-pinned-scripted-demo",
+  "knowledge_version": "not-applicable",
+  "model": "无模型：上游脚本化编辑器",
+  "question": "官方两项合成账目任务：观察提出修改、试跑、综合与跨任务经验。",
+  "stages": [
+    "base",
+    "propose",
+    "probe",
+    "compose",
+    "experience"
+  ],
+  "changes": "原示例的汇总脚本只累计正数；通用候选移除正数过滤，试跑后负数贷记也被计入。该脚本编辑能力仅属于原示例，CampusPilot 适配器只允许两份指引文本。",
+  "lessons": "# ledger-1\n\n- adopted: `c1`  (run `demo-oc-seq1/ledger-1/c1`)\n- components: 1 scripts; 62 always-on chars\n\n## Why this was chosen\ntrivial pool: single final at k=1; delivered without a selector session\n\n## What each edit did\ncomponent: scripts/summarize.py\ncandidates: inv1\nchange: dropped the positive-only filter from the amount sum\nobserved: the probe total included the credits the base run omitted\nverdict: helped\n\n## Transferable lesson\n- **cue**: When a ledger includes credits and debits\n- **lesson**: Include both signs when summing in scripts/summarize.py.\n- **evidence**: The scripts/summarize.py row -- removing the positive-only filter changed the probe total to include the credits omitted by the base trajectory.\n- **confidence**: high for this observed arithmetic contrast\n",
+  "trials": [],
+  "conclusion": "官方无模型示例完成 2/2 个任务、14 次执行、16 次脚本化编辑调用。第二题执行前，顺序与并行模式均已有一条经验。",
+  "adopted": false,
+  "cost_usd": 0.0,
+  "limitation": "这是原框架自带的合成机制示例，无外部模型调用；不证明校园知识质量或校园候选提升，不能作为正常问答策略。"
+}

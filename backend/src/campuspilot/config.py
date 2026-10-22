@@ -67,6 +67,9 @@ class Settings:
     # Optional in-process Jev plugin: off (default) | shadow (record only) | on.
     # Credentials: CAMPUSPILOT_JEV_API_KEY or CAMPUSPILOT_JEV_KEY_FILE (migration_config).
     jev: JevMode = "off"
+    jev_routing: bool = False
+    harness_profile: str = ""
+    lab_records_dir: str = ""
     jev_budget_dir: str = ""
     # Online Jev spend caps per UTC day (separate from the $5 evaluation ledger).
     jev_daily_usd: str = "1"
@@ -115,6 +118,9 @@ class Settings:
             agent_loop=env.get("CAMPUSPILOT_AGENT_LOOP", "off") == "on",
             grounding=parse_grounding_mode(env.get("CAMPUSPILOT_GROUNDING", "flag")),
             jev=parse_jev_mode(env.get("CAMPUSPILOT_JEV", "off")),
+            jev_routing=env.get("CAMPUSPILOT_JEV_ROUTING", "off") == "on",
+            harness_profile=env.get("CAMPUSPILOT_HARNESS_PROFILE", ""),
+            lab_records_dir=env.get("CAMPUSPILOT_LAB_RECORDS_DIR", ""),
             jev_budget_dir=env.get("CAMPUSPILOT_JEV_BUDGET_DIR", ""),
             jev_daily_usd=env.get("CAMPUSPILOT_JEV_DAILY_USD", "1"),
             jev_daily_calls=int(env.get("CAMPUSPILOT_JEV_DAILY_CALLS", "2000")),

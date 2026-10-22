@@ -1,0 +1,542 @@
+{
+  "body": {
+    "services": [],
+    "teachers": [],
+    "places": [],
+    "answer": "适用限制：\n心理咨询预约正文与服务条件：仅适用于本科生、研究生；来源适用校区尚未确认\n2026年春季学期学生心理咨询服务通知（1/1）：来源适用校区尚未确认\n\n不能保证。现有资料只说明预约渠道和办理时间，没有任何关于号源余量、当天是否可约、是否需排队或审核的信息，因此无法据此判断你今天能否预约成功。可确认的是：网上预约需在校园网区域内进入“砚湖易办”，在事务中心板块点击“心理咨询预约”；也可直接到心理健康教育中心现场预约。咨询时间为周一至周五9:00—18:00，中心地址为芙蓉餐厅三楼（成都校区）。上述通知为2026年春季学期发布，可能已过期，请以最新通知为准；来源适用校区尚未确认。建议先按上述渠道查看当天可约时段，或拨打84075525确认。",
+    "result_status": "success",
+    "answer_mode": "agent",
+    "excerpts": [
+      {
+        "document": "心理咨询预约正文与服务条件",
+        "content": "心理咨询预约\n\n事项编号：1042\n\n基本信息\n\n办理方式\t线上线下结合办理\t事项性质\t服务事项\n\n办理途径\t线上线下结合\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t028-84075525\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n离退休人员,退休校友教职工,研究生,学校管理员,教师,学生\n\n所属部门：\n\n心理健康教育中心\n\n服务日期：\n\n长期有效\n\n办理入口\n\n心理咨询预约\n\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+        "source_id": "cdut:source:official:portal-1042",
+        "chunk_id": "cdut:chunk:official:portal-1042:guide-body",
+        "source_url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/bfqh2dcrxbmryazncnyxn2tayqir2add.htm",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "documents/portal-1042/body.txt:chars[0:228] sha256=2dc6428055bd5b7b97d980d5c3bfc90c191590cb8f94cef47f89763c676f4f9a",
+        "text_sha256": "5460d9d7f37bfd300f5910a2f2ea2483013f5f486941dbf25762e75c05df3e11",
+        "scope_notes": [
+          "仅适用于本科生、研究生",
+          "来源适用校区尚未确认"
+        ]
+      },
+      {
+        "document": "2026年春季学期学生心理咨询服务通知（1/1）",
+        "content": "2026年春季学期学生心理咨询服务通知\n各位同学：\n本学期大学生心理咨询服务已经开始，现将预约咨询相关事项通知如下：\n一、咨询时间：周一至周五 9:00—18:00\n二、预约咨询：\n1. 网上预约：在校园网区域内进入“砚湖易办”，点击事务中心板块“心理咨询预约”预约（需在校园网区域内进入），并按预约时间前往心理中心咨询。\n2. 现场预约：直接到学校心理健康教育中心进行预约、咨询。\n三、应急及问询电话：84075525；问询QQ：1984818352\n四、中心地址：芙蓉餐厅三楼（成都校区）\n心理健康教育中心\n2026年3月5日",
+        "source_id": "cdut:source:psych2026",
+        "chunk_id": "cdut:chunk:psych2026:bs01",
+        "source_url": "https://xljk.cdut.edu.cn/info/1072/3594.htm",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "browser-raw/pages/2026年春季学期学生心理咨询服务通知-成都理工大学心理健康中心.html 正文第1段（共1段）",
+        "text_sha256": "9fcaa5a73e51aa3329d13166b597c6f7556f5fe436f0cca0be5087b789b5d656",
+        "scope_notes": [
+          "来源适用校区尚未确认"
+        ]
+      },
+      {
+        "document": "新成理人集合！速戳这份开学秘籍（13/15）",
+        "content": "学生公寓照明和空调欠费断电后，由学生按照校园一卡通在线购电流程自助缴费（具体操作流程见公寓内张贴的在线购电使用流程）。\n温馨提示：寝室内不得使用各类违章电器。\n3.学生公寓生活设施报修\n学生公寓设施若有损坏，请关注公众号“成理智慧后勤”进行网上报修。\n4.公寓内洗衣服务\n学生公寓园区或公寓内设有自助洗衣房，提供APP模式自助洗衣服务。（具体操作流程见洗衣房内张贴的智慧洗衣使用流程图）\n5.开水、热水供应\n各公寓均提供有偿开水及热水服务，按流量计费。供应时间：详见各公寓公示时间。\n运动\n我校现有运动场馆10万余平方米。有综合体育馆1座，固定座位1200人，使用面积3000余平方米（内设标准篮球场1个、专业羽毛球场12片、乒乓球桌20台），网球场12片（含风雨球场4片），标准游泳池2个和练习池1个，田径场2个（内设2个人工草皮标准足球场），塑胶篮球场25片，排球场10片，乒乓球台若干，5人制足球场2个，攀岩壁1座，综合拓展场地1个（含高空拓展），小型体操房2个。\n室外的运动场除教学使用时间外全部免费对同学们开放。网球、羽毛球、乒乓球、东区足球场和五人制足球场除教学时间段外成本补偿性收费向大家开放。\n校园交通\n电动校园交通车“小白龙”穿梭在遍布学校的二十多个站点，早晨7:00发车，晚上末班车22:55（周五、周六23:25），可以预约用车。",
+        "source_id": "cdut:source:cistfresh2025",
+        "chunk_id": "cdut:chunk:cistfresh2025:bs13",
+        "source_url": "https://cist.cdut.edu.cn/info/1135/7388.htm",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "browser-raw/pages/新成理人集合！速戳这份开学秘籍-计算机与网络安全学院（示范性软件学院）.html 正文第13段（共15段）",
+        "text_sha256": "4ffc4729db583f26e2f658814748acd19e526affb8b0a3ba133672f13009d3d4",
+        "scope_notes": [
+          "来源适用校区尚未确认"
+        ]
+      },
+      {
+        "document": "一键收藏！2024本科新生入学指南（14/16）",
+        "content": "学生公寓照明和空调欠费断电后，由学生按照校园一卡通在线购电流程自助缴费(具体操作流程见公寓内张贴的在线购电使用流程)。\n温馨提示：寝室内不得使用各类违规电器。\n3.学生公寓生活设施报修\n学生公寓设施若有损坏，请关注公众号“成理智慧后勤”进行网上报修，报修后学校将尽快安排，按照流程修理。\n4.公寓内洗衣服务\n学生公寓园区或公寓内设有自助洗衣房，提供APP模式自助洗衣服务。具体操作流程见洗衣房内张贴的智慧洗衣使用流程图。\n5.开水、热水供应\n各公寓均提供有偿开水及热水服务，按流量计费。供应时间详见各公寓公示时间。\n运动\n我校现有运动场馆10万余平方米。有综合体育馆1座，固定座位1200人，使用面积3000余平方米(内设标准篮球场1个、专业羽毛球场12片、乒乓球桌20台)，网球场12片(含风雨球场4片)，标准游泳池2个和练习池1个，田径场2个(内设2个人工草皮标准足球场)，塑胶篮球场25片，排球场10片，乒乓球台若干，5人制足球场2个，攀岩壁1座，综合拓展场地1个(含高空拓展)，小型体操房2个。室外的运动场除教学使用时间外全部免费对同学们开放。网球、羽毛球、乒乓球、东区足球场和五人制足球场除教学时间段外成本补偿性收费向大家开放。\n校园交通\n电动校园交通车“小白龙”穿梭在遍布学校的二十多个站点，早晨7:00发车，晚上末班车22:55（周五周六23:25），还可以预约用车。",
+        "source_id": "cdut:source:cistfresh2024",
+        "chunk_id": "cdut:chunk:cistfresh2024:bs14",
+        "source_url": "https://cist.cdut.edu.cn/info/1135/7328.htm",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "browser-raw/pages/一键收藏！2024本科新生入学指南-计算机与网络安全学院（示范性软件学院）.html 正文第14段（共16段）",
+        "text_sha256": "dca0800cc045a5d14aac604bb5f309492edf83708d046b5951e6da40f0d887c3",
+        "scope_notes": [
+          "仅适用于本科生",
+          "来源适用校区尚未确认"
+        ]
+      }
+    ],
+    "source_ids": [
+      "cdut:chunk:official:portal-1042:guide-body",
+      "cdut:source:official:portal-1042",
+      "cdut:chunk:psych2026:bs01",
+      "cdut:source:psych2026"
+    ],
+    "service_links": [
+      {
+        "id": "service-link:2c44327fbb4f04b5f0c8",
+        "title": "心理咨询预约",
+        "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/bfqh2dcrxbmryazncnyxn2tayqir2add.htm",
+        "kind": "guide",
+        "source_id": "cdut:source:official:portal-1042",
+        "source_title": "心理咨询预约",
+        "source_url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/bfqh2dcrxbmryazncnyxn2tayqir2add.htm",
+        "requires_login": null,
+        "network_requirement": "unknown",
+        "checked_at": "2026-10-14",
+        "availability": "not_checked"
+      }
+    ],
+    "plan": [
+      {
+        "step": 1,
+        "tool": "search_service",
+        "label": "查找办事事项",
+        "status": "empty"
+      },
+      {
+        "step": 2,
+        "tool": "make_checklist",
+        "label": "生成办理清单",
+        "status": "skipped"
+      },
+      {
+        "step": 3,
+        "tool": "search_knowledge",
+        "label": "检索官方资料",
+        "status": "success"
+      }
+    ],
+    "checklist": null,
+    "citations": [
+      {
+        "id": "cdut:source:official:portal-1042",
+        "title": "心理咨询预约",
+        "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/bfqh2dcrxbmryazncnyxn2tayqir2add.htm",
+        "publisher": "心理健康教育中心",
+        "audience": {
+          "audiences": [
+            "undergraduate",
+            "graduate"
+          ],
+          "campuses": [
+            "unknown"
+          ],
+          "conditions": [],
+          "exceptions": [],
+          "evidence_quotes": {},
+          "academic_year": null,
+          "valid_from": null,
+          "valid_until": null,
+          "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+        },
+        "date": null,
+        "source_authority": "official_university",
+        "access_method": null,
+        "source_label": "学校官方资料",
+        "stale": false,
+        "document_id": null,
+        "revision_id": null,
+        "locator": "documents/portal-1042/body.txt:chars[0:228] sha256=2dc6428055bd5b7b97d980d5c3bfc90c191590cb8f94cef47f89763c676f4f9a",
+        "text_sha256": "5460d9d7f37bfd300f5910a2f2ea2483013f5f486941dbf25762e75c05df3e11",
+        "scope_notes": [
+          "仅适用于本科生、研究生",
+          "来源适用校区尚未确认"
+        ],
+        "evidence_refs": [
+          {
+            "chunk_id": "cdut:chunk:official:portal-1042:guide-body",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "documents/portal-1042/body.txt:chars[0:228] sha256=2dc6428055bd5b7b97d980d5c3bfc90c191590cb8f94cef47f89763c676f4f9a",
+            "text_sha256": "5460d9d7f37bfd300f5910a2f2ea2483013f5f486941dbf25762e75c05df3e11"
+          }
+        ]
+      },
+      {
+        "id": "cdut:source:psych2026",
+        "title": "2026年春季学期学生心理咨询服务通知",
+        "url": "https://xljk.cdut.edu.cn/info/1072/3594.htm",
+        "publisher": "心理健康教育中心",
+        "audience": {
+          "audiences": [
+            "all"
+          ],
+          "campuses": [
+            "unknown"
+          ],
+          "conditions": [],
+          "exceptions": [],
+          "evidence_quotes": {},
+          "academic_year": null,
+          "valid_from": null,
+          "valid_until": null,
+          "source_scope": "学生（各位同学）"
+        },
+        "date": null,
+        "source_authority": "official_university",
+        "access_method": null,
+        "source_label": "学校官方资料",
+        "stale": true,
+        "document_id": null,
+        "revision_id": null,
+        "locator": "browser-raw/pages/2026年春季学期学生心理咨询服务通知-成都理工大学心理健康中心.html 正文第1段（共1段）",
+        "text_sha256": "9fcaa5a73e51aa3329d13166b597c6f7556f5fe436f0cca0be5087b789b5d656",
+        "scope_notes": [
+          "来源适用校区尚未确认"
+        ],
+        "evidence_refs": [
+          {
+            "chunk_id": "cdut:chunk:psych2026:bs01",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "browser-raw/pages/2026年春季学期学生心理咨询服务通知-成都理工大学心理健康中心.html 正文第1段（共1段）",
+            "text_sha256": "9fcaa5a73e51aa3329d13166b597c6f7556f5fe436f0cca0be5087b789b5d656"
+          }
+        ]
+      }
+    ],
+    "map_actions": [],
+    "understanding": {
+      "intent": "办事",
+      "slots": {
+        "identity": "unknown",
+        "academic_year": null,
+        "service": "心理咨询预约",
+        "destination": null
+      }
+    },
+    "harness_profile": {
+      "version": "h2-d161f2dc457057ae",
+      "sha256": "f7d748cc2f1b44a02258862cb3afc0207fe03a63b4393903b8e4f57890ddf089"
+    }
+  },
+  "events": [
+    {
+      "event": "understanding",
+      "data": {
+        "intent": "办事",
+        "slots": {
+          "identity": "unknown",
+          "academic_year": null,
+          "service": "心理咨询预约",
+          "destination": null
+        },
+        "missing": []
+      }
+    },
+    {
+      "event": "plan",
+      "data": {
+        "steps": [
+          {
+            "step": 1,
+            "tool": "search_service",
+            "label": "查找办事事项"
+          },
+          {
+            "step": 2,
+            "tool": "make_checklist",
+            "label": "生成办理清单"
+          },
+          {
+            "step": 3,
+            "tool": "search_knowledge",
+            "label": "检索官方资料"
+          }
+        ]
+      }
+    },
+    {
+      "event": "tool_start",
+      "data": {
+        "tool": "search_service",
+        "label": "查找办事事项"
+      }
+    },
+    {
+      "event": "tool_end",
+      "data": {
+        "tool": "search_service",
+        "label": "查找办事事项",
+        "status": "empty"
+      }
+    },
+    {
+      "event": "tool_start",
+      "data": {
+        "tool": "search_knowledge",
+        "label": "检索官方资料"
+      }
+    },
+    {
+      "event": "tool_end",
+      "data": {
+        "tool": "search_knowledge",
+        "label": "检索官方资料",
+        "status": "success"
+      }
+    },
+    {
+      "event": "composing",
+      "data": {
+        "label": "组织答案并核对引用"
+      }
+    }
+  ],
+  "latency_ms": 3245.2327930000138,
+  "tool_records": [
+    {
+      "tool": "search_service",
+      "arguments": {
+        "query": "心理咨询预约"
+      },
+      "result": {
+        "status": "empty"
+      }
+    },
+    {
+      "tool": "search_knowledge",
+      "arguments": {
+        "query": "已有心理咨询预约资料，是否足够保证我今天可以预约成功？",
+        "audience": "all"
+      },
+      "result": {
+        "result_status": "success",
+        "answer": "适用限制：仅适用于本科生、研究生；来源适用校区尚未确认。\n心理咨询预约\n\n事项编号：1042\n\n基本信息\n\n办理方式\t线上线下结合办理\t事项性质\t服务事项\n\n办理途径\t线上线下结合\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t028-84075525\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n离退休人员,退休校友教职工,研究生,学校管理员,教师,学生\n\n所属部门：\n\n心理健康教育中心\n\n服务日期：\n\n长期有效\n\n办理入口\n\n心理咨询预约\n\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。\n适用限制：来源适用校区尚未确认。\n2026年春季学期学生心理咨询服务通知\n各位同学：\n本学期大学生心理咨询服务已经开始，现将预约咨询相关事项通知如下：\n一、咨询时间：周一至周五 9:00—18:00\n二、预约咨询：\n1. 网上预约：在校园网区域内进入“砚湖易办”，点击事务中心板块“心理咨询预约”预约（需在校园网区域内进入），并按预约时间前往心理中心咨询。\n2. 现场预约：直接到学校心理健康教育中心进行预约、咨询。\n三、应急及问询电话：84075525；问询QQ：1984818352\n四、中心地址：芙蓉餐厅三楼（成都校区）\n心理健康教育中心\n2026年3月5日\n适用限制：来源适用校区尚未确认。\n学生公寓照明和空调欠费断电后，由学生按照校园一卡通在线购电流程自助缴费（具体操作流程见公寓内张贴的在线购电使用流程）。\n温馨提示：寝室内不得使用各类违章电器。\n3.学生公寓生活设施报修\n学生公寓设施若有损坏，请关注公众号“成理智慧后勤”进行网上报修。\n4.公寓内洗衣服务\n学生公寓园区或公寓内设有自助洗衣房，提供APP模式自助洗衣服务。（具体操作流程见洗衣房内张贴的智慧洗衣使用流程图）\n5.开水、热水供应\n各公寓均提供有偿开水及热水服务，按流量计费。供应时间：详见各公寓公示时间。\n运动\n我校现有运动场馆10万余平方米。有综合体育馆1座，固定座位1200人，使用面积3000余平方米（内设标准篮球场1个、专业羽毛球场12片、乒乓球桌20台），网球场12片（含风雨球场4片），标准游泳池2个和练习池1个，田径场2个（内设2个人工草皮标准足球场），塑胶篮球场25片，排球场10片，乒乓球台若干，5人制足球场2个，攀岩壁1座，综合拓展场地1个（含高空拓展），小型体操房2个。\n室外的运动场除教学使用时间外全部免费对同学们开放。网球、羽毛球、乒乓球、东区足球场和五人制足球场除教学时间段外成本补偿性收费向大家开放。\n校园交通\n电动校园交通车“小白龙”穿梭在遍布学校的二十多个站点，早晨7:00发车，晚上末班车22:55（周五、周六23:25），可以预约用车。",
+        "hits": [
+          {
+            "chunk_id": "cdut:chunk:official:portal-1042:guide-body",
+            "source_id": "cdut:source:official:portal-1042",
+            "title": "心理咨询预约正文与服务条件",
+            "text": "心理咨询预约\n\n事项编号：1042\n\n基本信息\n\n办理方式\t线上线下结合办理\t事项性质\t服务事项\n\n办理途径\t线上线下结合\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t028-84075525\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n离退休人员,退休校友教职工,研究生,学校管理员,教师,学生\n\n所属部门：\n\n心理健康教育中心\n\n服务日期：\n\n长期有效\n\n办理入口\n\n心理咨询预约\n\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/bfqh2dcrxbmryazncnyxn2tayqir2add.htm",
+            "source_title": "心理咨询预约",
+            "publisher": "心理健康教育中心",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "documents/portal-1042/body.txt:chars[0:228] sha256=2dc6428055bd5b7b97d980d5c3bfc90c191590cb8f94cef47f89763c676f4f9a",
+            "text_sha256": "5460d9d7f37bfd300f5910a2f2ea2483013f5f486941dbf25762e75c05df3e11",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "仅适用于本科生、研究生",
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：仅适用于本科生、研究生；来源适用校区尚未确认。\n心理咨询预约\n\n事项编号：1042\n\n基本信息\n\n办理方式\t线上线下结合办理\t事项性质\t服务事项\n\n办理途径\t线上线下结合\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t028-84075525\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n离退休人员,退休校友教职工,研究生,学校管理员,教师,学生\n\n所属部门：\n\n心理健康教育中心\n\n服务日期：\n\n长期有效\n\n办理入口\n\n心理咨询预约\n\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+            "verification_status": "official_document",
+            "service_links": [
+              {
+                "id": "service-link:2c44327fbb4f04b5f0c8",
+                "title": "心理咨询预约",
+                "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/bfqh2dcrxbmryazncnyxn2tayqir2add.htm",
+                "kind": "guide",
+                "source_id": "cdut:source:official:portal-1042",
+                "source_title": "心理咨询预约",
+                "source_url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/bfqh2dcrxbmryazncnyxn2tayqir2add.htm",
+                "requires_login": null,
+                "network_requirement": "unknown",
+                "checked_at": "2026-10-14",
+                "availability": "not_checked"
+              }
+            ],
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 125.294881,
+            "context_of": [],
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:psych2026:bs01",
+            "source_id": "cdut:source:psych2026",
+            "title": "2026年春季学期学生心理咨询服务通知（1/1）",
+            "text": "2026年春季学期学生心理咨询服务通知\n各位同学：\n本学期大学生心理咨询服务已经开始，现将预约咨询相关事项通知如下：\n一、咨询时间：周一至周五 9:00—18:00\n二、预约咨询：\n1. 网上预约：在校园网区域内进入“砚湖易办”，点击事务中心板块“心理咨询预约”预约（需在校园网区域内进入），并按预约时间前往心理中心咨询。\n2. 现场预约：直接到学校心理健康教育中心进行预约、咨询。\n三、应急及问询电话：84075525；问询QQ：1984818352\n四、中心地址：芙蓉餐厅三楼（成都校区）\n心理健康教育中心\n2026年3月5日",
+            "url": "https://xljk.cdut.edu.cn/info/1072/3594.htm",
+            "source_title": "2026年春季学期学生心理咨询服务通知",
+            "publisher": "心理健康教育中心",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "browser-raw/pages/2026年春季学期学生心理咨询服务通知-成都理工大学心理健康中心.html 正文第1段（共1段）",
+            "text_sha256": "9fcaa5a73e51aa3329d13166b597c6f7556f5fe436f0cca0be5087b789b5d656",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：来源适用校区尚未确认。\n2026年春季学期学生心理咨询服务通知\n各位同学：\n本学期大学生心理咨询服务已经开始，现将预约咨询相关事项通知如下：\n一、咨询时间：周一至周五 9:00—18:00\n二、预约咨询：\n1. 网上预约：在校园网区域内进入“砚湖易办”，点击事务中心板块“心理咨询预约”预约（需在校园网区域内进入），并按预约时间前往心理中心咨询。\n2. 现场预约：直接到学校心理健康教育中心进行预约、咨询。\n三、应急及问询电话：84075525；问询QQ：1984818352\n四、中心地址：芙蓉餐厅三楼（成都校区）\n心理健康教育中心\n2026年3月5日",
+            "verification_status": "verified",
+            "service_links": [],
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "学生（各位同学）"
+            },
+            "score": 93.17338,
+            "context_of": [],
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:cistfresh2025:bs13",
+            "source_id": "cdut:source:cistfresh2025",
+            "title": "新成理人集合！速戳这份开学秘籍（13/15）",
+            "text": "学生公寓照明和空调欠费断电后，由学生按照校园一卡通在线购电流程自助缴费（具体操作流程见公寓内张贴的在线购电使用流程）。\n温馨提示：寝室内不得使用各类违章电器。\n3.学生公寓生活设施报修\n学生公寓设施若有损坏，请关注公众号“成理智慧后勤”进行网上报修。\n4.公寓内洗衣服务\n学生公寓园区或公寓内设有自助洗衣房，提供APP模式自助洗衣服务。（具体操作流程见洗衣房内张贴的智慧洗衣使用流程图）\n5.开水、热水供应\n各公寓均提供有偿开水及热水服务，按流量计费。供应时间：详见各公寓公示时间。\n运动\n我校现有运动场馆10万余平方米。有综合体育馆1座，固定座位1200人，使用面积3000余平方米（内设标准篮球场1个、专业羽毛球场12片、乒乓球桌20台），网球场12片（含风雨球场4片），标准游泳池2个和练习池1个，田径场2个（内设2个人工草皮标准足球场），塑胶篮球场25片，排球场10片，乒乓球台若干，5人制足球场2个，攀岩壁1座，综合拓展场地1个（含高空拓展），小型体操房2个。\n室外的运动场除教学使用时间外全部免费对同学们开放。网球、羽毛球、乒乓球、东区足球场和五人制足球场除教学时间段外成本补偿性收费向大家开放。\n校园交通\n电动校园交通车“小白龙”穿梭在遍布学校的二十多个站点，早晨7:00发车，晚上末班车22:55（周五、周六23:25），可以预约用车。",
+            "url": "https://cist.cdut.edu.cn/info/1135/7388.htm",
+            "source_title": "新成理人集合！速戳这份开学秘籍",
+            "publisher": "计算机与网络安全学院（示范性软件学院）（页面：发布者 计网学院）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "browser-raw/pages/新成理人集合！速戳这份开学秘籍-计算机与网络安全学院（示范性软件学院）.html 正文第13段（共15段）",
+            "text_sha256": "4ffc4729db583f26e2f658814748acd19e526affb8b0a3ba133672f13009d3d4",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：来源适用校区尚未确认。\n学生公寓照明和空调欠费断电后，由学生按照校园一卡通在线购电流程自助缴费（具体操作流程见公寓内张贴的在线购电使用流程）。\n温馨提示：寝室内不得使用各类违章电器。\n3.学生公寓生活设施报修\n学生公寓设施若有损坏，请关注公众号“成理智慧后勤”进行网上报修。\n4.公寓内洗衣服务\n学生公寓园区或公寓内设有自助洗衣房，提供APP模式自助洗衣服务。（具体操作流程见洗衣房内张贴的智慧洗衣使用流程图）\n5.开水、热水供应\n各公寓均提供有偿开水及热水服务，按流量计费。供应时间：详见各公寓公示时间。\n运动\n我校现有运动场馆10万余平方米。有综合体育馆1座，固定座位1200人，使用面积3000余平方米（内设标准篮球场1个、专业羽毛球场12片、乒乓球桌20台），网球场12片（含风雨球场4片），标准游泳池2个和练习池1个，田径场2个（内设2个人工草皮标准足球场），塑胶篮球场25片，排球场10片，乒乓球台若干，5人制足球场2个，攀岩壁1座，综合拓展场地1个（含高空拓展），小型体操房2个。\n室外的运动场除教学使用时间外全部免费对同学们开放。网球、羽毛球、乒乓球、东区足球场和五人制足球场除教学时间段外成本补偿性收费向大家开放。\n校园交通\n电动校园交通车“小白龙”穿梭在遍布学校的二十多个站点，早晨7:00发车，晚上末班车22:55（周五、周六23:25），可以预约用车。",
+            "verification_status": "verified",
+            "service_links": [],
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "2025级新生（成都校区）"
+            },
+            "score": 14.249814,
+            "context_of": [],
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:cistfresh2024:bs14",
+            "source_id": "cdut:source:cistfresh2024",
+            "title": "一键收藏！2024本科新生入学指南（14/16）",
+            "text": "学生公寓照明和空调欠费断电后，由学生按照校园一卡通在线购电流程自助缴费(具体操作流程见公寓内张贴的在线购电使用流程)。\n温馨提示：寝室内不得使用各类违规电器。\n3.学生公寓生活设施报修\n学生公寓设施若有损坏，请关注公众号“成理智慧后勤”进行网上报修，报修后学校将尽快安排，按照流程修理。\n4.公寓内洗衣服务\n学生公寓园区或公寓内设有自助洗衣房，提供APP模式自助洗衣服务。具体操作流程见洗衣房内张贴的智慧洗衣使用流程图。\n5.开水、热水供应\n各公寓均提供有偿开水及热水服务，按流量计费。供应时间详见各公寓公示时间。\n运动\n我校现有运动场馆10万余平方米。有综合体育馆1座，固定座位1200人，使用面积3000余平方米(内设标准篮球场1个、专业羽毛球场12片、乒乓球桌20台)，网球场12片(含风雨球场4片)，标准游泳池2个和练习池1个，田径场2个(内设2个人工草皮标准足球场)，塑胶篮球场25片，排球场10片，乒乓球台若干，5人制足球场2个，攀岩壁1座，综合拓展场地1个(含高空拓展)，小型体操房2个。室外的运动场除教学使用时间外全部免费对同学们开放。网球、羽毛球、乒乓球、东区足球场和五人制足球场除教学时间段外成本补偿性收费向大家开放。\n校园交通\n电动校园交通车“小白龙”穿梭在遍布学校的二十多个站点，早晨7:00发车，晚上末班车22:55（周五周六23:25），还可以预约用车。",
+            "url": "https://cist.cdut.edu.cn/info/1135/7328.htm",
+            "source_title": "一键收藏！2024本科新生入学指南",
+            "publisher": "计算机与网络安全学院（示范性软件学院）（页面：发布者 计网学院）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "browser-raw/pages/一键收藏！2024本科新生入学指南-计算机与网络安全学院（示范性软件学院）.html 正文第14段（共16段）",
+            "text_sha256": "dca0800cc045a5d14aac604bb5f309492edf83708d046b5951e6da40f0d887c3",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "仅适用于本科生",
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：仅适用于本科生；来源适用校区尚未确认。\n学生公寓照明和空调欠费断电后，由学生按照校园一卡通在线购电流程自助缴费(具体操作流程见公寓内张贴的在线购电使用流程)。\n温馨提示：寝室内不得使用各类违规电器。\n3.学生公寓生活设施报修\n学生公寓设施若有损坏，请关注公众号“成理智慧后勤”进行网上报修，报修后学校将尽快安排，按照流程修理。\n4.公寓内洗衣服务\n学生公寓园区或公寓内设有自助洗衣房，提供APP模式自助洗衣服务。具体操作流程见洗衣房内张贴的智慧洗衣使用流程图。\n5.开水、热水供应\n各公寓均提供有偿开水及热水服务，按流量计费。供应时间详见各公寓公示时间。\n运动\n我校现有运动场馆10万余平方米。有综合体育馆1座，固定座位1200人，使用面积3000余平方米(内设标准篮球场1个、专业羽毛球场12片、乒乓球桌20台)，网球场12片(含风雨球场4片)，标准游泳池2个和练习池1个，田径场2个(内设2个人工草皮标准足球场)，塑胶篮球场25片，排球场10片，乒乓球台若干，5人制足球场2个，攀岩壁1座，综合拓展场地1个(含高空拓展)，小型体操房2个。室外的运动场除教学使用时间外全部免费对同学们开放。网球、羽毛球、乒乓球、东区足球场和五人制足球场除教学时间段外成本补偿性收费向大家开放。\n校园交通\n电动校园交通车“小白龙”穿梭在遍布学校的二十多个站点，早晨7:00发车，晚上末班车22:55（周五周六23:25），还可以预约用车。",
+            "verification_status": "verified",
+            "service_links": [],
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "2024级本科新生"
+            },
+            "score": 14.006878,
+            "context_of": [],
+            "grounded": true
+          }
+        ],
+        "context": [],
+        "context_complete": true,
+        "applicability_notice": "按每条资料的适用条件分别说明；未提供身份或学年且影响结论时先澄清。来源适用范围未确认是资料缺口，不得推定适用，不向用户索取来源缺失信息。",
+        "knowledge_version": "kb-229ee34eba99ef34",
+        "retrieval_mode": "lexical",
+        "degraded": false,
+        "grounding": {
+          "policy": "local-grounding-v1",
+          "mode": "flag",
+          "decision": "unassessed"
+        }
+      }
+    }
+  ],
+  "knowledge_version": "kb-229ee34eba99ef34",
+  "retrieval_mode": "lexical",
+  "profile": {
+    "version": "h2-d161f2dc457057ae",
+    "sha256": "f7d748cc2f1b44a02258862cb3afc0207fe03a63b4393903b8e4f57890ddf089"
+  },
+  "directory_hashes": {
+    "knowledge.json": "24ceecff3b45cad9fd7ce3881539ec22327812fe877773a09486f9fd52979f13",
+    "offices.json": "0dee683e434468ecb1c64f9f0ad72bdece6f2e13973e0c63a3cdd118a5e4ddaf",
+    "places.json": "69a0b0ec94fe459386a595e9b058e9c94c8931999392f976041339255054efc1",
+    "services.json": "f3d532b2bcb430753191134693280d94cb983f88c53feb9d2fa082bc5d19e275",
+    "sources.json": "93bb58d5dc594c1418d4d88f356998bc8b489e00d486ffa45f0fb6f25d9330ee",
+    "teachers.json": "aa0646da42f79bf09550ecd7bd4dc3b7b76323eb2f0ca4a787a8f440e78d2ec0",
+    "teachers_roster.json": "906e2d339e2e1b31164a71eb45085a82c1ba6b77465276849436f60fb22a7184"
+  },
+  "cost_upper_usd": "0.0025629",
+  "task_id": "hol-insufficient-16",
+  "arm": "harness"
+}

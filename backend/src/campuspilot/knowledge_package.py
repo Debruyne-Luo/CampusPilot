@@ -151,7 +151,7 @@ def build(
             continue
         source = by_id[c["source_id"]]
         text, kind = c["text"], c.get("kind", "fact")
-        if c["topic_id"] == "teacher_lookup":
+        if c["chunk_id"] in teacher_by_chunk:
             text, kind = teacher_text(teacher_by_chunk[c["chunk_id"]]), "fact"
         elif digest(text.encode()) != c["text_sha256"]:
             raise ValueError("Package chunk hash mismatch")
@@ -159,12 +159,27 @@ def build(
         if ocr:
             text = drop_unreadable(text)
         stale = bool(
-            c.get("stale_source")
+            c.get("stale")
+            or c.get("stale_source")
             or source.get("stale")
             or source["temporal_status"] in STALE_STATUSES
         )
         if stale:
             stale_ids.append(c["chunk_id"])
+        metadata = {key: c[key] for key in (
+            "academic_year", "valid_from", "valid_until", "enabled", "campuses",
+            "document_id", "revision_id", "section_id", "parent_chunk_id", "heading_path",
+            "clause_number", "conditions", "exceptions", "applicability_evidence",
+            "table_headers", "footnotes",
+        ) if key in c}
+        for key in ("valid_from", "valid_until"):
+            if metadata.get(key) is not None:
+                metadata[key] = date.fromisoformat(metadata[key])
+        for key in (
+            "campuses", "heading_path", "conditions", "exceptions", "table_headers", "footnotes",
+        ):
+            if key in metadata:
+                metadata[key] = tuple(metadata[key])
         chunks.append(
             RagChunk(
                 chunk_id=c["chunk_id"],
@@ -179,7 +194,8 @@ def build(
                 else "fact",
                 text_sha256=digest(text.encode()),
                 approval_id=approval_id,
-                audiences=tuple(audiences(source.get("applicability") or "")),
+                audiences=tuple(c.get("audiences") or audiences(source.get("applicability") or "")),
+                **metadata,
                 stale=stale,
                 ocr=ocr,
                 **review,

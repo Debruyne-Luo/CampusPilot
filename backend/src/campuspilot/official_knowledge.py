@@ -19,7 +19,16 @@ from xml.etree import ElementTree
 from zipfile import BadZipFile, ZipFile
 
 from campuspilot.knowledge import CHINA, official_url
-from campuspilot.rag import KnowledgeSnapshot, RagChunk, RagSource, canonical, digest, make_snapshot
+from campuspilot.rag import (
+    KnowledgeSnapshot,
+    RagChunk,
+    RagSource,
+    canonical,
+    compatible_scope,
+    digest,
+    make_snapshot,
+)
+from campuspilot.retrieval.applicability import campus_value
 
 MAX_FILE = 20_000_000
 MAX_PACKAGE = 80_000_000
@@ -220,10 +229,14 @@ def _document(package: Path, doc: dict[str, Any]) -> tuple[str, dict[str, bytes]
     _id(doc.get("document_id"))
     _require(doc.get("status", "success") == "success", "collection_failed")
     _require(isinstance(doc.get("url"), str), "invalid_source_url")
-    official_url(doc["url"])
+    official_url(doc["url"], wechat=True)
     _require(doc.get("complete") is True, "incomplete_document")
     _require(doc.get("content_kind") in {"article", "guide"}, "not_document_body")
     _require(doc.get("channel") in {"browser_dom", "http"}, "unknown_capture_channel")
+    source_capture = doc.get("source_capture", {})
+    _require(isinstance(source_capture, dict), "invalid_source_capture")
+    if source_capture:
+        _require(source_capture.get("provider") == "firecrawl-v2", "unknown_capture_provider")
     _require(doc.get("access_scope") in {"public", "authenticated_general"},
              "unknown_access_scope")
     _require(not doc.get("contains_personal_data"), "personal_data_forbidden")
@@ -247,6 +260,10 @@ def _document(package: Path, doc: dict[str, Any]) -> tuple[str, dict[str, bytes]
     if doc.get("original_file"):
         original = doc["original_file"]
         files[original] = _file(package, original)
+    if source_capture:
+        _require(bool(doc.get("original_file")), "missing_provider_original")
+        _require(source_capture.get("response_sha256") == digest(files[doc["original_file"]]),
+                 "provider_original_hash_mismatch")
     seen: set[str] = set()
     for attachment in capture_artifacts(doc):
         aid = _id(attachment.get("attachment_id") or attachment.get("asset_id"))
@@ -348,7 +365,7 @@ def _clause(
     source_ids: set[str], checked_on: date,
 ) -> tuple[RagChunk, dict[str, Any]]:
     disposition = clause.get("disposition")
-    _require(disposition in {"adopt", "limitation"}, "clause_not_adopted")
+    _require(disposition in {"adopt", "limitation", "retire"}, "clause_not_adopted")
     _require(not clause.get("unresolved_conflict"), "unresolved_conflict")
     locator = clause["locator"]
     filename, start, end = locator["file"], locator["start"], locator["end"]
@@ -362,6 +379,11 @@ def _clause(
     _require(filename in allowed_text, "unchecked_attachment_transcription")
     text = _text(files[filename])
     evidence_texts = (body,) if filename == doc["body_file"] else (body, text)
+    if disposition == "retire":
+        repeal = clause.get("repeal_quote", "")
+        _require(isinstance(repeal, str) and bool(repeal) and repeal in body
+                 and bool(re.search(r"废止|停止执行|不再适用|失效|替代", repeal)),
+                 "retirement_requires_explicit_evidence")
     _require(type(start) is int and type(end) is int and 0 <= start < end <= len(text),
              "invalid_quote_offsets")
     _require(clause["quote"] == text[start:end], "quote_locator_mismatch")
@@ -434,6 +456,20 @@ def _clause(
     if scope_parts:
         facts += "\n" + "\n".join(scope_parts)
     source_hash = digest(files[filename])
+    structure = clause.get("structure", {})
+    _require(isinstance(structure, dict), "invalid_clause_structure")
+    for field in ("heading_path", "table_headers", "footnotes"):
+        values = structure.get(field, [])
+        _require(isinstance(values, list) and all(
+            isinstance(value, str) and value and value in text for value in values
+        ), "structure_not_supported")
+    clause_number = structure.get("clause_number")
+    _require(clause_number is None or isinstance(clause_number, str)
+             and bool(clause_number) and clause_number in text, "clause_number_not_supported")
+    section_id = structure.get("section_id")
+    if section_id is not None:
+        _id(section_id)
+        _require(bool(structure.get("heading_path")), "section_requires_heading_evidence")
     approval = "official:" + digest(canonical({
         "document_id": doc["document_id"], "body_sha256": review["body_sha256"],
         "clause": clause,
@@ -443,16 +479,28 @@ def _clause(
         title=clause.get("title") or doc["title"], text=facts,
         locator=f"{filename}:chars[{start}:{end}] sha256={source_hash}",
         aliases=clause.get("aliases", ""),
-        kind="limitation" if disposition == "limitation" else "fact",
+        kind="deprecated" if disposition == "retire"
+        else "limitation" if disposition == "limitation" else "fact",
         text_sha256=digest(facts.encode()), verification_status="official_document",
         reviewer=review["checked_by"], verified_at=checked_on, approval_id=approval,
         audiences=tuple(audiences), academic_year=academic_year,
         valid_from=valid_from, valid_until=valid_until, ocr=filename in images,
+        campuses=tuple(dict.fromkeys(campus_value(c) for c in app.get("campuses", [])))
+        or ("unknown",),
+        conditions=tuple(app.get("conditions", [])), exceptions=tuple(app.get("exceptions", [])),
+        applicability_evidence={**app.get("evidence_quotes", {}),
+                                **({"audiences": app["audience_quote"]}
+                                   if app.get("audience_quote") else {})},
+        heading_path=tuple(structure.get("heading_path", [])), clause_number=clause_number,
+        table_headers=tuple(structure.get("table_headers", [])),
+        footnotes=tuple(structure.get("footnotes", [])),
+        enabled=disposition != "retire",
     )
     return chunk, {"chunk_id": chunk_id, "source_id": source_id, "quote": clause["quote"],
                    "locator": locator, "content_sha256": source_hash,
                    "applicability": app, "review": review,
                    "disposition": disposition, "limitation": clause.get("limitation"),
+                   "repeal_quote": clause.get("repeal_quote"),
                    "approval_id": approval}
 
 
@@ -523,6 +571,29 @@ def build(
             revision = digest(canonical({
                 "document": doc, "files_sha256": {n: digest(b) for n, b in files.items()},
             }))
+            accepted = [RagChunk.model_validate({**chunk.model_dump(),
+                "document_id": document_id, "revision_id": revision,
+                "section_id": clause.get("structure", {}).get("section_id"),
+                "parent_chunk_id": clause.get("structure", {}).get("parent_chunk_id"),
+            }) for chunk, clause in zip(accepted,
+                [c for c in clauses if c.get("disposition") != "exclude"], strict=True)]
+            # Validate relationships before mutating any last-success state for this document.
+            by_id = {c.chunk_id: c for c in accepted}
+            for chunk in accepted:
+                if chunk.parent_chunk_id:
+                    parent = by_id.get(chunk.parent_chunk_id)
+                    _require(parent is not None and parent.chunk_id != chunk.chunk_id,
+                             "invalid_parent_clause")
+                    assert parent is not None
+                    _require(parent.source_id == chunk.source_id, "invalid_parent_source")
+                    _require(compatible_scope(parent, chunk), "parent_scope_mismatch")
+                    seen = {chunk.chunk_id}
+                    while parent:
+                        _require(parent.chunk_id not in seen, "cyclic_parent_clause")
+                        seen.add(parent.chunk_id)
+                        parent = by_id.get(parent.parent_chunk_id or "")
+            for binding in bindings:
+                binding.update({"document_id": document_id, "revision_id": revision})
             prefix = f"official/documents/{document_id}/{revision}/"
             for name, content in files.items():
                 raw[prefix + name.replace("\\", "/")] = content
@@ -534,7 +605,9 @@ def build(
                     source_id=sid, title=doc["title"], url=doc["url"],
                     publisher=doc["publisher"], applicability=json.dumps(scope, ensure_ascii=False),
                     temporal_status=sources[sid].temporal_status if sid in legacy else "unknown",
-                    content_scope="complete_official_browser_dom" if doc["channel"] == "browser_dom"
+                    content_scope="complete_provider_extracted_document"
+                    if doc.get("source_capture", {}).get("provider") == "firecrawl-v2"
+                    else "complete_official_browser_dom" if doc["channel"] == "browser_dom"
                     else "complete_official_http_response",
                     verification_status="official_document", reviewer="official-source-validator",
                     verified_at=max(checked_dates),
@@ -548,7 +621,10 @@ def build(
                 "collected_at": _collection_value(doc), "channel": doc["channel"],
                 "collection_precision": doc.get("collection_precision", "second"),
                 "collection_note": doc.get("collection_note"),
-                "original_kind": "rendered_dom" if doc["channel"] == "browser_dom"
+                "source_capture": doc.get("source_capture"),
+                "original_kind": "provider_response"
+                if doc.get("source_capture", {}).get("provider") == "firecrawl-v2"
+                else "rendered_dom" if doc["channel"] == "browser_dom"
                 else "server_response", "published_on": doc.get("published_on"),
                 "signed_on": doc.get("signed_on"), "access_scope": doc["access_scope"],
                 "body_sha256": digest(files[doc["body_file"]]),

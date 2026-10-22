@@ -58,12 +58,15 @@ def register(app: FastAPI, state: WebState) -> None:
         if state.runtime_mode != "legacy":
             if (
                 state.embedder is not None
+                and state.agent is None
                 and state.runtime_mode == "phase2"
                 and query_text
                 and public_input(query_text)
             ):
                 # Fill the query-vector cache off the sync path; failure means BM25-only.
-                await _prefetch_embedding(state, query_text)
+                await _prefetch_embedding(
+                    state, state.runtime.embedding_question(query_text, session.context)
+                )
             if state.agent is not None:
                 return await _agent_turn(state, request, session, body, state.agent)
             prepared = state.runtime.prepare(query_text, session.context, request.state.request_id)
@@ -130,8 +133,7 @@ def register(app: FastAPI, state: WebState) -> None:
 
         async def dispatch_stream(turn: TurnObservation) -> None:
             try:
-                if state.embedder is not None and question and public_input(question):
-                    await _prefetch_embedding(state, question)
+                # Knowledge tools embed their actual query off-loop after authorization.
                 async with asyncio.timeout(AGENT_TIMEOUT_SECONDS):
                     if images:
                         response = await agent.run(question, session.context, emit, images=images)
@@ -214,6 +216,8 @@ async def _prefetch_embedding(state: WebState, question: str) -> None:
     """Cache warming has the same authorization as the knowledge capability it serves."""
     embedder = state.embedder
     assert embedder is not None
+    if state.agent is not None and not state.agent.needs_embedding(question):
+        return
     if state.agent is None:
         await embedder.prefetch(question)
     else:

@@ -24,11 +24,12 @@ from typing import Any
 
 from campuspilot.jev_plugin import DEFAULT_CALIBRATION, Calibration, combine
 from campuspilot.jev_shadow import ShadowResult
+from campuspilot.knowledge_evaluation import legacy_behavior
 
 
 def simulate(rows: list[dict[str, Any]], cal: Calibration) -> dict[str, Any]:
-    ans = [r for r in rows if r["gold"]]
-    ref = [r for r in rows if not r["gold"]]
+    ans = [r for r in rows if legacy_behavior(r) in {"answer", "partial"}]
+    ref = [r for r in rows if legacy_behavior(r) in {"refuse", "clarify"}]
     calls = unsure = 0
     refused: dict[str, bool] = {}
     decisions: dict[str, str] = {}

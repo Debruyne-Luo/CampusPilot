@@ -62,6 +62,33 @@ def test_unsafe_or_session_bound_destinations_are_rejected(url: str) -> None:
 def test_fixed_public_ids_and_safe_school_login_return_are_allowed() -> None:
     url = "https://bsdt.cdut.edu.cn/queryResult.htm?queryCode=SYNTHETIC-catalog-id"
     assert safe_service_url(url) == url
+
+
+def test_external_platform_requires_exact_official_body_binding() -> None:
+    from campuspilot.rag import RagChunk, RagSource, digest
+
+    target = 'https://cet-bm.neea.edu.cn/'
+    source = RagSource(
+        source_id='SYNTHETIC-source', title='SYNTHETIC official guide',
+        url='https://www.cdut.edu.cn/SYNTHETIC-guide', publisher='SYNTHETIC',
+        applicability='SYNTHETIC', verification_status='official_document',
+        reviewer='SYNTHETIC', verified_at=date(2026, 10, 21),
+    )
+    text = 'SYNTHETIC 报名申请入口：' + target
+    chunk = RagChunk(
+        chunk_id='SYNTHETIC-chunk', source_id=source.source_id, title='SYNTHETIC',
+        topic_id='SYNTHETIC', text=text, text_sha256=digest(text.encode()),
+        locator='SYNTHETIC', verification_status='official_document', reviewer='SYNTHETIC',
+        verified_at=date(2026, 10, 21), approval_id='SYNTHETIC',
+    )
+    links = hit_service_links(RetrievalHit(
+        knowledge_version='kb-' + '0' * 16, chunk=chunk, source=source, score=1,
+    ), {})
+    assert links and isinstance(links[0], dict) and links[0]['url'] == target
+    with pytest.raises(ValueError):
+        safe_service_url(target)
+    with pytest.raises(ValueError):
+        safe_service_url('https://cet-bm.neea.edu.cn/?token=SYNTHETIC', external=True)
     url = "https://cas.paas.cdut.edu.cn/cas/login?service=https%3A%2F%2Fwww.cdut.edu.cn%2F"
     assert safe_service_url(url) == url
 
@@ -233,3 +260,31 @@ def test_normal_and_stream_chat_deliver_same_real_guide_links(stream: bool) -> N
         assert all(link["source_id"] == sid for link in payload["service_links"])
         assert payload["service_links"][0]["kind"] == "guide"
         assert payload["service_links"][0]["availability"] == "not_checked"
+
+
+def test_exact_entry_question_uses_adopted_links_without_model(tmp_path: Path) -> None:
+    candidate, _, _ = prepared(tmp_path)
+    candidate = candidate.rename(tmp_path / 'approved-20261021')
+    store = SnapshotStore(tmp_path, 'lexical', bundled=candidate.name)
+    model = FakeLLM()
+    agent = AgentRunner(agent_registry(REPO, KnowledgeStore(()), store), REPO, model,
+                        snapshots=store, concise=True)
+    result = asyncio.run(agent.run('SYNTHETIC 测试条款入口在哪', ConversationContext()))
+    assert not model.calls
+    assert result['answer_mode'] == 'agent_entry'
+    assert result['result_status'] == 'success' and result['service_links']
+    assert not result['checklist']
+    assert SYNTHETIC_ENTRY in str(result['service_links'])
+    assert '当前开放' not in str(result['answer'])
+
+
+def test_adopted_email_entry_is_direct_without_inference_or_an_offline_map() -> None:
+    store = SnapshotStore(DATA / 'rag', 'lexical')
+    model = FakeLLM()
+    agent = AgentRunner(agent_registry(REPO, KnowledgeStore(()), store), REPO, model,
+                        snapshots=store, concise=True)
+    result = asyncio.run(agent.run('学生邮箱激活入口在哪', ConversationContext()))
+    assert result['answer_mode'] == 'agent_entry' and result['result_status'] == 'success'
+    assert not model.calls and not result['places']
+    assert result['service_links']
+    assert 'https://mail.stu.cdut.edu.cn' in str(result['service_links'])

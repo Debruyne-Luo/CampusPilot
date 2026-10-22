@@ -16,10 +16,22 @@ from campuspilot.directory.assist import AssistInput, AssistResponse, assist
 from campuspilot.directory.lookup import ServiceKey
 from campuspilot.directory.repository import DirectoryRepository
 from campuspilot.knowledge import KnowledgeQuery, KnowledgeStore, campus_today
-from campuspilot.presentation import AnswerEnvelope, guide_answer, resolve_cards
+from campuspilot.presentation import AnswerEnvelope, guide_answer, resolve_cards, service_summary
 from campuspilot.rag import RetrievalFilters, RetrievalHit, SnapshotStore
 from campuspilot.retrieval import campus_answer
+from campuspilot.retrieval.applicability import (
+    conditional_text,
+    evidence_metadata,
+    query_filters,
+    scope_notes,
+)
 from campuspilot.retrieval.bm25 import terms
+from campuspilot.retrieval.context import (
+    CONTEXT_BUDGET_NOTICE,
+    CONTEXT_BUDGET_REASON,
+    context_complete,
+    section_context,
+)
 
 Mode = Literal["legacy", "phase1", "phase2"]
 EMPTY_CARDS: dict[str, JsonValue] = {"services": [], "teachers": [], "places": []}
@@ -45,11 +57,13 @@ class ImageTask:
 
 @dataclass
 class ConversationContext:
+    service_focus: str | None = None
     history: tuple[ChatTurn, ...] = ()
     focus: str = ""
     topic: str = ""
     audience: str = "unknown"
     academic_year: str | None = None
+    campus: str = "chengdu"
     knowledge_titles: tuple[str, ...] = ()
     destination_candidates: list[dict[str, JsonValue]] = field(default_factory=list)
     image_task: ImageTask | None = None
@@ -75,22 +89,9 @@ class PreparedQuery:
 
 
 def filters_for(question: str, context: ConversationContext) -> RetrievalFilters:
-    audience = "all"
-    if "本科" in question:
-        audience = "undergraduate"
-    elif "研究生" in question:
-        audience = "graduate"
-    elif "教职工" in question:
-        audience = "staff"
-    elif context.audience != "unknown":
-        audience = context.audience
-    year = re.search(r"(20\d{2})\s*[-—–至]\s*(20\d{2})", question)
-    return RetrievalFilters(
-        today=campus_today(),
-        audience=audience,
-        academic_year=f"{year[1]}-{year[2]}" if year else context.academic_year,
-        historical=any(x in question for x in ("历史", "以前", "旧版", "2020年", "寒假", "2018年")),
-        current_only=any(x in question for x in ("现行", "当前有效", "现在还", "今年还能")),
+    return query_filters(
+        question, campus_today(), audience=context.audience,
+        academic_year=context.academic_year, campus=context.campus,
     )
 
 
@@ -125,16 +126,8 @@ class ChatRuntime:
         pinned = snapshots.acquire() if approved_direct_rules and mode == "phase2" else None
         self._rule_knowledge_version = pinned.snapshot.version if pinned else None
 
-    def prepare(
-        self, question: str, context: ConversationContext, request_id: str
-    ) -> PreparedQuery:
-        if not public_input(question):
-            return self._local(
-                question,
-                "private_input",
-                "请移除个人位置、账号或密码，再询问公开资料。",
-                "needs_clarification",
-            )
+    def embedding_question(self, question: str, context: ConversationContext) -> str:
+        """Resolve the same follow-up text before warming the query-vector cache."""
         original = question
         people = self.repository.search_teacher()
         named = {t.teacher_id for t in people if any(n in original for n in (t.name, *t.aliases))}
@@ -174,12 +167,39 @@ class ChatRuntime:
             previous = context.focus
             if any(word in original for word in ("本科", "研究生", "教职工")):
                 previous = re.sub(r"本科生?|研究生|教职工", "", previous)
+            if any(word in original for word in ("成都", "宜宾", "峨眉")):
+                previous = re.sub(r"(?:成都|宜宾|峨眉)(?:校区)?", "", previous)
             if re.search(r"20\d{2}\s*[-—–至]\s*20\d{2}", original):
                 previous = re.sub(r"20\d{2}\s*[-—–至]\s*20\d{2}(?:学年)?", "", previous)
             question = previous + "；" + question
+
+        return question
+
+    def prepare(
+        self, question: str, context: ConversationContext, request_id: str
+    ) -> PreparedQuery:
+        if not public_input(question):
+            return self._local(
+                question,
+                "private_input",
+                "请移除个人位置、账号或密码，再询问公开资料。",
+                "needs_clarification",
+            )
+        original = question
+        people = self.repository.search_teacher()
+        named = {t.teacher_id for t in people if any(n in original for n in (t.name, *t.aliases))}
+        teacher_reference = any(
+            text in original for text in ("这位老师", "那位老师", "该老师", "这位教授", "那位教授")
+        )
+        was_teacher = context.topic == "teacher"
+        # Inherit only on explicit continuation, and never use past model prose as authority.
+        resolved = self.embedding_question(question, context)
+        if resolved != question:
+            question = resolved
         else:
             context.audience = "unknown"
             context.academic_year = None
+            context.campus = "chengdu"
             context.history = ()
             context.knowledge_titles = ()
         if "本科" in original:
@@ -191,6 +211,7 @@ class ChatRuntime:
         year = re.search(r"(20\d{2})\s*[-—–至]\s*(20\d{2})", original)
         if year:
             context.academic_year = f"{year[1]}-{year[2]}"
+        context.campus = filters_for(original, context).campus
         local = campus_answer(self.repository, question)
         if local is not None:
             context.focus = question[:200]
@@ -254,16 +275,27 @@ class ChatRuntime:
             )
             card_query = any(word in question for word in ("校园卡", "补卡", "挂失", "解挂"))
             hits = tuple(h for h in hits if card_query and h.chunk.topic_id == "card")[:4]
+            filters = filters_for(question, context)
+            expanded = section_context(retriever.snapshot, hits, filters) if retriever else ()
+            supplement_complete = not retriever or context_complete(
+                retriever.snapshot, hits, expanded, filters
+            )
+            evidence_hits = (*hits, *expanded) if supplement_complete else ()
+            if not supplement_complete:
+                response["answer"] = str(response["answer"]) + "\n" + CONTEXT_BUDGET_NOTICE
+                response["degraded_reason"] = CONTEXT_BUDGET_REASON
             supplements = [
                 {
                     "source_id": h.source.source_id,
                     "chunk_id": h.chunk.chunk_id,
+                    "title": h.chunk.title,
                     "text": h.chunk.text,
+                    **evidence_metadata(h.chunk, filters),
                     "kind": h.chunk.kind,
                     "applicability": h.source.applicability,
                     "temporal_status": h.source.temporal_status,
                 }
-                for h in hits
+                for h in evidence_hits
             ]
             evidence = json.dumps(
                 {
@@ -281,8 +313,8 @@ class ChatRuntime:
                 and retriever.snapshot.version == self._rule_knowledge_version
             )
             direct = body.status != "success" or certified
-            if hits:
-                response["knowledge_version"] = hits[0].knowledge_version
+            if evidence_hits:
+                response["knowledge_version"] = evidence_hits[0].knowledge_version
                 existing = response.get("excerpts", [])
                 assert isinstance(existing, list)
                 response["excerpts"] = cast(
@@ -296,10 +328,11 @@ class ChatRuntime:
                                 "source_id": h.source.source_id,
                                 "chunk_id": h.chunk.chunk_id,
                                 "source_url": h.source.url,
+                                **evidence_metadata(h.chunk, filters),
                                 "kind": h.chunk.kind,
                                 "temporal_status": h.source.temporal_status,
                             }
-                            for h in hits
+                            for h in evidence_hits
                         ],
                     ],
                 )
@@ -311,7 +344,7 @@ class ChatRuntime:
                 allowed_sources=frozenset(
                     e.evidence_id for e in body.evidence if e.source_authority != "map_provider"
                 )
-                | frozenset(h.source.source_id for h in hits),
+                | frozenset(h.source.source_id for h in evidence_hits),
                 hits=hits,
                 model_needed=not direct,
             )
@@ -369,6 +402,17 @@ class ChatRuntime:
         context.focus = hits[0].chunk.title
         context.topic = hits[0].chunk.topic_id
         selected = hits[:4]
+        filters = filters_for(question, context)
+        expanded = section_context(retriever.snapshot, selected, filters)
+        if not context_complete(retriever.snapshot, selected, expanded, filters):
+            return PreparedQuery(query=question, route="rag", response={
+                **EMPTY_CARDS, "answer": CONTEXT_BUDGET_NOTICE,
+                "result_status": "empty", "answer_mode": "backend_rag",
+                "degraded_reason": CONTEXT_BUDGET_REASON,
+                "knowledge_version": retriever.snapshot.version,
+                "source_ids": [], "excerpts": [],
+            })
+        selected = (*selected, *expanded)
         evidence = json.dumps(
             [
                 {
@@ -376,6 +420,10 @@ class ChatRuntime:
                     "chunk_id": h.chunk.chunk_id,
                     "title": h.chunk.title,
                     "text": h.chunk.text,
+                    **evidence_metadata(h.chunk, filters),
+                    "campuses": list(h.chunk.campuses),
+                    "audiences": list(h.chunk.audiences),
+                    "academic_year": h.chunk.academic_year,
                     "kind": h.chunk.kind,
                     "applicability": h.source.applicability,
                     "temporal_status": h.source.temporal_status,
@@ -389,7 +437,7 @@ class ChatRuntime:
         rag_response: dict[str, JsonValue] = {
             **EMPTY_CARDS,
             "answer": "已收录的资料摘要如下，请注意来源适用范围。\n"
-            + "\n".join(f"{h.chunk.title}：{h.chunk.text}" for h in selected),
+            + "\n".join(f"{h.chunk.title}：{conditional_text(h.chunk, filters)}" for h in selected),
             "result_status": "limited",
             "answer_mode": "backend_rag",
             "knowledge_version": selected[0].knowledge_version,
@@ -403,6 +451,12 @@ class ChatRuntime:
                     "kind": h.chunk.kind,
                     "locator": h.chunk.locator,
                     "temporal_status": h.source.temporal_status,
+                    "document_id": h.chunk.document_id,
+                    "revision_id": h.chunk.revision_id,
+                    "text_sha256": h.chunk.text_sha256,
+                    "scope_notes": list(scope_notes(h.chunk, filters)),
+                    "table_headers": list(h.chunk.table_headers),
+                    "footnotes": list(h.chunk.footnotes),
                 }
                 for h in selected
             ],
@@ -501,7 +555,7 @@ class ChatRuntime:
         answer = guide_answer(self.repository, envelope, question)
         if result.status == "success" and result.services and answer == result.message:
             service = result.services[0]
-            answer = service.summary or "\n".join(step.instruction for step in service.steps)
+            answer = service_summary(service)
         if result.status == "success" and result.teachers and answer == result.message:
             t = result.teachers[0]
             answer = f"{t.name}，{t.department}；办公室：{t.office or '未收录'}。"
@@ -558,9 +612,20 @@ class ChatRuntime:
         local_answer = str((prepared.response or {}).get("answer", ""))
         if prepared.route == "service" and missing_premise(result.answer, local_answer):
             raise ChatUnavailable("required_premise_missing")
+        evidence_rows = json.loads(prepared.evidence) if prepared.evidence else []
+        if isinstance(evidence_rows, dict):
+            evidence_rows = evidence_rows.get("same_topic_supplements", [])
+        notes = [str(row.get("title")) + "：" + "；".join(row["scope_notes"])
+                 for row in evidence_rows if isinstance(row, dict) and row.get("scope_notes")
+                 and row.get("source_id") in result.source_ids] \
+            if isinstance(evidence_rows, list) else []
+        answer = ("适用限制：\n" + "\n".join(dict.fromkeys(notes)) + "\n\n" if notes else "")
+        context_notice = "\n" + CONTEXT_BUDGET_NOTICE if (prepared.response or {}).get(
+            "degraded_reason"
+        ) == CONTEXT_BUDGET_REASON else ""
         return {
             **(prepared.response or EMPTY_CARDS),
-            "answer": result.answer,
+            "answer": answer + result.answer + context_notice,
             "source_ids": list(result.source_ids),
             "result_status": result.status,
             "answer_mode": "backend_rag" if prepared.route == "rag" else "backend_generated",

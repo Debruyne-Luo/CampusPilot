@@ -253,6 +253,28 @@ def read_candidate(directory: Path, *, check_index: bool = True) -> KnowledgeSna
         or snapshot.source_package_sha256 != manifest.get("source_package_sha256")
     ):
         raise ValueError("Candidate evidence mapping mismatch")
+    if "directory_binding" in manifest:
+        from campuspilot.directory.repository import DirectoryRepository
+
+        binding = manifest["directory_binding"]
+        if (not isinstance(binding, dict) or binding.get("path") != "directory"
+            or binding.get("directory_schema_version") != 2
+            or binding.get("publication_mode") != "whole_release_required"
+            or not isinstance(binding.get("files"), dict)):
+            raise ValueError("Invalid structured directory binding")
+        for name, checksum in binding["files"].items():
+            if manifest["files_sha256"].get("directory/" + name) != checksum:
+                raise ValueError("Structured directory checksum binding mismatch")
+        # Repository.load reads optional JSON files when present too. Every consumed file
+        # must belong to the bound set, otherwise an unlisted teacher/place file could leak in.
+        for path in (directory / "directory").glob("*.json"):
+            if path.name not in binding["files"]:
+                raise ValueError("Unbound structured directory file")
+        if not {"services.json", "offices.json", "sources.json"} <= binding["files"].keys():
+            raise ValueError("Incomplete structured directory binding")
+        structured_repository = DirectoryRepository.load(directory / "directory")
+        if len(structured_repository.services()) != binding.get("services"):
+            raise ValueError("Structured directory counts mismatch")
     if check_index and (INDEX_NAME in manifest["files_sha256"] or "vector_index" in manifest):
         load_candidate_index(directory, snapshot, manifest, prefer="python")
     return snapshot
@@ -384,11 +406,36 @@ def publish(
     expected_current: str | None,
     *,
     fallback_bundle: str = "",
+    quality_report: Path | None = None,
 ) -> str:
     with publication_lock(root):
         if current_version(root) != expected_current:
             raise ValueError("Published knowledge drifted; preview again")
         snapshot = read_candidate(candidate)
+        candidate_manifest = json.loads((candidate / "manifest.json").read_bytes())
+        if snapshot.pending:
+            raise ValueError("Pending knowledge cannot be published; review and approve first")
+        if candidate_manifest.get("directory_binding"):
+            if quality_report is None:
+                raise ValueError("Structured knowledge requires a whole-package release")
+            acceptance = json.loads(quality_report.read_bytes())
+            gate = acceptance.get("release_gate", {})
+            if (acceptance.get("knowledge_version") != snapshot.version
+                or gate.get("passed") is not True or gate.get("blockers") != []
+                or gate.get("holdout_total_required") != 60
+                or type(gate.get("holdout_passed")) is not int
+                or gate["holdout_passed"] < 54
+                or acceptance.get("suite", {}).get("total") != 120):
+                raise ValueError("Whole-package quality acceptance incomplete or mismatched")
+            # Keep the exact acceptance artifact with the immutable whole release.
+            relative = "acceptance/quality.json"
+            body = quality_report.read_bytes()
+            if candidate_manifest["files_sha256"].get(relative) != digest(body):
+                if candidate.resolve().is_relative_to((root / "versions").resolve()):
+                    raise ValueError("Published versions are immutable")
+                atomic_write(candidate / relative, body)
+                candidate_manifest["files_sha256"][relative] = digest(body)
+                atomic_write(candidate / "manifest.json", canonical(candidate_manifest))
         if snapshot.pending:
             raise ValueError("Pending knowledge cannot be published; review and approve first")
         reference = root / "current.json"
@@ -480,7 +527,10 @@ def publish(
 def rollback(root: Path, version: str, expected_current: str | None) -> str:
     if not re.fullmatch(r"kb-[a-f0-9]{16}", version):
         raise ValueError("Invalid rollback version")
-    return publish(root / "versions" / version, root, expected_current)
+    candidate = root / "versions" / version
+    acceptance = candidate / "acceptance/quality.json"
+    return publish(candidate, root, expected_current,
+                   quality_report=acceptance if acceptance.is_file() else None)
 
 
 def compile_dify(snapshot: dict[str, Any], sidecar: dict[str, Any]) -> KnowledgeSnapshot:

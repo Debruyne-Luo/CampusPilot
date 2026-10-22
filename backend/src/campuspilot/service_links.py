@@ -34,11 +34,12 @@ REDIRECT_KEYS = frozenset({
     "callback", "callback_url", "url", "target", "next",
 })
 URL_TEXT = re.compile(r"https://[^\s<>\"'，。；）)\u4e00-\u9fff→]+")
-ACTION_WORDS = re.compile(r"办理|申请|预约|平台|系统|登录|访问|缴费|VPN|vpn")
+ACTION_WORDS = re.compile(r"办理|申请|报名|预约|平台|系统|登录|访问|缴费|VPN|vpn")
+EXTERNAL_PLATFORMS = frozenset({"cet-bm.neea.edu.cn", "www.scxszz.cn", "scxszz.cn"})
 GUIDE_TITLE = re.compile(r"指南|指引|手册|常见问题|操作说明")
 
 
-def safe_service_url(value: str, depth: int = 0) -> str:
+def safe_service_url(value: str, depth: int = 0, *, external: bool = False) -> str:
     """Campus HTTPS only, including nested authentication return destinations."""
     if not isinstance(value, str) or len(value) > 2048 or depth > 3:
         raise ValueError("Invalid service URL")
@@ -47,8 +48,13 @@ def safe_service_url(value: str, depth: int = 0) -> str:
         decoded = unquote(decoded)
     if any(c.isspace() or ord(c) < 32 or ord(c) == 127 for c in decoded):
         raise ValueError("Invalid service URL characters")
-    official_url(value)
     parsed = urlsplit(value)
+    if external and parsed.hostname in EXTERNAL_PLATFORMS:
+        if (parsed.scheme != "https" or parsed.username or parsed.password or parsed.fragment
+                or parsed.port not in (None, 443)):
+            raise ValueError("Invalid official external destination")
+    else:
+        official_url(value)
     if ";jsessionid" in parsed.path.casefold() or "\\" in decoded or any(
         mark in unquote(parsed.path) for mark in ("*", "{", "}")
     ):
@@ -64,7 +70,7 @@ def safe_service_url(value: str, depth: int = 0) -> str:
         for _ in range(3):
             target = unquote(target)
         if key.casefold() in REDIRECT_KEYS and target:
-            safe_service_url(urljoin(value, target), depth + 1)
+            safe_service_url(urljoin(value, target), depth + 1, external=external)
     return value
 
 
@@ -83,7 +89,7 @@ class ServiceLink(Contract):
 
     @model_validator(mode="after")
     def official_destination(self) -> Self:
-        safe_service_url(self.url)
+        safe_service_url(self.url, external=True)
         safe_service_url(self.source_url)
         if not all((self.id, self.source_id, self.source_title)):
             raise ValueError("Missing service link provenance")
@@ -101,7 +107,9 @@ def _link(
     from campuspilot.rag import digest
 
     try:
-        safe_service_url(url)
+        safe_service_url(url, external=True)
+        if urlsplit(url).hostname in EXTERNAL_PLATFORMS and url not in body:
+            raise ValueError("External platform lacks exact official source binding")
         return ServiceLink(
             id="service-link:" + digest((source_id + "\n" + url).encode())[:20],
             title=title.strip()[:160], url=url, kind=kind, source_id=source_id,
@@ -273,7 +281,9 @@ def hit_service_links(hit: RetrievalHit, catalog: LinkCatalog) -> list[JsonValue
     # Literal official entry URLs in an adopted clause need no new model inference.
     if ACTION_WORDS.search(chunk.text):
         for url in URL_TEXT.findall(chunk.text):
-            if url == source.url:
+            # A reviewed platform entry may cite its own public landing page.
+            # Ordinary source pages remain citations rather than service entrances.
+            if url == source.url and chunk.topic_id != "official_entry":
                 continue
             # A department homepage is evidence/discovery, not an application platform.
             if urlsplit(url).hostname in {"jcc.cdut.edu.cn", "www.jcc.cdut.edu.cn"} and (

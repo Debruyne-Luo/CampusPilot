@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "authority": "official_document",
+  "documents": [
+    {
+      "document_id": "portal-1266",
+      "clauses": [
+        {
+          "clause_id": "flow-image",
+          "topic_id": "campus",
+          "title": "借户口本申请：官方流程图",
+          "quote": "登录“砚湖易办”\n进入“事务中心”\n选择党委武装部、保卫处\n填写《借户口本申请》并提交审批\n审批通过后，到保卫处综合科线下领取户口本",
+          "locator": {
+            "file": "documents/portal-1266/assets/dd815f7fd70622613215069a.checked.txt",
+            "start": 0,
+            "end": 66
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-17",
+            "body_sha256": "6cf8cf844ef35b368aa191c8a10597e170e4274297c302b11660cdb1b4f6f8ac",
+            "content_sha256": "ce2b98c3b92e38ec9ea6e4c733fd3e3dab8ee085589870cf574ef287b9b774fd",
+            "attachment_sha256": "dd815f7fd70622613215069ac1279934e3927559ae15051df6e7defa3deebfb8"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "audience_quote": "学生",
+            "campuses": [],
+            "conditions": [
+              "学生申请者需是户口在学校的学生，才能办理"
+            ],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {}
+          },
+          "disposition": "limitation",
+          "limitation": "原指南未标明校区及发布日期；使用前仍需核对实际系统可用性。"
+        }
+      ]
+    },
+    {
+      "document_id": "portal-1042",
+      "clauses": [
+        {
+          "clause_id": "flow-image",
+          "topic_id": "campus",
+          "title": "心理咨询预约：官方流程图",
+          "quote": "方式一\n电脑登录“砚湖易办”\n进入“事务中心”\n填写“心理咨询预约”\n预约成功后，到心理健康教育中心线下进行咨询\n\n方式二\n手机关注学校官方微信企业号“成都理工大学”\n登录“砚湖易办”\n进入“事务中心”的“学生事务板块”\n填写“心理咨询预约”\n预约成功后，到心理健康教育中心线下进行咨询",
+          "locator": {
+            "file": "documents/portal-1042/assets/a1be8e35136d7db396d1d896.checked.txt",
+            "start": 0,
+            "end": 143
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-17",
+            "body_sha256": "2dc6428055bd5b7b97d980d5c3bfc90c191590cb8f94cef47f89763c676f4f9a",
+            "content_sha256": "686cc359dc13b32a0f4787b27dcce84ca1e0006d92923d0990800a378cb38ecc",
+            "attachment_sha256": "a1be8e35136d7db396d1d896942ff99213c113e2a0c894efa5732ac0bd1b2b5c"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate",
+              "graduate"
+            ],
+            "audience_quote": "学生",
+            "campuses": [],
+            "conditions": [],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": null,
+            "valid_until": null,
+            "evidence_quotes": {}
+          },
+          "disposition": "limitation",
+          "limitation": "原指南未标明校区及发布日期；使用前仍需核对实际系统可用性。"
+        }
+      ]
+    },
+    {
+      "document_id": "xjgl2019",
+      "clauses": [
+        {
+          "clause_id": "cdut:chunk:xjgl2019:16",
+          "topic_id": "proof",
+          "title": "证书遗失证明与成绩单",
+          "quote": "第五十六条  学历证书和学位证书遗失或者损坏，经本人申\n请，教务处审查批准后，可以出具相应的证明书。证明书与原证\n书具有同等效力。 \n第十三章  学籍档案 \n第五十七条  在读学生的学籍档案由教务处建立、维护和管\n理。毕业、结业及退学学生的学籍档案由学校档案馆保管。 \n第五十八条 在读学生需要出具学习成绩单时向所在学院提\n出申请，成绩单经学院审核后由教务处复核签章。毕业学生需要\n学习成绩单时向学校档案馆提出申请，由学校档案馆负责出具。",
+          "locator": {
+            "file": "official-student-management.txt",
+            "start": 9868,
+            "end": 10087
+          },
+          "review": {
+            "checked_by": "official-source-validator",
+            "checked_at": "2026-10-17",
+            "body_sha256": "9e6de726c45a8c3fe4b3665118cafdf6691069df2e3de5f2cd97b3ab58c88a6e"
+          },
+          "applicability": {
+            "audiences": [
+              "undergraduate"
+            ],
+            "audience_quote": "普通本科学生学籍管理办法",
+            "campuses": [],
+            "conditions": [],
+            "exceptions": [],
+            "academic_year": null,
+            "valid_from": "2020-01-01",
+            "valid_until": null,
+            "evidence_quotes": {
+              "valid_from": "第六十条  本办法自 2020年 1月1日起执行。原《成都理工\n大学全日制普通本科学生学籍管理办法 （试行） 》 （成理校教 〔2017〕\n17号）同时废止。"
+            }
+          },
+          "disposition": "limitation",
+          "limitation": "2019年办法，明确自2020年1月1日执行；截至本次采集未完成后续修订检索，不得单凭该旧文件断言2026年现行流程。仅适用普通本科学生，校区未明确。",
+          "source_id": "cdut:source:xjgl2019"
+        }
+      ]
+    },
+    {
+      "document_id": "fc-616bc08fbdd03d18",
+      "clauses": []
+    },
+    {
+      "document_id": "fc-e32ab7bb28a38b35",
+      "clauses": []
+    }
+  ]
+}

@@ -7,9 +7,9 @@ Arms (all hybrid retrieval, same cases, same generation model):
   D  + jev on           CAMPUSPILOT_GROUNDING=flag, CAMPUSPILOT_JEV=on
 
 Metrics per arm and per case file:
-  refusal_recall      refusal cases (no gold chunk ids) answered with a refusal/clarification
-  false_refusal       answerable cases (gold chunk ids) answered with a refusal/clarification
-  citation_accuracy   answerable, not refused: share of shown excerpt chunks that are gold
+  refusal_recall      explicitly labeled refusal/clarification cases answered that way
+  false_refusal       answerable cases answered with a refusal/clarification
+  excerpt_gold_overlap answerable, not refused: share of shown excerpt chunks that are gold
                       (precision) and share of cases with >=1 gold excerpt (hit rate);
                       refusal cases: share with no excerpts and no citations
   latency_ms          p50 / p95 per turn (wall clock, includes model and Jev calls)
@@ -54,6 +54,7 @@ from campuspilot.evaluation_budget import OnlineBudget
 from campuspilot.jev_plugin import JevMode, JevPlugin
 from campuspilot.jev_shadow import ShadowResult
 from campuspilot.knowledge import KnowledgeStore
+from campuspilot.knowledge_evaluation import legacy_behavior
 from campuspilot.rag import RetrievalHit, SnapshotStore
 from campuspilot.retrieval.grounding import GroundingMode
 from campuspilot.tools import agent_registry
@@ -198,6 +199,7 @@ def load_cases(paths: list[Path], limits: list[int] | None) -> list[dict[str, An
                     "file": path.parent.name + "/" + path.name,
                     "question": c["question"],
                     "gold": c.get("chunk_ids") or c.get("target_chunk_ids") or [],
+                    "expected_behavior": legacy_behavior(c),
                 }
             )
     return out
@@ -223,8 +225,8 @@ def ratio(n: int, d: int) -> str:
 
 
 def summarize(rows: list[dict[str, Any]], spend: Decimal) -> dict[str, Any]:
-    ans = [r for r in rows if r["gold"]]
-    ref = [r for r in rows if not r["gold"]]
+    ans = [r for r in rows if legacy_behavior(r) in {"answer", "partial"}]
+    ref = [r for r in rows if legacy_behavior(r) in {"refuse", "clarify"}]
     answered = [r for r in ans if not r["refused"]]
     shown = [c for r in answered for c in r["excerpt_ids"]]
     gold_shown = [c for r in answered for c in r["excerpt_ids"] if c in r["gold"]]
@@ -242,15 +244,17 @@ def summarize(rows: list[dict[str, Any]], spend: Decimal) -> dict[str, Any]:
     jlat = [r["jev_latency_ms"] for r in rows if r["jev_latency_ms"]]
     return {
         "n": len(rows),
+        "n_unlabeled": sum(legacy_behavior(r) == "unlabeled" for r in rows),
         "refusal_recall": ratio(sum(r["refused"] for r in ref), len(ref)),
         "false_refusal": ratio(sum(r["refused"] for r in ans), len(ans)),
-        "citation_precision": round(len(gold_shown) / len(shown), 4) if shown else None,
-        "citation_hit_rate": ratio(
+        "shown_excerpt_gold_precision": round(len(gold_shown) / len(shown), 4) if shown else None,
+        "shown_excerpt_gold_hit_rate": ratio(
             sum(any(c in r["gold"] for c in r["excerpt_ids"]) for r in answered), len(answered)
         ),
         "refusal_citation_free": ratio(
             sum(not r["excerpt_ids"] and not r["citations"] for r in ref), len(ref)
         ),
+        "citation_factual_support": "UNASSESSED_REQUIRES_CLAIM_REVIEW",
         "latency_ms_p50": pct(lat, 0.5),
         "latency_ms_p95": pct(lat, 0.95),
         "jev_latency_ms_p50": pct(jlat, 0.5),

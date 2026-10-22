@@ -26,6 +26,7 @@ class DirectoryRecord(Contract):
             "notes",
             "position",
             "hotspot",
+            "information_level",  # Project assessment, not a university claim.
         }
         data = self.model_dump(mode="json", exclude=metadata)
         paths: dict[str, JsonValue] = {}
@@ -55,6 +56,8 @@ class DirectoryRecord(Contract):
         for path, value in paths.items():
             if path.startswith("notes."):
                 continue
+            if path in {"steps", "modes"} and value == []:
+                continue  # An absent procedure/channel is unknown, not a claim of none.
             if value is None or isinstance(value, (dict, list)) and value:
                 continue
             if path in {"service_id", "office_id", "place_id", "teacher_id"}:
@@ -79,6 +82,11 @@ class AvailabilityRule(Contract):
     wait: Text
 
 
+class PublicContact(Contract):
+    label: Text
+    value: Text
+
+
 class CampusService(DirectoryRecord):
     service_id: CampusId
     name: Text
@@ -86,21 +94,34 @@ class CampusService(DirectoryRecord):
     department: Text
     office_id: CampusId | None
     audience: Text
+    # Missing in legacy files: loading old instructions never certifies a full procedure.
+    information_level: Literal["directory", "guide", "procedure"] = "guide"
     academic_year: Annotated[str, Field(pattern=r"^\d{4}-\d{4}$")] | None = None
-    modes: tuple[Literal["online", "self_service", "in_person"], ...] = Field(min_length=1)
+    modes: tuple[Literal["online", "self_service", "in_person"], ...] = ()
     entry_points: tuple[Text, ...]
+    contacts: tuple[PublicContact, ...] | None = None
     summary: Text | None = None
     required_materials: tuple[Text, ...] | None = None
     required_inputs: tuple[Text, ...] | None = None
-    steps: tuple[ServiceStep, ...] = Field(min_length=1)
+    steps: tuple[ServiceStep, ...] = ()
     availability: tuple[AvailabilityRule, ...] | None = None
     fees: tuple[Text, ...] | None = None
     limits: tuple[Text, ...] | None = None
 
+    @model_validator(mode="after")
+    def procedure_contract(self) -> Self:
+        if self.information_level == "procedure":
+            if not self.steps:
+                raise ValueError("A procedure requires source-backed handling steps")
+            if any(step.mode not in self.modes for step in self.steps):
+                raise ValueError("Procedure step mode must be a published service mode")
+        return self
 
-class PublicContact(Contract):
-    label: Text
-    value: Text
+    @property
+    def procedure_note(self) -> str | None:
+        if self.information_level == "procedure":
+            return None
+        return "尚未核验完整办理流程；已知入口和指南信息不代表完整步骤，请查阅官方指南。"
 
 
 class CampusOffice(DirectoryRecord):

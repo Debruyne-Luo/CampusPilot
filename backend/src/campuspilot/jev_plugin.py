@@ -1,7 +1,7 @@
 """Optional in-process Jev plugin (not MCP): reranker + sufficiency policy over one turn.
 
-CAMPUSPILOT_JEV=off|shadow|on (default off). The agent calls :meth:`JevTurn.assess` once,
-after the plan's tools ran and before the model answers:
+CAMPUSPILOT_JEV=off|shadow|on controls evidence assessment. Routing has its own switch.
+One turn permits one route and two evidence assessments, each bounded to two seconds:
 
 - ``shadow``: Jev is asked and its decision recorded (logs, response ``jev`` metadata);
   answers, citations and summaries are untouched.
@@ -10,8 +10,7 @@ after the plan's tools ran and before the model answers:
   insufficiency only refuses/clarifies when no retained passages or structured facts remain.
 
 Any timeout, error, exhausted budget, ``unsure`` or ``unknown`` answer fails open: the
-original flow continues unchanged. One Jev request per turn serves both the reranker and the
-policy (results are cached per turn).
+original flow continues unchanged. The reranker and policy share cached evidence results.
 """
 
 from __future__ import annotations
@@ -19,6 +18,7 @@ from __future__ import annotations
 import asyncio
 import json
 import logging
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass, field, replace
 from typing import Any, Literal, Protocol
@@ -248,13 +248,41 @@ class JevPlugin:
 
 @dataclass
 class JevTurn:
-    """Per-turn cache: the reranker and the policy share one Jev request."""
+    """Per-turn cache and shared request limit; no state is shared across sessions."""
 
     plugin: JevPlugin
     _cache: dict[tuple[str, tuple[str, ...], str, str, str], JevAssessment] = field(
         default_factory=dict
     )
     _requests: int = 0
+    _evidence_requests: int = 0
+    _routes: dict[tuple[str, str], Any] = field(default_factory=dict)
+
+    async def route(self, question: str, intent: str) -> Any:
+        from campuspilot.agent.routing import RouteDecision
+
+        key = (question, intent)
+        if key in self._routes:
+            return self._routes[key]
+        evaluate = getattr(self.plugin.client, "evaluate_route", None)
+        if self._routes or self._requests >= 3 or not callable(evaluate):
+            return RouteDecision("unknown", reason="route_unavailable_or_turn_limit")
+        self._requests += 1
+        started = time.perf_counter()
+        try:
+            async with asyncio.timeout(min(self.plugin.client.timeout_seconds, 2.0)):
+                result = await evaluate(question, intent, budget=self.plugin.budget)
+            if not isinstance(result, RouteDecision):
+                raise ValueError("Invalid route decision")
+        except BudgetExhausted:
+            result = RouteDecision("budget", reason="budget")
+        except TimeoutError:
+            result = RouteDecision("timeout", reason="timeout")
+        except Exception:
+            result = RouteDecision("unknown", reason="route_unavailable_or_invalid")
+        result = replace(result, latency_ms=(time.perf_counter() - started) * 1000)
+        self._routes[key] = result
+        return result
 
     async def assess(
         self, query: str, candidates: tuple[RetrievalHit, ...], local: str = "unassessed",
@@ -269,13 +297,15 @@ class JevTurn:
         key = (query, original, local, stage, context_key)
         if key in self._cache:
             return self._cache[key]
-        if self._requests >= 2:
+        if self._requests >= 3 or self._evidence_requests >= 2:
             return JevAssessment("unknown", "unknown", local, original,
                                  reason="turn_judge_limit")
         self._requests += 1
+        self._evidence_requests += 1
         client = self.plugin.client
+        started = time.perf_counter()
         try:
-            async with asyncio.timeout(client.timeout_seconds + 0.5):
+            async with asyncio.timeout(min(client.timeout_seconds, 2.0)):
                 extended = getattr(client, "evaluate_evidence", None)
                 if evidence_context is not None and callable(extended):
                     result = await extended(
@@ -297,6 +327,7 @@ class JevTurn:
             assessment = JevAssessment(
                 "error", "unknown", local, original, reason=type(exc).__name__
             )
+        assessment = replace(assessment, latency_ms=(time.perf_counter() - started) * 1000)
         logger.info(
             "jev mode=%s status=%s decision=%s local=%s dropped=%d",
             self.plugin.mode,

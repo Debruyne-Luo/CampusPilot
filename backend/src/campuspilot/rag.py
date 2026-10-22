@@ -76,6 +76,19 @@ class RagChunk(Contract):
     stale: bool = False
     # Text recognised from an official image (screenshot); cited with "图片识别，请以原文为准".
     ocr: bool = False
+    # v2 evidence identity. Unknown legacy applicability is never inferred from prose.
+    document_id: str | None = None
+    revision_id: Annotated[str, Field(pattern=r"^[a-f0-9]{64}$")] | None = None
+    campuses: tuple[str, ...] = ("unknown",)
+    section_id: str | None = None
+    parent_chunk_id: str | None = None
+    heading_path: tuple[str, ...] = ()
+    clause_number: str | None = None
+    conditions: tuple[str, ...] = ()
+    exceptions: tuple[str, ...] = ()
+    applicability_evidence: dict[str, str] = Field(default_factory=dict)
+    table_headers: tuple[str, ...] = ()
+    footnotes: tuple[str, ...] = ()
 
     @model_validator(mode="after")
     def approved_content(self) -> Self:
@@ -90,11 +103,17 @@ class RagChunk(Contract):
             raise ValueError("Incomplete chunk review")
         if self.valid_from and self.valid_until and self.valid_from > self.valid_until:
             raise ValueError("Reversed applicability dates")
+        if bool(self.document_id) != bool(self.revision_id):
+            raise ValueError("Document and revision identity must be bound together")
+        if not self.campuses or len(set(self.campuses)) != len(self.campuses):
+            raise ValueError("Invalid campus applicability")
+        if (self.section_id or self.parent_chunk_id) and not self.revision_id:
+            raise ValueError("Section context requires revision identity")
         return self
 
 
 class KnowledgeSnapshot(Contract):
-    schema_version: Literal[1] = 1
+    schema_version: Literal[1, 2] = 1
     version: Annotated[str, Field(pattern=r"^kb-[a-f0-9]{16}$")]
     source_package_sha256: str
     sources: tuple[RagSource, ...]
@@ -109,6 +128,26 @@ class KnowledgeSnapshot(Contract):
             raise ValueError("Duplicate stable evidence ID")
         if len(self.chunks) > 10_000 or any(c.source_id not in ids for c in self.chunks):
             raise ValueError("Invalid snapshot references or size")
+        by_id = {c.chunk_id: c for c in self.chunks}
+        for chunk in self.chunks:
+            if chunk.parent_chunk_id:
+                parent = by_id.get(chunk.parent_chunk_id)
+                if parent is None or parent.chunk_id == chunk.chunk_id or (
+                    parent.source_id, parent.document_id
+                ) != (chunk.source_id, chunk.document_id):
+                    raise ValueError("Invalid parent evidence scope")
+                # Stable upserts may retain an old child while its parent is revised. Its
+                # old relationship remains provenance, never expandable in the new revision.
+                if parent.revision_id != chunk.revision_id:
+                    continue
+                if not compatible_scope(parent, chunk):
+                    raise ValueError("Invalid parent applicability")
+                seen = {chunk.chunk_id}
+                while parent is not None:
+                    if parent.chunk_id in seen:
+                        raise ValueError("Cyclic parent evidence")
+                    seen.add(parent.chunk_id)
+                    parent = by_id.get(parent.parent_chunk_id or "")
         body = snapshot_body(self.model_dump(mode="json", exclude={"version"}))
         if self.version != "kb-" + digest(canonical(body))[:16]:
             raise ValueError("Snapshot version does not match content")
@@ -121,20 +160,44 @@ class KnowledgeSnapshot(Contract):
         )
 
 
+def compatible_scope(left: RagChunk, right: RagChunk) -> bool:
+    """A universal rule can have a scoped exception; disjoint scopes cannot share context."""
+    return all("all" in a or "all" in b or bool(set(a) & set(b)) for a, b in (
+        (left.campuses, right.campuses), (left.audiences, right.audiences),
+    )) and (not left.academic_year or not right.academic_year
+            or left.academic_year == right.academic_year)
+
+
 def snapshot_body(body: dict[str, Any]) -> dict[str, Any]:
     """Hash body; optional fields at their default are omitted so older versions keep IDs."""
     for chunk in body["chunks"]:
         for flag in ("stale", "ocr"):
             if chunk.get(flag) is False:
                 del chunk[flag]
+        if body["schema_version"] == 1:
+            for name, default in V2_CHUNK_DEFAULTS.items():
+                if chunk.get(name, default) != default:
+                    raise ValueError("Enriched evidence requires snapshot schema v2")
+                chunk.pop(name, None)
     return body
+
+
+V2_CHUNK_DEFAULTS: dict[str, Any] = {
+    "document_id": None, "revision_id": None, "campuses": ["unknown"],
+    "section_id": None, "parent_chunk_id": None, "heading_path": [],
+    "clause_number": None, "conditions": [], "exceptions": [],
+    "applicability_evidence": {}, "table_headers": [], "footnotes": [],
+}
 
 
 def make_snapshot(
     sources: tuple[RagSource, ...], chunks: tuple[RagChunk, ...], package_hash: str
 ) -> KnowledgeSnapshot:
     body = {
-        "schema_version": 1,
+        "schema_version": 2 if any(
+            any(c.model_dump(mode="json")[key] != default
+                for key, default in V2_CHUNK_DEFAULTS.items()) for c in chunks
+        ) else 1,
         "source_package_sha256": package_hash,
         "sources": [s.model_dump(mode="json") for s in sorted(sources, key=lambda s: s.source_id)],
         "chunks": [c.model_dump(mode="json") for c in sorted(chunks, key=lambda c: c.chunk_id)],
@@ -151,6 +214,7 @@ class RetrievalFilters(Contract):
     academic_year: str | None = None
     historical: bool = False
     current_only: bool = False
+    campus: str = "chengdu"
 
 
 class RetrievalHit(Contract):
@@ -229,6 +293,7 @@ class SnapshotStore:
         self._cached: HybridRetriever | None = None
         self._key = ""
         self._had_current = False
+        self._application_snapshot: tuple[HybridRetriever | None] | None = None
         # A tuple distinguishes a pinned empty store from no request scope. ContextVar
         # isolates concurrent requests and follows asyncio.to_thread's copied context.
         self._pinned: ContextVar[tuple[HybridRetriever | None] | None] = ContextVar(
@@ -248,6 +313,8 @@ class SnapshotStore:
         pinned = self._pinned.get()
         if pinned is not None:
             return pinned[0]
+        if self._application_snapshot is not None:
+            return self._application_snapshot[0]
         pointer = self.root / "current.json"
         fallback = self.root / "last_good.json"
         try:
@@ -286,6 +353,24 @@ class SnapshotStore:
                 except (OSError, ValueError, KeyError, TypeError, sqlite3.Error):
                     pass
             raise
+
+    def bind_directory(self, base: Path) -> Path:
+        """Bind the application directory and RAG together until the next app restart.
+
+        Standalone stores retain hot reload. An application cannot combine a newly
+        published index with the previous process's already-loaded structured tools.
+        """
+        reader = self.acquire()
+        self._application_snapshot = (reader,)
+        if reader is None:
+            return base
+        version = self.root / "versions" / reader.snapshot.version
+        manifest_path = version / "manifest.json"
+        if manifest_path.is_file():
+            manifest = json.loads(manifest_path.read_bytes())
+            if manifest.get("directory_binding"):
+                return version / "directory"
+        return base
 
     def _load_reference(
         self, raw: dict[str, Any], *, recovery: bool = False
@@ -375,6 +460,8 @@ class SnapshotStore:
                 index_hash = "degraded"
         key = snapshot_hash + ":" + manifest_hash + ":" + index_hash
         if self._cached is not None and key == self._key:
+            if index is not None:
+                index.close()
             return self._cached
         embedder = self.embedder
         retriever = HybridRetriever(

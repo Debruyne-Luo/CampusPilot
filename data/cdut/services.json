@@ -1,6 +1,7 @@
 [
   {
     "service_id": "cdut:service:campus-card-loss",
+    "information_level": "procedure",
     "name": "校园卡挂失",
     "aliases": [
       "一卡通挂失",
@@ -157,6 +158,7 @@
   },
   {
     "service_id": "cdut:service:graduate-enrollment-proof",
+    "information_level": "procedure",
     "name": "研究生在读证明申请",
     "aliases": [
       "研究生在读证明",
@@ -294,6 +296,7 @@
   },
   {
     "service_id": "cdut:service:tuition-receipt-2026-2027",
+    "information_level": "procedure",
     "name": "学杂费电子票据获取（2026-2027学年）",
     "aliases": [
       "学杂费电子票据",
@@ -413,6 +416,7 @@
   },
   {
     "service_id": "cdut:service:campus-card-replacement",
+    "information_level": "procedure",
     "name": "校园卡补办",
     "aliases": [
       "一卡通补办",

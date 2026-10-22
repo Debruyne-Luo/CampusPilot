@@ -1,0 +1,21 @@
+{
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "documentWidth": 390,
+  "removedControls": 0,
+  "automaticScopeNotice": false,
+  "lastAnswer": [
+    {
+      "text": "已核对 · 引用 1 条\n东区图书馆\n\n已找到东区图书馆，可在地图上查看建筑参考位置。具体入口、楼层和室内路线尚未确认，前往时请按现场指示。",
+      "height": 190,
+      "content": 190,
+      "x": 16,
+      "right": 372
+    }
+  ],
+  "placeCard": [
+    "东区图书馆\n在地图上查看"
+  ]
+}

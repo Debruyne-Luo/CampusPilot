@@ -1,0 +1,570 @@
+{
+  "body": {
+    "services": [],
+    "teachers": [],
+    "places": [],
+    "answer": "适用限制：\n网络故障报修正文与服务条件：仅适用于本科生、研究生；来源适用校区尚未确认\n网络故障报修流程图核对：仅适用于本科生、研究生；来源适用校区尚未确认\n\n登录砚湖易办后，进入“事务中心”，选择“网络与信息化处”，填写《网络故障报修》并提交审批，审批通过后由网络与信息化处安排维修。该事项的所属部门是网络与信息化处，办理时间为上午8:00-12:00、下午2:30-6:00。资料标注该事项适用于本科生、研究生，来源适用校区尚未确认。",
+    "result_status": "success",
+    "answer_mode": "agent",
+    "excerpts": [
+      {
+        "document": "网络故障报修正文与服务条件",
+        "content": "网络故障报修\n\n事项编号：1053\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t.028-84079467\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n2.提交申请\n\n3.申请人登录平台，发起申请\n\n4.填写申请表\n\n5.等待办理结果通知\n\n6.审核\n\n7.网络与信息化处经办人\n\n8.流程办结\n\n9.申请人查看审核结果，确认结果并办结流程\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n网络故障报修\n\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+        "source_id": "cdut:source:official:portal-1053",
+        "chunk_id": "cdut:chunk:official:portal-1053:guide-body",
+        "source_url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "documents/portal-1053/body.txt:chars[0:302] sha256=d9b4b7be538b981d38a9e94b9256cf83e6249e7350282b95b65991ad524769ee",
+        "text_sha256": "6538da2cab4327c3bcbebae3519fa53ecf31e6ab13c6a1fec970f34bbf63a61a",
+        "scope_notes": [
+          "仅适用于本科生、研究生",
+          "来源适用校区尚未确认"
+        ]
+      },
+      {
+        "document": "网络故障报修流程图核对",
+        "content": "登录“砚湖易办”\n进入“事务中心”\n选择网络与信息化处\n填写《网络故障保修》并提交审批\n审批通过后维修\n\n适用限制（采集校验标注）：图片中的“保修”字样按原图保留，正文事项名为“报修”。",
+        "source_id": "cdut:source:official:portal-1053",
+        "chunk_id": "cdut:chunk:official:portal-1053:checked-flow",
+        "source_url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "documents/portal-1053/assets/image-198883ffa554aaa5639e731d-checked.txt:chars[0:52] sha256=e8b4ef8df7b0f269a95dbd43b53ad2051b26ea567b5abf74c191ecac7137386a",
+        "text_sha256": "d98f29d78ac0f8b8c14d0195798c59a8b4001d4421d84cb0899f8df2e167c4c4",
+        "scope_notes": [
+          "仅适用于本科生、研究生",
+          "来源适用校区尚未确认"
+        ]
+      },
+      {
+        "document": "砚湖易办服务搜索与分类筛选",
+        "content": "可通过搜索关键字，或按服务分类、服务对象、所属部门进行功能筛选和查找。\n适用限制（采集校验标注）：手册封面版本2022年12月；完整18页原件保留，只有经视觉核对的段落进入条款，当前界面是否相同未知。",
+        "source_id": "cdut:source:official:portal2020",
+        "chunk_id": "cdut:chunk:official:portal2020:service-search",
+        "source_url": "https://wxc.cdut.edu.cn/info/1013/1241.htm",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "assets/portalmanual/checked-text.txt:chars[1988:2023] sha256=529f09189c5f8134636bcf0b9e627bc0058035629623dbf7c93840f1717fad89",
+        "text_sha256": "023ccb295bae1f7fdf4b280aab7b7c00af63794d4945dfc8119be012f04808af",
+        "scope_notes": [
+          "来源适用校区尚未确认"
+        ]
+      },
+      {
+        "document": "电脑端查询砚湖易办办理进度",
+        "content": "依次点击“个人中心-待办中心-我发起的”，可以查看发出的申请事项具体办理进度。\n适用限制（采集校验标注）：手册封面版本2022年12月；完整18页原件保留，只有经视觉核对的段落进入条款，当前界面是否相同未知。",
+        "source_id": "cdut:source:official:portal2020",
+        "chunk_id": "cdut:chunk:official:portal2020:pc-progress",
+        "source_url": "https://wxc.cdut.edu.cn/info/1013/1241.htm",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "assets/portalmanual/checked-text.txt:chars[788:827] sha256=529f09189c5f8134636bcf0b9e627bc0058035629623dbf7c93840f1717fad89",
+        "text_sha256": "5545142590bba3b8f44e3e0a9d3ab0f4a58f92321e899c879a546d568e1cab96",
+        "scope_notes": [
+          "来源适用校区尚未确认"
+        ]
+      }
+    ],
+    "source_ids": [
+      "cdut:chunk:official:portal-1053:checked-flow",
+      "cdut:chunk:official:portal-1053:guide-body"
+    ],
+    "service_links": [
+      {
+        "id": "service-link:3ec726871781d47685e3",
+        "title": "网络故障报修",
+        "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+        "kind": "guide",
+        "source_id": "cdut:source:official:portal-1053",
+        "source_title": "网络故障报修",
+        "source_url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+        "requires_login": null,
+        "network_requirement": "unknown",
+        "checked_at": "2026-10-14",
+        "availability": "not_checked"
+      }
+    ],
+    "plan": [
+      {
+        "step": 1,
+        "tool": "search_service",
+        "label": "查找办事事项",
+        "status": "empty"
+      },
+      {
+        "step": 2,
+        "tool": "make_checklist",
+        "label": "生成办理清单",
+        "status": "skipped"
+      },
+      {
+        "step": 3,
+        "tool": "search_knowledge",
+        "label": "检索官方资料",
+        "status": "success"
+      }
+    ],
+    "checklist": null,
+    "citations": [
+      {
+        "id": "cdut:source:official:portal-1053",
+        "title": "网络故障报修",
+        "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+        "publisher": "网络与信息化处",
+        "audience": {
+          "audiences": [
+            "undergraduate",
+            "graduate"
+          ],
+          "campuses": [
+            "unknown"
+          ],
+          "conditions": [],
+          "exceptions": [],
+          "evidence_quotes": {},
+          "academic_year": null,
+          "valid_from": null,
+          "valid_until": null,
+          "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+        },
+        "date": null,
+        "source_authority": "official_university",
+        "access_method": null,
+        "source_label": "学校官方资料",
+        "stale": false,
+        "document_id": null,
+        "revision_id": null,
+        "locator": "documents/portal-1053/assets/image-198883ffa554aaa5639e731d-checked.txt:chars[0:52] sha256=e8b4ef8df7b0f269a95dbd43b53ad2051b26ea567b5abf74c191ecac7137386a",
+        "text_sha256": "d98f29d78ac0f8b8c14d0195798c59a8b4001d4421d84cb0899f8df2e167c4c4",
+        "scope_notes": [
+          "仅适用于本科生、研究生",
+          "来源适用校区尚未确认"
+        ],
+        "evidence_refs": [
+          {
+            "chunk_id": "cdut:chunk:official:portal-1053:guide-body",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "documents/portal-1053/body.txt:chars[0:302] sha256=d9b4b7be538b981d38a9e94b9256cf83e6249e7350282b95b65991ad524769ee",
+            "text_sha256": "6538da2cab4327c3bcbebae3519fa53ecf31e6ab13c6a1fec970f34bbf63a61a"
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-1053:checked-flow",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "documents/portal-1053/assets/image-198883ffa554aaa5639e731d-checked.txt:chars[0:52] sha256=e8b4ef8df7b0f269a95dbd43b53ad2051b26ea567b5abf74c191ecac7137386a",
+            "text_sha256": "d98f29d78ac0f8b8c14d0195798c59a8b4001d4421d84cb0899f8df2e167c4c4"
+          }
+        ],
+        "note": "图片识别，请以原文为准"
+      },
+      {
+        "id": "cdut:source:official:portal2020",
+        "title": "砚湖易办",
+        "url": "https://wxc.cdut.edu.cn/info/1013/1241.htm",
+        "publisher": "成都理工大学网络与信息化处",
+        "audience": {
+          "audiences": [
+            "all"
+          ],
+          "campuses": [
+            "unknown"
+          ],
+          "conditions": [],
+          "exceptions": [],
+          "evidence_quotes": {},
+          "academic_year": null,
+          "valid_from": null,
+          "valid_until": null,
+          "source_scope": "{\"audiences\": [\"all\", \"unknown\"], \"clauses\": [{\"academic_year\": null, \"audiences\": [], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"全校师生\", \"audiences\": [\"all\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"全校师生\", \"audiences\": [\"all\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"全校师生\", \"audiences\": [\"all\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+        },
+        "date": null,
+        "source_authority": "official_university",
+        "access_method": null,
+        "source_label": "学校官方资料",
+        "stale": false,
+        "document_id": null,
+        "revision_id": null,
+        "locator": "assets/portalmanual/checked-text.txt:chars[788:827] sha256=529f09189c5f8134636bcf0b9e627bc0058035629623dbf7c93840f1717fad89",
+        "text_sha256": "5545142590bba3b8f44e3e0a9d3ab0f4a58f92321e899c879a546d568e1cab96",
+        "scope_notes": [
+          "来源适用校区尚未确认"
+        ],
+        "evidence_refs": [
+          {
+            "chunk_id": "cdut:chunk:official:portal2020:service-search",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "assets/portalmanual/checked-text.txt:chars[1988:2023] sha256=529f09189c5f8134636bcf0b9e627bc0058035629623dbf7c93840f1717fad89",
+            "text_sha256": "023ccb295bae1f7fdf4b280aab7b7c00af63794d4945dfc8119be012f04808af"
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal2020:pc-progress",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "assets/portalmanual/checked-text.txt:chars[788:827] sha256=529f09189c5f8134636bcf0b9e627bc0058035629623dbf7c93840f1717fad89",
+            "text_sha256": "5545142590bba3b8f44e3e0a9d3ab0f4a58f92321e899c879a546d568e1cab96"
+          }
+        ]
+      }
+    ],
+    "map_actions": [],
+    "understanding": {
+      "intent": "办事",
+      "slots": {
+        "identity": "unknown",
+        "academic_year": null,
+        "service": "网络报修",
+        "destination": "砚湖易办"
+      }
+    },
+    "harness_profile": {
+      "version": "h2-d161f2dc457057ae",
+      "sha256": "f7d748cc2f1b44a02258862cb3afc0207fe03a63b4393903b8e4f57890ddf089"
+    }
+  },
+  "events": [
+    {
+      "event": "understanding",
+      "data": {
+        "intent": "办事",
+        "slots": {
+          "identity": "unknown",
+          "academic_year": null,
+          "service": "网络报修",
+          "destination": "砚湖易办"
+        },
+        "missing": []
+      }
+    },
+    {
+      "event": "plan",
+      "data": {
+        "steps": [
+          {
+            "step": 1,
+            "tool": "search_service",
+            "label": "查找办事事项"
+          },
+          {
+            "step": 2,
+            "tool": "make_checklist",
+            "label": "生成办理清单"
+          },
+          {
+            "step": 3,
+            "tool": "search_knowledge",
+            "label": "检索官方资料"
+          }
+        ]
+      }
+    },
+    {
+      "event": "tool_start",
+      "data": {
+        "tool": "search_service",
+        "label": "查找办事事项"
+      }
+    },
+    {
+      "event": "tool_end",
+      "data": {
+        "tool": "search_service",
+        "label": "查找办事事项",
+        "status": "empty"
+      }
+    },
+    {
+      "event": "tool_start",
+      "data": {
+        "tool": "search_knowledge",
+        "label": "检索官方资料"
+      }
+    },
+    {
+      "event": "tool_end",
+      "data": {
+        "tool": "search_knowledge",
+        "label": "检索官方资料",
+        "status": "success"
+      }
+    },
+    {
+      "event": "composing",
+      "data": {
+        "label": "组织答案并核对引用"
+      }
+    }
+  ],
+  "latency_ms": 2243.994672999861,
+  "tool_records": [
+    {
+      "tool": "search_service",
+      "arguments": {
+        "query": "网络报修"
+      },
+      "result": {
+        "status": "empty"
+      }
+    },
+    {
+      "tool": "search_knowledge",
+      "arguments": {
+        "query": "网络坏了准备报修，登录砚湖易办后该去哪个中心、哪个部门？",
+        "audience": "all"
+      },
+      "result": {
+        "result_status": "success",
+        "answer": "适用限制：仅适用于本科生、研究生；来源适用校区尚未确认。\n网络故障报修\n\n事项编号：1053\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t.028-84079467\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n2.提交申请\n\n3.申请人登录平台，发起申请\n\n4.填写申请表\n\n5.等待办理结果通知\n\n6.审核\n\n7.网络与信息化处经办人\n\n8.流程办结\n\n9.申请人查看审核结果，确认结果并办结流程\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n网络故障报修\n\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。\n适用限制：仅适用于本科生、研究生；来源适用校区尚未确认。\n登录“砚湖易办”\n进入“事务中心”\n选择网络与信息化处\n填写《网络故障保修》并提交审批\n审批通过后维修\n\n适用限制（采集校验标注）：图片中的“保修”字样按原图保留，正文事项名为“报修”。\n适用限制：来源适用校区尚未确认。\n可通过搜索关键字，或按服务分类、服务对象、所属部门进行功能筛选和查找。\n适用限制（采集校验标注）：手册封面版本2022年12月；完整18页原件保留，只有经视觉核对的段落进入条款，当前界面是否相同未知。",
+        "hits": [
+          {
+            "chunk_id": "cdut:chunk:official:portal-1053:guide-body",
+            "source_id": "cdut:source:official:portal-1053",
+            "title": "网络故障报修正文与服务条件",
+            "text": "网络故障报修\n\n事项编号：1053\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t.028-84079467\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n2.提交申请\n\n3.申请人登录平台，发起申请\n\n4.填写申请表\n\n5.等待办理结果通知\n\n6.审核\n\n7.网络与信息化处经办人\n\n8.流程办结\n\n9.申请人查看审核结果，确认结果并办结流程\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n网络故障报修\n\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+            "source_title": "网络故障报修",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "documents/portal-1053/body.txt:chars[0:302] sha256=d9b4b7be538b981d38a9e94b9256cf83e6249e7350282b95b65991ad524769ee",
+            "text_sha256": "6538da2cab4327c3bcbebae3519fa53ecf31e6ab13c6a1fec970f34bbf63a61a",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "仅适用于本科生、研究生",
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：仅适用于本科生、研究生；来源适用校区尚未确认。\n网络故障报修\n\n事项编号：1053\n\n基本信息\n\n办理方式\t线上办理\t事项性质\t审批事项\n\n办理途径\t线上\t办理时间\t上午8:00-12:00，下午2:30-6:00\n\n咨询电话\t.028-84079467\t监督电话\t暂无\n\n办理流程\n\n1.如下：\n\n2.提交申请\n\n3.申请人登录平台，发起申请\n\n4.填写申请表\n\n5.等待办理结果通知\n\n6.审核\n\n7.网络与信息化处经办人\n\n8.流程办结\n\n9.申请人查看审核结果，确认结果并办结流程\n\n其它说明\n\n暂无其他说明\n\n服务人群：\n\n研究生,学校管理员,教师,学生\n\n所属部门：\n\n网络与信息化处\n\n服务日期：\n\n长期有效\n\n办理入口\n\n网络故障报修\n\n适用限制（采集校验标注）：发布日期、校区和有效起始日期未知；“长期有效”是页面原文，不能推断制度未被后续通知调整。",
+            "verification_status": "official_document",
+            "service_links": [
+              {
+                "id": "service-link:3ec726871781d47685e3",
+                "title": "网络故障报修",
+                "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+                "kind": "guide",
+                "source_id": "cdut:source:official:portal-1053",
+                "source_title": "网络故障报修",
+                "source_url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+                "requires_login": null,
+                "network_requirement": "unknown",
+                "checked_at": "2026-10-14",
+                "availability": "not_checked"
+              }
+            ],
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 29.380798,
+            "context_of": [],
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal-1053:checked-flow",
+            "source_id": "cdut:source:official:portal-1053",
+            "title": "网络故障报修流程图核对",
+            "text": "登录“砚湖易办”\n进入“事务中心”\n选择网络与信息化处\n填写《网络故障保修》并提交审批\n审批通过后维修\n\n适用限制（采集校验标注）：图片中的“保修”字样按原图保留，正文事项名为“报修”。",
+            "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+            "source_title": "网络故障报修",
+            "publisher": "网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": true,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "documents/portal-1053/assets/image-198883ffa554aaa5639e731d-checked.txt:chars[0:52] sha256=e8b4ef8df7b0f269a95dbd43b53ad2051b26ea567b5abf74c191ecac7137386a",
+            "text_sha256": "d98f29d78ac0f8b8c14d0195798c59a8b4001d4421d84cb0899f8df2e167c4c4",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "仅适用于本科生、研究生",
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：仅适用于本科生、研究生；来源适用校区尚未确认。\n登录“砚湖易办”\n进入“事务中心”\n选择网络与信息化处\n填写《网络故障保修》并提交审批\n审批通过后维修\n\n适用限制（采集校验标注）：图片中的“保修”字样按原图保留，正文事项名为“报修”。",
+            "verification_status": "official_document",
+            "service_links": [
+              {
+                "id": "service-link:3ec726871781d47685e3",
+                "title": "网络故障报修",
+                "url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+                "kind": "guide",
+                "source_id": "cdut:source:official:portal-1053",
+                "source_title": "网络故障报修",
+                "source_url": "https://bsdt.cdut.edu.cn/EIP/nonlogin/elobby/service/introduction/4hjbbewp5kip6nh5r5pstwccmdf4fssg.htm",
+                "requires_login": null,
+                "network_requirement": "unknown",
+                "checked_at": "2026-10-14",
+                "availability": "not_checked"
+              }
+            ],
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"authenticated_general\"}"
+            },
+            "score": 27.240823,
+            "context_of": [],
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal2020:service-search",
+            "source_id": "cdut:source:official:portal2020",
+            "title": "砚湖易办服务搜索与分类筛选",
+            "text": "可通过搜索关键字，或按服务分类、服务对象、所属部门进行功能筛选和查找。\n适用限制（采集校验标注）：手册封面版本2022年12月；完整18页原件保留，只有经视觉核对的段落进入条款，当前界面是否相同未知。",
+            "url": "https://wxc.cdut.edu.cn/info/1013/1241.htm",
+            "source_title": "砚湖易办",
+            "publisher": "成都理工大学网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "assets/portalmanual/checked-text.txt:chars[1988:2023] sha256=529f09189c5f8134636bcf0b9e627bc0058035629623dbf7c93840f1717fad89",
+            "text_sha256": "023ccb295bae1f7fdf4b280aab7b7c00af63794d4945dfc8119be012f04808af",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：来源适用校区尚未确认。\n可通过搜索关键字，或按服务分类、服务对象、所属部门进行功能筛选和查找。\n适用限制（采集校验标注）：手册封面版本2022年12月；完整18页原件保留，只有经视觉核对的段落进入条款，当前界面是否相同未知。",
+            "verification_status": "official_document",
+            "service_links": [],
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"all\", \"unknown\"], \"clauses\": [{\"academic_year\": null, \"audiences\": [], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"全校师生\", \"audiences\": [\"all\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"全校师生\", \"audiences\": [\"all\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"全校师生\", \"audiences\": [\"all\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 23.190561,
+            "context_of": [],
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:official:portal2020:pc-progress",
+            "source_id": "cdut:source:official:portal2020",
+            "title": "电脑端查询砚湖易办办理进度",
+            "text": "依次点击“个人中心-待办中心-我发起的”，可以查看发出的申请事项具体办理进度。\n适用限制（采集校验标注）：手册封面版本2022年12月；完整18页原件保留，只有经视觉核对的段落进入条款，当前界面是否相同未知。",
+            "url": "https://wxc.cdut.edu.cn/info/1013/1241.htm",
+            "source_title": "砚湖易办",
+            "publisher": "成都理工大学网络与信息化处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "assets/portalmanual/checked-text.txt:chars[788:827] sha256=529f09189c5f8134636bcf0b9e627bc0058035629623dbf7c93840f1717fad89",
+            "text_sha256": "5545142590bba3b8f44e3e0a9d3ab0f4a58f92321e899c879a546d568e1cab96",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：来源适用校区尚未确认。\n依次点击“个人中心-待办中心-我发起的”，可以查看发出的申请事项具体办理进度。\n适用限制（采集校验标注）：手册封面版本2022年12月；完整18页原件保留，只有经视觉核对的段落进入条款，当前界面是否相同未知。",
+            "verification_status": "official_document",
+            "service_links": [],
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"all\", \"unknown\"], \"clauses\": [{\"academic_year\": null, \"audiences\": [], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"全校师生\", \"audiences\": [\"all\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"全校师生\", \"audiences\": [\"all\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}, {\"academic_year\": null, \"audience_quote\": \"全校师生\", \"audiences\": [\"all\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 22.72166,
+            "context_of": [],
+            "grounded": true
+          }
+        ],
+        "context": [],
+        "context_complete": true,
+        "applicability_notice": "按每条资料的适用条件分别说明；未提供身份或学年且影响结论时先澄清。来源适用范围未确认是资料缺口，不得推定适用，不向用户索取来源缺失信息。",
+        "knowledge_version": "kb-229ee34eba99ef34",
+        "retrieval_mode": "lexical",
+        "degraded": false,
+        "grounding": {
+          "policy": "local-grounding-v1",
+          "mode": "flag",
+          "decision": "unassessed"
+        }
+      }
+    }
+  ],
+  "knowledge_version": "kb-229ee34eba99ef34",
+  "retrieval_mode": "lexical",
+  "profile": {
+    "version": "h2-d161f2dc457057ae",
+    "sha256": "f7d748cc2f1b44a02258862cb3afc0207fe03a63b4393903b8e4f57890ddf089"
+  },
+  "directory_hashes": {
+    "knowledge.json": "24ceecff3b45cad9fd7ce3881539ec22327812fe877773a09486f9fd52979f13",
+    "offices.json": "0dee683e434468ecb1c64f9f0ad72bdece6f2e13973e0c63a3cdd118a5e4ddaf",
+    "places.json": "69a0b0ec94fe459386a595e9b058e9c94c8931999392f976041339255054efc1",
+    "services.json": "f3d532b2bcb430753191134693280d94cb983f88c53feb9d2fa082bc5d19e275",
+    "sources.json": "93bb58d5dc594c1418d4d88f356998bc8b489e00d486ffa45f0fb6f25d9330ee",
+    "teachers.json": "aa0646da42f79bf09550ecd7bd4dc3b7b76323eb2f0ca4a787a8f440e78d2ec0",
+    "teachers_roster.json": "906e2d339e2e1b31164a71eb45085a82c1ba6b77465276849436f60fb22a7184"
+  },
+  "cost_upper_usd": "0.0022638",
+  "task_id": "hol-combined-13",
+  "arm": "harness"
+}

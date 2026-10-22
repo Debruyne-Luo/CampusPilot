@@ -92,7 +92,9 @@ def test_agent_keeps_initial_version_for_jev_extra_search_and_citations(
 
     body = asyncio.run(agent.run("SYNTHETIC graduate guideline", ConversationContext(), emit))
     assert switched and len(rows_seen) == 2
-    assert body["result_status"] == "success" and body["answer"] == old.chunks[0].text
+    assert body["result_status"] == "success"
+    assert str(body["answer"]).split("\n\n")[-1] == old.chunks[0].text
+    assert "仅适用于研究生" in str(body["answer"])
     assert body["source_ids"] == [old.sources[0].source_id]
     assert judge.evidence and all(version == old.version for version, _, _ in judge.evidence)
     excerpts = body["excerpts"]

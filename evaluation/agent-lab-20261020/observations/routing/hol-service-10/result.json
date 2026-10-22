@@ -1,0 +1,576 @@
+{
+  "body": {
+    "services": [],
+    "teachers": [],
+    "places": [],
+    "answer": "找到相关来源：2026-2027学年各银行贷款抵缴条件、成都理工大学在校生2026-2027学年 缴费通知（2）。本次未能整理出可靠答复，可查看下方来源。",
+    "result_status": "limited",
+    "answer_mode": "agent",
+    "excerpts": [
+      {
+        "document": "2026-2027学年各银行贷款抵缴条件",
+        "content": "（四）生源地助学贷款缴费\n\n1. 国家开发银行和中国银行生源地信用贷款同学：开学报到时，登录学工系统（https://xgfw.cdut.edu.cn）提交贷款回执校验码即可。当地资助中心审核、银行放款后，财务处会直接抵扣学费住宿费，收到银行放款短信后记得确认缴费状态哦～\n\n2. 四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度～\n\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\n适用条件：国家开发银行和中国银行生源地信用贷款同学；四川农信贷款同学；其他银行贷款同学\n例外条件：如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～",
+        "source_id": "cdut:source:official:tuition-2026",
+        "chunk_id": "cdut:chunk:official:tuition-2026:loan-payment",
+        "source_url": "https://jcc.cdut.edu.cn/info/1012/2724.htm",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "bodies/tuition-2026.txt:chars[450:775] sha256=5323e799fe7fc159ad55a6b7a51a85c035532cf402c7df10bc4b44680b81eb6c",
+        "text_sha256": "9dad1c447741f6625977873693e503a020eb7f0c64aac362bdde57850b8a819d",
+        "scope_notes": [
+          "仅适用于本科生、研究生",
+          "来源适用校区尚未确认"
+        ]
+      },
+      {
+        "document": "成都理工大学在校生2026-2027学年 缴费通知（2）",
+        "content": "2.四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦。\n支付小技巧：如果遇到银行卡支付限额，别担心！可以试试“分笔支付”：比如当天单笔限额1万元，你可以在支付时手动修改“本次支付金额”，分几天、分几次缴纳；用微信/支付宝缴费的同学，也可以先把钱足额转到微信/支付宝余额里再支付哦。\n三、票据获取\n微信/网页缴费成功的同学，24小时后就可以登录网上缴费平台（https://jcc.cdut.edu.cn），通过【缴费平台→缴费历史查询→电子票据】下载电子票据，存手机里超方便。\n办理生源地贷款的同学，在银行放款满1个月（或确认支用成功满1个月）后，同样通过上述路径获取电子票据哦。\n四、银行卡绑卡\n若同学们不慎遗失原已绑定的建行卡，补办好新卡后，可以通过以下三种方式修改绑定信息，钱款到账不迷路。\nPC端智能报销平台修改\n砚湖易办登录后进入财务服务平台→智能报销平台→个人酬金卡号维护→选中旧卡号点击“修改”→保存新卡号。\n微信端修改",
+        "source_id": "cdut:source:wx:fee20262027",
+        "chunk_id": "cdut:chunk:wx:fee20262027:02",
+        "source_url": "https://mp.weixin.qq.com/s/mVGytkIE_8J4o5IliHFGaA",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "微信原文 第2段落组",
+        "text_sha256": "191e4ccefce84a0e05c0111c0d0ebb4dbf89f78e7fa1549c25116fd1e030629a",
+        "scope_notes": [
+          "来源适用校区尚未确认"
+        ]
+      },
+      {
+        "document": "2026级成理萌新看过来！这份超全缴费指南请收好（3）",
+        "content": "④ 在申请进度中点击“去缴费”\n⑤点击“去缴费”\n⑥点击“下一步”\n⑦点击“确认缴费”之后就完成啦\n3.其他银行贷款学生\n除上述银行外，完成在线填报后，需将纸质贷款回执交至所在学院，由学院统一交至学校学生资助管理中心处理。如有疑问，请咨询贷款银行。\n有疑问，可咨询贷款银行热线。学杂费超过生源地贷款的部份请学生自行完成缴纳。\n特别提醒：助学贷款原则上仅用于学费、住宿费的缴纳，代办费（医保费、体检费等）请同学们自行缴纳。若因贷款未到先行缴纳学费的同学，贷款到账后，学校会定期自动退还已交学费。\n温馨提示\n1. 关于支付限额\n学校缴费平台本身不限制支付金额，但各银行或第三方支付平台（微信、支付宝）设有不同的单笔/单日支付限额。如缴费金额超出限额，可在支付页面修改金额，分次缴纳；或提前将足额资金转入微信/支付宝余额后进行支付。如有疑问，请咨询您的发卡银行或支付平台。\n2.关于电子票据\n缴费成功后，可在24小时后通过“成都理工大学财务处”微信公众号的【支付记录】中查看并下载电子票据。\n也可登录网上缴费平台（https://jcc.cdut.edu.cn），点击“缴费平台→ 缴费历史查询→电子票据”，查看并打印电子票据，财务处不再提供纸质票据。\n学生通过申请生源地贷款缴费的，在贷款银行汇出贷款一个月后， 登录网上缴费平台（如上操作）查看或打印票据\n3.关于银行卡绑定",
+        "source_id": "cdut:source:wx:fresh2026fee",
+        "chunk_id": "cdut:chunk:wx:fresh2026fee:03",
+        "source_url": "https://mp.weixin.qq.com/s/37b1EidELwZnhfLEiCDtjA",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "微信原文 第3段落组",
+        "text_sha256": "2ead1a5495c7d27eb53d6f6daf3968ccb8879ece69f71cf11d647ac324f9bf5f",
+        "scope_notes": [
+          "仅适用于本科生",
+          "来源适用校区尚未确认"
+        ]
+      },
+      {
+        "document": "2026届毕业生｜国家助学贷款毕业确认，请及时完成！（1/4）",
+        "content": "亲爱的2026届毕业生：\n毕业临近，崭新的旅程即将开启。同学们在收拾行囊、奔赴前程之际，请留意还有一项重要手续需按时完成：\n国家助学贷款毕业确认\n毕业确认关系到个人贷款信息更新、还款计划衔接和个人信用记录。请办理过国家助学贷款的毕业生，认真阅读以下内容，按要求完成相关手续。\n一、哪些同学需要办理？\n在校期间办理过国家助学贷款的2026届毕业生，均需关注并按要求完成毕业确认。\n主要包括：\n国家开发银行生源地信用助学贷款；四川农商银行／四川农信助学贷款；中国银行国家助学贷款；其他银行承办的生源地信用助学贷款。\n如不确定自己的贷款银行，可查看贷款合同、登录贷款系统，或咨询生源地学生资助管理中心。\n二、国家开发银行助学贷款毕业确认\n办理国家开发银行生源地信用助学贷款的同学，于规定时间内请登录国家开发银行生源地助学贷款学生在线系统：\nhttps://sls.cdb.com.cn\n1. 登录系统\n选择“生源地助学贷款学生在线系统”。忘记密码的同学，可通过系统提示找回密码，若学生修改初始密码后忘记新密码，需联系生源地县级资助管理中心申请重置密码。\n操作流程：进入系统首页 → 选择“生源地助学贷款” → 输入身份证号、密码和验证码 → 点击登录。\n2. 完善个人信息",
+        "source_id": "cdut:source:loanconfirm2026",
+        "chunk_id": "cdut:chunk:loanconfirm2026:bs01",
+        "source_url": "https://xsc.cdut.edu.cn/info/1033/4603.htm",
+        "document_id": null,
+        "revision_id": null,
+        "locator": "browser-raw/pages/2026届毕业生｜国家助学贷款毕业确认，请及时完成！-成都理工大学学生处.html 正文第1段（共4段）",
+        "text_sha256": "5af089f159313cfd160ba91bc0b3faec89a234e67cfca7431d26777a8759283f",
+        "scope_notes": [
+          "来源适用校区尚未确认"
+        ]
+      }
+    ],
+    "source_ids": [],
+    "service_links": [],
+    "plan": [
+      {
+        "step": 1,
+        "tool": "search_knowledge",
+        "label": "检索官方资料",
+        "status": "success"
+      }
+    ],
+    "checklist": null,
+    "citations": [
+      {
+        "id": "cdut:source:official:tuition-2026",
+        "title": "成都理工大学在校生2026-2027学年缴费通知",
+        "url": "https://jcc.cdut.edu.cn/info/1012/2724.htm",
+        "publisher": "成都理工大学财务处",
+        "audience": {
+          "audiences": [
+            "undergraduate",
+            "graduate"
+          ],
+          "campuses": [
+            "unknown"
+          ],
+          "conditions": [],
+          "exceptions": [],
+          "evidence_quotes": {},
+          "academic_year": "2026-2027",
+          "valid_from": "2026-07-16",
+          "valid_until": null,
+          "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台\", \"校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"国家开发银行和中国银行生源地信用贷款同学\", \"四川农信贷款同学\", \"其他银行贷款同学\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [\"如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\"], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"微信/网页缴费成功\", \"银行放款满1个月（或确认支用成功满1个月）\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"家庭经济困难且暂未办理生源地助学贷款\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_until\": \"于2026年7月30日前提交申请\"}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": \"2026-07-30\"}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}], \"access_scope\": \"public\"}"
+        },
+        "date": null,
+        "source_authority": "official_university",
+        "access_method": null,
+        "source_label": "学校官方资料",
+        "stale": false,
+        "document_id": null,
+        "revision_id": null,
+        "locator": "bodies/tuition-2026.txt:chars[450:775] sha256=5323e799fe7fc159ad55a6b7a51a85c035532cf402c7df10bc4b44680b81eb6c",
+        "text_sha256": "9dad1c447741f6625977873693e503a020eb7f0c64aac362bdde57850b8a819d",
+        "scope_notes": [
+          "仅适用于本科生、研究生",
+          "来源适用校区尚未确认"
+        ],
+        "evidence_refs": [
+          {
+            "chunk_id": "cdut:chunk:official:tuition-2026:loan-payment",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "bodies/tuition-2026.txt:chars[450:775] sha256=5323e799fe7fc159ad55a6b7a51a85c035532cf402c7df10bc4b44680b81eb6c",
+            "text_sha256": "9dad1c447741f6625977873693e503a020eb7f0c64aac362bdde57850b8a819d"
+          }
+        ]
+      },
+      {
+        "id": "cdut:source:wx:fee20262027",
+        "title": "成都理工大学在校生2026-2027学年 缴费通知",
+        "url": "https://mp.weixin.qq.com/s/mVGytkIE_8J4o5IliHFGaA",
+        "publisher": "成都理工大学财务处",
+        "audience": {
+          "audiences": [
+            "all"
+          ],
+          "campuses": [
+            "unknown"
+          ],
+          "conditions": [],
+          "exceptions": [],
+          "evidence_quotes": {},
+          "academic_year": null,
+          "valid_from": null,
+          "valid_until": null,
+          "source_scope": "在校生（2026-2027学年）"
+        },
+        "date": null,
+        "source_authority": "official_university",
+        "access_method": null,
+        "source_label": "学校官方资料",
+        "stale": true,
+        "document_id": null,
+        "revision_id": null,
+        "locator": "微信原文 第2段落组",
+        "text_sha256": "191e4ccefce84a0e05c0111c0d0ebb4dbf89f78e7fa1549c25116fd1e030629a",
+        "scope_notes": [
+          "来源适用校区尚未确认"
+        ],
+        "evidence_refs": [
+          {
+            "chunk_id": "cdut:chunk:wx:fee20262027:02",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "微信原文 第2段落组",
+            "text_sha256": "191e4ccefce84a0e05c0111c0d0ebb4dbf89f78e7fa1549c25116fd1e030629a"
+          }
+        ]
+      },
+      {
+        "id": "cdut:source:wx:fresh2026fee",
+        "title": "2026级成理萌新看过来！这份超全缴费指南请收好",
+        "url": "https://mp.weixin.qq.com/s/37b1EidELwZnhfLEiCDtjA",
+        "publisher": "成都理工大学财务处",
+        "audience": {
+          "audiences": [
+            "undergraduate"
+          ],
+          "campuses": [
+            "unknown"
+          ],
+          "conditions": [],
+          "exceptions": [],
+          "evidence_quotes": {},
+          "academic_year": null,
+          "valid_from": null,
+          "valid_until": null,
+          "source_scope": "2026级本科新生"
+        },
+        "date": null,
+        "source_authority": "official_university",
+        "access_method": null,
+        "source_label": "学校官方资料",
+        "stale": true,
+        "document_id": null,
+        "revision_id": null,
+        "locator": "微信原文 第3段落组",
+        "text_sha256": "2ead1a5495c7d27eb53d6f6daf3968ccb8879ece69f71cf11d647ac324f9bf5f",
+        "scope_notes": [
+          "仅适用于本科生",
+          "来源适用校区尚未确认"
+        ],
+        "evidence_refs": [
+          {
+            "chunk_id": "cdut:chunk:wx:fresh2026fee:03",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "微信原文 第3段落组",
+            "text_sha256": "2ead1a5495c7d27eb53d6f6daf3968ccb8879ece69f71cf11d647ac324f9bf5f"
+          }
+        ]
+      },
+      {
+        "id": "cdut:source:loanconfirm2026",
+        "title": "2026届毕业生｜国家助学贷款毕业确认，请及时完成！",
+        "url": "https://xsc.cdut.edu.cn/info/1033/4603.htm",
+        "publisher": "学生处（信息来源：学生资助管理中心）",
+        "audience": {
+          "audiences": [
+            "all"
+          ],
+          "campuses": [
+            "unknown"
+          ],
+          "conditions": [],
+          "exceptions": [],
+          "evidence_quotes": {},
+          "academic_year": null,
+          "valid_from": null,
+          "valid_until": null,
+          "source_scope": "在校期间办理过国家助学贷款的2026届毕业生"
+        },
+        "date": null,
+        "source_authority": "official_university",
+        "access_method": null,
+        "source_label": "学校官方资料",
+        "stale": true,
+        "document_id": null,
+        "revision_id": null,
+        "locator": "browser-raw/pages/2026届毕业生｜国家助学贷款毕业确认，请及时完成！-成都理工大学学生处.html 正文第1段（共4段）",
+        "text_sha256": "5af089f159313cfd160ba91bc0b3faec89a234e67cfca7431d26777a8759283f",
+        "scope_notes": [
+          "来源适用校区尚未确认"
+        ],
+        "evidence_refs": [
+          {
+            "chunk_id": "cdut:chunk:loanconfirm2026:bs01",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "browser-raw/pages/2026届毕业生｜国家助学贷款毕业确认，请及时完成！-成都理工大学学生处.html 正文第1段（共4段）",
+            "text_sha256": "5af089f159313cfd160ba91bc0b3faec89a234e67cfca7431d26777a8759283f"
+          }
+        ]
+      }
+    ],
+    "map_actions": [],
+    "understanding": {
+      "intent": "政策问答",
+      "slots": {
+        "identity": "unknown",
+        "academic_year": "2026-2027",
+        "service": "生源地信用助学贷款回执提交",
+        "destination": null
+      }
+    },
+    "decisions": [
+      {
+        "stage": "route",
+        "status": "ok",
+        "action": "knowledge",
+        "reason": "",
+        "latency_ms": 813.2
+      }
+    ],
+    "degraded_reason": "answer_validation"
+  },
+  "events": [
+    {
+      "event": "understanding",
+      "data": {
+        "intent": "政策问答",
+        "slots": {
+          "identity": "unknown",
+          "academic_year": "2026-2027",
+          "service": "生源地信用助学贷款回执提交",
+          "destination": null
+        },
+        "missing": []
+      }
+    },
+    {
+      "event": "decision",
+      "data": {
+        "stage": "route",
+        "status": "ok",
+        "action": "knowledge",
+        "reason": "",
+        "latency_ms": 813.2
+      }
+    },
+    {
+      "event": "plan",
+      "data": {
+        "steps": [
+          {
+            "step": 1,
+            "tool": "search_knowledge",
+            "label": "检索官方资料"
+          }
+        ]
+      }
+    },
+    {
+      "event": "tool_start",
+      "data": {
+        "tool": "search_knowledge",
+        "label": "检索官方资料"
+      }
+    },
+    {
+      "event": "tool_end",
+      "data": {
+        "tool": "search_knowledge",
+        "label": "检索官方资料",
+        "status": "success"
+      }
+    },
+    {
+      "event": "composing",
+      "data": {
+        "label": "组织答案并核对引用"
+      }
+    }
+  ],
+  "latency_ms": 3672.0236979999754,
+  "tool_records": [
+    {
+      "tool": "search_knowledge",
+      "arguments": {
+        "query": "2026—2027学年国开行贷款和其他银行贷款，要交给辅导员的回执有何区别？",
+        "audience": "all",
+        "academic_year": "2026-2027"
+      },
+      "result": {
+        "result_status": "success",
+        "answer": "适用限制：仅适用于本科生、研究生；来源适用校区尚未确认。\n（四）生源地助学贷款缴费\n\n1. 国家开发银行和中国银行生源地信用贷款同学：开学报到时，登录学工系统（https://xgfw.cdut.edu.cn）提交贷款回执校验码即可。当地资助中心审核、银行放款后，财务处会直接抵扣学费住宿费，收到银行放款短信后记得确认缴费状态哦～\n\n2. 四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度～\n\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\n适用条件：国家开发银行和中国银行生源地信用贷款同学；四川农信贷款同学；其他银行贷款同学\n例外条件：如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\n适用限制：来源适用校区尚未确认。\n2.四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦。\n支付小技巧：如果遇到银行卡支付限额，别担心！可以试试“分笔支付”：比如当天单笔限额1万元，你可以在支付时手动修改“本次支付金额”，分几天、分几次缴纳；用微信/支付宝缴费的同学，也可以先把钱足额转到微信/支付宝余额里再支付哦。\n三、票据获取\n微信/网页缴费成功的同学，24小时后就可以登录网上缴费平台（https://jcc.cdut.edu.cn），通过【缴费平台→缴费历史查询→电子票据】下载电子票据，存手机里超方便。\n办理生源地贷款的同学，在银行放款满1个月（或确认支用成功满1个月）后，同样通过上述路径获取电子票据哦。\n四、银行卡绑卡\n若同学们不慎遗失原已绑定的建行卡，补办好新卡后，可以通过以下三种方式修改绑定信息，钱款到账不迷路。\nPC端智能报销平台修改\n砚湖易办登录后进入财务服务平台→智能报销平台→个人酬金卡号维护→选中旧卡号点击“修改”→保存新卡号。\n微信端修改\n适用限制：仅适用于本科生；来源适用校区尚未确认。\n④ 在申请进度中点击“去缴费”\n⑤点击“去缴费”\n⑥点击“下一步”\n⑦点击“确认缴费”之后就完成啦\n3.其他银行贷款学生\n除上述银行外，完成在线填报后，需将纸质贷款回执交至所在学院，由学院统一交至学校学生资助管理中心处理。如有疑问，请咨询贷款银行。\n有疑问，可咨询贷款银行热线。学杂费超过生源地贷款的部份请学生自行完成缴纳。\n特别提醒：助学贷款原则上仅用于学费、住宿费的缴纳，代办费（医保费、体检费等）请同学们自行缴纳。若因贷款未到先行缴纳学费的同学，贷款到账后，学校会定期自动退还已交学费。\n温馨提示\n1. 关于支付限额\n学校缴费平台本身不限制支付金额，但各银行或第三方支付平台（微信、支付宝）设有不同的单笔/单日支付限额。如缴费金额超出限额，可在支付页面修改金额，分次缴纳；或提前将足额资金转入微信/支付宝余额后进行支付。如有疑问，请咨询您的发卡银行或支付平台。\n2.关于电子票据\n缴费成功后，可在24小时后通过“成都理工大学财务处”微信公众号的【支付记录】中查看并下载电子票据。\n也可登录网上缴费平台（https://jcc.cdut.edu.cn），点击“缴费平台→ 缴费历史查询→电子票据”，查看并打印电子票据，财务处不再提供纸质票据。\n学生通过申请生源地贷款缴费的，在贷款银行汇出贷款一个月后， 登录网上缴费平台（如上操作）查看或打印票据\n3.关于银行卡绑定",
+        "hits": [
+          {
+            "chunk_id": "cdut:chunk:official:tuition-2026:loan-payment",
+            "source_id": "cdut:source:official:tuition-2026",
+            "title": "2026-2027学年各银行贷款抵缴条件",
+            "text": "（四）生源地助学贷款缴费\n\n1. 国家开发银行和中国银行生源地信用贷款同学：开学报到时，登录学工系统（https://xgfw.cdut.edu.cn）提交贷款回执校验码即可。当地资助中心审核、银行放款后，财务处会直接抵扣学费住宿费，收到银行放款短信后记得确认缴费状态哦～\n\n2. 四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度～\n\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\n适用条件：国家开发银行和中国银行生源地信用贷款同学；四川农信贷款同学；其他银行贷款同学\n例外条件：如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～",
+            "url": "https://jcc.cdut.edu.cn/info/1012/2724.htm",
+            "source_title": "成都理工大学在校生2026-2027学年缴费通知",
+            "publisher": "成都理工大学财务处",
+            "temporal_status": "unknown",
+            "stale": false,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "bodies/tuition-2026.txt:chars[450:775] sha256=5323e799fe7fc159ad55a6b7a51a85c035532cf402c7df10bc4b44680b81eb6c",
+            "text_sha256": "9dad1c447741f6625977873693e503a020eb7f0c64aac362bdde57850b8a819d",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "仅适用于本科生、研究生",
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：仅适用于本科生、研究生；来源适用校区尚未确认。\n（四）生源地助学贷款缴费\n\n1. 国家开发银行和中国银行生源地信用贷款同学：开学报到时，登录学工系统（https://xgfw.cdut.edu.cn）提交贷款回执校验码即可。当地资助中心审核、银行放款后，财务处会直接抵扣学费住宿费，收到银行放款短信后记得确认缴费状态哦～\n\n2. 四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度～\n\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\n适用条件：国家开发银行和中国银行生源地信用贷款同学；四川农信贷款同学；其他银行贷款同学\n例外条件：如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～",
+            "verification_status": "official_document",
+            "service_links": [
+              {
+                "id": "service-link:32d0ae5d52f72c03b4f7",
+                "title": "官方办事平台",
+                "url": "https://xgfw.cdut.edu.cn",
+                "kind": "platform",
+                "source_id": "cdut:source:official:tuition-2026",
+                "source_title": "成都理工大学在校生2026-2027学年缴费通知",
+                "source_url": "https://jcc.cdut.edu.cn/info/1012/2724.htm",
+                "requires_login": true,
+                "network_requirement": "unknown",
+                "checked_at": "2026-10-14",
+                "availability": "not_checked"
+              }
+            ],
+            "applicability": {
+              "audiences": [
+                "undergraduate",
+                "graduate"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": "2026-2027",
+              "valid_from": "2026-07-16",
+              "valid_until": null,
+              "source_scope": "{\"audiences\": [\"graduate\", \"undergraduate\"], \"clauses\": [{\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"校外访问：成都理工大学主页→砚湖易办→VPN入口→财务缴费平台\", \"校内访问：直接登录财务处主页https://jcc.cdut.edu.cn→学生网上缴费\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"国家开发银行和中国银行生源地信用贷款同学\", \"四川农信贷款同学\", \"其他银行贷款同学\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [\"如果贷款额度不够缴纳学杂费的部分，记得自己补足哦～\"], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"微信/网页缴费成功\", \"银行放款满1个月（或确认支用成功满1个月）\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [\"家庭经济困难且暂未办理生源地助学贷款\"], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_until\": \"于2026年7月30日前提交申请\"}, \"exceptions\": [], \"valid_from\": null, \"valid_until\": \"2026-07-30\"}, {\"academic_year\": \"2026-2027\", \"audience_quote\": \"成都理工大学学生\", \"audiences\": [\"undergraduate\", \"graduate\"], \"campuses\": [], \"conditions\": [], \"evidence_quotes\": {\"academic_year\": \"成都理工大学在校生2026-2027学年缴费通知\", \"valid_from\": \"自2026年7月16日起正式开启。\"}, \"exceptions\": [], \"valid_from\": \"2026-07-16\", \"valid_until\": null}], \"access_scope\": \"public\"}"
+            },
+            "score": 113.586412,
+            "context_of": [],
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:wx:fee20262027:02",
+            "source_id": "cdut:source:wx:fee20262027",
+            "title": "成都理工大学在校生2026-2027学年 缴费通知（2）",
+            "text": "2.四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦。\n支付小技巧：如果遇到银行卡支付限额，别担心！可以试试“分笔支付”：比如当天单笔限额1万元，你可以在支付时手动修改“本次支付金额”，分几天、分几次缴纳；用微信/支付宝缴费的同学，也可以先把钱足额转到微信/支付宝余额里再支付哦。\n三、票据获取\n微信/网页缴费成功的同学，24小时后就可以登录网上缴费平台（https://jcc.cdut.edu.cn），通过【缴费平台→缴费历史查询→电子票据】下载电子票据，存手机里超方便。\n办理生源地贷款的同学，在银行放款满1个月（或确认支用成功满1个月）后，同样通过上述路径获取电子票据哦。\n四、银行卡绑卡\n若同学们不慎遗失原已绑定的建行卡，补办好新卡后，可以通过以下三种方式修改绑定信息，钱款到账不迷路。\nPC端智能报销平台修改\n砚湖易办登录后进入财务服务平台→智能报销平台→个人酬金卡号维护→选中旧卡号点击“修改”→保存新卡号。\n微信端修改",
+            "url": "https://mp.weixin.qq.com/s/mVGytkIE_8J4o5IliHFGaA",
+            "source_title": "成都理工大学在校生2026-2027学年 缴费通知",
+            "publisher": "成都理工大学财务处",
+            "temporal_status": "unknown",
+            "stale": true,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "微信原文 第2段落组",
+            "text_sha256": "191e4ccefce84a0e05c0111c0d0ebb4dbf89f78e7fa1549c25116fd1e030629a",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：来源适用校区尚未确认。\n2.四川农信贷款同学：开学报到时，在学工系统上传四川农信APP里的贷款二维码截图。贷款发放到你的银行卡后会处于冻结状态，需要你手动支用至学校指定学费账户才算完成缴费，全程可以在农信APP跟踪进度\n3.其他银行贷款同学：除了在线填报信息，还需要把纸质贷款回执交给辅导员，由学院统一报送学生资助管理中心办理。\n特别提醒，如果贷款额度不够缴纳学杂费的部分，记得自己补足哦。\n支付小技巧：如果遇到银行卡支付限额，别担心！可以试试“分笔支付”：比如当天单笔限额1万元，你可以在支付时手动修改“本次支付金额”，分几天、分几次缴纳；用微信/支付宝缴费的同学，也可以先把钱足额转到微信/支付宝余额里再支付哦。\n三、票据获取\n微信/网页缴费成功的同学，24小时后就可以登录网上缴费平台（https://jcc.cdut.edu.cn），通过【缴费平台→缴费历史查询→电子票据】下载电子票据，存手机里超方便。\n办理生源地贷款的同学，在银行放款满1个月（或确认支用成功满1个月）后，同样通过上述路径获取电子票据哦。\n四、银行卡绑卡\n若同学们不慎遗失原已绑定的建行卡，补办好新卡后，可以通过以下三种方式修改绑定信息，钱款到账不迷路。\nPC端智能报销平台修改\n砚湖易办登录后进入财务服务平台→智能报销平台→个人酬金卡号维护→选中旧卡号点击“修改”→保存新卡号。\n微信端修改",
+            "verification_status": "verified",
+            "service_links": [],
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "在校生（2026-2027学年）"
+            },
+            "score": 57.425763,
+            "context_of": [],
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:wx:fresh2026fee:03",
+            "source_id": "cdut:source:wx:fresh2026fee",
+            "title": "2026级成理萌新看过来！这份超全缴费指南请收好（3）",
+            "text": "④ 在申请进度中点击“去缴费”\n⑤点击“去缴费”\n⑥点击“下一步”\n⑦点击“确认缴费”之后就完成啦\n3.其他银行贷款学生\n除上述银行外，完成在线填报后，需将纸质贷款回执交至所在学院，由学院统一交至学校学生资助管理中心处理。如有疑问，请咨询贷款银行。\n有疑问，可咨询贷款银行热线。学杂费超过生源地贷款的部份请学生自行完成缴纳。\n特别提醒：助学贷款原则上仅用于学费、住宿费的缴纳，代办费（医保费、体检费等）请同学们自行缴纳。若因贷款未到先行缴纳学费的同学，贷款到账后，学校会定期自动退还已交学费。\n温馨提示\n1. 关于支付限额\n学校缴费平台本身不限制支付金额，但各银行或第三方支付平台（微信、支付宝）设有不同的单笔/单日支付限额。如缴费金额超出限额，可在支付页面修改金额，分次缴纳；或提前将足额资金转入微信/支付宝余额后进行支付。如有疑问，请咨询您的发卡银行或支付平台。\n2.关于电子票据\n缴费成功后，可在24小时后通过“成都理工大学财务处”微信公众号的【支付记录】中查看并下载电子票据。\n也可登录网上缴费平台（https://jcc.cdut.edu.cn），点击“缴费平台→ 缴费历史查询→电子票据”，查看并打印电子票据，财务处不再提供纸质票据。\n学生通过申请生源地贷款缴费的，在贷款银行汇出贷款一个月后， 登录网上缴费平台（如上操作）查看或打印票据\n3.关于银行卡绑定",
+            "url": "https://mp.weixin.qq.com/s/37b1EidELwZnhfLEiCDtjA",
+            "source_title": "2026级成理萌新看过来！这份超全缴费指南请收好",
+            "publisher": "成都理工大学财务处",
+            "temporal_status": "unknown",
+            "stale": true,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "微信原文 第3段落组",
+            "text_sha256": "2ead1a5495c7d27eb53d6f6daf3968ccb8879ece69f71cf11d647ac324f9bf5f",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "仅适用于本科生",
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：仅适用于本科生；来源适用校区尚未确认。\n④ 在申请进度中点击“去缴费”\n⑤点击“去缴费”\n⑥点击“下一步”\n⑦点击“确认缴费”之后就完成啦\n3.其他银行贷款学生\n除上述银行外，完成在线填报后，需将纸质贷款回执交至所在学院，由学院统一交至学校学生资助管理中心处理。如有疑问，请咨询贷款银行。\n有疑问，可咨询贷款银行热线。学杂费超过生源地贷款的部份请学生自行完成缴纳。\n特别提醒：助学贷款原则上仅用于学费、住宿费的缴纳，代办费（医保费、体检费等）请同学们自行缴纳。若因贷款未到先行缴纳学费的同学，贷款到账后，学校会定期自动退还已交学费。\n温馨提示\n1. 关于支付限额\n学校缴费平台本身不限制支付金额，但各银行或第三方支付平台（微信、支付宝）设有不同的单笔/单日支付限额。如缴费金额超出限额，可在支付页面修改金额，分次缴纳；或提前将足额资金转入微信/支付宝余额后进行支付。如有疑问，请咨询您的发卡银行或支付平台。\n2.关于电子票据\n缴费成功后，可在24小时后通过“成都理工大学财务处”微信公众号的【支付记录】中查看并下载电子票据。\n也可登录网上缴费平台（https://jcc.cdut.edu.cn），点击“缴费平台→ 缴费历史查询→电子票据”，查看并打印电子票据，财务处不再提供纸质票据。\n学生通过申请生源地贷款缴费的，在贷款银行汇出贷款一个月后， 登录网上缴费平台（如上操作）查看或打印票据\n3.关于银行卡绑定",
+            "verification_status": "verified",
+            "service_links": [],
+            "applicability": {
+              "audiences": [
+                "undergraduate"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "2026级本科新生"
+            },
+            "score": 41.890657,
+            "context_of": [],
+            "grounded": true
+          },
+          {
+            "chunk_id": "cdut:chunk:loanconfirm2026:bs01",
+            "source_id": "cdut:source:loanconfirm2026",
+            "title": "2026届毕业生｜国家助学贷款毕业确认，请及时完成！（1/4）",
+            "text": "亲爱的2026届毕业生：\n毕业临近，崭新的旅程即将开启。同学们在收拾行囊、奔赴前程之际，请留意还有一项重要手续需按时完成：\n国家助学贷款毕业确认\n毕业确认关系到个人贷款信息更新、还款计划衔接和个人信用记录。请办理过国家助学贷款的毕业生，认真阅读以下内容，按要求完成相关手续。\n一、哪些同学需要办理？\n在校期间办理过国家助学贷款的2026届毕业生，均需关注并按要求完成毕业确认。\n主要包括：\n国家开发银行生源地信用助学贷款；四川农商银行／四川农信助学贷款；中国银行国家助学贷款；其他银行承办的生源地信用助学贷款。\n如不确定自己的贷款银行，可查看贷款合同、登录贷款系统，或咨询生源地学生资助管理中心。\n二、国家开发银行助学贷款毕业确认\n办理国家开发银行生源地信用助学贷款的同学，于规定时间内请登录国家开发银行生源地助学贷款学生在线系统：\nhttps://sls.cdb.com.cn\n1. 登录系统\n选择“生源地助学贷款学生在线系统”。忘记密码的同学，可通过系统提示找回密码，若学生修改初始密码后忘记新密码，需联系生源地县级资助管理中心申请重置密码。\n操作流程：进入系统首页 → 选择“生源地助学贷款” → 输入身份证号、密码和验证码 → 点击登录。\n2. 完善个人信息",
+            "url": "https://xsc.cdut.edu.cn/info/1033/4603.htm",
+            "source_title": "2026届毕业生｜国家助学贷款毕业确认，请及时完成！",
+            "publisher": "学生处（信息来源：学生资助管理中心）",
+            "temporal_status": "historical",
+            "stale": true,
+            "ocr": false,
+            "document_id": null,
+            "revision_id": null,
+            "section_id": null,
+            "parent_chunk_id": null,
+            "heading_path": [],
+            "clause_number": null,
+            "locator": "browser-raw/pages/2026届毕业生｜国家助学贷款毕业确认，请及时完成！-成都理工大学学生处.html 正文第1段（共4段）",
+            "text_sha256": "5af089f159313cfd160ba91bc0b3faec89a234e67cfca7431d26777a8759283f",
+            "table_headers": [],
+            "footnotes": [],
+            "scope_notes": [
+              "来源适用校区尚未确认"
+            ],
+            "conditional_text": "适用限制：来源适用校区尚未确认。\n亲爱的2026届毕业生：\n毕业临近，崭新的旅程即将开启。同学们在收拾行囊、奔赴前程之际，请留意还有一项重要手续需按时完成：\n国家助学贷款毕业确认\n毕业确认关系到个人贷款信息更新、还款计划衔接和个人信用记录。请办理过国家助学贷款的毕业生，认真阅读以下内容，按要求完成相关手续。\n一、哪些同学需要办理？\n在校期间办理过国家助学贷款的2026届毕业生，均需关注并按要求完成毕业确认。\n主要包括：\n国家开发银行生源地信用助学贷款；四川农商银行／四川农信助学贷款；中国银行国家助学贷款；其他银行承办的生源地信用助学贷款。\n如不确定自己的贷款银行，可查看贷款合同、登录贷款系统，或咨询生源地学生资助管理中心。\n二、国家开发银行助学贷款毕业确认\n办理国家开发银行生源地信用助学贷款的同学，于规定时间内请登录国家开发银行生源地助学贷款学生在线系统：\nhttps://sls.cdb.com.cn\n1. 登录系统\n选择“生源地助学贷款学生在线系统”。忘记密码的同学，可通过系统提示找回密码，若学生修改初始密码后忘记新密码，需联系生源地县级资助管理中心申请重置密码。\n操作流程：进入系统首页 → 选择“生源地助学贷款” → 输入身份证号、密码和验证码 → 点击登录。\n2. 完善个人信息",
+            "verification_status": "verified",
+            "service_links": [],
+            "applicability": {
+              "audiences": [
+                "all"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "在校期间办理过国家助学贷款的2026届毕业生"
+            },
+            "score": 39.251541,
+            "context_of": [],
+            "grounded": true
+          }
+        ],
+        "context": [],
+        "context_complete": true,
+        "applicability_notice": "按每条资料的适用条件分别说明；未提供身份或学年且影响结论时先澄清。来源适用范围未确认是资料缺口，不得推定适用，不向用户索取来源缺失信息。",
+        "knowledge_version": "kb-229ee34eba99ef34",
+        "retrieval_mode": "lexical",
+        "degraded": false,
+        "grounding": {
+          "policy": "local-grounding-v1",
+          "mode": "flag",
+          "decision": "unassessed"
+        }
+      }
+    }
+  ],
+  "knowledge_version": "kb-229ee34eba99ef34",
+  "retrieval_mode": "lexical",
+  "profile": null,
+  "directory_hashes": {
+    "knowledge.json": "24ceecff3b45cad9fd7ce3881539ec22327812fe877773a09486f9fd52979f13",
+    "offices.json": "0dee683e434468ecb1c64f9f0ad72bdece6f2e13973e0c63a3cdd118a5e4ddaf",
+    "places.json": "69a0b0ec94fe459386a595e9b058e9c94c8931999392f976041339255054efc1",
+    "services.json": "f3d532b2bcb430753191134693280d94cb983f88c53feb9d2fa082bc5d19e275",
+    "sources.json": "93bb58d5dc594c1418d4d88f356998bc8b489e00d486ffa45f0fb6f25d9330ee",
+    "teachers.json": "aa0646da42f79bf09550ecd7bd4dc3b7b76323eb2f0ca4a787a8f440e78d2ec0",
+    "teachers_roster.json": "906e2d339e2e1b31164a71eb45085a82c1ba6b77465276849436f60fb22a7184"
+  },
+  "cost_upper_usd": "0.00295545",
+  "task_id": "hol-service-10",
+  "arm": "routing"
+}

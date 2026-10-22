@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "tasks_sha256": "69c157358a03adb1423b66eca64084c25d80deced09984fa204279d59205eb0a",
+  "development": 12,
+  "holdout": 12,
+  "groups_disjoint": true,
+  "original_source_cases": 16,
+  "directory_contract_cases": 8,
+  "answer_reviews_completed": true,
+  "knowledge_release_gate": "unaffected",
+  "heldout_observations": 72,
+  "development_observations": 36,
+  "postfix_regressions": 4,
+  "global_profile_adopted": false,
+  "unverified_output_claims_remain": true
+}

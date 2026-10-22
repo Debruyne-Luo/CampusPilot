@@ -82,7 +82,10 @@ def test_document_partial_survives_whole_question_jev_decision(
 
     body: Any = asyncio.run(agent.run(QUESTION, ConversationContext()))
 
-    assert body["answer"] == PARTIAL_ANSWER
+    limitations, generated = body["answer"].split("\n\n", 1)
+    assert generated == PARTIAL_ANSWER
+    assert "来源适用校区尚未确认" in limitations
+    assert "仅适用于2026-2027学年" in limitations
     assert body["result_status"] in {"success", "limited"}
     assert body["source_ids"] == [LOCAL_ID]
     assert body["excerpts"][0]["chunk_id"] == CHUNK_ID
@@ -116,7 +119,10 @@ def test_model_extra_document_search_keeps_ranked_partial_evidence(
 
     body: Any = asyncio.run(agent.run(QUESTION, ConversationContext()))
 
-    assert body["answer"] == PARTIAL_ANSWER
+    limitations, generated = body["answer"].split("\n\n", 1)
+    assert generated == PARTIAL_ANSWER
+    assert "来源适用校区尚未确认" in limitations
+    assert "仅适用于2026-2027学年" in limitations
     assert body["source_ids"] == [LOCAL_ID]
     assert len(model.calls) == 3 and judge.await_count == 2
 
