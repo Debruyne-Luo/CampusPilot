@@ -128,6 +128,29 @@ def test_answer_model_is_told_when_the_page_already_has_detailed_procedures() ->
                                           ConversationContext(), ev))
         systems = [m['content'] for m in model.calls[0]['messages'] if m['role'] == 'system']
         assert any('本轮页面已提供' in str(message) for message in systems) is available
+        assert any('本轮页面没有' in str(message) for message in systems) is not available
+
+
+def test_presentation_context_updates_after_a_model_requested_service_search() -> None:
+    from campuspilot.agent.evidence import Evidence
+    from campuspilot.agent.understand import Understanding
+    from campuspilot.llm.chat_model import Completion, ToolCall
+
+    seen = []
+
+    def search(messages: list[dict[str, object]]) -> Completion:
+        seen.append(any('本轮页面没有' in str(m['content']) for m in messages))
+        return Completion(tool_calls=(ToolCall(call_id='synthetic:search', name='search_service',
+                          arguments='{"query":"校园卡补办"}'),))
+
+    def respond(messages: list[dict[str, object]]) -> Completion:
+        seen.append(any('本轮页面已提供' in str(m['content']) for m in messages))
+        return answer('SYNTHETIC 简要答复。', [], 'empty')
+
+    asyncio.run(concise(FakeLLM(search, respond))._answer(
+        'SYNTHETIC 怎么办', Understanding(intent='办事'), ConversationContext(), Evidence(),
+    ))
+    assert seen == [True, True]
 
 
 def test_concise_answer_has_no_automatic_scope_notice_but_keeps_metadata() -> None:

@@ -502,15 +502,9 @@ class AgentRunner:
         if self.model is None:
             return None, "model_not_configured", 0
         messages: list[dict[str, object]] = [{"role": "system", "content": AGENT_SYSTEM}]
+        presentation: dict[str, object] = {"role": "system", "content": ""}
         if self.concise:
-            if any(s.information_level == "procedure" and s.steps for s in ev.services.values()):
-                messages.append({"role": "system", "content": (
-                    "本轮页面已提供‘查看办理步骤’，包含完整材料、条件和具体操作。"
-                    "正文控制在约180字内，最多三个短段，用简短加粗标签突出先做什么、渠道和关键提醒。"
-                    "不要复述验证、缴费、取卡或逐个按钮等操作，也不要主动列材料。"
-                    "用户明确问材料时简答所问，完整清单仍在折叠区。"
-                    "影响选择的金额、年份、适用条件和未知事项必须保留，可为此适当超出字数。"
-                )})
+            messages.append(presentation)
             messages.append({"role": "system", "content": (
                 "优先使用已经取得的证据直接回答，不补查用户未问的事项。"
                 "不要附加固定的‘适用提醒’或罗列每条来源的范围未知提示；"
@@ -555,6 +549,21 @@ class AgentRunner:
         extra_calls = 0
         for round_index in range(self.max_tool_rounds + 1):
             allow_tools = round_index < self.max_tool_rounds and not ev.routing_complete
+            if self.concise:
+                # Recompute after model-requested tools: the final UI uses these same services.
+                has_procedure = any(
+                    s.information_level == "procedure" and s.steps for s in ev.services.values()
+                )
+                presentation["content"] = (
+                    "本轮页面已提供‘查看办理步骤’，包含完整材料、条件和具体操作。"
+                    "正文控制在约180字内，最多三个短段，用简短加粗标签突出先做什么、渠道和关键提醒。"
+                    "不要复述验证、缴费、取卡或逐个按钮等操作，也不要主动列材料。"
+                    "用户明确问材料时简答所问，完整清单仍在折叠区。"
+                    "影响选择的金额、年份、适用条件和未知事项必须保留，可为此适当超出字数。"
+                    if has_procedure else
+                    "本轮页面没有‘查看办理步骤’折叠入口，不能让用户点击它或加入不存在的办理清单。"
+                    "请直接回答已取得证据支持的必要操作，保留未知信息，不提示不存在的控件。"
+                )
             try:
                 completion = await self.model.complete(
                     messages,
