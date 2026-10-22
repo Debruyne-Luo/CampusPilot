@@ -2,6 +2,7 @@
 
 import argparse
 import hashlib
+import io
 import json
 import subprocess
 from datetime import UTC, datetime
@@ -59,11 +60,42 @@ SUFFIXES = {
 }
 
 
+def committed_source(root: Path, target: Path) -> dict[str, object]:
+    """Export exactly HEAD, independently of local edits, untracked files and caches."""
+    head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
+    raw = subprocess.check_output(["git", "archive", "--format=zip", head], cwd=root)
+    with ZipFile(io.BytesIO(raw)) as source:
+        files = {
+            info.filename: source.read(info) for info in source.infolist() if not info.is_dir()
+        }
+    if any("宣传片" in Path(name).parts for name in files):
+        raise ValueError("Promotional experiments must not enter submission packages")
+    manifest: dict[str, object] = {
+        "git_commit": head,
+        "working_tree_changes": False,
+        "files_sha256": {name: hashlib.sha256(body).hexdigest() for name, body in files.items()},
+    }
+    target.parent.mkdir(parents=True, exist_ok=True)
+    with ZipFile(target, "x", compression=ZIP_DEFLATED) as output:
+        for name, body in files.items():
+            output.writestr(name, body)
+        output.writestr("SOURCE_MANIFEST.json", json.dumps(manifest, ensure_ascii=False, indent=2))
+    return manifest
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT / "release-backups")
+    parser.add_argument("--committed", action="store_true", help="Export HEAD as submission source")
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
+    if args.committed:
+        head = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+        target = args.output / f"campuspilot-source-{head[:12]}.zip"
+        committed_source(ROOT, target)
+        print(target)
+        print("sha256=" + hashlib.sha256(target.read_bytes()).hexdigest())
+        return
     stamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     target = args.output / f"campuspilot-{stamp}.zip"
     paths = [ROOT / item for item in FILES if (ROOT / item).is_file()]

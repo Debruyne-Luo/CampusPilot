@@ -20,6 +20,7 @@ import hashlib
 import io
 import json
 import os
+import re
 import shutil
 import tarfile
 import time
@@ -114,9 +115,56 @@ def _knowledge_files(root: Path, bundle: str) -> dict[str, bytes]:
     return required
 
 
-def collect(root: Path, bundle: str = "") -> dict[str, bytes]:
+def _published_knowledge_files(root: Path) -> dict[str, bytes]:
+    """Freeze both pointer targets, including every manifest-bound original and directory."""
+    rag = root / "data/cdut/rag"
+    files: dict[str, bytes] = {}
+    for pointer in ("current.json", "last_good.json"):
+        raw_bytes = _knowledge_bytes(rag, pointer)
+        raw = json.loads(raw_bytes)
+        if not isinstance(raw, dict):
+            raise ValueError("Invalid published knowledge reference")
+        version = raw.get("version")
+        if raw.get("kind", "published") != "published" or not isinstance(version, str) or not (
+            re.fullmatch(r"kb-[a-f0-9]{16}", version)
+        ):
+            raise ValueError("Invalid published knowledge reference")
+        directory = rag / "versions" / version
+        for path in (rag, rag / "versions", directory):
+            if path.is_symlink():
+                raise ValueError("Unsafe knowledge bundle symlink")
+        manifest_bytes = _knowledge_bytes(directory, "manifest.json")
+        manifest = json.loads(manifest_bytes)
+        if (
+            not isinstance(manifest, dict) or manifest.get("schema_version") != 1
+            or manifest.get("version") != version
+            or not isinstance(manifest.get("files_sha256"), dict)
+            or "snapshot.json" not in manifest["files_sha256"]
+            or raw.get("manifest_sha256") != sha256(manifest_bytes)
+        ):
+            raise ValueError("Invalid published knowledge manifest")
+        prefix = f"data/cdut/rag/versions/{version}/"
+        for name, checksum in manifest["files_sha256"].items():
+            if not isinstance(name, str) or not isinstance(checksum, str) or not (
+                re.fullmatch(r"[a-f0-9]{64}", checksum)
+            ):
+                raise ValueError("Invalid knowledge bundle checksum")
+            body = _knowledge_bytes(directory, name)
+            if sha256(body) != checksum:
+                raise ValueError("Invalid knowledge bundle checksum")
+            files[prefix + name] = body
+        if raw.get("sha256") != sha256(files[prefix + "snapshot.json"]):
+            raise ValueError("Invalid published knowledge checksum")
+        files[prefix + "manifest.json"] = manifest_bytes
+        files["data/cdut/rag/" + pointer] = raw_bytes
+    return files
+
+
+def collect(root: Path, bundle: str = "", *, knowledge_current: bool = False) -> dict[str, bytes]:
     """Every file the service needs; data limited to directory JSON + the chosen knowledge."""
     root = root.resolve()
+    if knowledge_current and bundle:
+        raise ValueError("Knowledge current and legacy bundle are mutually exclusive")
     names = _files_under(root, PACKAGE)
     names += [n for n in TOP_FILES if (root / n).is_file()]
     data = root / "data" / "cdut"
@@ -132,6 +180,8 @@ def collect(root: Path, bundle: str = "") -> dict[str, bytes]:
         raise ValueError("v2 front end missing from package")
     files = {n: (root / n).read_bytes() for n in names}
     files.update(knowledge_files)
+    if knowledge_current:
+        files.update(_published_knowledge_files(root))
     if any(len(b) > MAX_FILE for b in files.values()):
         raise ValueError("Release file too large")
     return files
@@ -149,9 +199,16 @@ def manifest_for(files: dict[str, bytes], bundle: str, commit: str = "") -> dict
     }
 
 
-def build(root: Path, output: Path, bundle: str = "", commit: str = "") -> dict[str, object]:
-    files = collect(root, bundle)
+def build(
+    root: Path, output: Path, bundle: str = "", commit: str = "", *,
+    knowledge_current: bool = False,
+) -> dict[str, object]:
+    files = collect(root, bundle, knowledge_current=knowledge_current)
     manifest = manifest_for(files, bundle, commit)
+    if knowledge_current:
+        manifest["knowledge_version"] = json.loads(files["data/cdut/rag/current.json"])["version"]
+        previous = json.loads(files["data/cdut/rag/last_good.json"])
+        manifest["knowledge_last_good"] = previous["version"]
     output.parent.mkdir(parents=True, exist_ok=True)
     with tarfile.open(output, "x:gz") as tar:
         for name, data in [(MANIFEST, json.dumps(manifest, indent=1).encode()), *files.items()]:

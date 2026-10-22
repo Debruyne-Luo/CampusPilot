@@ -30,6 +30,76 @@ def load(name: str) -> ModuleType:
 R: Any = load("_release")
 
 
+def published_root(tmp: Path) -> tuple[Path, list[str]]:
+    """Two hash-bound synthetic versions and an unrelated candidate."""
+    from campuspilot.knowledge_release import release_reference
+
+    root = fake_root(tmp)
+    versions = []
+    for pointer, label in (("current.json", "current"), ("last_good.json", "previous")):
+        snapshot = synthetic_snapshot(label)
+        target = root / "data/cdut/rag/versions" / snapshot.version
+        write_candidate(target, snapshot)
+        (root / "data/cdut/rag" / pointer).write_text(json.dumps(release_reference(target)))
+        versions.append(snapshot.version)
+    return root, versions
+
+
+def test_current_release_carries_active_and_recovery_versions(tmp_path: Path) -> None:
+    root, versions = published_root(tmp_path)
+    output = tmp_path / "current.tar.gz"
+    manifest = R.build(root, output, knowledge_current=True)
+    files = R.read_archive(output.read_bytes())[1]
+    assert manifest["knowledge_version"] == versions[0]
+    assert manifest["knowledge_last_good"] == versions[1]
+    assert "data/cdut/rag/current.json" in files
+    assert "data/cdut/rag/last_good.json" in files
+    for version in versions:
+        assert f"data/cdut/rag/versions/{version}/snapshot.json" in files
+        assert f"data/cdut/rag/versions/{version}/manifest.json" in files
+    assert not any("packages/" in name or "candidates/" in name for name in files)
+    installed = tmp_path / "unpacked"
+    for name, body in files.items():
+        dest = installed / name
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(body)
+    store = SnapshotStore(installed / "data/cdut/rag", "lexical")
+    reader = store.acquire()
+    assert reader is not None and reader.snapshot.version == versions[0]
+    (installed / "data/cdut/rag/current.json").write_text("{}")
+    recovered = SnapshotStore(installed / "data/cdut/rag", "lexical").acquire()
+    assert recovered is not None and recovered.snapshot.version == versions[1]
+
+
+@pytest.mark.parametrize("damage", ["pointer", "manifest", "snapshot", "missing", "traversal"])
+def test_current_release_rejects_incomplete_or_changed_knowledge(
+    tmp_path: Path, damage: str,
+) -> None:
+    root, versions = published_root(tmp_path)
+    rag = root / "data/cdut/rag"
+    directory = rag / "versions" / versions[1]
+    if damage == "pointer":
+        (rag / "current.json").write_text("{}")
+    elif damage == "manifest":
+        (directory / "manifest.json").write_text("{}")
+    elif damage == "snapshot":
+        (directory / "snapshot.json").write_text("{}")
+    elif damage == "missing":
+        (directory / "snapshot.json").unlink()
+    else:
+        raw = json.loads((rag / "current.json").read_text())
+        raw["version"] = "../outside"
+        (rag / "current.json").write_text(json.dumps(raw))
+    with pytest.raises(ValueError):
+        R.collect(root, knowledge_current=True)
+
+
+def test_current_release_mode_and_legacy_bundle_are_mutually_exclusive(tmp_path: Path) -> None:
+    root, _ = published_root(tmp_path)
+    with pytest.raises(ValueError, match="mutually exclusive"):
+        R.collect(root, "approved-20991231", knowledge_current=True)
+
+
 def fake_root(tmp: Path, marker: str = "1") -> Path:
     root = tmp / f"src-{marker}"
     for name, text in {

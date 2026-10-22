@@ -17,3 +17,10 @@ output/
 .cache/
 
 .preview/
+
+# Local experimental promotional materials are outside the software release.
+/宣传片/
+data/cdut/.knowledge-history/
+# Keep only the source-backed regression fixture needed by test_student_life_candidate.
+data/cdut/rag/candidates/*
+!data/cdut/rag/candidates/student-life-integrated-20261021-v2/
