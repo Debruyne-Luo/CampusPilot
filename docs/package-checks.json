@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-22",
+  "source_commit": "15c3b9e91c9f9bde74654c1756c3158b91e363c0",
+  "knowledge_version": "kb-1d15bf97b31c0d90",
+  "frontend_fingerprint": "ea0e123f8db8",
+  "checks": {
+    "windows": {
+      "system": "Windows",
+      "python": "3.14.7",
+      "uv": "0.12.19",
+      "fresh_directory_dependency_install": "passed",
+      "offline_suite": {
+        "passed": 13,
+        "failed": 0
+      }
+    },
+    "linux": {
+      "system": "Ubuntu 22.04 in WSL, native temporary filesystem",
+      "python": "3.14.7",
+      "uv": "0.12.19",
+      "fresh_directory_dependency_install": "passed",
+      "offline_suite": {
+        "passed": 13,
+        "failed": 0
+      }
+    },
+    "real_launcher": {
+      "windows": {
+        "platform": "Windows",
+        "command": "python run_agent.py --offline --port 8796",
+        "health": "ready",
+        "answer_state": "limited",
+        "degraded_reason": "model_not_configured",
+        "citations_present": true,
+        "checklist_service": "cdut:service:campus-card-replacement",
+        "real_socket_http": true
+      },
+      "linux": {
+        "platform": "Linux Ubuntu 22.04 (WSL)",
+        "health": "ready",
+        "real_socket_http": true,
+        "citation_and_checklist": true
+      }
+    },
+    "artifact_audit": {
+      "judge_document_links_checked": 11,
+      "broken_judge_document_links": 0,
+      "archived_source_readme_missing_references": 1,
+      "archived_reference_policy": "Known missing in original source; preserved immutable evidence, disclosed in validation.md.",
+      "forbidden_files": 0,
+      "high_confidence_credential_patterns": 0,
+      "svg_xml_valid": true,
+      "svg_rendered_and_visually_reviewed": true,
+      "clean_knowledge_versions": 1
+    },
+    "new_launcher_and_verifier_ruff": "passed"
+  },
+  "first_verifier_run": {
+    "failed": 3,
+    "reason": "New verifier used sources instead of the existing citations response field. Corrected verifier, preserved runtime response contract.",
+    "production_source_changed": false
+  },
+  "verified_components": {
+    "run_agent.py": "ac186a296d5d93df9502373d4cd6fc98c36f1b1de1f1021a78746f187d0ccae1",
+    "verify_agent.py": "0f546f95d3cead2f0daa2b8781dcbaa08bf541838b02b06e9302f7d16c54c8a6",
+    "uv.lock": "2e76b96cae26d3161cc03846be60bf2327c1e21636e5b06b830337bfe60c572e",
+    "source_files": 581
+  },
+  "external_paid_calls_this_packaging_pass": 0,
+  "scope": "These checks validate this standalone subset. Existing fixed-60 real-model results and full-repository checks are documented separately; no production switch or physical-device GPS acceptance is claimed."
+}

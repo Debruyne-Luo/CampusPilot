@@ -1,7 +1,7 @@
 [project]
 name = "campuspilot"
 version = "0.1.0"
-description = "Offline synthetic CampusPilot core skeleton"
+description = "CDUTdino single-agent campus assistant"
 requires-python = ">=3.14,<3.15"
 dependencies = ["pydantic>=2.12,<3"]
 
@@ -35,60 +35,3 @@ dev = [
     "pillow>=12,<13",
 ]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["."]
-addopts = "-ra"
-
-[tool.mypy]
-python_version = "3.14"
-strict = true
-files = ["backend/src", "tests"]
-# A host whose temp directory is unwritable makes pytest fall back to the repository root,
-# so `mypy .` would otherwise type-check its own source copies. Keep these out of the run.
-exclude = [
-    "^pytest-of-",
-    "^release-backups/",
-    "^output/",
-    "^\\.test-runs/",
-    "^\\.playwright-cli/",
-]
-
-[[tool.mypy.overrides]]
-module = ["sqlite_vec"]
-ignore_missing_imports = true
-
-[tool.ruff]
-target-version = "py314"
-line-length = 100
-
-# Cloud Code nodes use their own sandbox runtime, independent of the backend.
-[tool.ruff.per-file-target-version]
-"integrations/dify/*.py" = "py310"
-"deploy/*.py" = "py312"
-"backend/src/campuspilot/web.py" = "py312"
-"backend/src/campuspilot/api.py" = "py312"
-"backend/src/campuspilot/dify.py" = "py312"
-"backend/src/campuspilot/tools/*.py" = "py312"
-"backend/src/campuspilot/__main__.py" = "py312"
-"backend/src/campuspilot/knowledge.py" = "py312"
-"backend/src/campuspilot/chat_model.py" = "py312"
-"backend/src/campuspilot/llm/*.py" = "py312"
-"backend/src/campuspilot/app/*.py" = "py312"
-"backend/src/campuspilot/attachments.py" = "py312"
-"backend/src/campuspilot/config.py" = "py312"
-"backend/src/campuspilot/retrieval/*.py" = "py312"
-"backend/src/campuspilot/agent/*.py" = "py312"
-"backend/src/campuspilot/chat_runtime.py" = "py312"
-"backend/src/campuspilot/dify_knowledge.py" = "py312"
-"backend/src/campuspilot/evaluation_budget.py" = "py312"
-"backend/src/campuspilot/jev_shadow.py" = "py312"
-"backend/src/campuspilot/knowledge_release.py" = "py312"
-"backend/src/campuspilot/migration_config.py" = "py312"
-"backend/src/campuspilot/rag.py" = "py312"
-"backend/src/campuspilot/migration_eval.py" = "py312"
-"backend/src/campuspilot/release_gate.py" = "py312"
-"backend/src/campuspilot/api_evaluation.py" = "py312"
-
-[tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B"]

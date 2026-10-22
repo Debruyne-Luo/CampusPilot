@@ -1,8 +1,0 @@
-URL Source: https://mp.weixin.qq.com/s/37b1EidELwZnhfLEiCDtjA
-Source-image-sha256: 1a205d75c49bf3a58bf7ec5cd7b079f00c4b7baae444cf088998ab9004b62e3b
-Method: Codex visual transcription; image examples are not current personal amounts.
-学生服务
-历史缴费
-支付记录
-下载票据
-保存到票夹

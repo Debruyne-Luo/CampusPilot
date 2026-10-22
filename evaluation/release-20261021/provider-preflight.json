@@ -1,1 +1,0 @@
-{"host": "38.244.61.184", "gemini": {"http_status": 200, "error_message": "", "usage": {"completion_tokens": 1, "prompt_tokens": 5, "total_tokens": 6}, "answers": null, "choices": 1}, "jev": {"http_status": 200, "error_message": "", "usage": {"input_tokens": 304, "output_tokens": 20, "cost": 1.2768e-05}, "answers": {"correct": {"type": "noul", "noul": 0.98}}, "choices": 0}}

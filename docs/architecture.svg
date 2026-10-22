@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="770" viewBox="0 0 1120 770" role="img" aria-labelledby="title desc">
+  <title id="title">理小龙 CDUTdino：一个主 Agent，受约束的工具</title>
+  <desc id="desc">用户经 Web 和 SSE 与唯一 AgentRunner 交互。主 Agent 理解任务、生成有限计划、授权工具、组织证据并校验结果。公开目录、版本知识、图片阅读、Jev 和 Search 是受约束的能力。Harness² 只作离线研究且默认关闭。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#447d71"/></marker>
+  </defs>
+  <style>
+    text{font-family:'Microsoft YaHei','Noto Sans CJK SC',sans-serif;fill:#203c35}
+    .title{font-size:29px;font-weight:700}.sub{font-size:16px;fill:#536c65}
+    .head{font-size:19px;font-weight:700}.body{font-size:16px}.small{font-size:14px;fill:#536c65}
+    .box{fill:white;stroke:#cadbd5;stroke-width:1.5}.primary{fill:#e3f0ea;stroke:#447d71;stroke-width:2}
+    .line{fill:none;stroke:#447d71;stroke-width:2;marker-end:url(#arrow)}
+  </style>
+  <rect width="1120" height="770" rx="18" fill="#f4f8f6"/>
+  <text class="title" x="44" y="54">理小龙 · CDUTdino Agent 架构</text>
+  <text class="sub" x="44" y="84">单个主 Agent 协调任务；程序管理权限、证据版本与输出约束。</text>
+
+  <rect class="box" x="44" y="126" width="235" height="162" rx="14"/>
+  <text class="head" x="66" y="160">用户与 Web 接口</text>
+  <text class="body" x="66" y="194">自然语言 · 会话 · 图片</text>
+  <text class="body" x="66" y="222">FastAPI / SSE</text>
+  <text class="small" x="66" y="260">app/routes_chat.py</text>
+  <path class="line" d="M279 207H333"/>
+
+  <rect class="primary" x="338" y="115" width="420" height="186" rx="14"/>
+  <text class="head" x="360" y="150">唯一主 Agent：AgentRunner</text>
+  <text class="body" x="360" y="184">理解与条件核对 → 有限计划</text>
+  <text class="body" x="360" y="214">调用受约束工具 → 汇总本轮证据</text>
+  <text class="body" x="360" y="244">模型组织答复 → JSON / 引用 / 事实校验</text>
+  <text class="small" x="360" y="278">agent/executor.py · 最多 4 步计划 / 3 轮补充调用</text>
+  <path class="line" d="M758 207H808"/>
+
+  <rect class="box" x="814" y="126" width="262" height="162" rx="14"/>
+  <text class="head" x="836" y="160">有依据的任务结果</text>
+  <text class="body" x="836" y="194">答复 · 来源 · 清单</text>
+  <text class="body" x="836" y="222">教师 / 地点卡片 · 地图动作</text>
+  <text class="small" x="836" y="260">证据不足与错误均有明确状态</text>
+
+  <path class="line" d="M521 301V342"/>
+  <path class="line" d="M579 342V305"/>
+  <rect x="44" y="349" width="1032" height="48" rx="10" fill="#447d71"/>
+  <text x="66" y="379" style="font-size:17px;fill:white">程序边界：ExecutionBoundary 先授权  →  ToolRegistry 参数校验  →  只读执行与脱敏审计</text>
+
+  <rect class="box" x="44" y="414" width="246" height="162" rx="12"/>
+  <text class="head" x="64" y="447">公开业务工具</text>
+  <text class="body" x="64" y="479">办事 / 清单 / 办公室</text>
+  <text class="body" x="64" y="507">教师 / 地点 / 地图入口</text>
+  <text class="small" x="64" y="549">tools/ · 不代登录或提交</text>
+
+  <rect class="box" x="306" y="414" width="246" height="162" rx="12"/>
+  <text class="head" x="326" y="447">版本化知识检索</text>
+  <text class="body" x="326" y="479">来源、时效与适用条件</text>
+  <text class="body" x="326" y="507">BM25 / 向量 / 混合检索</text>
+  <text class="small" x="326" y="549">rag.py · 单轮绑定同一版本</text>
+
+  <rect class="box" x="568" y="414" width="246" height="162" rx="12"/>
+  <text class="head" x="588" y="447">生成模型与图片 reader</text>
+  <text class="body" x="588" y="479">理解与表达 / 视觉读取</text>
+  <text class="body" x="588" y="507">图片属于用户输入资料</text>
+  <text class="small" x="588" y="549">llm/ · 可独立配置视觉模型</text>
+
+  <rect class="box" x="830" y="414" width="246" height="162" rx="12"/>
+  <text class="head" x="850" y="447">可选外部补证</text>
+  <text class="body" x="850" y="479">Jev 判断 / Search / Fetch</text>
+  <text class="body" x="850" y="507">显式开关与费用限额</text>
+  <text class="small" x="850" y="549">默认关闭 · 不新增业务权限</text>
+
+  <path class="line" d="M429 576V605"/>
+  <rect class="box" x="44" y="611" width="632" height="105" rx="12"/>
+  <text class="head" x="64" y="644">当前知识：kb-1d15bf97b31c0d90</text>
+  <text class="body" x="64" y="674">36 项事项 · 192 个来源 · 402 条知识片段</text>
+  <text class="small" x="64" y="699">公开原文 + 索引 + 业务目录共同校验，保留一次，不混用旧版本。</text>
+
+  <rect x="696" y="611" width="380" height="105" rx="12" fill="#eef1ef" stroke="#a7b8b1" stroke-dasharray="5 4"/>
+  <text class="head" x="716" y="644">Harness²：可选离线研究</text>
+  <text class="body" x="716" y="674">保留源码与实验说明，默认不加载策略</text>
+  <text class="small" x="716" y="699">不属于普通聊天必经调用链</text>
+  <text class="small" x="44" y="748">启动入口：run_agent.py　｜　角色与边界：AGENT.md　｜　核心运行源码保留固定提交原字节</text>
+</svg>
