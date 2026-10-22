@@ -1,5 +1,5 @@
 // Pages stays at cdutdino.pages.dev; only the HTTPS origin changes during migration.
-const DEFAULT_ORIGIN = 'https://campuspilot.95-40-212-65.sslip.io';
+const DEFAULT_ORIGIN = 'https://campuspilot.38-244-61-184.sslip.io:8443';
 
 export default {
   async fetch(request, env) {

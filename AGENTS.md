@@ -62,7 +62,8 @@ Read the relevant contracts and accepted [ADRs](docs/adr/README.md) before chang
 ## Current repository stage
 
 CONFIRMED (2026-10-21): The user authorized implementation of the release integration,
-module commits, GitHub PR preparation, and migration preparation for Ubuntu at 95.40.212.65.
+module commits, GitHub PR preparation, and migration preparation. After provider region checks
+failed at 95.40.212.65, the user selected the original Ubuntu host at 38.244.61.184 instead.
 Use [the release handoff](docs/qa/release-20261021.md) for tested identities and remaining gates.
 Preserve the cdutdino.pages.dev project and URL. Promotional experiments stay local and must
 not enter Git, release attachments or packages. Keep Harness profiles unset until adoption;

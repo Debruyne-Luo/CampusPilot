@@ -3,13 +3,14 @@ import assert from 'node:assert/strict';
 import worker from '../deploy/pages/_worker.js';
 
 const publicOrigin = 'https://cdutdino.pages.dev';
-const origin = 'https://SYNTHETIC-origin.example';
+const origin = 'https://SYNTHETIC-origin.example:8443';
 
 test('Pages preserves paths, query, request body and same-origin browser authentication', async t => {
   t.mock.method(globalThis, 'fetch', async request => {
     assert.equal(request.url, origin.toLowerCase() + '/api/chat?synthetic=1');
     assert.equal(request.method, 'POST');
     assert.equal(request.headers.get('Origin'), origin.toLowerCase());
+    assert.equal(request.headers.get('Host'), 'synthetic-origin.example:8443');
     assert.equal(request.headers.get('X-CampusPilot-Request'), '1');
     assert.equal(await request.text(), 'SYNTHETIC request');
     return new Response('SYNTHETIC answer', {headers: {

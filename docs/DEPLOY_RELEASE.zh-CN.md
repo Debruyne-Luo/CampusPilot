@@ -2,8 +2,9 @@
 
 ## 2026-10-21 整合版与新机器
 
-本轮状态、验收和切换前提见 [发布交接](qa/release-20261021.md)。目标为 Ubuntu 24.04.4
-`95.40.212.65`，沿用 `https://cdutdino.pages.dev/`。宣传片是本地实验材料，不进入 Git、
+本轮状态、验收和切换前提见 [发布交接](qa/release-20261021.md)。用户最终选择原机
+`38.244.61.184`（Ubuntu 24.04.3），沿用 `https://cdutdino.pages.dev/`。初选95.40.212.65
+因Gemini和Jev地区限制退出本次发布。宣传片是本地实验材料，不进入 Git、
 源码包、运行包或 Release 附件。
 
 新知识使用 `current.json`、`last_good.json` 与 `versions/`，必须用以下新模式；旧 `--bundle`
@@ -32,10 +33,25 @@ Harness profile为空。真实密钥、已消耗预算和读图配置通过仓�
 时不得伪称联网/Jev启用成功，不重置原账本。应用单worker，保留systemd资源限制。
 
 Pages代理源码在 `deploy/pages/_worker.js`，默认新源站为
-`https://campuspilot.95-40-212-65.sslip.io`，可用 `CAMPUSPILOT_ORIGIN` 覆盖。
+`https://campuspilot.38-244-61-184.sslip.io:8443`，可用 `CAMPUSPILOT_ORIGIN` 覆盖。
 它只改写真正同源浏览器的Origin，外站Origin保持原值供后端拒绝；流式正文、Cookie、状态和
 缓存/安全头保留，双斜杠路径不能改变目标主机。后端 `PUBLIC_ORIGIN` 与源站HTTPS地址一致。
 代理配置不授予模型权限，不把网页线索自动写入知识库。
+
+原机的80/443已有服务，使用`deploy/Caddyfile.shared`与独立`campuspilot-gateway`。
+`CAMPUSPILOT_DOMAIN`不带端口，`CAMPUSPILOT_BIND_ADDRESS=38.244.61.184`；应用的
+`PUBLIC_ORIGIN`包含8443。服务单元沿用`deploy/campuspilot-gateway.service`的隔离限制，
+采用APT安装时将ExecStart中的旧二进制路径替换为`/usr/bin/caddy`。Caddy发行包的默认
+`caddy.service`在安装前保持masked，避免占用已有nginx的80。
+
+复制`deploy/nginx.campuspilot-acme.conf.example`并替换主机名，只将本主机名的ACME路径
+转发到127.0.0.1:18880；nginx语法检查成功后reload。Caddy在公网IP:8443提供HTTPS，
+不占用原127.0.0.1:8443；HTTP挑战经已有80转发，不使用已占用的443做TLS-ALPN挑战。
+共享配置保留错误状态与错误ID，删除错误日志中的request字段，避免记录请求头、查询或位置。
+配置经Caddy 2.11.7、nginx语法验证与实际签证通过；其他站点保持原有配置。
+依据：[内部HTTP端口](https://caddyserver.com/docs/caddyfile/options#http-port)、
+[接口绑定](https://caddyserver.com/docs/caddyfile/directives/bind)、
+[TLS挑战](https://caddyserver.com/docs/caddyfile/directives/tls)。
 
 保留现有Pages项目，先创建预览部署并联调，再由Tech Lead最终审阅后提升生产部署。
 旧Pages生产部署ID为 `cca0404b-2d63-4a15-b0f3-a7a204d5f17a`；它当前返回526，

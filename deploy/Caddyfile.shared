@@ -1,0 +1,42 @@
+# Shared host: preserve existing nginx :80 and another service on :443.
+# nginx forwards only this hostname's ACME path to the loopback HTTP listener.
+{
+    log {
+        format filter {
+            wrap json
+            fields {
+                request delete
+            }
+        }
+    }
+    http_port 18880
+    https_port 8443
+    auto_https disable_redirects
+}
+
+http://{$CAMPUSPILOT_DOMAIN}:18880 {
+    bind 127.0.0.1
+    respond 404
+}
+
+https://{$CAMPUSPILOT_DOMAIN}:8443 {
+    # nginx already uses 127.0.0.1:8443; use only the public interface here.
+    bind {$CAMPUSPILOT_BIND_ADDRESS}
+    tls {
+        issuer acme {
+            disable_tlsalpn_challenge
+        }
+    }
+    encode zstd gzip
+    @images path /api/attachments
+    request_body @images {
+        max_size 10MiB
+    }
+    @ordinary not path /api/attachments
+    request_body @ordinary {
+        max_size 16KB
+    }
+    @api path /api/* /_AMapService/*
+    header @api Cache-Control "no-store"
+    reverse_proxy 127.0.0.1:8766
+}
