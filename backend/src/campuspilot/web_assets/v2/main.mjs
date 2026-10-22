@@ -379,7 +379,7 @@ async function submit(text) {
   $("new-chat").disabled = true; attachments.refresh();
   $("empty")?.remove();
   bubble(text, images); followAnswer = true; scrollEnd(true);
-  let state = initialPlan();
+  let state = initialPlan(), answerAnchor = null;
   const planHost = h("div", { class: "plan-host" });
   const live = h("p", { class: "conclusion streaming", "aria-live": "polite" });
   thread.append(planHost);
@@ -402,7 +402,8 @@ async function submit(text) {
       if (!live.isConnected) {
         const bar = h("div", { class: "stream-line", "aria-hidden": "true" }, h("i", { style: "width:12%" }));
         bar.dataset.streamBar = "true";
-        thread.append(bar, live);
+        thread.insertBefore(bar, planHost);
+        thread.insertBefore(live, planHost);
       }
       live.textContent = state.answer;
       const barFill = thread.querySelector('[data-stream-bar] i');
@@ -414,6 +415,7 @@ async function submit(text) {
   if (ticket !== conversationRevision) return;
   thread.querySelector('[data-stream-bar]')?.remove();
   if (!result.ok) {
+    state = reducePlan(state, { event: "final", data: { degraded_reason: "request_failed" } }); paint();
     if (state.answer) {
       live.textContent = `${state.answer}\n\n（以上内容未完成，尚未核对引用）`;
       live.classList.remove("streaming");
@@ -425,14 +427,18 @@ async function submit(text) {
     if (!result.streamed) planHost.remove();
     else { state = reducePlan(state, { event: "final", data: {} }); paint(); }
     attachments.sent();
-    const cards = answerCards(result.body, { checklistPreview: handling.preview, onFocus: highlight, onGo: go, onMapPick: pickDestination, onDetails: (s) => submit(`请列出${s.name}需要的材料和办理步骤`), onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
+    const cards = answerCards(result.body, { checklistPreview: handling.preview, onFocus: highlight, onGo: go, onMapPick: pickDestination, onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
+    answerAnchor = cards[0];
     for (const c of cards) if (c.update) placeCards.add(c);
     thread.append(...cards); cardsIn(cards);
     map.addPlaces(result.body.places || []);
     map.reveal((result.body.places || []).map((p) => p.place_id));
   }
+  if (planHost.isConnected) thread.append(planHost);
   busy = false; chatController = null; $("new-chat").disabled = false; $("send-label").textContent = "发送"; attachments.refresh();
-  scrollEnd();
+  if (answerAnchor && followAnswer && !handling.active && !desktopUI?.mapMode) {
+    thread.scrollTo({ top: thread.scrollTop + answerAnchor.getBoundingClientRect().top - thread.getBoundingClientRect().top - 12, behavior: "instant" });
+  } else scrollEnd();
   if (!mobile() && !handling.active && !desktopUI?.mapMode) input.focus({ preventScroll: true });
 }
 

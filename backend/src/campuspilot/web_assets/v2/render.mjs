@@ -48,6 +48,11 @@ function answerText(text) {
   return parts;
 }
 
+function answerParagraphs(text) {
+  return text.split(/(\n[\t ]*\n)/).map((part, i) => i % 2
+    ? part : h("p", { class: "answer-paragraph" }, answerText(part)));
+}
+
 function conclusion(body) {
   const status = body.result_status || "success";
   const ok = status === "success";
@@ -57,17 +62,31 @@ function conclusion(body) {
     h("div", { class: "stream-line", "aria-hidden": "true" }, h("i", {})),
     h("div", { class: "kicker" }, ok ? `${n ? "已核对 · " : ""}引用 ${n} 条` : (STATUS[status] || status)),
     title ? h("h2", { class: "bigq" }, title) : null,
-    h("p", { class: "conclusion" }, answerText(body.answer || "")),
+    h("div", { class: "conclusion" }, answerParagraphs(body.answer || "")),
     body.degraded_reason ? h("p", { class: "fineprint" }, DEGRADED[body.degraded_reason] || "当前只提供能够确认的信息。") : null);
 }
 
 function stepsCard(services) {
-  const steps = services.filter((s) => s.information_level === "procedure").flatMap((s) => s.steps || []);
-  if (!steps.length) return null;
-  return h("details", { class: "card" }, h("summary", { "aria-label": "查看办理步骤，展开已有步骤" }, "查看办理步骤"),
-    h("ol", { class: "numsteps" }, steps.map((s, i) => h("li", {},
-      h("span", { class: "no" }, String(i + 1).padStart(2, "0")),
-      h("span", {}, s.condition ? `${s.instruction}（适用：${s.condition}）` : s.instruction)))));
+  const procedures = services.filter((s) => s.information_level === "procedure" && s.steps?.length);
+  if (!procedures.length) return null;
+  return h("details", { class: "card procedure-details" },
+    h("summary", { "aria-label": "查看办理步骤，展开材料与具体操作" }, "查看办理步骤"),
+    procedures.map((service) => {
+      const preparation = [...(service.required_materials || []), ...(service.required_inputs || [])];
+      const notes = [...(service.limits || []), ...(service.fees || []).map(f => `费用：${f}`), ...(service.notes || [])];
+      return h("section", { class: "procedure-content" },
+        procedures.length > 1 ? h("h3", {}, service.name) : null,
+        preparation.length ? h("div", {}, h("h4", {}, "需要准备"),
+          h("ul", {}, preparation.map(item => h("li", {}, item)))) : null,
+        service.required_materials == null || service.required_inputs == null
+          ? h("p", { class: "fineprint" }, "部分准备要求待核实。") : null,
+        h("h4", {}, "具体步骤"),
+        h("ol", { class: "numsteps" }, service.steps.map((step, i) => h("li", {},
+          h("span", { class: "no" }, String(i + 1).padStart(2, "0")),
+          h("span", {}, step.instruction,
+            step.condition ? h("small", { class: "step-condition" }, `适用：${step.condition}`) : null)))),
+        notes.length ? h("div", {}, h("h4", {}, "注意事项"), h("ul", {}, notes.map(note => h("li", {}, note)))) : null);
+    }));
 }
 
 export function serviceGuideCards(services) {
@@ -159,18 +178,14 @@ function webSourcesCard(sources) {
       s.url ? h("a", { href: s.url, target: "_blank", rel: "noopener noreferrer" }, s.title || "查看搜索来源") : s.title || "搜索来源")));
 }
 
-export function answerCards(body, { checklistPreview, onFocus, onGo, onFrom, onMapPick, onDetails, origin = null }) {
+export function answerCards(body, { checklistPreview, onFocus, onGo, onFrom, onMapPick, origin = null }) {
   const teachers = (body.teachers || []).map((t) =>
     h("section", { class: "card" }, h("h4", {}, "老师"), h("p", { class: "conclusion" }, t.name),
       h("p", {}, [t.department, t.office].filter(Boolean).join(" · "))));
   return [
     conclusion(body),
-    decisionCard(body),
     checklistPreview?.(body),
     serviceLinksCard(body),
-    ...(!body.checklist && onDetails && ["success", "limited"].includes(body.result_status)
-      ? (body.services || []).filter((s) => s.information_level === "procedure").slice(0, 1).map((s) =>
-          h("button", { type: "button", class: "chip details-request", "aria-label": `查看材料与步骤，询问${s.name}`, onclick: () => onDetails(s) }, "查看材料与步骤")) : []),
     ...serviceGuideCards(body.services || []),
     stepsCard(body.services || []),
     ...teachers,
@@ -179,14 +194,4 @@ export function answerCards(body, { checklistPreview, onFocus, onGo, onFrom, onM
     citationsCard(body.citations),
     webSourcesCard(body.web_sources),
   ].filter(Boolean);
-}
-
-export function decisionCard(body) {
-  if (!Array.isArray(body.decisions) || !body.decisions.length) return null;
-  const stages = {route:"工具选择",evidence:"本地证据",web_evidence:"联网证据"};
-  const actions = {service:"办理事项与官方资料",teacher:"教师目录",place:"地点查询",knowledge:"官方资料",place_knowledge:"地点与官方资料",baseline:"采用程序规划",sufficient:"证据充分",insufficient:"证据不足，保留已知部分",clarify:"仍有条件或依据待确认",unknown:"判断未确认，沿用本地依据"};
-    const faults = {timeout:"判断超时",budget:"预算已达上限",unsure:"置信度不足",unknown:"判断不可用或未确认",error:"判断服务异常",denied:"执行权限受限"};
-  return h("details", {class:"card decision-records"}, h("summary", {}, "执行记录 · Jev 决策"),
-    ...body.decisions.slice(0, 8).map(d => h("p", {class:"fineprint"},
-        `${stages[d.stage] || "证据判断"}：${actions[d.action] || "沿用现有流程"} · ${d.status === "ok" ? "判断已返回" : (faults[d.status] || "使用回退流程")} · ${Number(d.latency_ms || 0).toFixed(0)} ms`)));
 }

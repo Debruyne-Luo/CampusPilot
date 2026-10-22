@@ -118,11 +118,12 @@ def service_answer(service: CampusService, question: str) -> str | None:
     entries = [e for e in entries if "http" not in e]
     if not entries:
         return None
-    lines = ["办理入口：" + "；".join(entries[:2]) + "。"]
-    prerequisites = [*(service.required_materials or ()), *(service.limits or ())]
+    lines = ["**办理入口：**" + "；".join(entries[:2]) + "。"]
+    # Preparation stays in the procedure disclosure; constraints still affect choice.
+    prerequisites = list(service.limits or ())
     if prerequisites:
-        lines.append("办理前：" + "；".join(p.rstrip('。；') for p in prerequisites) + "。")
+        lines.append("**注意：**" + "；".join(p.rstrip('。；') for p in prerequisites) + "。")
     conditions = [s.condition for s in service.steps if s.condition]
     if any(any(w in c for w in ("历史", "待复核", "2023年", "2024年")) for c in conditions):
-        lines.append("依据所引年份指南，当前入口及受理安排以学校最新说明为准。")
-    return "\n".join(lines)
+        lines.append("**资料时效：**依据所引年份指南，当前入口及受理安排以学校最新说明为准。")
+    return "\n\n".join(lines)

@@ -66,7 +66,7 @@ test("external platforms need a school source; direct URL helper remains school-
   assert.deepEqual(normalizeServiceLinks({ service_links: [fixture("platform", { url, source_url: "https://evil.example/" })] }), []);
 });
 
-test("steps and completed progress are folded; material expansion is explicitly offered", () => {
+test("procedure details and completed progress are folded without a redundant follow-up request", () => {
   const previousNode = globalThis.Node, previousDocument = globalThis.document;
   globalThis.Node = TestNode; globalThis.document = { createElement: (tag) => new TestNode(tag) };
   try {
@@ -74,10 +74,10 @@ test("steps and completed progress are folded; material expansion is explicitly 
       service_id: "synthetic:service", name: "SYNTHETIC service", information_level: "procedure",
       steps: [{ instruction: "SYNTHETIC detail" }],
     }], places: [{ name: "SYNTHETIC place" }] };
-    const cards = answerCards(body, { onDetails: () => {} });
+    const cards = answerCards(body, {});
     const heading = descendants(cards[0]).find((n) => n.tag === "h2");
     assert.equal(heading.textContent, "SYNTHETIC service");
-    assert.ok(cards.some((n) => n.tag === "button" && n.textContent === "查看材料与步骤"));
+    assert.ok(!cards.some((n) => n.tag === "button" && n.textContent === "查看材料与步骤"));
     const steps = cards.find((n) => n.textContent.includes("SYNTHETIC detail"));
     assert.equal(steps.tag, "details");
     assert.equal(steps.attributes.open, undefined);

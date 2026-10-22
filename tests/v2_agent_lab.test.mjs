@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { decisionCard } from "../backend/src/campuspilot/web_assets/v2/render.mjs";
+import { answerCards } from "../backend/src/campuspilot/web_assets/v2/render.mjs";
 import { experimentView } from "../backend/src/campuspilot/web_assets/v2/lab.mjs";
 
 class TestNode {
@@ -17,15 +17,13 @@ function dom(fn) {
   try { fn(); } finally { [globalThis.Node, globalThis.document] = saved; }
 }
 
-test("execution record shows actual decision status without raw prompts or private reasoning", () => dom(() => {
-  assert.equal(decisionCard({}), null);
-  const card = decisionCard({decisions:[{stage:"route",status:"timeout",action:"baseline",latency_ms:2000,raw:"SECRET"},
-    {stage:"evidence",status:"ok",action:"insufficient",latency_ms:40}]});
-  assert.equal(card.tag, "details");
-  assert.match(card.textContent, /采用程序规划/);
-  assert.match(card.textContent, /判断超时/);
-  assert.match(card.textContent, /保留已知部分/);
-  assert.doesNotMatch(card.textContent, /SECRET/);
+test("student answers do not render Jev records, prompts or private reasoning", () => dom(() => {
+  const cards = answerCards({answer:"SYNTHETIC public answer",result_status:"success",
+    decisions:[{stage:"route",status:"timeout",action:"baseline",latency_ms:2000,raw:"SECRET"},
+    {stage:"evidence",status:"ok",action:"insufficient",latency_ms:40}]},{});
+  const text = cards.map(c=>c.textContent).join("");
+  assert.match(text,/SYNTHETIC public answer/);
+  assert.doesNotMatch(text,/SECRET|Jev|执行记录|判断超时|保留已知部分/);
 }));
 
 test("experiment viewer preserves failed/unknown cost and treats model text as text", () => dom(() => {

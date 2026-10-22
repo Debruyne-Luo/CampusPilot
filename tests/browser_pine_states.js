@@ -35,7 +35,7 @@ async page => {
     await check.locator('.attachment-draft').waitFor({state:'detached'});
     if(uploads!==2)throw new Error('Retry count');
     await check.locator('#question').fill('SYNTHETIC 清单呈现测试');await check.locator('#send').click();
-    await check.locator('.handling-preview>summary').click();
+    await check.locator('.procedure-details>summary').click();
     await check.getByRole('button',{name:'＋ 加入办理清单',exact:true}).click();
     await check.locator('#handling-entry').click();
     await check.locator('.handling-row').click();

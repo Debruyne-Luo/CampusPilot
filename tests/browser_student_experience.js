@@ -15,11 +15,13 @@ async page => {
     await check.goto(url);
     if (await check.locator('a[href="/lab"], #desktop-settings, #reading-settings').count()) throw new Error('Removed controls still present');
     await submit('校园卡补办在哪里办');
-    await check.getByRole('button', { name: /^查看材料与步骤，询问/ }).waitFor();
-    if (await check.locator('.handling-preview-card').count()) throw new Error('Unrequested checklist');
+    await check.getByRole('button', { name: '＋ 加入办理清单', exact: true }).waitFor();
+    if (await check.locator('.decision-records, .details-request').count()) throw new Error('Removed answer controls still present');
     if (await check.locator('.card.answer h2').innerText() !== '校园卡补办') throw new Error('Wrong task title');
     if (await check.locator('details.card[open]').count()) throw new Error('Details expanded by default');
-    await check.getByRole('button', { name: /^查看材料与步骤，询问/ }).click();
+    const questionCount = await check.locator('.msg-user').count();
+    await check.locator('.procedure-details>summary').click();
+    if (await check.locator('.msg-user').count() !== questionCount) throw new Error('Expanding steps sent another question');
     await check.getByRole('button', { name: '＋ 加入办理清单', exact: true }).click();
     await check.locator('#handling-entry').click();
     await check.getByRole('button', { name: /校园卡补办 已准备 0\/2/ }).click();
@@ -55,7 +57,7 @@ async page => {
     const last = check.locator('.card.answer').last();
     if ((await last.innerText()).includes('补卡')) throw new Error('Previous service leaked into a new topic');
     if (errors.length) throw new Error(errors.join('; '));
-    return { entry: true, offlinePlace: true, onDemandMaterials: true, savedProgressAfterResetAndReload: '1/2',
+    return { entry: true, offlinePlace: true, firstAnswerChecklist: true, foldedStepsWithoutNewQuestion: true, savedProgressAfterResetAndReload: '1/2',
       topicSwitch: true, removedSettingsAndLabEntry: true, noAutomaticScopeNotice: true,
       mobileAnswerUnclipped: geometry, widths: [1440, 390], map: 'illustration only', pageErrors: errors.length };
   } finally { await context.close(); }

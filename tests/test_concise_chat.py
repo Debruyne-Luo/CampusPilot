@@ -7,7 +7,7 @@ from campuspilot.agent.executor import AgentRunner
 from campuspilot.chat_runtime import ConversationContext
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.tools import agent_registry
-from test_agent_loop import CARD_EVIDENCE, DATA, REPO, FakeLLM, answer, understood
+from test_agent_loop import CARD, CARD_EVIDENCE, DATA, REPO, FakeLLM, answer, understood
 
 
 def concise(model: FakeLLM | None = None) -> AgentRunner:
@@ -28,6 +28,22 @@ def test_card_loss_gives_named_miniapp_without_model_or_checklist() -> None:
     assert not result.get('checklist')
     assert [s['tool'] for s in result['plan']] == ['search_service']
     assert result['citations'] and len(result['answer']) < 250
+
+
+def test_direct_service_highlights_channel_and_conditions_with_materials_in_details() -> None:
+    from campuspilot.agent.quick_answers import service_answer
+
+    assert CARD is not None
+    service = CARD.model_copy(update={
+        'entry_points': ('SYNTHETIC 合成食堂服务区',),
+        'required_materials': ('SYNTHETIC 合成证件',),
+        'limits': ('SYNTHETIC 余额大于20元，不是工本费',),
+    })
+    text = service_answer(service, 'SYNTHETIC 在哪里办')
+    assert text is not None and text.startswith('**办理入口：**')
+    assert '\n\n**注意：**' in text
+    assert '合成证件' not in text
+    assert '余额大于20元，不是工本费' in text
 
 
 def test_exact_place_query_avoids_model_and_returns_map_action() -> None:
@@ -95,6 +111,23 @@ def test_materials_tool_is_not_offered_or_executed_without_a_request() -> None:
                               ConversationContext(), evidence))
     schema_text = str(model.calls[0])
     assert 'make_checklist' not in schema_text
+
+
+def test_answer_model_is_told_when_the_page_already_has_detailed_procedures() -> None:
+    from campuspilot.agent.evidence import Evidence
+    from campuspilot.agent.understand import Understanding
+
+    assert CARD is not None and CARD.steps
+    for level, steps, available in [('procedure', CARD.steps, True),
+                                    ('guide', (), False), ('procedure', (), False)]:
+        model = FakeLLM(answer('SYNTHETIC 简要答复。', [], 'empty'))
+        ev = Evidence(services={'synthetic:service': CARD.model_copy(update={
+            'information_level': level, 'steps': steps,
+        })})
+        asyncio.run(concise(model)._answer('SYNTHETIC 怎么办', Understanding(intent='办事'),
+                                          ConversationContext(), ev))
+        systems = [m['content'] for m in model.calls[0]['messages'] if m['role'] == 'system']
+        assert any('本轮页面已提供' in str(message) for message in systems) is available
 
 
 def test_concise_answer_has_no_automatic_scope_notice_but_keeps_metadata() -> None:

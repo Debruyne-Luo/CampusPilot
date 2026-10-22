@@ -60,6 +60,15 @@ header small{display:block;color:var(--muted);font-size:var(--text-xs);line-heig
 .step .meta{margin-left:auto;color:var(--muted);font-size:var(--text-xs)}
 .conclusion{font-size:16px;font-weight:400;margin:0;white-space:pre-wrap;line-height:1.625;overflow-wrap:anywhere}
 .conclusion strong{font-weight:600}
+div.conclusion{white-space:normal}
+.answer-paragraph{margin:0 0 12px;white-space:pre-wrap}
+.answer-paragraph:last-child{margin-bottom:0}
+.answer-paragraph:first-child{font-weight:500;color:var(--ink)}
+.procedure-content{padding-top:16px}
+.procedure-content h4{margin-top:16px}
+.procedure-content ul{padding-left:22px;margin:8px 0 16px}
+.procedure-content li{margin:8px 0}
+.step-condition{display:block;color:var(--muted);font-size:13px;line-height:1.6;margin-top:6px}
 .conclusion.streaming{padding:0 6px;color:var(--muted)}
 /* Brief control feedback; the desktop motion module owns layout animation. */
 button{transition:transform .14s ease,border-color .18s ease}
@@ -198,8 +207,6 @@ body.guiding .locate-button,body.picking-origin .locate-button{display:none}
 .place-row.active{background:var(--brand-soft);border-radius:var(--radius-s)}
 .place-row.active .place-name b{color:var(--brand)}
 .place-row .chip.go{background:var(--panel);color:var(--brand);border-color:var(--control)}
-.details-request{justify-content:space-between;padding:12px 16px;text-align:left}
-.details-request::after{content:"→";margin-left:12px;color:var(--brand)}
 .place-name{flex:1;min-width:100px;min-height:44px;display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;border:0;background:none;padding:0;text-align:left;cursor:pointer}
 .place-name small{width:100%;color:var(--muted);font-size:var(--text-xs)}
 .tag-best{font-size:12px;padding:0 6px;border-radius:6px;background:color-mix(in srgb,var(--ok) 14%,transparent);color:var(--ok)}
@@ -270,6 +277,9 @@ body.picking-origin .place-card,body.picking-origin .route-note{display:none}
 .chat>header .text-button{white-space:nowrap;min-height:44px;padding:4px 10px}
 #handling-entry[aria-expanded="true"]{background:var(--brand-soft);border-color:var(--control);color:var(--brand)}
 .handling-preview-card{padding:14px 16px;flex-shrink:0}
+.handling-preview-card{display:flex;align-items:center;gap:12px}
+.handling-preview-card>.fineprint{margin:0;flex:1}
+.handling-preview-card>.handling-add{margin:0;width:auto;flex-shrink:0}
 .handling-preview{padding:0;border:0}
 .handling-preview>summary{display:flex;align-items:center;gap:12px;list-style:none;min-height:44px}
 .handling-preview>summary::-webkit-details-marker{display:none}

@@ -54,7 +54,7 @@ async (page) => {
   await page.locator('.citations').filter({hasText:'引用来源'}).locator('details summary').click();
   await shot('rounded-evidence-1440');
   await page.locator('.handling-add').click();
-  check((await page.locator('.handling-add').innerText())==='查看清单','added state');
+  check((await page.locator('.handling-add').innerText())==='已加入 · 查看清单','added state');
   await page.locator('#handling-entry').click();await shot('rounded-checklist-list-1440');
   await page.locator('.handling-row').click();await page.locator('.handling-items input').first().check();
   await shot('rounded-checklist-detail-1440');

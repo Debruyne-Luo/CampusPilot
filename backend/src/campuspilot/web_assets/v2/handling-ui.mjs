@@ -121,7 +121,7 @@ export function createHandlingUI({ store, entry, panel, toast, thread, form, get
     entry.textContent = count ? `办理清单 · ${count}` : "办理清单";
     for (const p of previews) {
       if (!p.button.isConnected) { previews.delete(p); continue; }
-      p.button.textContent = store.get(p.id) ? "查看清单" : "＋ 加入办理清单";
+      p.button.textContent = store.get(p.id) ? "已加入 · 查看清单" : "＋ 加入办理清单";
     }
     // Preserve scroll and keyboard focus when a checkbox update rebuilds the detail.
     const scroll = panel.querySelector(".handling-scroll")?.scrollTop || 0;
@@ -147,11 +147,6 @@ export function createHandlingUI({ store, entry, panel, toast, thread, form, get
     preview(body) {
       const task = taskSnapshot(body, getPlaces());
       if (!task) return null;
-      const details = h("details", { class: "handling-preview" },
-        h("summary", {}, h("span", {}, h("b", {}, task.title), h("small", {}, task.items.length ? `准备项 · ${task.items.length} 项` : preparationLabel(task)))),
-        task.items.length ? h("ul", {}, task.items.map((i) => h("li", {}, i.text))) : null,
-        task.preparationUnknown && task.items.length ? h("p", { class: "fineprint" }, "部分准备要求待核实。") : null,
-        task.notes.length ? h("p", { class: "fineprint" }, task.notes.join("；")) : null);
       const button = h("button", { type: "button", class: "handling-add", onclick: () => {
         if (store.get(task.service_id)) { open(task.service_id); return; }
         // Rebuild at click time: public place loading may have completed after the answer.
@@ -161,9 +156,10 @@ export function createHandlingUI({ store, entry, panel, toast, thread, form, get
         if (!result.ok) { message(result.message); return; }
         if (result.existing) open(task.service_id);
         else message("已加入办理清单");
-      } }, store.get(task.service_id) ? "查看清单" : "＋ 加入办理清单");
+      } }, store.get(task.service_id) ? "已加入 · 查看清单" : "＋ 加入办理清单");
       previews.add({ id: task.service_id, button });
-      return h("section", { class: "card handling-preview-card", "aria-label": "办理清单" }, details, button);
+      return h("section", { class: "card handling-preview-card", "aria-label": "办理清单" },
+        h("p", { class: "fineprint" }, "保存材料与步骤，下次继续查看。"), button);
     },
   };
 }

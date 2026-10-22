@@ -59,6 +59,34 @@ test("only a matching structured checklist is saveable; limited model answers re
   assert.equal(taskSnapshot(body), null);
 });
 
+test("the first matched procedure can be saved without asking the model for a checklist", () => {
+  const body = fixture(); delete body.checklist;
+  const saved = taskSnapshot(body, [], 42);
+  assert.ok(saved);
+  assert.equal(saved.service_id, body.services[0].service_id);
+  assert.deepEqual(saved.items.map(i => [i.id, i.kind, i.text]), [
+    ["material-1", "material", "合成材料 A"], ["input-2", "input", "合成信息 B"],
+  ]);
+  assert.deepEqual(saved.steps, task(42).steps);
+  assert.deepEqual(saved.notes, task(42).notes);
+  assert.deepEqual(saved.sources, task(42).sources);
+  assert.doesNotMatch(JSON.stringify(saved), /private conversation/);
+});
+
+test("first-answer saving rejects ambiguous, non-procedure and unsuccessful responses", () => {
+  for (const result_status of [undefined, "needs_clarification", "empty", "error", "refused"]) {
+    const body = fixture(); delete body.checklist; body.result_status = result_status;
+    assert.equal(taskSnapshot(body), null);
+  }
+  for (const level of [undefined, "directory", "guide"]) {
+    const body = fixture(); delete body.checklist; body.services[0].information_level = level;
+    assert.equal(taskSnapshot(body), null);
+  }
+  const body = fixture(); delete body.checklist;
+  body.services.push({ ...body.services[0], service_id: "synthetic:service:b" });
+  assert.equal(taskSnapshot(body), null);
+});
+
 test("public place fallback is limited to service-linked ids and retains coordinate provenance", () => {
   const body = fixture(); body.places = [];
   const position = { longitude: 0, latitude: 0, coordinate_system: "GCJ02", source_kind: "map_provider", source_url: "https://example.org/synthetic-map", verification_status: "needs_review", note: "synthetic", personal: "never copy" };

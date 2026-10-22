@@ -7,9 +7,22 @@ export function sourceUrl(value) {
   catch { return null; }
 }
 
-/** Only the structured service matching the checklist can become a saved task. */
+// A first answer already carries the verified procedure. Saving it needs no second
+// model request. An explicit checklist result remains authoritative, including denial.
+function procedureChecklist(body) {
+  if (!["success", "limited"].includes(body?.result_status) || body.services?.length !== 1) return null;
+  const service = body.services[0];
+  if (service?.information_level !== "procedure" || !Array.isArray(service.steps) || !service.steps.length) return null;
+  const items = [];
+  for (const [kind, values] of [["material", service.required_materials], ["input", service.required_inputs]]) {
+    for (const value of strings(values)) items.push({ id: `${kind}-${items.length + 1}`, kind, text: value });
+  }
+  return { status: "success", service_id: service.service_id, items };
+}
+
+/** Save one structured procedure, never instructions inferred from model answer text. */
 export function taskSnapshot(body, places = [], now = Date.now()) {
-  const list = body?.checklist;
+  const list = body?.checklist ?? procedureChecklist(body);
   if (list?.status !== "success" || !Array.isArray(list.items)) return null;
   const service = body.services?.find((s) => s.service_id === list.service_id);
   if (!service?.name || service.information_level !== "procedure" || !service.steps?.length || list.checklist_available === false) return null;
