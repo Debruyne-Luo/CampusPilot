@@ -13,12 +13,21 @@ from pydantic import JsonValue
 from campuspilot.agent.verify import BARE_DOMAIN
 from campuspilot.contracts import Contract
 from campuspilot.llm.chat_model import ImageInput
+from campuspilot.retrieval.context import (
+    CONTEXT_BUDGET_NOTICE as CONTEXT_BUDGET_NOTICE,
+)
+from campuspilot.retrieval.context import (
+    CONTEXT_BUDGET_REASON as CONTEXT_BUDGET_REASON,
+)
+from campuspilot.retrieval.context import withheld_context
 
 if TYPE_CHECKING:
     from campuspilot.jev_plugin import JevTurn
+    from campuspilot.rag import RetrievalFilters
 
 ID_KEYS = ("source_id", "evidence_id", "chunk_id", "service_id", "place_id", "teacher_id")
 _URL = re.compile(r"https?://[A-Za-z0-9\-._~:/?#\[\]@!$&'*+,;=%()]+")
+TOOL_EVIDENCE_MAX_CHARS = 12_000
 
 
 def generation_evidence(value: Any) -> Any:
@@ -34,6 +43,20 @@ def generation_evidence(value: Any) -> Any:
     if isinstance(value, str):
         return BARE_DOMAIN.sub("（入口见下方来源）", _URL.sub("（入口见下方来源）", value))
     return value
+
+
+def bounded_knowledge_evidence(result: dict[str, JsonValue]) -> dict[str, JsonValue]:
+    """Keep complete tool evidence or withhold it before granting citation authority.
+
+    An anchor without its exception context can change a policy's meaning. Do not shorten
+    JSON, drop siblings, or truncate text to make an oversized search look usable.
+    """
+    encoded = json.dumps(generation_evidence(result), ensure_ascii=False)
+    if len(encoded) <= TOOL_EVIDENCE_MAX_CHARS:
+        return result
+    return withheld_context(
+        str(result.get("knowledge_version") or "")
+    )
 
 
 class StepRecord(Contract):
@@ -76,6 +99,17 @@ class Evidence:
     visible_text: str = ""
     web_status: str = ""
     jev_turn: JevTurn | None = None
+    retrieval_scope: RetrievalFilters | None = None
+    decisions: list[dict[str, JsonValue]] = field(default_factory=list)
+
+    async def decision(self, stage: str, status: str, action: str, *,
+                       reason: str = "", latency_ms: float = 0) -> None:
+        record: dict[str, JsonValue] = {
+            "stage": stage, "status": status, "action": action,
+            "reason": reason, "latency_ms": round(latency_ms, 1),
+        }
+        self.decisions.append(record)
+        await self.notify("decision", record)
 
     async def notify(self, event: str, data: dict[str, JsonValue]) -> None:
         if self.emit is not None:
@@ -152,13 +186,22 @@ def _collect_ids(value: Any, into: set[str]) -> None:
             _collect_ids(item, into)
 
 
+def context_rows(rows: Any, hits: Any) -> list[dict[str, Any]]:
+    """A withheld/reranked anchor also withholds its dependent section evidence."""
+    anchors = {row.get("chunk_id") for row in hits or [] if isinstance(row, dict)}
+    return [row for row in rows or [] if isinstance(row, dict)
+            and isinstance(row.get("context_of"), list)
+            and any(cid in anchors for cid in row["context_of"])]
+
+
 def _split_grounding(result: dict[str, Any]) -> tuple[dict[str, Any], dict[str, JsonValue]]:
     """Flag mode: strip grounding fields so the model sees the pre-grounding payload."""
     grounding = result.get("grounding")
     record: dict[str, JsonValue] = dict(grounding) if isinstance(grounding, dict) else {}
     hits = result.get("hits") or []
     record["grounded_chunk_ids"] = [
-        str(h.get("chunk_id")) for h in hits if isinstance(h, dict) and h.get("grounded")
+        str(h.get("chunk_id")) for h in [*hits, *(result.get("context") or [])]
+        if isinstance(h, dict) and h.get("grounded")
     ]
     clean_hits = [
         {k: v for k, v in h.items() if k != "grounded"} if isinstance(h, dict) else h for h in hits
@@ -166,6 +209,11 @@ def _split_grounding(result: dict[str, Any]) -> tuple[dict[str, Any], dict[str, 
     clean = {k: v for k, v in result.items() if k != "grounding"}
     if "hits" in result:
         clean["hits"] = clean_hits
+    if "context" in result:
+        clean["context"] = [
+            {k: v for k, v in h.items() if k != "grounded"} if isinstance(h, dict) else h
+            for h in result.get("context") or []
+        ]
     return clean, record
 
 
@@ -180,6 +228,7 @@ def _apply_grounding(name: str, result: dict[str, Any]) -> dict[str, Any]:
         return result
     if grounding.get("decision") != "insufficient" or not result.get("hits"):
         return result
-    return {**result, "result_status": "empty", "answer": "", "hits": [], "withheld": True}
+    return {**result, "result_status": "empty", "answer": "", "hits": [],
+            "context": [], "withheld": True}
 
 

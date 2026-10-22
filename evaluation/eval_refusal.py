@@ -1,7 +1,8 @@
 """Refusal eval for the local grounding policy (retrieval level, hybrid mode, top-4 shown).
 
-refusal recall      = out-of-KB cases (no gold ids) the policy marks ``insufficient``
-false-refusal rate  = answerable cases (gold ids) the policy marks ``insufficient``
+insufficient-policy recall = explicitly labeled refuse/clarify cases marked ``insufficient``
+false-insufficient rate = answerable cases marked ``insufficient``
+These retrieval-policy decisions do not establish answer-level refusal correctness.
 baseline ("before") = the previous behaviour: refuse only when retrieval returns zero hits.
 Also re-reports hybrid Recall@5 / MRR@20 to show ranking is unchanged by this work.
 
@@ -17,6 +18,7 @@ from pathlib import Path
 
 from campuspilot.chat_runtime import ConversationContext, filters_for
 from campuspilot.config import Settings
+from campuspilot.knowledge_evaluation import legacy_behavior
 from campuspilot.rag import KnowledgeSnapshot
 from campuspilot.retrieval import grounding
 from campuspilot.retrieval.hybrid import HybridRetriever
@@ -27,9 +29,14 @@ SHOWN = grounding.SHOWN
 
 
 def measure(cases, results) -> dict[str, object]:
-    ans = [c for c in cases if c["gold"]]
-    ref = [c for c in cases if not c["gold"]]
-    out: dict[str, object] = {"n_answerable": len(ans), "n_refusal": len(ref)}
+    ans = [c for c in cases if legacy_behavior(c) in {"answer", "partial"}]
+    ref = [c for c in cases if legacy_behavior(c) in {"refuse", "clarify"}]
+    out: dict[str, object] = {
+        "n_answerable": len(ans),
+        "n_explicit_refusal_or_clarification": len(ref),
+        "n_unlabeled": sum(legacy_behavior(c) == "unlabeled" for c in cases),
+        "answer_refusal_correctness": "UNASSESSED_RETRIEVAL_POLICY_ONLY",
+    }
     for name, refused in (
         ("before", lambda c: not results[c["id"]].hits),
         (
@@ -40,9 +47,9 @@ def measure(cases, results) -> dict[str, object]:
         rr = [c for c in ref if refused(c)]
         fr = [c for c in ans if refused(c)]
         out[name] = {
-            "refusal_recall": f"{len(rr)}/{len(ref)}"
+            "insufficient_policy_recall": f"{len(rr)}/{len(ref)}"
             + (f" ({len(rr) / len(ref):.1%})" if ref else ""),
-            "false_refusal": f"{len(fr)}/{len(ans)}"
+            "false_insufficient_policy": f"{len(fr)}/{len(ans)}"
             + (f" ({len(fr) / len(ans):.1%})" if ans else ""),
             "missed_refusals": [c["question"] for c in ref if not refused(c)],
             "false_refusals": [c["question"] for c in ans if refused(c)],
@@ -97,7 +104,15 @@ def main() -> None:
                     grounding.STRONG_SIMILARITY, grounding.FLOOR_SIMILARITY = strong, floor
                     grounding.AGREE_RANK = agree
                     m = measure(cases, results)["after"]
-                    rows.append([strong, floor, agree, m["refusal_recall"], m["false_refusal"]])
+                    rows.append(
+                        [
+                            strong,
+                            floor,
+                            agree,
+                            m["insufficient_policy_recall"],
+                            m["false_insufficient_policy"],
+                        ]
+                    )
         grounding.STRONG_SIMILARITY, grounding.FLOOR_SIMILARITY, grounding.AGREE_RANK = saved
         report["sweep"] = rows
     text = json.dumps(report, ensure_ascii=False, indent=2)

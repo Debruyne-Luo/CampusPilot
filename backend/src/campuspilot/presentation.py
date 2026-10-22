@@ -50,6 +50,9 @@ def place_card(place: CampusPlace) -> dict[str, JsonValue]:
 def service_card(repository: DirectoryRepository, service: CampusService) -> dict[str, JsonValue]:
     """Expose source links with the guide, independently of generated answer text."""
     data = service.model_dump(mode="json")
+    if service.information_level != "procedure":
+        data["steps"] = []
+    data["procedure_note"] = service.procedure_note
     links: list[JsonValue] = []
     seen: set[str] = set()
     for source in repository.evidence_for((service,)):
@@ -62,10 +65,21 @@ def service_card(repository: DirectoryRepository, service: CampusService) -> dic
         links.append({"title": source.source_reference, "url": url})
     data["source_links"] = links
     office = repository.find_office(service.office_id) if service.office_id else None
-    data["contacts"] = (
-        [c.model_dump(mode="json") for c in (office.contacts or ())] if office else []
+    contacts = (*(service.contacts or ()), *((office.contacts or ()) if office else ()))
+    data["contacts"] = list(
+        {(c.label, c.value): c.model_dump(mode="json") for c in contacts}.values()
     )
     return data
+
+
+def service_summary(service: CampusService) -> str:
+    """Keep legacy facts readable without certifying legacy instructions as a procedure."""
+    if service.information_level == "procedure":
+        return service.summary or "\n".join(step.instruction for step in service.steps)
+    known = service.summary or (
+        f"{service.name}，负责部门：{service.department}；适用：{service.audience}。"
+    )
+    return known + "\n" + str(service.procedure_note)
 
 
 def guide_answer(repository: DirectoryRepository, reply: AnswerEnvelope, question: str) -> str:
@@ -144,7 +158,7 @@ def guide_answer(repository: DirectoryRepository, reply: AnswerEnvelope, questio
         word in question
         for word in ("在哪", "哪里", "去哪", "怎么办", "怎么", "流程", "步骤", "补办", "补卡")
     ):
-        return service.summary
+        return service_summary(service)
     return reply.answer
 
 

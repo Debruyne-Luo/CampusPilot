@@ -1,0 +1,170 @@
+[
+  {
+    "id": "dev-service-01",
+    "split": "development",
+    "category": "service",
+    "group": "official:graduate-proof-2023",
+    "question": "研究生需要在读证明时，已收录通知给出的两种办理渠道是什么？"
+  },
+  {
+    "id": "dev-service-02",
+    "split": "development",
+    "category": "service",
+    "group": "official:graduate-proof-2023",
+    "question": "我是研究生，想先下载在读证明，应该从什么平台的哪项流程开始？"
+  },
+  {
+    "id": "dev-policy-03",
+    "split": "development",
+    "category": "policy",
+    "group": "official:portal-06",
+    "question": "账号激活需要验证本人信息；安全手机能不能随便填同学的？"
+  },
+  {
+    "id": "dev-policy-04",
+    "split": "development",
+    "category": "policy",
+    "group": "official:portal-06",
+    "question": "按已有激活指南，开始验证之前应准备哪两项身份信息？"
+  },
+  {
+    "id": "dev-combined-05",
+    "split": "development",
+    "category": "combined",
+    "group": "official:winter2026",
+    "question": "旧寒假通知里有一卡通设备地点，能据此确认现在窗口值班时间吗？"
+  },
+  {
+    "id": "dev-combined-06",
+    "split": "development",
+    "category": "combined",
+    "group": "official:winter2026",
+    "question": "我看到寒假每周四值班的旧通知，它能保证今天能现场补卡吗？"
+  },
+  {
+    "id": "dev-insufficient-07",
+    "split": "development",
+    "category": "insufficient",
+    "group": "official:portal-1266",
+    "question": "借户口本的指南是否承诺审批一定当天完成？有依据的申请资格是什么？"
+  },
+  {
+    "id": "dev-insufficient-08",
+    "split": "development",
+    "category": "insufficient",
+    "group": "official:portal-1266",
+    "question": "借户口本最长可以拿走多少天？找不到依据时请指出未知项。"
+  },
+  {
+    "id": "hol-service-09",
+    "split": "holdout",
+    "category": "service",
+    "group": "official:tuition-2026",
+    "question": "2026—2027学年四川农信贷款到账后，我还要做什么才算交上学费？"
+  },
+  {
+    "id": "hol-service-10",
+    "split": "holdout",
+    "category": "service",
+    "group": "official:tuition-2026",
+    "question": "2026—2027学年国开行贷款和其他银行贷款，要交给辅导员的回执有何区别？"
+  },
+  {
+    "id": "hol-policy-11",
+    "split": "holdout",
+    "category": "policy",
+    "group": "official:gradesindex",
+    "question": "成绩复核超过申请期限，现有官方资料是否支持保证受理？"
+  },
+  {
+    "id": "hol-policy-12",
+    "split": "holdout",
+    "category": "policy",
+    "group": "official:gradesindex",
+    "question": "成绩复核申请交上去以后，有没有明确保证几天内出结果？"
+  },
+  {
+    "id": "hol-combined-13",
+    "split": "holdout",
+    "category": "combined",
+    "group": "official:portal-1053",
+    "question": "网络坏了准备报修，登录砚湖易办后该去哪个中心、哪个部门？"
+  },
+  {
+    "id": "hol-combined-14",
+    "split": "holdout",
+    "category": "combined",
+    "group": "official:portal-1053",
+    "question": "网络故障报修的图上出现保修一词，我应按哪项业务提交？能保证多久修好？"
+  },
+  {
+    "id": "hol-insufficient-15",
+    "split": "holdout",
+    "category": "insufficient",
+    "group": "official:portal-1042",
+    "question": "心理咨询预约指南能不能告诉我本周哪天还有空位？"
+  },
+  {
+    "id": "hol-insufficient-16",
+    "split": "holdout",
+    "category": "insufficient",
+    "group": "official:portal-1042",
+    "question": "已有心理咨询预约资料，是否足够保证我今天可以预约成功？"
+  },
+  {
+    "id": "dev-teacher-17",
+    "split": "development",
+    "category": "teacher",
+    "group": "teacher:蔡彪",
+    "question": "想联系蔡彪老师，能否先查公开教师资料，而不猜办公室？"
+  },
+  {
+    "id": "dev-teacher-18",
+    "split": "development",
+    "category": "teacher",
+    "group": "teacher:蔡彪",
+    "question": "没有公开办公室记录时，能直接给我蔡彪老师的具体房间和接待时间吗？"
+  },
+  {
+    "id": "dev-place-19",
+    "split": "development",
+    "category": "place",
+    "group": "place:香樟餐厅",
+    "question": "帮我在地图目录找香樟餐厅，只需要建筑参考位置。"
+  },
+  {
+    "id": "dev-place-20",
+    "split": "development",
+    "category": "place",
+    "group": "place:香樟餐厅",
+    "question": "带我去香樟餐厅，目的地先用目录建筑点，具体入口不确定就说明。"
+  },
+  {
+    "id": "hol-teacher-21",
+    "split": "holdout",
+    "category": "teacher",
+    "group": "teacher:汤影",
+    "question": "想联系汤影老师，能否先查公开教师资料，而不猜办公室？"
+  },
+  {
+    "id": "hol-teacher-22",
+    "split": "holdout",
+    "category": "teacher",
+    "group": "teacher:汤影",
+    "question": "没有公开办公室记录时，能直接给我汤影老师的具体房间和接待时间吗？"
+  },
+  {
+    "id": "hol-place-23",
+    "split": "holdout",
+    "category": "place",
+    "group": "place:东区图书馆",
+    "question": "帮我在地图目录找东区图书馆，只需要建筑参考位置。"
+  },
+  {
+    "id": "hol-place-24",
+    "split": "holdout",
+    "category": "place",
+    "group": "place:东区图书馆",
+    "question": "带我去东区图书馆，目的地先用目录建筑点，具体入口不确定就说明。"
+  }
+]

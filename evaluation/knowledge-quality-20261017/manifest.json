@@ -1,0 +1,37 @@
+{
+  "total": 120,
+  "splits": {
+    "development": 60,
+    "holdout": 60
+  },
+  "categories": {
+    "common": 20,
+    "applicability": 20,
+    "temporal": 20,
+    "formats": 20,
+    "multi_clause": 20,
+    "insufficient": 20
+  },
+  "labels": {
+    "draft": 82,
+    "source_checked": 38
+  },
+  "issue_groups": 24,
+  "source_documents": 24,
+  "suite_sha256": "571902a1e3d42d96103add4218e6b55da57e3d37579826c9013b03ead6fc9c1e",
+  "leakage_check": "passed",
+  "schema_version": 1,
+  "baseline_knowledge_version": "kb-229ee34eba99ef34",
+  "baseline_snapshot": "data/cdut/rag/versions/kb-229ee34eba99ef34/snapshot.json",
+  "baseline_snapshot_sha256": "23515fe696a33b361e078d6bb5bf67df43443c4663ce4d510100fb20c040b7f5",
+  "authored_by": "agent-public-source-draft",
+  "gold_review": "independent semantic review complete; missing original artifacts remain draft",
+  "gold_reviewed_by": "agent-independent-gold-review-20261017",
+  "gold_review_report": "docs/research/knowledge-gold-review-20261017.md",
+  "gold_review_ledger": "output/knowledge-quality-20261017/independent-gold-review.json",
+  "before_review_suite_sha256": "2314c0a4ac40081cecab0f6c0e5b7a196d8b64fbe72484b7b6482cf1f92e49ba",
+  "freeze_date": "2026-10-17",
+  "holdout_tuning": "forbidden",
+  "provenance_limit": "All cases semantically reviewed; legacy extracts and unbound attachment interpretation remain draft",
+  "current_retrieval_required_cases": 88
+}

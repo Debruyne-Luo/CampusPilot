@@ -114,6 +114,71 @@ def test_adoption_binds_exact_body_preserves_other_sources_and_multi_id_mapping(
     assert report["adopted_clauses"] == 1 and not report["failed"]
 
 
+def test_v2_adoption_binds_revision_campus_and_checked_heading(tmp_path: Path) -> None:
+    package, document, clause = capture(tmp_path)
+    clause["structure"] = {"section_id": "synthetic-section", "heading_path": ["SYNTHETIC"]}
+    app = clause["applicability"]
+    assert isinstance(app, dict)
+    app["campuses"] = ["成都校区"]
+    save(package, [document])
+    adopted, raw, report = build(package, base_snapshot())
+    assert not report["failed"] and adopted.schema_version == 2
+    checked = next(c for c in adopted.chunks if c.document_id == "synthetic")
+    history = json.loads(raw[PROVENANCE])["documents"]["synthetic"]
+    assert checked.revision_id == history["current_revision"]
+    assert checked.campuses == ("chengdu",) and checked.section_id == "synthetic-section"
+    assert checked.heading_path == ("SYNTHETIC",)
+    clause["structure"] = {"section_id": "invented", "heading_path": ["SYNTHETIC not in source"]}
+    save(package, [document])
+    failed, preserved, report = build(package, adopted, prior_raw=raw)
+    assert failed == adopted and preserved == raw
+    assert report["failed"][0]["reason"] == "structure_not_supported"
+
+
+def test_provider_extract_is_not_mislabelled_as_original_http_response(tmp_path: Path) -> None:
+    package, document, _ = capture(tmp_path)
+    document["channel"] = "http"
+    original = b'{"SYNTHETIC":"provider response"}'
+    (package / "response.json").write_bytes(original)
+    document["original_file"] = "response.json"
+    document["source_capture"] = {"provider": "firecrawl-v2", "response_sha256": digest(original)}
+    save(package, [document])
+    adopted, raw, report = build(package, base_snapshot())
+    assert not report["failed"]
+    checked = next(c for c in adopted.chunks if c.document_id == "synthetic")
+    src = next(s for s in adopted.sources if s.source_id == checked.source_id)
+    assert src.content_scope == "complete_provider_extracted_document"
+    history = json.loads(raw[PROVENANCE])["documents"]["synthetic"]
+    assert history["versions"][history["current_revision"]]["source_capture"]["provider"] == \
+        "firecrawl-v2"
+
+
+def test_explicit_retirement_requires_source_evidence_and_preserves_history(tmp_path: Path) -> None:
+    package, document, clause = capture(tmp_path)
+    adopted, raw, report = build(package, base_snapshot())
+    assert not report["failed"]
+    clause["disposition"] = "retire"
+    clause["repeal_quote"] = "SYNTHETIC nonexistent repeal"
+    save(package, [document])
+    failed, preserved, report = build(package, adopted, prior_raw=raw)
+    assert failed == adopted and preserved == raw
+    assert report["failed"][0]["reason"] == "retirement_requires_explicit_evidence"
+    new_body = BODY + "\nSYNTHETIC 测试条款停止执行。"
+    (package / "body.txt").write_bytes(new_body.encode())
+    document["collected_at"] = "2026-10-15T10:00:00+08:00"
+    clause["review"] = {"checked_by": "SYNTHETIC validator", "checked_at": "2026-10-15",
+                        "body_sha256": digest(new_body.encode())}
+    clause["repeal_quote"] = "SYNTHETIC 测试条款停止执行。"
+    save(package, [document])
+    retired, history_raw, report = build(package, adopted, prior_raw=raw)
+    assert not report["failed"]
+    latest = next(c for c in retired.chunks if c.document_id == "synthetic")
+    assert not latest.enabled and latest.kind == "deprecated"
+    assert not eligible(latest, retired.sources[-1], RetrievalFilters(today=date(2026, 10, 15)))
+    history = json.loads(history_raw[PROVENANCE])["documents"]["synthetic"]
+    assert len(history["versions"]) == 2
+
+
 def test_exact_offsets_and_applicability_dates_are_enforced(tmp_path: Path) -> None:
     package, document, clause = capture(tmp_path)
     app = clause["applicability"]
@@ -432,6 +497,29 @@ def test_document_failure_does_not_stop_other_documents(tmp_path: Path) -> None:
                              "status": "failed", "failure_reason": "SYNTHETIC timeout"}])
     snapshot, _, report = build(package, base_snapshot())
     assert len(snapshot.chunks) == 3 and len(report["adopted"]) == len(report["failed"]) == 1
+
+
+def test_cross_source_parent_fails_only_its_document_before_last_success_mutation(
+    tmp_path: Path,
+) -> None:
+    package, document, clause = capture(tmp_path)
+    parent = {**clause, "clause_id": "parent", "source_id": "cdut:source:synthetic-legacy-0"}
+    child = {**clause, "clause_id": "child", "source_id": "cdut:source:synthetic-legacy-1",
+             "structure": {"parent_chunk_id": "cdut:chunk:official:synthetic:parent"}}
+    document["clauses"] = [parent, child]
+    good = {**document, "document_id": "synthetic-good", "clauses": [clause]}
+    save(package, [document, good])
+    base = base_snapshot()
+    result, raw, report = build(package, base)
+    assert report["failed"] == [{"document_id": "synthetic", "reason": "invalid_parent_source",
+                                 "last_success_preserved": True}]
+    assert report["adopted"][0]["document_id"] == "synthetic-good"
+    assert len(result.chunks) == len(base.chunks) + 1
+    remaining_sources = {s.source_id: s for s in result.sources}
+    assert all(remaining_sources[s.source_id] == s for s in base.sources)
+    assert all(c in result.chunks for c in base.chunks)
+    provenance = json.loads(raw[PROVENANCE])["documents"]
+    assert "synthetic" not in provenance and "synthetic-good" in provenance
 
 
 @pytest.mark.parametrize(

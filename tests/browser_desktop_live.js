@@ -20,7 +20,7 @@ async (page) => {
   await page.locator('#question').fill('校园卡丢了怎么补办？');await page.locator('#send').click();
   await page.locator('.handling-add').waitFor({timeout:90000});
   await page.locator('.handling-add').click();
-  if(await page.locator('.handling-add').innerText()!=='查看清单')throw new Error('live save failed');
+  if(await page.locator('.handling-add').innerText()!=='已加入 · 查看清单')throw new Error('live save failed');
   await page.locator('#handling-entry').click();await page.locator('.handling-row').first().click();
   await page.locator('.handling-primary').click();
   await page.locator('#handling-toast button').click();

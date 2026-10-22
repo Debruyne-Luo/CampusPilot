@@ -768,6 +768,27 @@
             ],
             "title": "Address Detail"
           },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "\\S"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags"
+          },
+          "hotspot": {
+            "type": "boolean",
+            "title": "Hotspot",
+            "default": false
+          },
           "position": {
             "anyOf": [
               {
@@ -868,6 +889,16 @@
             "pattern": "\\S",
             "title": "Audience"
           },
+          "information_level": {
+            "type": "string",
+            "enum": [
+              "directory",
+              "guide",
+              "procedure"
+            ],
+            "title": "Information Level",
+            "default": "guide"
+          },
           "academic_year": {
             "anyOf": [
               {
@@ -885,12 +916,13 @@
               "type": "string",
               "enum": [
                 "online",
-                "self_service"
+                "self_service",
+                "in_person"
               ]
             },
             "type": "array",
-            "minItems": 1,
-            "title": "Modes"
+            "title": "Modes",
+            "default": []
           },
           "entry_points": {
             "items": {
@@ -900,6 +932,33 @@
             },
             "type": "array",
             "title": "Entry Points"
+          },
+          "contacts": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/PublicContact"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contacts"
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
           },
           "required_materials": {
             "anyOf": [
@@ -938,8 +997,8 @@
               "$ref": "#/components/schemas/ServiceStep"
             },
             "type": "array",
-            "minItems": 1,
-            "title": "Steps"
+            "title": "Steps",
+            "default": []
           },
           "availability": {
             "anyOf": [
@@ -999,9 +1058,7 @@
           "department",
           "office_id",
           "audience",
-          "modes",
-          "entry_points",
-          "steps"
+          "entry_points"
         ],
         "title": "CampusService"
       },
@@ -1682,7 +1739,8 @@
             "type": "string",
             "enum": [
               "online",
-              "self_service"
+              "self_service",
+              "in_person"
             ],
             "title": "Mode"
           },
@@ -1750,10 +1808,17 @@
             "title": "Source Reference"
           },
           "source_url": {
-            "type": "string",
-            "maxLength": 2083,
-            "minLength": 1,
-            "format": "uri",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2083,
+                "minLength": 1,
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Source Url"
           },
           "publisher": {
@@ -1767,7 +1832,9 @@
             "enum": [
               "official_university",
               "official_department",
-              "official_college"
+              "official_college",
+              "map_provider",
+              "user_supplement"
             ],
             "title": "Source Authority"
           },
@@ -1857,7 +1924,10 @@
             "enum": [
               "direct",
               "search_index",
-              "user_provided_file"
+              "user_provided_file",
+              "reader_proxy",
+              "provider_api",
+              "user_message"
             ],
             "title": "Access Method"
           },

@@ -1,0 +1,3 @@
+URL Source: https://wxc.cdut.edu.cn/info/1006/3954.htm
+Original-sha256: a7388269441373fe78872ea8a07ace6c310827dbec8b5b999c9bed96acea13a0
+xl/worksheets/sheet1.xml A3=44587; Excel1900 calendar yields 2022-01-26. The notice title says2026.

@@ -1,0 +1,1198 @@
+{
+  "cases_file": "evaluation\\final-rag-20261021\\freshman-cases.jsonl",
+  "knowledge_version": "kb-1d15bf97b31c0d90",
+  "n": 34,
+  "n_explicit_refusal_or_clarification": 0,
+  "n_unlabeled": 4,
+  "unknown_gold_ids": [],
+  "vector_backend": "sqlite-vec",
+  "results": {
+    "lexical": {
+      "recall@1": 0.8167,
+      "recall@3": 0.8667,
+      "recall@5": 0.9,
+      "hit@1": 0.8333,
+      "hit@5": 0.9,
+      "mrr@20": 0.8583,
+      "miss@20": 3,
+      "answerable_empty": 0,
+      "no_gold_empty_retrieval": "0/4",
+      "answer_refusal_correctness": "UNASSESSED_RETRIEVAL_ONLY"
+    },
+    "vector": {
+      "recall@1": 0.7,
+      "recall@3": 0.85,
+      "recall@5": 0.8833,
+      "hit@1": 0.7,
+      "hit@5": 0.9,
+      "mrr@20": 0.7733,
+      "miss@20": 3,
+      "answerable_empty": 0,
+      "no_gold_empty_retrieval": "0/4",
+      "answer_refusal_correctness": "UNASSESSED_RETRIEVAL_ONLY"
+    },
+    "hybrid": {
+      "recall@1": 0.8167,
+      "recall@3": 0.8833,
+      "recall@5": 0.9,
+      "hit@1": 0.8333,
+      "hit@5": 0.9,
+      "mrr@20": 0.8611,
+      "miss@20": 3,
+      "answerable_empty": 0,
+      "no_gold_empty_retrieval": "0/4",
+      "answer_refusal_correctness": "UNASSESSED_RETRIEVAL_ONLY"
+    }
+  },
+  "per_case": [
+    {
+      "id": "fs-001",
+      "question": "新生什么时候报到",
+      "gold": [
+        "cdut:chunk:fresh2026:01"
+      ],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:cistfresh2024:bs01",
+          "cdut:chunk:cistfresh2025:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:xjgl2019:01",
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:fresh2026:05"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:cistfresh2024:bs01",
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:cistfresh2025:bs01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-002",
+      "question": "报到要带什么材料",
+      "gold": [
+        "cdut:chunk:fresh2026:04"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:expand-card:02",
+          "cdut:chunk:cistfresh2024:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:lyfwdorm:bs03",
+          "cdut:chunk:expand-archive:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:cistfresh2025:bs01",
+          "cdut:chunk:cistfresh2024:bs01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-003",
+      "question": "从双流机场怎么到学校",
+      "gold": [
+        "cdut:chunk:fresh2026:03"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:03",
+          "cdut:chunk:cistfresh2025:bs01",
+          "cdut:chunk:cistfresh2024:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:03",
+          "cdut:chunk:fresh2026:29",
+          "cdut:chunk:cistfresh2025:bs03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:03",
+          "cdut:chunk:cistfresh2025:bs01",
+          "cdut:chunk:cistfresh2025:bs03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-004",
+      "question": "天府机场到学校坐地铁怎么走",
+      "gold": [
+        "cdut:chunk:fresh2026:03"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:03",
+          "cdut:chunk:cistfresh2024:bs03",
+          "cdut:chunk:cistfresh2025:bs03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:03",
+          "cdut:chunk:cistfresh2025:bs03",
+          "cdut:chunk:cistfresh2024:bs03"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:03",
+          "cdut:chunk:cistfresh2025:bs03",
+          "cdut:chunk:cistfresh2024:bs03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-005",
+      "question": "户口迁移什么时候截止",
+      "gold": [
+        "cdut:chunk:fresh2026:05"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:05",
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:cistfresh2024:bs03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:05",
+          "cdut:chunk:official:portal-1266:guide-body",
+          "cdut:chunk:expand-dorm:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:05",
+          "cdut:chunk:cistfresh2024:bs03",
+          "cdut:chunk:official:portal-1266:guide-body"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-006",
+      "question": "团组织关系怎么转到学校",
+      "gold": [
+        "cdut:chunk:fresh2026:06"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:06",
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:cistfresh2025:bs05"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:06",
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:xjgl2019:10"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:06",
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:cistfresh2025:bs05"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-007",
+      "question": "纸质档案寄到哪里",
+      "gold": [
+        "cdut:chunk:fresh2026:07"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:07",
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:cistfresh2024:bs05"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:07",
+          "cdut:chunk:expand-archive:02",
+          "cdut:chunk:expand-archive:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:07",
+          "cdut:chunk:expand-archive:02",
+          "cdut:chunk:cistfresh2024:bs05"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-008",
+      "question": "新生学费多少钱",
+      "gold": [
+        "cdut:chunk:fresh2026:09"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:09",
+          "cdut:chunk:card2024:03",
+          "cdut:chunk:expand-card:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:09",
+          "cdut:chunk:fresh2026:42",
+          "cdut:chunk:fresh2026:08"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:09",
+          "cdut:chunk:wx:fresh2026fee:ocr01",
+          "cdut:chunk:fresh2026:08"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-009",
+      "question": "学费可以怎么交",
+      "gold": [
+        "cdut:chunk:fresh2026:08"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:08",
+          "cdut:chunk:official:tuition-2026:card-update",
+          "cdut:chunk:fresh2026:09"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:08",
+          "cdut:chunk:official:tuition-2026:loan-payment",
+          "cdut:chunk:fresh2026:10"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:08",
+          "cdut:chunk:official:tuition-2026:loan-payment",
+          "cdut:chunk:wx:fresh2026fee:03"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-010",
+      "question": "缴费发票在哪里打印",
+      "gold": [
+        "cdut:chunk:fresh2026:10"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:10",
+          "cdut:chunk:wx:feeinvoice:02",
+          "cdut:chunk:wx:feeinvoice:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:10",
+          "cdut:chunk:wx:feeinvoice:ocr01",
+          "cdut:chunk:wx:feeinvoice:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:10",
+          "cdut:chunk:wx:feeinvoice:01",
+          "cdut:chunk:wx:feeinvoice:ocr01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-011",
+      "question": "生源地助学贷款怎么申请",
+      "gold": [
+        "cdut:chunk:fresh2026:11"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:11",
+          "cdut:chunk:loanconfirm2026:bs01",
+          "cdut:chunk:zzzc:bs02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 3,
+        "top3": [
+          "cdut:chunk:official:portal-1165:checked-flow",
+          "cdut:chunk:official:portal-1165:guide-body",
+          "cdut:chunk:fresh2026:11"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:11",
+          "cdut:chunk:official:tuition-2026:loan-payment",
+          "cdut:chunk:cistfresh2024:bs09"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-012",
+      "question": "绿色通道是什么",
+      "gold": [
+        "cdut:chunk:fresh2026:32"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:32",
+          "cdut:chunk:xscoffices:02",
+          "cdut:chunk:hospoverview:bs01"
+        ],
+        "n_hits": 10
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:32",
+          "cdut:chunk:wx:beisen:01",
+          "cdut:chunk:fresh2026:35"
+        ],
+        "n_hits": 4
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:32",
+          "cdut:chunk:wx:beisen:01",
+          "cdut:chunk:fresh2026:35"
+        ],
+        "n_hits": 12
+      }
+    },
+    {
+      "id": "fs-013",
+      "question": "爱心助学包怎么领",
+      "gold": [
+        "cdut:chunk:fresh2026:34"
+      ],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:32",
+          "cdut:chunk:fresh2026:16",
+          "cdut:chunk:expand-scholarship:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:xscoffices:02",
+          "cdut:candidate-office:09",
+          "cdut:chunk:fresh2026:11"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:32",
+          "cdut:chunk:fresh2026:16",
+          "cdut:chunk:xscoffices:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-014",
+      "question": "宿舍几点关门",
+      "gold": [
+        "cdut:chunk:fresh2026:20"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:20",
+          "cdut:chunk:expand-canteen:01",
+          "cdut:chunk:libhours:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:20",
+          "cdut:chunk:lyfwdorm:bs07",
+          "cdut:chunk:lyfwdorm:bs04"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:20",
+          "cdut:chunk:expand-canteen:01",
+          "cdut:chunk:lyfwdorm:bs07"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-015",
+      "question": "宿舍没电了怎么充电",
+      "gold": [
+        "cdut:chunk:fresh2026:20",
+        "cdut:chunk:expand-card:05"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:expand-card:05",
+          "cdut:chunk:fresh2026:20",
+          "cdut:chunk:cistfresh2025:bs13"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 3,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs08",
+          "cdut:chunk:fresh2026:26",
+          "cdut:chunk:fresh2026:20"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:20",
+          "cdut:chunk:lyfwdorm:bs08",
+          "cdut:chunk:cistfresh2025:bs13"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-016",
+      "question": "宿舍东西坏了怎么报修",
+      "gold": [
+        "cdut:chunk:fresh2026:21"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:21",
+          "cdut:chunk:repair:01",
+          "cdut:chunk:fresh2026:20"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 3,
+        "top3": [
+          "cdut:chunk:lyfwdorm:bs06",
+          "cdut:chunk:repair:02",
+          "cdut:chunk:fresh2026:21"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:21",
+          "cdut:chunk:repair:01",
+          "cdut:chunk:lyfwdorm:bs06"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-017",
+      "question": "校医院怎么报销",
+      "gold": [
+        "cdut:chunk:fresh2026:24"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:24",
+          "cdut:chunk:cistfresh2025:bs15",
+          "cdut:chunk:medins2026:bs02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:24",
+          "cdut:chunk:cistfresh2025:bs15",
+          "cdut:chunk:cistfresh2024:bs16"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:24",
+          "cdut:chunk:cistfresh2025:bs15",
+          "cdut:chunk:medins2026:bs02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-018",
+      "question": "军训服装要自己买吗",
+      "gold": [
+        "cdut:chunk:fresh2026:13"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:13",
+          "cdut:chunk:cistfresh2024:bs13",
+          "cdut:chunk:cistfresh2025:bs11"
+        ],
+        "n_hits": 17
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:13",
+          "cdut:chunk:cistfresh2024:bs12",
+          "cdut:chunk:cistfresh2025:bs11"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:13",
+          "cdut:chunk:cistfresh2025:bs11",
+          "cdut:chunk:cistfresh2024:bs12"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-019",
+      "question": "计算机学院电话是多少",
+      "gold": [
+        "cdut:chunk:fresh2026:15"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:15",
+          "cdut:chunk:fresh2026:14",
+          "cdut:chunk:netfaq2023:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:15",
+          "cdut:chunk:fresh2026:14",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:15",
+          "cdut:chunk:fresh2026:14",
+          "cdut:chunk:lyzn2023:bs06"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-020",
+      "question": "砚湖易办怎么登录",
+      "gold": [
+        "cdut:chunk:fresh2026:35"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:35",
+          "cdut:chunk:fresh2026:36",
+          "cdut:chunk:portalmanual:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:35",
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:official:portal2020:pc-progress"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:35",
+          "cdut:chunk:portalmanual:01",
+          "cdut:chunk:fresh2026:36"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-021",
+      "question": "统一身份认证怎么激活",
+      "gold": [
+        "cdut:chunk:fresh2026:38"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:38",
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:official:portal-06:guide-body"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:fresh2026:38",
+          "cdut:chunk:official:portal-06:guide-body"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 2,
+        "top3": [
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:fresh2026:38",
+          "cdut:chunk:official:portal-06:guide-body"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-022",
+      "question": "学校地址和地铁站",
+      "gold": [
+        "cdut:chunk:fresh2026:29"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:29",
+          "cdut:chunk:cistfresh2025:bs02",
+          "cdut:chunk:cistfresh2024:bs03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 2,
+        "top3": [
+          "cdut:chunk:fresh2026:03",
+          "cdut:chunk:fresh2026:29",
+          "cdut:chunk:fresh2026:14"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:29",
+          "cdut:chunk:fresh2026:03",
+          "cdut:chunk:cistfresh2025:bs02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-023",
+      "question": "学校有哪些学生餐厅",
+      "gold": [
+        "cdut:chunk:fresh2026:18"
+      ],
+      "lexical": {
+        "rank": 2,
+        "top3": [
+          "cdut:chunk:wx:tworgs2026:02",
+          "cdut:chunk:fresh2026:18",
+          "cdut:chunk:wx:tworgs2026:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:18",
+          "cdut:chunk:expand-canteen:01",
+          "cdut:chunk:expand-canteen:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:18",
+          "cdut:chunk:expand-canteen:01",
+          "cdut:chunk:expand-canteen:02"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-024",
+      "question": "校园一卡通能干什么",
+      "gold": [
+        "cdut:chunk:fresh2026:19"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:19",
+          "cdut:chunk:expand-card:03",
+          "cdut:chunk:expand-card:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:19",
+          "cdut:chunk:card2024:01",
+          "cdut:chunk:libprint:bs01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:19",
+          "cdut:chunk:libprint:bs01",
+          "cdut:chunk:expand-card:06"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-029",
+      "question": "统一身份认证安全手机换了怎么办",
+      "gold": [
+        "cdut:chunk:fresh2026:40"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:40",
+          "cdut:chunk:fresh2026:38",
+          "cdut:chunk:identity2021:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:40",
+          "cdut:chunk:identity2021:03",
+          "cdut:chunk:identity2021:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:40",
+          "cdut:chunk:identity2021:01",
+          "cdut:chunk:fresh2026:38"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-030",
+      "question": "心理难受想找心理老师聊聊",
+      "gold": [
+        "cdut:chunk:fresh2026:43"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:43",
+          "cdut:chunk:official:portal-1042:guide-body",
+          "cdut:chunk:official:portal-1042:flow-image"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:43",
+          "cdut:chunk:official:portal-1042:guide-body",
+          "cdut:chunk:official:portal-1042:flow-image"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:43",
+          "cdut:chunk:official:portal-1042:guide-body",
+          "cdut:chunk:official:portal-1042:flow-image"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-031",
+      "question": "新生体检要查什么",
+      "gold": [
+        "cdut:chunk:fresh2026:42"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:42",
+          "cdut:chunk:fresh2026:39",
+          "cdut:chunk:cistfresh2025:bs07"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:42",
+          "cdut:chunk:fresh2026:31",
+          "cdut:chunk:hospoverview:bs02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:42",
+          "cdut:chunk:fresh2026:31",
+          "cdut:chunk:cistfresh2024:bs07"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-032",
+      "question": "迎新网怎么在线报到",
+      "gold": [
+        "cdut:chunk:fresh2026:41"
+      ],
+      "lexical": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:41",
+          "cdut:chunk:fresh2026:38",
+          "cdut:chunk:wx:fresh2026fee:01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:41",
+          "cdut:chunk:fresh2026:38",
+          "cdut:chunk:official:portal-06:guide-body"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 1,
+        "top3": [
+          "cdut:chunk:fresh2026:41",
+          "cdut:chunk:fresh2026:38",
+          "cdut:chunk:official:portal-06:guide-body"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-033",
+      "question": "学生邮箱怎么激活",
+      "gold": [
+        "cdut:chunk:fresh2026:44"
+      ],
+      "lexical": {
+        "rank": 4,
+        "top3": [
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:fresh2026:38",
+          "cdut:chunk:mail2022:02"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": 5,
+        "top3": [
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:official:portal-06:checked-step-4"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": 3,
+        "top3": [
+          "cdut:chunk:mail2022:01",
+          "cdut:chunk:mail2022:02",
+          "cdut:chunk:fresh2026:44"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-034",
+      "question": "新生入学先做什么",
+      "gold": [
+        "cdut:chunk:fresh2026:45"
+      ],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:31",
+          "cdut:chunk:xjgl2019:01",
+          "cdut:chunk:fresh2026:27"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:04",
+          "cdut:chunk:xjgl2019:01",
+          "cdut:chunk:xjgl2019:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:xjgl2019:01",
+          "cdut:chunk:xjgl2019:02",
+          "cdut:chunk:cistfresh2024:bs12"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-025",
+      "question": "帮我登录砚湖易办缴费",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:expand-card:06",
+          "cdut:chunk:fresh2026:36",
+          "cdut:chunk:fresh2026:35"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:35",
+          "cdut:chunk:fresh2026:36",
+          "cdut:chunk:official:portal2020:pc-progress"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:35",
+          "cdut:chunk:fresh2026:36",
+          "cdut:chunk:portalmanual:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-026",
+      "question": "2027年录取分数线是多少",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:netfaq2023:01",
+          "cdut:chunk:fresh2026:09",
+          "cdut:chunk:card2024:03"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:09",
+          "cdut:chunk:expand-scholarship:02",
+          "cdut:chunk:expand-scholarship:01"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:09",
+          "cdut:chunk:wx:jobfair2027autumn:01",
+          "cdut:chunk:official:tuition-2026:insurance-notice"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-027",
+      "question": "学校附近哪家火锅好吃",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:18",
+          "cdut:chunk:fresh2026:03",
+          "cdut:chunk:fresh2026:29"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:18",
+          "cdut:chunk:expand-canteen:01",
+          "cdut:chunk:expand-canteen:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:fresh2026:18",
+          "cdut:chunk:fresh2026:29",
+          "cdut:chunk:expand-canteen:01"
+        ],
+        "n_hits": 20
+      }
+    },
+    {
+      "id": "fs-028",
+      "question": "校长办公室电话是多少",
+      "gold": [],
+      "lexical": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:netfaq2023:01",
+          "cdut:chunk:lyzn2023:bs06",
+          "cdut:chunk:lyzn2023:bs01"
+        ],
+        "n_hits": 20
+      },
+      "vector": {
+        "rank": null,
+        "top3": [
+          "cdut:candidate-office:05",
+          "cdut:chunk:aaooffices:03",
+          "cdut:candidate-office:02"
+        ],
+        "n_hits": 20
+      },
+      "hybrid": {
+        "rank": null,
+        "top3": [
+          "cdut:chunk:lyzn2023:bs06",
+          "cdut:chunk:xscoffices:02",
+          "cdut:candidate-office:09"
+        ],
+        "n_hits": 20
+      }
+    }
+  ]
+}

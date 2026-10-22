@@ -1,0 +1,43 @@
+{
+  "body": {
+    "services": [],
+    "teachers": [],
+    "places": [],
+    "answer": "请上传要阅读或查询的图片，我会接着处理这个问题。",
+    "result_status": "needs_clarification",
+    "answer_mode": "agent_image",
+    "excerpts": [],
+    "source_ids": [],
+    "service_links": [],
+    "plan": [],
+    "checklist": null,
+    "citations": [],
+    "map_actions": [],
+    "understanding": null,
+    "harness_profile": {
+      "version": "h2-d161f2dc457057ae",
+      "sha256": "f7d748cc2f1b44a02258862cb3afc0207fe03a63b4393903b8e4f57890ddf089"
+    }
+  },
+  "events": [],
+  "latency_ms": 3.6351430001104745,
+  "tool_records": [],
+  "knowledge_version": "kb-229ee34eba99ef34",
+  "retrieval_mode": "lexical",
+  "profile": {
+    "version": "h2-d161f2dc457057ae",
+    "sha256": "f7d748cc2f1b44a02258862cb3afc0207fe03a63b4393903b8e4f57890ddf089"
+  },
+  "directory_hashes": {
+    "knowledge.json": "24ceecff3b45cad9fd7ce3881539ec22327812fe877773a09486f9fd52979f13",
+    "offices.json": "0dee683e434468ecb1c64f9f0ad72bdece6f2e13973e0c63a3cdd118a5e4ddaf",
+    "places.json": "69a0b0ec94fe459386a595e9b058e9c94c8931999392f976041339255054efc1",
+    "services.json": "f3d532b2bcb430753191134693280d94cb983f88c53feb9d2fa082bc5d19e275",
+    "sources.json": "93bb58d5dc594c1418d4d88f356998bc8b489e00d486ffa45f0fb6f25d9330ee",
+    "teachers.json": "aa0646da42f79bf09550ecd7bd4dc3b7b76323eb2f0ca4a787a8f440e78d2ec0",
+    "teachers_roster.json": "906e2d339e2e1b31164a71eb45085a82c1ba6b77465276849436f60fb22a7184"
+  },
+  "cost_upper_usd": "0",
+  "task_id": "hol-combined-14",
+  "arm": "combined"
+}

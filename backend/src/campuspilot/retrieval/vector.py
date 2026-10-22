@@ -158,6 +158,13 @@ class VectorIndex:
             return cls(snapshot, vectors, model, dimensions, None, backend)
         return cls(snapshot, vectors, model, dimensions, conn, backend)
 
+    def close(self) -> None:
+        """Release SQLite handles after a reader is no longer used (not during a turn)."""
+        if self._conn is not None:
+            self._conn.close()
+            self._conn = None
+            self.backend = "python"
+
     def similarities(self, query: Sequence[float], ids: Sequence[str]) -> dict[str, float]:
         if len(query) != self.dimensions:
             raise ValueError("Query dimension mismatch")

@@ -4,6 +4,9 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Iterator
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Annotated, Literal, Self
@@ -17,10 +20,21 @@ Audience = Literal["all", "undergraduate", "graduate", "staff", "alumni"]
 Category = Literal["all", "guide", "notice", "event"]
 Period = Literal["all", "current", "week", "registration", "history"]
 CHINA = timezone(timedelta(hours=8))
+_campus_date: ContextVar[date | None] = ContextVar("campuspilot_campus_date", default=None)
 
 
 def campus_today() -> date:
-    return datetime.now(CHINA).date()
+    return _campus_date.get() or datetime.now(CHINA).date()
+
+
+@contextmanager
+def campus_clock(today: date) -> Iterator[None]:
+    """Application-owned fixture clock; scoped to this async context and its workers."""
+    token = _campus_date.set(today)
+    try:
+        yield
+    finally:
+        _campus_date.reset(token)
 
 
 def official_url(value: str, *, wechat: bool = False) -> str:

@@ -15,7 +15,8 @@ DATA = Path(__file__).resolve().parents[1] / "data" / "cdut"
 def test_shell_branding_and_removed_notices() -> None:
     with TestClient(create_web_app(data_dir=DATA)) as client:
         shell = client.get("/").text
-        assert "<title>理小龙 CDUTdino</title>" in shell and "<b>理小龙</b>" in shell
+        assert "<title>理小龙 CDUTdino</title>" in shell and "<h1>理小龙</h1>" in shell
+        assert shell.count("<h1>") == 1
         assert 'rel="icon" href="/assets/v2/brand-icon.png"' in shell and 'rel="manifest"' in shell
         for removed in ("成都理工大学 · 校园行动助手", "资料来自学校公开页面", 'id="unlocated"'):
             assert removed not in shell
@@ -36,6 +37,21 @@ def test_map_frame_allows_amap_poi_click_lookup_only_in_the_frame() -> None:
         page = client.get("/").headers["content-security-policy"]
         assert "https://vdata.amap.com" in frame and "frame-ancestors 'self'" in frame
         assert "vdata.amap.com" not in page and "script-src 'self';" in page
+
+
+def test_embedded_model_textures_can_be_fetched_only_in_the_map_frame() -> None:
+    # GLTFLoader decodes embedded PNGs by fetching local blob URLs before
+    # createImageBitmap; img-src permission alone does not permit that fetch.
+    with TestClient(create_web_app(data_dir=DATA)) as client:
+        for path in ("/map-view", "/", "/classic", "/assets/dino3d.mjs"):
+            policy = client.get(path).headers["content-security-policy"]
+            directives = dict(
+                (tokens[0], tokens[1:]) for part in policy.split(";") if (tokens := part.split())
+            )
+            allowed = directives["connect-src"]
+            assert "'self'" in allowed
+            assert ("blob:" in allowed) == (path == "/map-view")
+            assert "*" not in allowed and "data:" not in allowed
 
 
 def test_places_api_carries_hotspot_flag_for_an_uncluttered_map() -> None:

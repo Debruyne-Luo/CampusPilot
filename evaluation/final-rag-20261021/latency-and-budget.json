@@ -1,0 +1,28 @@
+{
+  "knowledge_version": "kb-1d15bf97b31c0d90",
+  "selected_60": {
+    "n": 60,
+    "p50_ms": 5752.3974499963515,
+    "sample_p95_ms": 8652.061900000263,
+    "max_ms": 14060.871500005305,
+    "selected_observation_cost_usd": 0.146353842
+  },
+  "limitations": [
+    "Includes rule-only refusals and limited answers; not all observations are successful model answers.",
+    "Serial public fixtures, single host, no concurrency; this is not a production P95 guarantee.",
+    "Some queries have preceding turns; their elapsed time includes those turns.",
+    "Local model P50<=3s and P95<=6s are not met; Search/Fetch P95 was not measured in this final local-only acceptance."
+  ],
+  "campaign_before": {
+    "calls": 664,
+    "charged_usd": "1.269708576",
+    "search_flows": 5
+  },
+  "campaign_after": {
+    "calls": 1061,
+    "charged_usd": "1.734738984",
+    "search_flows": 5
+  },
+  "charged_delta_usd": "0.465030408",
+  "billing": "Conservative persisted ledger, not a provider invoice; includes failed attempts, two complete freezes, affected-case repeats and two diagnostic calls. CF document/query embedding invoice is unavailable; tracked inputs separately."
+}

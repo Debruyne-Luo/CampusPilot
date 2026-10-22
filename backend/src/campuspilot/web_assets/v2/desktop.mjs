@@ -1,25 +1,14 @@
 import {getGsap, reducedMotion, installDisclosures} from './desktop-motion.mjs';
-const KEY = 'campuspilot:desktop:v1';
 export function initDesktop({showChat, focusQuestion, map}) {
   const $ = id => document.getElementById(id);
   const media = matchMedia('(min-width:1280px)'), systemMotion = matchMedia('(prefers-reduced-motion: reduce)');
   const app = document.querySelector('.app'), thread = $('thread'), chat = document.querySelector('.chat');
-  const dialog = $('reading-settings'), size = $('reading-size'), motion = $('reduce-motion');
-  let prefs = {}, mapMode = false, savedScroll = 0, savedFocus = null, transition = 0, gsap = null;
-  try {prefs = JSON.parse(localStorage.getItem(KEY)) || {};} catch { /* optional preferences */ }
-  size.value = prefs.size === 'large' ? 'large' : 'normal'; motion.checked = prefs.reduceMotion === true;
+  let mapMode = false, savedScroll = 0, savedFocus = null, transition = 0, gsap = null;
   function apply() {
-    document.body.dataset.readingSize = size.value;
-    document.body.dataset.reduceMotion = String(motion.checked);
-    map.preferences({desktop:media.matches, reducedMotion:systemMotion.matches || motion.checked});
+    map.preferences({desktop:media.matches, reducedMotion:systemMotion.matches});
     if (reducedMotion()) gsap?.globalTimeline.getChildren().forEach(t => t.progress(1));
   }
-  function save() {
-    apply();
-    try {localStorage.setItem(KEY, JSON.stringify({size:size.value,reduceMotion:motion.checked})); $('settings-notice').textContent = '已保存到此浏览器';}
-    catch {$('settings-notice').textContent = '无法保存，偏好仅在本次页面生效。';}
-  }
-  size.addEventListener('change', save); motion.addEventListener('change', save); systemMotion.addEventListener('change', apply);
+  systemMotion.addEventListener('change', apply);
   apply();
   if (media.matches) getGsap().then(value => gsap = value);
   installDisclosures(thread);
@@ -66,12 +55,10 @@ export function initDesktop({showChat, focusQuestion, map}) {
   $('new-chat').addEventListener('click',()=>{mode(false);focusQuestion();});
   $('handling-entry').addEventListener('click',()=>mode(false));
   $('desktop-map').addEventListener('click',()=>{if(mapMode)mode(false);else enterMap();});
-  $('desktop-settings').addEventListener('click',()=>{if(media.matches){dialog.showModal();if(gsap&&!reducedMotion())gsap.fromTo(dialog,{opacity:0,y:8},{opacity:1,y:0,duration:.2,ease:'power3.out',overwrite:true,clearProps:'opacity,transform'});}});
-  $('settings-close').addEventListener('click',()=>dialog.close());
   $('route-overview').addEventListener('click',()=>map.overview());
   function resize() {
     ++transition;gsap?.killTweensOf(app);
-    if(!media.matches){if(dialog.open)dialog.close();gsap?.globalTimeline.getChildren().forEach(t=>t.progress(1));delete document.body.dataset.workspace;app.style.removeProperty('--read-width');mapMode=false;}
+    if(!media.matches){gsap?.globalTimeline.getChildren().forEach(t=>t.progress(1));delete document.body.dataset.workspace;app.style.removeProperty('--read-width');mapMode=false;}
     else {app.style.setProperty('--read-width',(mapMode?392:readingWidth())+'px');getGsap().then(value=>gsap=value);insets();}
     map.layout(false);apply();
   }

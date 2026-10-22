@@ -48,7 +48,9 @@ def asks_place_attribute(question: str) -> bool:
     return bool(PLACE_ATTRIBUTE.search(question))
 
 
-def make_plan(view: Understanding, question: str) -> Plan:
+def make_plan(
+    view: Understanding, question: str, *, on_demand_checklist: bool = False,
+) -> Plan:
     slots = view.slots
     audience = slots.identity if slots.identity != "unknown" else "all"
     knowledge_args: dict[str, JsonValue] = {"query": question[:500], "audience": audience}
@@ -77,6 +79,11 @@ def make_plan(view: Understanding, question: str) -> Plan:
         map_action = "plan_route" if view.intent == "路线" else "show_place"
     elif view.intent == "政策问答":
         raw = [("search_knowledge", "检索官方资料", knowledge_args, None)]
+    if on_demand_checklist:
+        from campuspilot.agent.quick_answers import DETAILS
+
+        if not DETAILS.search(question):
+            raw = [step for step in raw if step[0] != "make_checklist"]
     steps = tuple(
         PlanStep(step=i, tool=tool, label=label, arguments=args, from_step=dep)
         for i, (tool, label, args, dep) in enumerate(raw[:MAX_STEPS], start=1)

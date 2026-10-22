@@ -4,8 +4,8 @@
   "description": "CDUTdino：问办事流程、找老师和地点，并步行带你去。",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f5f6f8",
-  "theme_color": "#f5f6f8",
+  "background_color": "#f5f7f6",
+  "theme_color": "#f5f7f6",
   "lang": "zh-CN",
   "icons": [
     {

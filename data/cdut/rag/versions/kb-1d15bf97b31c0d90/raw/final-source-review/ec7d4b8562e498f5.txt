@@ -1,0 +1,62 @@
+Title: hillstone SSLVPN服务说明（该VPN将不再提供服务）-网络与信息化处
+
+URL Source: https://wxc.cdut.edu.cn/info/1012/1164.htm
+
+Markdown Content:
+发布时间：2018-08-29 浏览次数：23544
+
+紧急通知：网信处已部署并正式上线了新的VPN系统，Hillstone vpn将于2020年4月13日后不再提供服务，请参阅 新WEB VPN使用方法[http://wxc.cdut.edu.cn/info/1079/1316.htm](http://wxc.cdut.edu.cn/info/1079/1316.htm)和SSL VPN使用方法[](http://wxc.cdut.edu.cn/info/1079/1338.htm)[http://wxc.cdut.edu.cn/info/1079/1338.htm](http://wxc.cdut.edu.cn/info/1079/1338.htm)。
+
+为方便成都理工大学校园网用户在校外访问校园网资源，信息技术中心已部署了VPN系统。用 户在校外使用VPN登录后，可以安全地接入校园网，访问那些只限定校内IP地址才能使用的各类网络资源与服务（如：图书馆中各类电子资源）。
+
+一、使用说明：
+
+1.电脑VPN操作方法：用户可访问[https://202.115.128.22:4433](https://202.115.128.22:4433/)，通过网页或直接下载VPN客户端软件登陆。登陆账号和密码是学校实名认证上网账号加@dr和密码。具体的操作方法可参阅《[成都理工大学sslvpn使用指南.pdf](https://wxc.cdut.edu.cn/SSLVPNsy.pdf)》各种版本操作系统客户端下载如下：
+
+[Windows版本客户端下载](https://wxc.cdut.edu.cn/scvpn.zip)
+
+[Linux](https://wxc.cdut.edu.cn/SCVPN_LINUX_1.0.zip)[客户端下载版本](https://wxc.cdut.edu.cn/SCVPN_LINUX_1.0.zip)
+
+[Mac OS版本客户端下载](https://wxc.cdut.edu.cn/SCVPN_OSX_1.1.2.zip)
+
+2.手机端VPN操作方法:
+
+（1）安卓系统：请扫描下面二维码下载并安装手机客户端（若不能扫描该二维码，可以登录官网[http://www.hillstonenet.com.cn/product/technology/VPN.html](http://www.hillstonenet.com.cn/product/technology/VPN.html)扫描下载），登陆账号和密码是学校实名认证上网账号加@dr和密码。操作方法和电脑VPN操作方法一样，具体的方法可参阅《[成都理工大学sslvpn使用指南.pdf](https://wxc.cdut.edu.cn/SSLVPNsy.pdf)》 。
+
+![Image 1](https://wxc.cdut.edu.cn/__local/A/63/4D/CA9D4703C2B5B2847AC32526B58_8D85B5D1_308E.png)
+
+（2）iOS系统：请扫描下面二维码下载并安装手机客户端，登陆账号和密码是学校实名认证上网账号加@dr和密码。具体的操作方法可参阅《[成都理工大学sslvpn使用指南.pdf](https://wxc.cdut.edu.cn/SSLVPNsy.pdf)[》](http://www.cdut.edu.cn/xxzx/UserFiles/File/20160413/20160413112310_671.pdf)。
+
+![Image 2](https://wxc.cdut.edu.cn/__local/B/69/20/E46590F8906ED78CC31A5CB36CF_BA2344B0_382.png)
+
+3.iPAD端 VPN操作方法:请扫描下面二维码下载并安装iPAD客户端。
+
+![Image 3](https://wxc.cdut.edu.cn/__local/5/52/0E/84C78B5B3E06F7E63C9E7C827D0_F5F11A59_560.png)
+
+使用VPN服务过程中如果遇到问题，可拨打电话84078860、84079043获得技术支持。
+
+二、VPN使用注意事项：
+
+VPN业务是为了方便我校教职工和学生使用校园网资源。请用户在使用时遵守以下规定：
+
+1.持有有效“一卡通”的本校教职工和在校学生为校园网电子资源远程访问的合法用户，除此之外的用户没有远程访问权限；使用VPN业务的用户需妥善保管本人账号密码，不得泄露、转让或租借给他人使用，若怀疑被人盗用，请告知信息技术中心并立即修改密码。
+
+2.VPN系统有并发用户数的限制，为了保证所有用户都能正常使用，请用户在需要访问校内资源时才使用VPN系统，用完后立即断开VPN连接。
+
+3.合法用户在使用校园网电子资源时，应遵守国家相关部门及学校的相关法律法规，不得恶意下载和提供非法使用，违规者将受到追究。
+
+三、常见问题:
+
+1.为什么我的VPN用不了或VPN插件装不上?
+
+答: 正常的VPN连接建立后,在桌面的右下角会出现一个绿色的网络安全图标,如下图:
+
+![Image 4](https://wxc.cdut.edu.cn/__local/9/A9/4F/4579C0E5C98D2892C0442DF9636_4F991164_1000.png?e=.png)
+
+如果没有此图标或图标是灰色，请检查您的电脑系统是否安装360安全卫士等诸如 此类的安全软件。把此类安全软件完全卸载后（请注意，这里指完全卸载，而不是简单的功能禁用），再重新连接VPN即可。
+
+2. 我在校内，无法使用VPN?
+
+答：VPN服务只提供用户从校外登录，用户在校内时无法使用。
+
+3．其它常见问题可参考[《常见故障处理》](https://wxc.cdut.edu.cn/SSLVPN.pdf)。

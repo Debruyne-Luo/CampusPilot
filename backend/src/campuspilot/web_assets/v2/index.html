@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f4f8f8"><meta name="color-scheme" content="light dark"><title>理小龙 CDUTdino</title>
+  <meta name="theme-color" content="#f5f7f6"><meta name="color-scheme" content="light dark"><title>理小龙 CDUTdino</title>
   <link rel="icon" href="/assets/v2/brand-icon.png" type="image/png"><link rel="apple-touch-icon" href="/assets/v2/brand-icon.png"><link rel="manifest" href="/assets/v2/manifest.webmanifest">
   <link rel="stylesheet" href="/assets/v2/app.css">
   <link rel="stylesheet" href="/assets/v2/desktop-enhancements.css">
@@ -18,25 +18,24 @@
     <button id="sheet-handle" class="sheet-handle" type="button" aria-label="展开或收起对话面板" aria-expanded="true"></button>
     <header>
       <img class="brand-mark" src="/assets/v2/brand-icon.png" alt="" width="34" height="34">
-      <div class="brand"><b>理小龙</b><small>CDUTdino</small></div>
+      <div class="brand"><h1>理小龙</h1><small>CDUTdino</small></div>
       <span id="status" class="status" role="status">正在连接…</span>
       <span class="theme-seg" role="group" aria-label="深色或浅色">
         <button id="theme-light" type="button" aria-pressed="true">浅色</button><button id="theme-dark" type="button" aria-pressed="false">深色</button>
       </span>
       <button id="new-chat" class="text-button" type="button">新对话</button>
       <button id="handling-entry" class="text-button" type="button" aria-controls="handling-panel" aria-expanded="false">办理清单</button>
-      <button id="desktop-settings" class="text-button desktop-only settings-trigger" type="button" aria-label="阅读偏好" aria-haspopup="dialog" title="阅读偏好">⚙</button>
     </header>
     <div id="thread" class="thread" role="log" aria-live="polite" aria-label="对话记录">
       <section id="empty" class="empty">
         <div class="kicker">校园问答 · 引用可验</div>
-        <h1>我是理小龙，<span class="hl">帮你少跑冤枉路。</span></h1>
-        <p>说出要办的事——我列计划、查官方依据，给你清单和路线，还能带你走过去。</p>
+        <h2>我是理小龙，<span class="hl">帮你少跑冤枉路。</span></h2>
+        <p>问问入学、办事或校园地点。线上给入口，线下给地点；材料和步骤按需查看。</p>
         <div class="chips" aria-label="试试这些问题">
           <button type="button" class="chip" data-question="校园卡丢了怎么补办？">校园卡丢了怎么补办？</button>
-          <button type="button" class="chip" data-question="研究生在读证明怎么开？">研究生在读证明怎么开？</button>
-          <button type="button" class="chip" data-question="学生邮箱怎么激活？">学生邮箱怎么激活？</button>
-          <button type="button" class="chip" data-question="附近哪里可以拿快递？">附近哪里可以拿快递？</button>
+          <button type="button" class="chip" data-question="东区图书馆在哪？">东区图书馆在哪？</button>
+          <button type="button" class="chip" data-question="网络故障报修入口在哪？">网络故障报修入口在哪？</button>
+          <button type="button" class="chip" data-question="香樟餐厅怎么去？">香樟餐厅怎么去？</button>
         </div>
       </section>
     </div>
@@ -75,13 +74,6 @@
     <div class="guidance-slot" aria-live="polite"></div>
   </section>
 </div>
-<dialog id="reading-settings" class="reading-settings" aria-labelledby="settings-title">
-  <div class="settings-heading"><span>阅读偏好</span><button id="settings-close" type="button" class="text-button" aria-label="关闭设置">关闭</button></div>
-  <h2 id="settings-title">按你的习惯阅读。</h2><p>只影响此浏览器的桌面显示。</p>
-  <label class="setting-row" for="reading-size"><span><b>回答字号</b><small>调整回答、清单与引用的正文大小</small></span><select id="reading-size"><option value="normal">标准 · 16px</option><option value="large">较大 · 18px</option></select></label>
-  <label class="setting-row" for="reduce-motion"><span><b>减少动效</b><small>关闭内容入场过渡；始终尊重系统减少动态效果设置</small></span><input id="reduce-motion" type="checkbox"></label>
-  <p id="settings-notice" role="status"></p><div class="reading-sample"><span>阅读预览</span><p>先核对适用条件，再准备所需材料。资料来源随回答保留，方便你继续查阅。</p></div>
-</dialog>
 <div id="handling-toast" class="handling-toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

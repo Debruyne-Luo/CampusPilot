@@ -25,7 +25,6 @@ async(page)=>{
   await page.locator('#route-overview').click();await page.waitForTimeout(800);
   await page.screenshot({path:'output/playwright/rounded-live-map-1440.png'});
   await page.locator('#return-reading').click();await page.waitForTimeout(700);
-  await page.locator('#desktop-settings').click();await page.waitForTimeout(600);await page.keyboard.press('Escape');
   await page.locator('#map-search').fill('图书馆');await page.locator('#search-results button').first().waitFor();await page.waitForTimeout(600);
   await page.locator('#search-results button').first().click();await page.waitForTimeout(1000);
   await page.locator('#return-reading').click();await page.waitForTimeout(500);

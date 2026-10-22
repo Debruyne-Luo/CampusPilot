@@ -47,13 +47,12 @@ async(page)=>{
   await frame.evaluate(()=>{window.testCenter=map.getCenter().toArray();window.testZoom=map.getZoom();});
   await page.evaluate(()=>window.sendToMap({action:'places',places:[]}));await page.waitForTimeout(300);
   check(await frame.evaluate(()=>map.getCenter().toArray().every((v,i)=>Math.abs(v-window.testCenter[i])<1e-7)&&map.getZoom()===window.testZoom),'data cannot take manual camera');checks.push('drag interrupts camera; new data keeps manual view');
-  await page.locator('#desktop-settings').click();await page.locator('#reduce-motion').check();await page.keyboard.press('Escape');
+  await page.emulateMedia({reducedMotion:'reduce'});
   await page.locator('#return-reading').click();
   check(Math.abs((await page.locator('.chat').boundingBox()).width-540)<2,'reduced motion instant');
   check(await frame.evaluate(()=>reduceMotion===true),'reduced motion camera');
-  await page.locator('#desktop-settings').click();await page.locator('#reduce-motion').uncheck();await page.keyboard.press('Escape');
-  await page.locator('#desktop-settings').focus();await page.keyboard.press('Enter');check(await page.locator('#reading-settings').isVisible(),'keyboard settings');await page.keyboard.press('Escape');
-  check(await page.locator('#desktop-settings').evaluate(el=>el===document.activeElement),'dialog focus returned');checks.push('reduced motion and keyboard focus');
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  check(await page.locator('#desktop-settings, #reading-settings').count()===0,'settings removed');checks.push('system reduced motion and settings removed');
   await page.locator('#question').fill('');
   return {passed:true,checks,browser:await page.context().browser().version()};
 }

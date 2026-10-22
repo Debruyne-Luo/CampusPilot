@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "submission_id": "campuspilot-competition-20261020-1eb41caf",
+  "status": "local_review_candidate_not_published",
+  "recorded_at_utc": "2026-10-21T02:54:40.741650+00:00",
+  "base_commit": "715555e13829395aeef4abb89706f3f6a3f9d51a",
+  "branch": "feat/harness-jev-submission-20261020",
+  "working_tree_modified": true,
+  "source_identity": "715555e13829395aeef4abb89706f3f6a3f9d51a+1eb41caf1e16df4b",
+  "experiment_identity": "715555e13829395aeef4abb89706f3f6a3f9d51a+42b176c08d4bced6",
+  "upstream_commit": "1cfe254e8d25b15f37048c3730134686abe60335",
+  "runtime_knowledge_bundle": "approved-20261011b",
+  "experiment_knowledge_version": "kb-229ee34eba99ef34",
+  "new_knowledge_promoted": false,
+  "default_harness_profile": null,
+  "research_profile_sha256": "f7d748cc2f1b44a02258862cb3afc0207fe03a63b4393903b8e4f57890ddf089",
+  "profile_adoption": false,
+  "profile_adoption_reason": "Unverified current applicability of financial fields from a historical example; research completion gain is not a global promotion",
+  "model": "deepseek-flash",
+  "jev_model": "typesafe/jev-1.13",
+  "runtime_python": "3.14.7",
+  "optimizer_python": "3.12.15",
+  "budget": {
+    "limit_usd": "20",
+    "conservative_occupancy_usd": "1.251051762",
+    "settled_estimate_usd": "1.177090362",
+    "unknown_reservation_usd": "0.0739614",
+    "unknown_requests": 3,
+    "request_count": 633,
+    "is_provider_invoice": false
+  },
+  "verification": {
+    "linux_full_comparison_revision": 1106,
+    "windows_final_pass": 1107,
+    "windows_posix_deselected": 3,
+    "linux_final_targeted_pass": 24,
+    "frontend_pass": 90,
+    "ruff_scoped": "passed",
+    "mypy_source_files": 158,
+    "browser_real_models": "passed; map schematic only",
+    "live_native_search": "not_verified",
+    "live_safe_page_reader": "blocked_non_public_dns_address"
+  },
+  "artifacts": {
+    "source": "campuspilot-competition-source-20261020.zip",
+    "runtime": "campuspilot-competition-runtime-20261020.tar.gz"
+  },
+  "no_git_commit_push_merge_or_deployment": true
+}

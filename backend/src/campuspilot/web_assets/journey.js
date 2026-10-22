@@ -104,9 +104,13 @@ const Journey = (() => {
       for (const service of result.services) {
         body.append(element("h3", service.name));
         if (!route) {
-          const steps = element("ol", undefined, "journey-steps");
-          service.steps.slice(0, 3).forEach((step) => steps.append(element("li", step.instruction)));
-          body.append(steps, button("完整办理步骤", () => showService(service)));
+          if (service.information_level === "procedure") {
+            const steps = element("ol", undefined, "journey-steps");
+            (service.steps || []).slice(0, 3).forEach((step) => steps.append(element("li", step.instruction)));
+            body.append(steps, button("完整办理步骤", () => showService(service)));
+          } else {
+            body.append(element("p", service.procedure_note || "完整办理流程尚未核验。"), button("查看办事指南", () => showService(service)));
+          }
         }
       }
     }

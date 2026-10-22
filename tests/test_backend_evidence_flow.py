@@ -55,6 +55,9 @@ def test_embedding_prefetch_cannot_start_two_writers_in_one_session() -> None:
         class QueuedEmbedder:
             calls = 0
 
+            def cached(self, query: str) -> list[float] | None:
+                return None
+
             async def prefetch(self, query: str) -> None:
                 self.calls += 1
                 if self.calls == 2:
@@ -106,6 +109,9 @@ def test_rejected_private_queries_never_reach_embedding_or_model(path: str) -> N
     class RecordingEmbedder:
         def __init__(self) -> None:
             self.calls: list[str] = []
+
+        def cached(self, query: str) -> list[float] | None:
+            return None
 
         async def prefetch(self, query: str) -> None:
             self.calls.append(query)

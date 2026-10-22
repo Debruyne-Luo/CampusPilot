@@ -31,7 +31,15 @@ class DirectoryTool:
         result = self._inner.execute(params.model_dump(mode="json", exclude_none=True))
         if result is None:
             return {"status": "empty"}
-        return {"status": "success", **result.model_dump(mode="json")}
+        data = result.model_dump(mode="json")
+        if self.name == "search_service":
+            for service in data.get("matches", []):
+                if isinstance(service, dict) and service.get("information_level") != "procedure":
+                    service["steps"] = []
+                    service["procedure_note"] = (
+                        "尚未核验完整办理流程；入口与指南不能替代完整步骤。"
+                    )
+        return {"status": "success", **data}
 
 
 class PlaceDiscoveryTool:

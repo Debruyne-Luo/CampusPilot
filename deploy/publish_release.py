@@ -40,23 +40,34 @@ def remote_program(archive: bytes, base: str = "/opt/campuspilot") -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
+    knowledge = parser.add_mutually_exclusive_group()
+    knowledge.add_argument(
         "--bundle", default="", help="data/cdut/rag/<bundle>, e.g. approved-20261011"
+    )
+    knowledge.add_argument(
+        "--knowledge-current", action="store_true",
+        help="Freeze current.json, last_good.json and their complete published versions",
     )
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--publish", action="store_true")
     parser.add_argument("--host", default="campuspilot-vps")
     args = parser.parse_args()
-    commit = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=False
-    ).stdout.strip()
-    manifest = _release.build(ROOT, args.output, args.bundle, commit)
+    # An exported ZIP has no .git; do not accidentally take an enclosing checkout's HEAD.
+    commit = ""
+    if not (ROOT / "SOURCE_MANIFEST.json").exists():
+        commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=False
+        ).stdout.strip()
+    manifest = _release.build(
+        ROOT, args.output, args.bundle, commit, knowledge_current=args.knowledge_current,
+    )
     print(
         json.dumps(
             {
                 "version": manifest["version"],
                 "files": len(manifest["files"]),  # type: ignore[arg-type]
                 "bundle": args.bundle,
+                "knowledge_version": manifest.get("knowledge_version"),
                 "archive": str(args.output),
             }
         )

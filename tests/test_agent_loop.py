@@ -16,10 +16,13 @@ from campuspilot.chat_runtime import ConversationContext
 from campuspilot.config import Settings
 from campuspilot.dify import ChatUnavailable
 from campuspilot.directory.repository import DirectoryRepository
+from campuspilot.domain import CampusOffice, CampusPlace, CampusService
+from campuspilot.evidence import SourceEvidence
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.llm.chat_model import ChatCompletionsModel, Completion, ModelReply, ToolCall
 from campuspilot.rag import SnapshotStore
 from campuspilot.tools import ToolError, agent_registry
+from pydantic import TypeAdapter
 
 DATA = Path(__file__).resolve().parents[1] / "data" / "cdut"
 REPO = DirectoryRepository.load(DATA)
@@ -74,11 +77,26 @@ def answer(text: str, ids: list[str], status: str = "success") -> Completion:
     return say({"answer": text, "source_ids": ids, "status": status})
 
 
-def runner(model: FakeLLM | None) -> AgentRunner:
+def runner(model: FakeLLM | None, repository: DirectoryRepository = REPO) -> AgentRunner:
     registry = agent_registry(
-        REPO, KnowledgeStore.load(DATA / "knowledge.json"), SnapshotStore(DATA / "rag", "hybrid")
+        repository, KnowledgeStore.load(DATA / "knowledge.json"),
+        SnapshotStore(DATA / "rag", "hybrid"),
     )
-    return AgentRunner(registry, REPO, model)
+    return AgentRunner(registry, repository, model)
+
+
+def procedure_repository() -> DirectoryRepository:
+    """Explicit procedure fixture for citation tests; legacy loading itself stays a guide."""
+    services = tuple(CampusService.model_validate({
+        **service.model_dump(),
+        "information_level": "procedure" if service.service_id == CARD_ID else "guide",
+    }) for service in REPO.services())
+    return DirectoryRepository(
+        services,
+        TypeAdapter(tuple[CampusOffice, ...]).validate_json((DATA / "offices.json").read_bytes()),
+        TypeAdapter(tuple[SourceEvidence, ...]).validate_json((DATA / "sources.json").read_bytes()),
+        TypeAdapter(tuple[CampusPlace, ...]).validate_json((DATA / "places.json").read_bytes()),
+    )
 
 
 def run(agent: AgentRunner, question: str, context: ConversationContext | None = None) -> Any:
@@ -449,7 +467,7 @@ def test_checklist_item_keys_are_not_counted_as_citations() -> None:
     model = FakeLLM(
         understood(service="校园卡补办"), answer(GOOD_CARD, [CARD_EVIDENCE[0], "limit-3", "step-4"])
     )
-    out = run(runner(model), "校园卡补办需要什么")
+    out = run(runner(model, procedure_repository()), "校园卡补办需要什么")
     assert out["result_status"] == "success" and out["source_ids"] == [CARD_EVIDENCE[0]]
     only_local = FakeLLM(understood(service="校园卡补办"), answer(GOOD_CARD, ["limit-3"]))
     assert run(runner(only_local), "校园卡补办需要什么")["degraded_reason"] == "answer_validation"
@@ -508,7 +526,7 @@ def test_business_ids_inside_id_lists_are_citable() -> None:
         understood(service="校园卡补办"),
         answer(GOOD_CARD, ["cdut:place:gongtong-dining", "cdut:place:finance"]),
     )
-    out = run(runner(model), "校园卡补办需要什么")
+    out = run(runner(model, procedure_repository()), "校园卡补办需要什么")
     assert out["result_status"] == "success"
 
 

@@ -120,6 +120,9 @@ def unsupported_numbers(answer: str, evidence: str, user_context: str = "") -> l
     normal_answer = unicodedata.normalize("NFKC", answer)
     normal_user = unicodedata.normalize("NFKC", user_context)
     normal_evidence = unicodedata.normalize("NFKC", evidence)
+    year_range = re.compile(r"(?<!\d)(20\d{2})\s*[-—–至]\s*(20\d{2})(?!\d)")
+    normal_answer = year_range.sub(r"\1-\2", normal_answer)
+    normal_evidence = year_range.sub(r"\1-\2", normal_evidence)
     # Flattened table/list text can join "6:00" and "2.电话". Separate only the
     # explicit next numbered Chinese clause; never reinterpret arbitrary digits.
     normal_evidence = re.sub(

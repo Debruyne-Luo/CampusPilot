@@ -1,0 +1,11 @@
+{
+  "url": "https://dbxb.cdut.edu.cn/__local/7/B6/E5/006AC04D88A214D1AD8B1F5E540_16B4A5B7_C543C.pdf",
+  "final_url": "https://dbxb.cdut.edu.cn/__local/7/B6/E5/006AC04D88A214D1AD8B1F5E540_16B4A5B7_C543C.pdf",
+  "status": 200,
+  "content_type": "application/pdf",
+  "collected_at": "2026-10-17T13:40:41.574365+00:00",
+  "bytes": 807996,
+  "sha256": "d74ac91749e5d4eaac39033388e5463fadb7bd1abb93badaec95722d2a727b21",
+  "is_pdf": true,
+  "reason": "public_http_probe"
+}

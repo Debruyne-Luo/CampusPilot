@@ -1,0 +1,886 @@
+{
+  "session": {
+    "configured": true,
+    "knowledge_available": true,
+    "runtime_mode": "phase2",
+    "images_enabled": false,
+    "place_discovery_enabled": false,
+    "model_configured": true,
+    "context_notice": "后端会话仅保留本次最近8轮，服务更新后请开启新对话。",
+    "notice": "资料待人工核验，仅提供指引，未替你办理。"
+  },
+  "observations": [
+    {
+      "question": "校园卡补办在哪里办",
+      "http": 200,
+      "latency_ms": 12.91510000010021,
+      "body": {
+        "services": [
+          {
+            "synthetic": false,
+            "verification_status": "needs_review",
+            "field_evidence": [
+              {
+                "field_path": "name",
+                "evidence_ids": [
+                  "cdut:evidence:card-replacement-guide-2024"
+                ],
+                "note": "官方指南的自助补卡事项；项目归纳名称。"
+              },
+              {
+                "field_path": "aliases",
+                "evidence_ids": [
+                  "cdut:evidence:card-replacement-guide-2024"
+                ],
+                "note": "依据同一事项整理的口语检索别名。"
+              },
+              {
+                "field_path": "department",
+                "evidence_ids": [
+                  "cdut:evidence:card-replacement-guide-2024"
+                ],
+                "note": "指南编制单位；负责单位不等于窗口地址。"
+              },
+              {
+                "field_path": "audience",
+                "evidence_ids": [
+                  "cdut:evidence:card-replacement-guide-2024"
+                ],
+                "note": "学生版指南范围。"
+              },
+              {
+                "field_path": "modes",
+                "evidence_ids": [
+                  "cdut:evidence:card-replacement-guide-2024",
+                  "cdut:evidence:card-counter-2019"
+                ],
+                "note": "自助补办及人工补办渠道；历史时段不沿用。"
+              },
+              {
+                "field_path": "entry_points",
+                "evidence_ids": [
+                  "cdut:evidence:card-self-service-2023",
+                  "cdut:evidence:card-winter-2026",
+                  "cdut:evidence:card-counter-2019",
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "官方设备分布与同楼标注，加2026-10-09用户明确确认；不保证机器实时状态。"
+              },
+              {
+                "field_path": "required_materials",
+                "evidence_ids": [
+                  "cdut:evidence:card-operation-2020"
+                ],
+                "note": "身份证验证见历史操作说明，按当前设备提示准备。"
+              },
+              {
+                "field_path": "required_inputs",
+                "evidence_ids": [
+                  "cdut:evidence:card-operation-2020"
+                ],
+                "note": "只记录学校设备所需输入类型。"
+              },
+              {
+                "field_path": "steps.0",
+                "evidence_ids": [
+                  "cdut:evidence:card-self-service-2023",
+                  "cdut:evidence:card-winter-2026"
+                ],
+                "note": "服务区名称有官方依据，并采用用户当前补充；关联的是食堂建筑。"
+              },
+              {
+                "field_path": "steps.1",
+                "evidence_ids": [
+                  "cdut:evidence:card-replacement-guide-2024",
+                  "cdut:evidence:card-guide-2024",
+                  "cdut:evidence:card-operation-2020"
+                ],
+                "note": "遗失先挂失；操作流程按官方指南，不把余额要求当成工本费。"
+              },
+              {
+                "field_path": "steps.2",
+                "evidence_ids": [
+                  "cdut:evidence:card-counter-2019",
+                  "cdut:evidence:campus-plan",
+                  "cdut:evidence:card-self-service-2023"
+                ],
+                "note": "人工渠道、同楼位置与业务联系电话分别保留出处；用户当前补充已采用。"
+              },
+              {
+                "field_path": "fees",
+                "evidence_ids": [
+                  "cdut:evidence:card-operation-2020"
+                ],
+                "note": "明确标注2020年历史收费，不作为当前收费承诺。"
+              },
+              {
+                "field_path": "limits",
+                "evidence_ids": [
+                  "cdut:evidence:card-replacement-guide-2024"
+                ],
+                "note": "2024年指南正文第27页（PDF第30页）明确自助补卡余额大于20元；2026-10-09用户要求主动展示这一前提。不是挂失前提，也不是补卡工本费。"
+              },
+              {
+                "field_path": "summary",
+                "evidence_ids": [
+                  "cdut:evidence:card-guide-2024",
+                  "cdut:evidence:card-replacement-guide-2024",
+                  "cdut:evidence:card-self-service-2023",
+                  "cdut:evidence:card-operation-2020",
+                  "cdut:evidence:card-counter-2019",
+                  "cdut:evidence:campus-plan",
+                  "cdut:evidence:user-campus-life-20261009"
+                ],
+                "note": "短答整理自分项来源并采用2026-10-09用户明确补充；机器实时卡种和窗口时间须按现场。"
+              },
+              {
+                "field_path": "notes.5",
+                "evidence_ids": [
+                  "cdut:evidence:user-campus-life-20261009"
+                ],
+                "note": "用户补充；不改变旧公告卡种分配与今天适用性之间的区别。"
+              }
+            ],
+            "notes": [
+              "2026-10-09采用明确官方资料和用户补充：珙桐、香樟自助补卡，以及财务处楼一卡通中心人工办理。",
+              "关联地图为服务区所在食堂、人工中心所在财务处建筑；不是室内机器或受理窗口的精确坐标。",
+              "2023年通知曾将学生卡分配到珙桐、家属卡到香樟；当前卡种、收费与开放时段以现场为准。",
+              "2020年流程曾说明补卡72小时后可用领款服务领取冻结余额；当前以设备或中心说明为准。",
+              "仅提供办理指引，不收集密码、不执行挂失或补卡。",
+              "2026-10-09用户补充银杏设有自助补卡机；2023年官方设备公告亦列出银杏服务区。卡种支持以设备提示为准。"
+            ],
+            "service_id": "cdut:service:campus-card-replacement",
+            "name": "校园卡补办",
+            "aliases": [
+              "一卡通补办",
+              "校园卡补卡",
+              "饭卡补办",
+              "饭卡补卡",
+              "卡丢了补卡",
+              "丢卡补办",
+              "校园卡丢了补办",
+              "补校园卡"
+            ],
+            "department": "网络与信息化处",
+            "office_id": "cdut:office:network-information",
+            "audience": "持校园卡学生；按学生版指南整理",
+            "information_level": "procedure",
+            "academic_year": null,
+            "modes": [
+              "self_service",
+              "in_person"
+            ],
+            "entry_points": [
+              "珙桐食堂校园卡自助服务区（学生卡优先）",
+              "香樟食堂校园卡自助服务区（按机器支持的卡种选择）",
+              "财务处楼校园一卡通中心（人工办理）"
+            ],
+            "contacts": [
+              {
+                "label": "一卡通中心",
+                "value": "028-84078750"
+              }
+            ],
+            "summary": "**去哪办：**珙桐、银杏、香樟食堂自助服务区；机器按支持卡种使用。\n**办理前：**带本人身份证，卡内余额须**大于20元**（余额要求，不是补卡费）。\n**怎么做：**遗失先在「成理校园卡」小程序挂失 → 自助机「自助补卡」→ 按提示验证、缴费、领卡。\n**人工办理：**财务处楼校园一卡通中心，去前拨028-84078750确认时间。",
+            "required_materials": [
+              "本人身份证（按设备提示进行身份验证）"
+            ],
+            "required_inputs": [
+              "学工号及校园卡消费密码（仅在学校设备或官方系统输入）"
+            ],
+            "steps": [
+              {
+                "mode": "self_service",
+                "instruction": "学生卡优先到珙桐食堂校园卡自助服务区；香樟食堂也有自助补卡设备，按机器支持的卡种选择。",
+                "condition": "官方2023年通知列出补卡点与当时卡种，2026年指南继续列出服务区；用户2026-10-09确认珙桐、香樟设备。",
+                "place_ids": [
+                  "cdut:place:gongtong-dining",
+                  "cdut:place:camphor-dining",
+                  "cdut:place:ginkgo-dining"
+                ]
+              },
+              {
+                "mode": "self_service",
+                "instruction": "卡片遗失先在微信小程序“成理校园卡”挂失；自助补卡前确认卡内余额大于20元（余额要求，不是补卡费），带好本人身份证。点击“自助补卡”→选择所在服务区机器→“开始补卡”，按提示验证、缴费并领取新卡。",
+                "condition": "挂失依据2024年指南；补卡按钮流程依据2024年指南，验证缴费取卡详见官方操作说明。",
+                "place_ids": null
+              },
+              {
+                "mode": "in_person",
+                "instruction": "自助机无法办理时，可到财务处楼的校园一卡通中心人工办理；去前可拨028-84078750确认受理时间和材料。",
+                "condition": "官方平面图将财务处与一卡通中心标为同楼，历史通知支持人工补办；用户2026-10-09确认该办理渠道。",
+                "place_ids": [
+                  "cdut:place:finance"
+                ]
+              }
+            ],
+            "availability": null,
+            "fees": [
+              "2020年官方操作说明曾标注25元/张；当前工本费以设备显示或一卡通中心答复为准。"
+            ],
+            "limits": [
+              "自助补卡前，校园卡内余额须大于20元；这是余额要求，不是补卡工本费。"
+            ],
+            "procedure_note": null,
+            "source_links": [
+              {
+                "title": "成理平面图",
+                "url": "https://www.cdut.edu.cn/files/mapcl.pdf"
+              },
+              {
+                "title": "计划财务处关于2019年寒假值班工作安排有关事宜的通知",
+                "url": "https://jcc.cdut.edu.cn/info/1012/1230.htm"
+              },
+              {
+                "title": "成都理工大学网络与信息化服务指南（学生版），第四版",
+                "url": "https://wxc.cdut.edu.cn/__local/8/1C/3C/0F34CEA8E563BE8802193833FE4_CFB792C4_36A72F.pdf"
+              },
+              {
+                "title": "自助补卡操作流程",
+                "url": "https://wxc.cdut.edu.cn/info/1006/1083.htm"
+              },
+              {
+                "title": "关于2023年寒假期间校园卡补卡等相关事宜的通知",
+                "url": "https://wxc.cdut.edu.cn/info/1006/3424.htm"
+              },
+              {
+                "title": "成都理工大学2026年寒假网络信息服务指南",
+                "url": "https://wxc.cdut.edu.cn/info/1006/3954.htm"
+              }
+            ]
+          }
+        ],
+        "teachers": [],
+        "places": [
+          {
+            "synthetic": false,
+            "verification_status": "needs_review",
+            "field_evidence": [
+              {
+                "field_path": "name",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "aliases",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "campus",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "category",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "address_detail",
+                "evidence_ids": [
+                  "cdut:evidence:card-self-service-2023",
+                  "cdut:evidence:card-winter-2026"
+                ],
+                "note": "官方通知列出食堂自助服务区，地图标记仅对应建筑。"
+              }
+            ],
+            "notes": [
+              "该建筑有校园卡自助服务区，补卡终端分布见官方通知并采用2026-10-09用户补充。",
+              "地图对应食堂建筑，不是室内机器的精确位置；当前卡种与开放时间按现场提示。"
+            ],
+            "place_id": "cdut:place:gongtong-dining",
+            "name": "珙桐餐厅",
+            "aliases": [
+              "珙桐食堂"
+            ],
+            "campus": "成都校区",
+            "category": "dining",
+            "address_detail": "校园卡自助服务区所在食堂；进入后按现场指示找到补卡设备。",
+            "tags": null,
+            "hotspot": true,
+            "position": {
+              "longitude": 104.149025,
+              "latitude": 30.672625,
+              "coordinate_system": "GCJ02",
+              "source_kind": "map_provider",
+              "source_url": "https://ditu.amap.com/place/B001C8NPMY",
+              "retrieved_at": "2026-10-08",
+              "verification_status": "needs_review",
+              "confirmed_at": null,
+              "reviewer": null,
+              "note": "高德建筑候选：成都理工大学二仙桥校区珙桐餐厅（B001C8NPMY）。坐标对应建筑，不确认入口、补卡设备、办公室或当前接待位置；尚待负责人核对，不提供导航。"
+            },
+            "navigation_url": null
+          },
+          {
+            "synthetic": false,
+            "verification_status": "needs_review",
+            "field_evidence": [
+              {
+                "field_path": "name",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "aliases",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "campus",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "category",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "address_detail",
+                "evidence_ids": [
+                  "cdut:evidence:card-self-service-2023",
+                  "cdut:evidence:card-winter-2026"
+                ],
+                "note": "官方通知列出食堂自助服务区，地图标记仅对应建筑。"
+              }
+            ],
+            "notes": [
+              "该建筑有校园卡自助服务区，补卡终端分布见官方通知并采用2026-10-09用户补充。",
+              "地图对应食堂建筑，不是室内机器的精确位置；当前卡种与开放时间按现场提示。"
+            ],
+            "place_id": "cdut:place:camphor-dining",
+            "name": "香樟餐厅",
+            "aliases": [
+              "香樟食堂"
+            ],
+            "campus": "成都校区",
+            "category": "dining",
+            "address_detail": "校园卡自助服务区所在食堂；进入后按现场指示找到补卡设备。",
+            "tags": null,
+            "hotspot": true,
+            "position": {
+              "longitude": 104.154625,
+              "latitude": 30.676964,
+              "coordinate_system": "GCJ02",
+              "source_kind": "map_provider",
+              "source_url": "https://ditu.amap.com/place/B0FFGYU5VQ",
+              "retrieved_at": "2026-10-08",
+              "verification_status": "needs_review",
+              "confirmed_at": null,
+              "reviewer": null,
+              "note": "高德建筑候选：香樟餐厅（B0FFGYU5VQ）。坐标对应建筑，不确认入口、补卡设备、办公室或当前接待位置；尚待负责人核对，不提供导航。"
+            },
+            "navigation_url": null
+          },
+          {
+            "synthetic": false,
+            "verification_status": "needs_review",
+            "field_evidence": [
+              {
+                "field_path": "name",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "aliases",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "campus",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "category",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              }
+            ],
+            "notes": [
+              "公开资料候选，当前名称、具体建筑和位置尚待复核。",
+              "已收录高德建筑坐标候选，位置待核验；不表示这里可办理补卡或是老师办公室。"
+            ],
+            "place_id": "cdut:place:ginkgo-dining",
+            "name": "银杏餐厅",
+            "aliases": [],
+            "campus": "成都校区",
+            "category": "dining",
+            "address_detail": null,
+            "tags": null,
+            "hotspot": true,
+            "position": {
+              "longitude": 104.143811,
+              "latitude": 30.670203,
+              "coordinate_system": "GCJ02",
+              "source_kind": "map_provider",
+              "source_url": "https://ditu.amap.com/place/B001C8NOJU",
+              "retrieved_at": "2026-10-08",
+              "verification_status": "needs_review",
+              "confirmed_at": null,
+              "reviewer": null,
+              "note": "高德建筑候选：银杏餐厅(银杏路店)（B001C8NOJU）。坐标对应建筑，不确认入口、补卡设备、办公室或当前接待位置；尚待负责人核对，不提供导航。"
+            },
+            "navigation_url": null
+          },
+          {
+            "synthetic": false,
+            "verification_status": "needs_review",
+            "field_evidence": [
+              {
+                "field_path": "name",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "aliases",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "campus",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "category",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "address_detail",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "平面图同楼标注；不推断房间号。"
+              }
+            ],
+            "notes": [
+              "财务处楼的校园一卡通中心可作为人工补办渠道，已采用2026-10-09用户补充及官方历史资料。",
+              "地图对应财务处建筑，不是具体受理窗口；去前可拨一卡通中心确认受理时间。"
+            ],
+            "place_id": "cdut:place:finance",
+            "name": "财务处",
+            "aliases": [
+              "计划财务处",
+              "财务处楼"
+            ],
+            "campus": "成都校区",
+            "category": "office",
+            "address_detail": "官方学校平面图将财务处、校园一卡通中心标为同一编号建筑。",
+            "tags": null,
+            "hotspot": false,
+            "position": {
+              "longitude": 104.143618,
+              "latitude": 30.676646,
+              "coordinate_system": "GCJ02",
+              "source_kind": "map_provider",
+              "source_url": "https://ditu.amap.com/place/B0FFFDK67D",
+              "retrieved_at": "2026-10-08",
+              "verification_status": "needs_review",
+              "confirmed_at": null,
+              "reviewer": null,
+              "note": "高德建筑候选：成都理工大学二仙桥校区计划财务处（B0FFFDK67D）。坐标对应建筑，不确认入口、补卡设备、办公室或当前接待位置；尚待负责人核对，不提供导航。"
+            },
+            "navigation_url": null
+          }
+        ],
+        "answer": "办理入口：珙桐食堂校园卡自助服务区（学生卡优先）；香樟食堂校园卡自助服务区（按机器支持的卡种选择）。\n办理前：本人身份证（按设备提示进行身份验证）；自助补卡前，校园卡内余额须大于20元；这是余额要求，不是补卡工本费。\n依据所引年份指南，当前入口及受理安排以学校最新说明为准。",
+        "result_status": "success",
+        "answer_mode": "agent_direct",
+        "excerpts": [],
+        "source_ids": [
+          "cdut:evidence:campus-plan",
+          "cdut:evidence:card-counter-2019",
+          "cdut:evidence:card-guide-2024",
+          "cdut:evidence:card-operation-2020",
+          "cdut:evidence:card-replacement-guide-2024",
+          "cdut:evidence:card-self-service-2023",
+          "cdut:evidence:card-winter-2026",
+          "cdut:evidence:user-campus-life-20261009"
+        ],
+        "service_links": [],
+        "plan": [
+          {
+            "step": 1,
+            "tool": "search_service",
+            "label": "查找办事事项",
+            "status": "success"
+          }
+        ],
+        "checklist": null,
+        "citations": [
+          {
+            "id": "cdut:evidence:campus-plan",
+            "title": "成理平面图",
+            "url": "https://www.cdut.edu.cn/files/mapcl.pdf",
+            "publisher": "成都理工大学",
+            "audience": "仅支持页面明示字段，不推断校区、入口、坐标或接待时间。",
+            "date": "2026-10-09",
+            "date_kind": "retrieved"
+          },
+          {
+            "id": "cdut:evidence:card-counter-2019",
+            "title": "计划财务处关于2019年寒假值班工作安排有关事宜的通知",
+            "url": "https://jcc.cdut.edu.cn/info/1012/1230.htm",
+            "publisher": "成都理工大学财务处",
+            "audience": "历史通知支持人工补办渠道，位置结合官方平面图及2026-10-09用户明确补充。",
+            "date": "2019-01-09",
+            "date_kind": "published"
+          },
+          {
+            "id": "cdut:evidence:card-guide-2024",
+            "title": "成都理工大学网络与信息化服务指南（学生版），第四版",
+            "url": "https://wxc.cdut.edu.cn/__local/8/1C/3C/0F34CEA8E563BE8802193833FE4_CFB792C4_36A72F.pdf",
+            "publisher": "成都理工大学网络与信息化处",
+            "audience": "学生服务指南中的校园卡挂失；不包含补卡、费用或当前设备地点的推断。",
+            "date": "2026-09-27",
+            "date_kind": "retrieved"
+          },
+          {
+            "id": "cdut:evidence:card-operation-2020",
+            "title": "自助补卡操作流程",
+            "url": "https://wxc.cdut.edu.cn/info/1006/1083.htm",
+            "publisher": "成都理工大学网络与信息化处",
+            "audience": "历史操作说明；身份验证可作为准备指引，收费与领款等待规则必须注明来源年份。",
+            "date": "2020-01-10",
+            "date_kind": "published"
+          },
+          {
+            "id": "cdut:evidence:card-replacement-guide-2024",
+            "title": "网络与信息化服务指南（学生版），第四版",
+            "url": "https://wxc.cdut.edu.cn/__local/8/1C/3C/0F34CEA8E563BE8802193833FE4_CFB792C4_36A72F.pdf",
+            "publisher": "成都理工大学网络与信息化处",
+            "audience": "自助设备补卡步骤；不支持当前机器位置、收费或小程序补卡推断。",
+            "date": "2026-10-07",
+            "date_kind": "retrieved"
+          },
+          {
+            "id": "cdut:evidence:card-self-service-2023",
+            "title": "关于2023年寒假期间校园卡补卡等相关事宜的通知",
+            "url": "https://wxc.cdut.edu.cn/info/1006/3424.htm",
+            "publisher": "成都理工大学网络与信息化处",
+            "audience": "历史通知明确列出珙桐学生卡、香樟家属卡等设备分布和一卡通联系电话；2026年设备点仍见寒假指南。",
+            "date": "2023-01-13",
+            "date_kind": "published"
+          },
+          {
+            "id": "cdut:evidence:card-winter-2026",
+            "title": "成都理工大学2026年寒假网络信息服务指南",
+            "url": "https://wxc.cdut.edu.cn/info/1006/3954.htm",
+            "publisher": "成都理工大学网络与信息化处",
+            "audience": "仅证明该通知列出自助服务区；不确认2026年10月补卡机或卡种。",
+            "date": "2026-01-29",
+            "date_kind": "published"
+          },
+          {
+            "id": "cdut:evidence:user-campus-life-20261009",
+            "title": "用户补充的校园地点与生活信息（2026-10-09）",
+            "url": null,
+            "publisher": "项目用户",
+            "audience": "校园地点别名与生活检索补充；不作为学校办理政策、费用、营业时间或现场核验依据。",
+            "date": "2026-10-09",
+            "date_kind": "retrieved"
+          }
+        ],
+        "map_actions": [
+          {
+            "type": "show_place",
+            "place_id": "cdut:place:gongtong-dining"
+          },
+          {
+            "type": "show_place",
+            "place_id": "cdut:place:camphor-dining"
+          },
+          {
+            "type": "show_place",
+            "place_id": "cdut:place:ginkgo-dining"
+          },
+          {
+            "type": "show_place",
+            "place_id": "cdut:place:finance"
+          }
+        ],
+        "understanding": {
+          "intent": "办事",
+          "slots": {
+            "identity": "unknown",
+            "academic_year": null,
+            "service": "校园卡补办",
+            "destination": null
+          }
+        },
+        "request_id": "1834dbdc-5afc-4366-96c2-815080e937ba",
+        "notice": "资料待人工核验，仅提供指引，未替你办理。"
+      }
+    },
+    {
+      "question": "东区图书馆在哪",
+      "http": 200,
+      "latency_ms": 6.124899999122135,
+      "body": {
+        "services": [],
+        "teachers": [],
+        "places": [
+          {
+            "synthetic": false,
+            "verification_status": "needs_review",
+            "field_evidence": [
+              {
+                "field_path": "name",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "aliases",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "campus",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              },
+              {
+                "field_path": "category",
+                "evidence_ids": [
+                  "cdut:evidence:campus-plan"
+                ],
+                "note": "名称依据明示来源；别名和分类为项目检索整理，不代表新增校园事实。"
+              }
+            ],
+            "notes": [
+              "公开资料候选，当前名称、具体建筑和位置尚待复核。",
+              "已收录高德建筑坐标候选，位置待核验；不表示这里可办理补卡或是老师办公室。"
+            ],
+            "place_id": "cdut:place:east-library",
+            "name": "东区图书馆",
+            "aliases": [
+              "东图"
+            ],
+            "campus": "成都校区",
+            "category": "library",
+            "address_detail": null,
+            "tags": null,
+            "hotspot": true,
+            "position": {
+              "longitude": 104.151472,
+              "latitude": 30.676143,
+              "coordinate_system": "GCJ02",
+              "source_kind": "map_provider",
+              "source_url": "https://ditu.amap.com/place/B0FFGHMVYO",
+              "retrieved_at": "2026-10-08",
+              "verification_status": "needs_review",
+              "confirmed_at": null,
+              "reviewer": null,
+              "note": "高德建筑候选：成都理工大学二仙桥校区东区图书馆（B0FFGHMVYO）。坐标对应建筑，不确认入口、补卡设备、办公室或当前接待位置；尚待负责人核对，不提供导航。"
+            },
+            "navigation_url": null
+          }
+        ],
+        "answer": "已找到东区图书馆，可在地图上查看建筑参考位置。具体入口、楼层和室内路线尚未确认，前往时请按现场指示。",
+        "result_status": "success",
+        "answer_mode": "agent_place",
+        "excerpts": [],
+        "source_ids": [
+          "cdut:evidence:campus-plan"
+        ],
+        "service_links": [],
+        "plan": [
+          {
+            "step": 1,
+            "tool": "search_place",
+            "label": "查找地点",
+            "status": "success"
+          }
+        ],
+        "checklist": null,
+        "citations": [
+          {
+            "id": "cdut:evidence:campus-plan",
+            "title": "成理平面图",
+            "url": "https://www.cdut.edu.cn/files/mapcl.pdf",
+            "publisher": "成都理工大学",
+            "audience": "仅支持页面明示字段，不推断校区、入口、坐标或接待时间。",
+            "date": "2026-10-09",
+            "date_kind": "retrieved"
+          }
+        ],
+        "map_actions": [
+          {
+            "type": "show_place",
+            "place_id": "cdut:place:east-library"
+          }
+        ],
+        "understanding": {
+          "intent": "找地点",
+          "slots": {
+            "identity": "unknown",
+            "academic_year": null,
+            "service": null,
+            "destination": "东区图书馆"
+          }
+        },
+        "place_search": {
+          "provider_status": "",
+          "resolution": "exact"
+        },
+        "map_pick_available": false,
+        "request_id": "aedec4c6-ab3c-4760-b5b0-9146f2dd0a00",
+        "notice": "资料待人工核验，仅提供指引，未替你办理。"
+      }
+    },
+    {
+      "question": "学生邮箱激活入口在哪",
+      "http": 200,
+      "latency_ms": 12.349399999948218,
+      "body": {
+        "services": [],
+        "teachers": [],
+        "places": [],
+        "answer": "可从下方官方入口进入；具体受理状态以平台显示为准。",
+        "result_status": "success",
+        "answer_mode": "agent_entry",
+        "excerpts": [
+          {
+            "document": "学生邮箱激活入口",
+            "content": "网信处学生邮箱指南提供登录入口 https://mail.stu.cdut.edu.cn ，可以在该入口选择账号激活。建议只在学校官方站点填写个人信息。",
+            "source_id": "cdut:source:mail2022",
+            "chunk_id": "cdut:chunk:mail2022:01",
+            "source_url": "https://wxc.cdut.edu.cn/info/1012/3873.htm",
+            "document_id": null,
+            "revision_id": null,
+            "locator": "一、激活页面入口",
+            "text_sha256": "3cbd64493ed4f8adbdba2c184c35604596b5ba3abb67eacaa57641b9e31320c5",
+            "scope_notes": [
+              "来源适用校区尚未确认"
+            ]
+          }
+        ],
+        "source_ids": [
+          "cdut:chunk:mail2022:01"
+        ],
+        "service_links": [
+          {
+            "id": "service-link:2685b30612b33c263b34",
+            "title": "官方办事平台",
+            "url": "https://mail.stu.cdut.edu.cn",
+            "kind": "platform",
+            "source_id": "cdut:source:mail2022",
+            "source_title": "学生邮箱激活方法和校友邮箱使用方法",
+            "source_url": "https://wxc.cdut.edu.cn/info/1012/3873.htm",
+            "requires_login": true,
+            "network_requirement": "unknown",
+            "checked_at": "2026-10-21",
+            "availability": "not_checked"
+          }
+        ],
+        "plan": [
+          {
+            "step": 1,
+            "tool": "search_knowledge",
+            "label": "核对官方入口",
+            "status": "success"
+          }
+        ],
+        "checklist": null,
+        "citations": [
+          {
+            "id": "cdut:source:mail2022",
+            "title": "学生邮箱激活方法和校友邮箱使用方法",
+            "url": "https://wxc.cdut.edu.cn/info/1012/3873.htm",
+            "publisher": "网络与信息化处",
+            "audience": {
+              "audiences": [
+                "all"
+              ],
+              "campuses": [
+                "unknown"
+              ],
+              "conditions": [],
+              "exceptions": [],
+              "evidence_quotes": {},
+              "academic_year": null,
+              "valid_from": null,
+              "valid_until": null,
+              "source_scope": "常规说明；实际办理状态待核对"
+            },
+            "date": null,
+            "source_authority": "official_university",
+            "access_method": null,
+            "source_label": "学校官方资料",
+            "stale": false,
+            "document_id": null,
+            "revision_id": null,
+            "locator": "一、激活页面入口",
+            "text_sha256": "3cbd64493ed4f8adbdba2c184c35604596b5ba3abb67eacaa57641b9e31320c5",
+            "scope_notes": [
+              "来源适用校区尚未确认"
+            ],
+            "evidence_refs": [
+              {
+                "chunk_id": "cdut:chunk:mail2022:01",
+                "document_id": null,
+                "revision_id": null,
+                "locator": "一、激活页面入口",
+                "text_sha256": "3cbd64493ed4f8adbdba2c184c35604596b5ba3abb67eacaa57641b9e31320c5"
+              }
+            ]
+          }
+        ],
+        "map_actions": [],
+        "understanding": {
+          "intent": "政策问答",
+          "slots": {
+            "identity": "unknown",
+            "academic_year": null,
+            "service": "学生邮箱激活",
+            "destination": null
+          }
+        },
+        "request_id": "fab7d4b7-9fd7-4a3b-9448-ce87c1c4ba71",
+        "notice": "资料待人工核验，仅提供指引，未替你办理。"
+      }
+    }
+  ]
+}

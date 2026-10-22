@@ -1,0 +1,50 @@
+[
+  {
+    "execution_sha256": "03eff76df31f8bf7c92e1c1df3d0f85b0d359ed27c24e02e544e4a3739d78407",
+    "optimization_binding": {
+      "code_identity": "715555e13829395aeef4abb89706f3f6a3f9d51a+fbe99a479a8bad69",
+      "directory_hashes": {
+        "knowledge.json": "24ceecff3b45cad9fd7ce3881539ec22327812fe877773a09486f9fd52979f13",
+        "offices.json": "0dee683e434468ecb1c64f9f0ad72bdece6f2e13973e0c63a3cdd118a5e4ddaf",
+        "places.json": "69a0b0ec94fe459386a595e9b058e9c94c8931999392f976041339255054efc1",
+        "services.json": "f3d532b2bcb430753191134693280d94cb983f88c53feb9d2fa082bc5d19e275",
+        "sources.json": "93bb58d5dc594c1418d4d88f356998bc8b489e00d486ffa45f0fb6f25d9330ee",
+        "teachers.json": "aa0646da42f79bf09550ecd7bd4dc3b7b76323eb2f0ca4a787a8f440e78d2ec0",
+        "teachers_roster.json": "906e2d339e2e1b31164a71eb45085a82c1ba6b77465276849436f60fb22a7184"
+      },
+      "jev_model": "typesafe/jev-1.13",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "model": "deepseek-flash",
+      "retrieval_mode": "lexical",
+      "tasks_sha256": "69c157358a03adb1423b66eca64084c25d80deced09984fa204279d59205eb0a",
+      "upstream_commit": "1cfe254e8d25b15f37048c3730134686abe60335"
+    },
+    "profile_sha256": "f7d748cc2f1b44a02258862cb3afc0207fe03a63b4393903b8e4f57890ddf089",
+    "summary_sha256": "b1772822f4a53b08f52ad9a0b247953f3d620d47b378ec862878f0a91f7f1dfc",
+    "task_id": "dev-service-01"
+  },
+  {
+    "execution_sha256": "133fb78442178a8cca28733f08b5dc5c525e324c30b6c7fb8dcc663bbebdb7b8",
+    "optimization_binding": {
+      "code_identity": "715555e13829395aeef4abb89706f3f6a3f9d51a+fbe99a479a8bad69",
+      "directory_hashes": {
+        "knowledge.json": "24ceecff3b45cad9fd7ce3881539ec22327812fe877773a09486f9fd52979f13",
+        "offices.json": "0dee683e434468ecb1c64f9f0ad72bdece6f2e13973e0c63a3cdd118a5e4ddaf",
+        "places.json": "69a0b0ec94fe459386a595e9b058e9c94c8931999392f976041339255054efc1",
+        "services.json": "f3d532b2bcb430753191134693280d94cb983f88c53feb9d2fa082bc5d19e275",
+        "sources.json": "93bb58d5dc594c1418d4d88f356998bc8b489e00d486ffa45f0fb6f25d9330ee",
+        "teachers.json": "aa0646da42f79bf09550ecd7bd4dc3b7b76323eb2f0ca4a787a8f440e78d2ec0",
+        "teachers_roster.json": "906e2d339e2e1b31164a71eb45085a82c1ba6b77465276849436f60fb22a7184"
+      },
+      "jev_model": "typesafe/jev-1.13",
+      "knowledge_version": "kb-229ee34eba99ef34",
+      "model": "deepseek-flash",
+      "retrieval_mode": "lexical",
+      "tasks_sha256": "69c157358a03adb1423b66eca64084c25d80deced09984fa204279d59205eb0a",
+      "upstream_commit": "1cfe254e8d25b15f37048c3730134686abe60335"
+    },
+    "profile_sha256": "785e9d0a19c12179999068fe93af62aa947e2300a1574ec96982480164610579",
+    "summary_sha256": "9521c8e97fc599f6ad814ac1b78c3e799e37fe242c78100d873a56eb304a9e92",
+    "task_id": "dev-service-02"
+  }
+]

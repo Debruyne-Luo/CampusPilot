@@ -11,6 +11,7 @@ import re
 from collections import Counter
 
 from campuspilot.rag import KnowledgeSnapshot, RagChunk, RagSource, RetrievalFilters, RetrievalHit
+from campuspilot.retrieval.applicability import campus_value
 
 GENERIC = ("请问", "如何", "怎么", "什么", "哪里", "你好", "谢谢", "是否")
 # Colloquial -> official wording appended to the query (never replaces it). Built only from
@@ -112,8 +113,13 @@ def eligible(chunk: RagChunk, source: RagSource, filters: RetrievalFilters) -> b
     if filters.current_only and (historical or source.temporal_status != "current"):
         return False
     if filters.audience != "all" and "all" not in chunk.audiences:
-        if filters.audience not in chunk.audiences:
+        if filters.audience not in chunk.audiences and "unknown" not in chunk.audiences:
             return False
+    campuses = {campus_value(c) for c in chunk.campuses}
+    if filters.campus not in {"all", "unknown"} and not campuses & {
+        campus_value(filters.campus), "all", "unknown"
+    }:
+        return False
     if filters.academic_year and chunk.academic_year not in (None, filters.academic_year):
         return False
     return True
@@ -122,7 +128,10 @@ def eligible(chunk: RagChunk, source: RagSource, filters: RetrievalFilters) -> b
 def eligible_chunks(
     snapshot: KnowledgeSnapshot, sources: dict[str, RagSource], filters: RetrievalFilters
 ) -> list[RagChunk]:
-    return [c for c in snapshot.chunks if eligible(c, sources[c.source_id], filters)]
+    # Public teacher records have their own structured tool. Exclude before either
+    # channel's top-k, while keeping them in the version-bound, complete vector index.
+    return [c for c in snapshot.chunks
+            if c.topic_id != "teacher_lookup" and eligible(c, sources[c.source_id], filters)]
 
 
 class BM25Retriever:

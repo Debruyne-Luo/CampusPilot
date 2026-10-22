@@ -49,6 +49,8 @@ def main() -> None:
         p.add_argument("--candidate", type=Path, required=True)
         p.add_argument("--store", type=Path, required=True)
         if name == "publish":
+            p.add_argument("--quality-report", type=Path,
+                           help="Passing 120-case acceptance for a whole directory/RAG bundle")
             p.add_argument("--expected-current", required=True, help="version ID or none")
             p.add_argument("--fallback-bundle", default="",
                            help="approved bundle for first-publication recovery")
@@ -156,6 +158,7 @@ def main() -> None:
                 args.store,
                 None if args.expected_current == "none" else args.expected_current,
                 fallback_bundle=args.fallback_bundle,
+                quality_report=args.quality_report,
             )
             result = {"published_version": version}
         else:

@@ -1,5 +1,32 @@
 # 办理清单首版
 
+## 知识候选完整度契约（2026-10-17）
+
+**CONFIRMED（用户本轮实施计划）：** `CampusService.information_level` 区分 `directory`（目录）、
+`guide`（指南）、`procedure`（完整流程）。缺字段的旧数据确定性读取为 `guide`，保留原字段和
+证据，不凭已有 `steps` 自动升级。目录和指南允许没有步骤、未知办理渠道；完整流程必须有
+非空、逐步有证据的步骤及对应办理渠道。完整度不证明实时可用性，原有年份、试运行及现场限制继续展示。
+
+服务卡及 Agent 的服务搜索屏蔽非完整流程的旧步骤，展示已知部门、对象、准备信息、咨询电话、
+入口和“流程尚未核验”。服务自身 `contacts` 与办公室联系方式合并展示，避免把某事项咨询电话
+错误推断为整个部门的电话。`make_checklist` 对指南返回已知信息和 `checklist_available=false`，
+仅明确的 `procedure` 提供步骤和可新建的浏览器清单。
+
+`campuspilot:handling:v1` 的读取和勾选逻辑保持兼容；已保存快照不按新完整度重新校验、清空或
+重置进度，同事项已有快照继续复用。新快照要求服务明确标记为 `procedure`。
+
+隔离候选位于 `data/cdut/rag/candidates/services-20261017/`，尚未切换 active 数据或上线。
+四项旧服务在 `baseline-service-review.json` 逐项记录源文依据与限制，明确归类后保留清单资格。
+复用的 135 项办事大厅记录全部以无伪造步骤的指南/目录通过模型，32 项符合学生范围，103 项范围外。
+目录可以用以下命令重建并通过 `DirectoryRepository.load` 验证，旧采集文件不覆盖：
+
+```powershell
+.venv/Scripts/python.exe scripts/promote_services.py --input data/cdut/rag/packages/bsdt-services-20261017/services_full.json --output data/cdut/rag/candidates/services-20261017 --base-directory data/cdut --reviewed-services data/cdut/rag/candidates/services-20261017/reviewed-services.json
+```
+
+`--allow-navigation-step` 为旧命令兼容保留，但不再生成导航伪步骤。每项采纳范围见
+`scope-report.json`；候选源记录及 SHA-256 与服务、部门、教师和地点文件一起保存，发布仍需匹配的知识索引。
+
 ## 范围与当前状态
 
 **CONFIRMED（2026-10-13）：** 用户批准精简方案，并要求在

@@ -14,17 +14,21 @@ import json
 import re
 from collections.abc import Callable
 from contextlib import ExitStack
-from typing import Any
+from typing import Any, cast
 
 from pydantic import JsonValue, ValidationError
 
 from campuspilot.agent.evidence import (
+    CONTEXT_BUDGET_NOTICE,
+    CONTEXT_BUDGET_REASON,
     Emit,
     StepRecord,
     _apply_grounding,
     _collect_ids,
     _split_grounding,
     _without_ocr,
+    bounded_knowledge_evidence,
+    context_rows,
     generation_evidence,
 )
 from campuspilot.agent.evidence import (
@@ -32,6 +36,15 @@ from campuspilot.agent.evidence import (
 )
 from campuspilot.agent.execution import ExecutionBoundary
 from campuspilot.agent.plan import Plan, asks_place_attribute, make_plan
+from campuspilot.agent.quick_answers import (
+    DETAILS,
+    FOLLOWUP,
+    entry_subject,
+    entry_title_matches,
+    quick_view,
+    service_answer,
+    service_channel,
+)
 from campuspilot.agent.responses import (
     NO_BASIS_ANSWER as NO_BASIS_ANSWER,
 )
@@ -41,19 +54,34 @@ from campuspilot.agent.responses import (
 from campuspilot.agent.responses import (
     ResponseBuilder,
 )
-from campuspilot.agent.understand import Understanding, classroom_code, understand
+from campuspilot.agent.routing import ROUTES, route_plan
+from campuspilot.agent.structured_answers import parse_answer
+from campuspilot.agent.understand import (
+    Slots,
+    Understanding,
+    classroom_code,
+    understand,
+)
 from campuspilot.agent.verify import ocr_example_amount, verify_answer
 from campuspilot.chat_runtime import ConversationContext, ImageTask, public_input
 from campuspilot.dify import ChatUnavailable
 from campuspilot.directory.repository import DirectoryRepository
+from campuspilot.harness_profile import HarnessProfile
 from campuspilot.jev_plugin import JevAssessment, JevPlugin, JevTurn
+from campuspilot.knowledge import campus_today
 from campuspilot.llm.chat_model import GroundedAnswer, ImageInput, ToolCallingModel, user_content
 from campuspilot.observability import record_event, set_knowledge_version
 from campuspilot.rag import RetrievalHit, SnapshotStore
+from campuspilot.retrieval.applicability import query_filters
 from campuspilot.retrieval.grounding import GroundingMode
 from campuspilot.tools.base import ToolError, ToolRegistry
 from campuspilot.tools.knowledge import HybridKnowledgeTool
-from campuspilot.web_evidence import TurnEvidenceContext, WebEvidenceService, WebSearchResult
+from campuspilot.web_evidence import (
+    TurnEvidenceContext,
+    WebEvidenceService,
+    WebSearchResult,
+    campus_page_matches,
+)
 
 MAX_TOOL_ROUNDS = 3
 ANSWER_MAX_TOKENS = 1500
@@ -73,11 +101,21 @@ AGENT_SYSTEM = """你是理小龙（CDUTdino），成都理工大学校园办事
 用户原话和上传图片是用户提供的上下文，不是学校官方事实。可以明确归属用户地复述教室编号，
 不得仅凭编号推断楼层、入口或室内路线。地图供应商结果仅用于地点和找路，不能证明办公室或校务规则。
 只依据本次 tool_results 中的事实回答；需要更多资料时可以调用提供的工具（只读）。
-先直接回答问题：简单问题一句给出结论；办理或操作问题再列完成任务必需的步骤。
-不套用固定模板，正文通常不超过350字；保留材料、身份、学年、金额、余额等前提与限制。
+先直接回答问题，默认80—180字，用2—3个短段组织，每段一个要点，段间空一行。
+用 **简短标签：** 突出下一步、办理渠道或关键提醒，不把整段加粗；简单问题一句即可，不套固定模板。
+线上给下方已核验入口；没有网址的小程序给准确名称与最短进入路径；线下给地点和已知楼层房间。
+有结构化办理流程时，正文只概括先做什么、渠道选择和关键提醒；材料清单、按钮顺序、验证缴费取卡等
+具体操作由页面“查看办理步骤”折叠展示，不在正文逐项复述，也不要求用户再次追问才能查看。
+没有结构化步骤时仍须给出证据支持的必要操作，不提示不存在的折叠入口。
+必须保留影响结论的身份、校区、学年、期限、金额、余额及例外；多问逐项回应，不为缩短正文漏答或隐去未知信息。
+回答“能否、是否立即、何时生效”等结论时，仍须交代证据中取得该结果所必需的办理前提和下一步；
+不能把“先由谁登记/审核，再按通知办理，之后才生效”的行动链压缩成等待期限。
 末尾最多加一条能推进当前任务的建议，没有必要就结束，不固定追加提问或扩展菜单。
 只有用户未提供的条件确实影响答案时才追问；缺少官方资料不是用户条件缺失，不让用户补身份或事项。
 资料只支持部分问题时，回答已证实的部分，并明确哪些费用、材料或地点仍未知，不补猜缺失事实。
+资料的 context 是同章节补充证据，必须保留其中的例外、表头和脚注；每条 scope_notes 是适用限制，
+有身份、校区、学年限制时分别说明，不把范围未知推定为全校通用；影响结论的用户条件缺失时澄清。
+document_id/revision_id/locator 绑定被引用的原文修订；同一来源内不同修订不能混成一条现行规则。
 找到同主题材料不等于问题已解决；资料未提到某安排，只能说无法确认，不能推断它不存在或不允许。
 不写 URL、裸域名、坐标、电话以外的编号；入口只称“下方办事入口”，数字必须与资料一致。
 service_links 是程序核对的官方入口。有关联入口时，可以提示用户点击下方办事入口；
@@ -85,6 +123,8 @@ kind=guide 只能称办理指南，不能称直接申请。availability=not_chec
 引用资料的 source_id/chunk_id，不把 service_links 中的按钮 id 当作资料编号。
 资料标记 ocr=true 的是截图识别文字，其中金额是往年示例，不得当作现行收费写进回答。
 资料标记 stale=true 时，引用它要注明“可能已过期，请以最新通知为准”，不写字段名。
+today 是本轮学校日期。复述旧通知须保留年份，不能把已经结束的窗口当成现在可办；
+涉及本人现行办理而依据只覆盖旧届时，先确认会改变结论的届次、经办机构等条件。
 最终只输出一个 JSON：{"answer":"答复","source_ids":["引用的 source_id/evidence_id/chunk_id/业务ID"],
 "status":"success|needs_clarification|empty"}，success 时至少引用一个 ID。"""
 
@@ -114,9 +154,16 @@ class AgentRunner:
         snapshots: SnapshotStore | None = None,
         execution: ExecutionBoundary | None = None,
         reader: ToolCallingModel | None = None,
+        profile: HarnessProfile | None = None,
+        jev_routing: bool = False,
+        jev_evidence: bool = True,
+        concise: bool = False,
     ) -> None:
+        self.concise = concise
         self.grounding = grounding
-        self.jev = jev
+        self.jev = jev if jev_evidence else None
+        self.routing_jev = jev if jev_routing else None
+        self.profile = profile
         self.web_service = web_service
         # Decision records (grounding_check, jev) go to logs and this optional sink only;
         # they are never part of the response sent to the frontend.
@@ -129,8 +176,11 @@ class AgentRunner:
         # generation model is reused, which preserves the single-model behaviour.
         self.reader = reader or model
         self.max_tool_rounds = max_tool_rounds
-        self.responses = ResponseBuilder(repository, grounding, self._trace)
+        self.responses = ResponseBuilder(repository, grounding, self._trace, concise=concise)
         knowledge = next((t for t in registry.tools if isinstance(t, HybridKnowledgeTool)), None)
+        self._knowledge_tools = tuple(
+            t for t in registry.tools if isinstance(t, HybridKnowledgeTool)
+        )
         stores = [
             store for store in (
                 snapshots,
@@ -165,18 +215,29 @@ class AgentRunner:
         """Keep only clarifications the data can act on.
 
         Models tend to ask for identity on every question; identity is asked only when a
-        matching service is restricted to one identity (e.g. graduate-only enrollment proof).
+        matching service actually restricts identity (e.g. graduate-only enrollment proof),
+        not merely because an all-student-and-staff audience happens to name graduates.
         A vague 办事 request with no recognisable service may ask which service is meant.
         """
         keep: list[str] = []
         matches = self.matching_services(question)
+
+        def restricted(service_id: str) -> bool:
+            service = self.repository.find_service(service_id)
+            audience = service.audience if service else ""
+            if "师生" in audience:
+                return False
+            students = bool(re.search(r"(?:^|[\s,，、;；])学生(?:$|[\s,，、;；])", audience))
+            undergraduate = students or "本科" in audience
+            graduate = students or "研究生" in audience
+            staff = any(word in audience for word in ("教职工", "教师", "职工"))
+            return any((undergraduate, graduate, staff)) and not all((
+                undergraduate, graduate, staff,
+            ))
+
         for item in view.missing:
             if "identity" in item or "身份" in item:
-                restricted = any(
-                    any(w in (svc.audience if svc else "") for w in ("本科", "研究生", "教职工"))
-                    for svc in map(self.repository.find_service, matches)
-                )
-                if view.slots.identity == "unknown" and restricted:
+                if view.slots.identity == "unknown" and any(map(restricted, matches)):
                     keep.append("identity")
             elif "service" in item or "事项" in item:
                 if view.intent == "办事" and not view.slots.service and not matches:
@@ -207,7 +268,12 @@ class AgentRunner:
 
     # -- tools --------------------------------------------------------------------------
 
-    async def _call(self, name: str, args: dict[str, JsonValue], ev: Evidence) -> str:
+    async def _call(
+        self, name: str, args: dict[str, JsonValue], ev: Evidence, *, entry_only: bool = False,
+    ) -> str:
+        if (self.concise and ev.answering and name == "make_checklist"
+                and not DETAILS.search(ev.question)):
+            return "not_requested"
         if ev.routing_complete:
             return "evidence_routing_complete"
         # A model's broad second search must not replace the explicit destination.
@@ -216,13 +282,23 @@ class AgentRunner:
         label = TOOL_LABELS.get(name, name)
         await ev.notify("tool_start", {"tool": name, "label": label})
         try:
-            result = await asyncio.to_thread(self.execution.call_tool, self.registry, name, args)
+            with ExitStack() as scope:
+                if name == "search_knowledge" and ev.retrieval_scope is not None:
+                    for tool in self._knowledge_tools:
+                        scope.enter_context(tool.pin_scope(
+                            ev.retrieval_scope, entry_only=entry_only,
+                        ))
+                result = await asyncio.to_thread(
+                    self.execution.call_tool, self.registry, name, args
+                )
         except ToolError as exc:
             await ev.notify("tool_end", {"tool": name, "label": label, "status": exc.code})
             return exc.code
         except Exception:
             await ev.notify("tool_end", {"tool": name, "label": label, "status": "tool_error"})
             return "tool_error"
+        if name == "search_knowledge" and ev.answering:
+            result = bounded_knowledge_evidence(result)
         meta: Any = result.get("grounding")
         if name == "search_knowledge" and isinstance(meta, dict):
             if self.grounding == "block":
@@ -246,6 +322,10 @@ class AgentRunner:
             if ev.answering and result.get("hits") and not ev.routing_complete:
                 result = await self._jev_in_loop(result, ev, str(record.get("decision")))
         status = str(result.get("status") or result.get("result_status") or "success")
+        if name == "search_knowledge" and result.get("context"):
+            result["context"] = cast(JsonValue, context_rows(
+                result.get("context"), result.get("hits")
+            ))
         if result.get("kind") == "place_discovery" and status == "unavailable":
             status = str(result.get("provider_status") or status)
         await ev.notify("tool_end", {"tool": name, "label": label, "status": status})
@@ -290,6 +370,7 @@ class AgentRunner:
                 "result_status": "empty",
                 "answer": "",
                 "hits": [],
+                "context": [],
                 "withheld": True,
             }
             applied = "withhold"
@@ -306,6 +387,7 @@ class AgentRunner:
             result = {
                 **result,
                 "hits": hits,
+                "context": context_rows(result.get("context"), hits),
                 "answer": "\n".join(str(h.get("text")) for h in hits[:3]),
                 "result_status": "success" if hits else "empty",
             }
@@ -355,32 +437,12 @@ class AgentRunner:
                 if not result.get("hits"):
                     decision = "insufficient"
                 ev.grounding.append(str(decision or "unassessed"))
-            for row in result.get("hits") or []:
+            contexts = context_rows(result.get("context"), result.get("hits"))
+            for row in [*(result.get("hits") or []), *contexts]:
                 if isinstance(row, dict):
                     ev.hits.append(row)
                     ev.knowledge_sources.add(str(row.get("source_id")))
-                    ev.citations[str(row.get("source_id"))] = {
-                        "id": row.get("source_id"),
-                        "title": row.get("source_title"),
-                        "url": row.get("url"),
-                        "publisher": row.get("publisher"),
-                        "audience": row.get("applicability"),
-                        "date": row.get("published_at") or row.get("updated_at"),
-                        "source_authority": row.get("source_authority"),
-                        "access_method": row.get("access_method"),
-                        "source_label": "联网官方页面"
-                        if row.get("source_authority") == "official_university"
-                        else "第三方辅助信息"
-                        if row.get("web")
-                        else None,
-                        "stale": bool(row.get("stale")),
-                        **(
-                            {"note": OCR_NOTE}
-                            if row.get("ocr")
-                            or ev.citations.get(str(row.get("source_id")), {}).get("note")
-                            else {}
-                        ),
-                    }
+                    self._knowledge_citation(row, ev)
         elif name == "find_teacher":
             for row in result.get("matches") or []:
                 if isinstance(row, dict) and row.get("source_id"):
@@ -454,6 +516,25 @@ class AgentRunner:
         if self.model is None:
             return None, "model_not_configured", 0
         messages: list[dict[str, object]] = [{"role": "system", "content": AGENT_SYSTEM}]
+        presentation: dict[str, object] = {"role": "system", "content": ""}
+        if self.concise:
+            messages.append(presentation)
+            messages.append({"role": "system", "content": (
+                "优先使用已经取得的证据直接回答，不补查用户未问的事项。"
+                "不要附加固定的‘适用提醒’或罗列每条来源的范围未知提示；"
+                "影响结论的具体身份、学年、前提及例外仍须在答案中说明。"
+                "分段和 **加粗标签** 必须写在最终JSON的answer字符串内，换行用\\n转义；"
+                "最终仍只返回answer、source_ids、status组成的合法JSON对象，不能输出裸正文或代码围栏。"
+            )})
+            if (re.search(r"入口|网址|链接|在哪办|哪里办|去哪办", question)
+                    and not DETAILS.search(question)):
+                messages.append({"role": "system", "content": (
+                    "本题只问入口或办理地点：最多给两项渠道，每项一行，优先最直接的一项。"
+                    "公众号用名称和菜单路径表达；具体平台分支和操作步骤留待用户追问。"
+                    "引用中保留来源范围信息，正文只写会影响本次选择的具体限制。"
+                )})
+        if self.profile is not None:
+            messages.extend(self.profile.messages())
         messages.extend(t.model_dump() for t in context.history[-8:])
         messages.append(
             {
@@ -462,6 +543,7 @@ class AgentRunner:
                     json.dumps(
                         {
                             "question": question,
+                            "today": campus_today().isoformat(),
                             "understanding": view.model_dump(mode="json"),
                             "tool_results": generation_evidence(ev.results),
                             "user_image_observation": ev.user_observation,
@@ -473,9 +555,29 @@ class AgentRunner:
             }
         )
         tools: list[dict[str, object]] = [dict(t) for t in self.registry.schemas()]
+        if self.concise and not DETAILS.search(question):
+            tools = [t for t in tools if not (
+                isinstance(function := t.get("function"), dict)
+                and function.get("name") == "make_checklist"
+            )]
         extra_calls = 0
         for round_index in range(self.max_tool_rounds + 1):
             allow_tools = round_index < self.max_tool_rounds and not ev.routing_complete
+            if self.concise:
+                # Recompute after model-requested tools: the final UI uses these same services.
+                has_procedure = any(
+                    s.information_level == "procedure" and s.steps for s in ev.services.values()
+                )
+                presentation["content"] = (
+                    "本轮页面已提供‘查看办理步骤’，包含完整材料、条件和具体操作。"
+                    "正文控制在约180字内，最多三个短段，用简短加粗标签突出先做什么、渠道和关键提醒。"
+                    "不要复述验证、缴费、取卡或逐个按钮等操作，也不要主动列材料。"
+                    "用户明确问材料时简答所问，完整清单仍在折叠区。"
+                    "影响选择的金额、年份、适用条件和未知事项必须保留，可为此适当超出字数。"
+                    if has_procedure else
+                    "本轮页面没有‘查看办理步骤’折叠入口，不能让用户点击它或加入不存在的办理清单。"
+                    "请直接回答已取得证据支持的必要操作，保留未知信息，不提示不存在的控件。"
+                )
             try:
                 completion = await self.model.complete(
                     messages,
@@ -525,18 +627,53 @@ class AgentRunner:
                             "tool_call_id": call.call_id,
                             "content": json.dumps(
                                 generation_evidence(payload), ensure_ascii=False
-                            )[:12000],
+                            ),
                         }
                     )
                 continue
-            if completion.finish_reason == "length":
-                return None, "output_truncated", extra_calls
-            try:
-                answer = GroundedAnswer.model_validate_json(completion.content or "")
-            except ValidationError:
-                return None, "model_format", extra_calls
-            return answer, "", extra_calls
+            failure = "output_truncated" if completion.finish_reason == "length" else ""
+            if not failure:
+                try:
+                    answer, repaired = parse_answer(completion.content or "")
+                except ValidationError:
+                    failure = "model_format"
+                else:
+                    if repaired:
+                        self._trace("answer_recovery", {
+                            "reason": "model_format", "status": "ok", "count": 0,
+                        })
+                    return answer, "", extra_calls
+            # Retry generation once from the original evidence, without replaying the
+            # malformed/truncated content or granting another round of tool authority.
+            recovered_answer = await self._recover_answer(messages, failure)
+            if recovered_answer is None:
+                return None, failure, extra_calls
+            return recovered_answer, "", extra_calls
         return None, "tool_rounds_exceeded", extra_calls
+
+    async def _recover_answer(
+        self, messages: list[dict[str, object]], failure: str
+    ) -> GroundedAnswer | None:
+        assert self.model is not None
+        retry_messages: list[dict[str, object]] = [*messages, {"role": "system", "content": (
+            "上次答复未通过格式检查。请只根据本轮已有证据重新给出紧凑答复，不再调用工具。"
+            "先完成直接结论和必要前提、例外；删除无关背景，不重复整段资料。"
+            "仅返回含answer、source_ids、status的完整JSON对象；answer内换行必须用\\n转义。"
+            "不得补写证据没有的事实、引用或操作，也不能为了简短省略影响结论的信息。"
+        )}]
+        recovered = None
+        try:
+            completion = await self.model.complete(
+                retry_messages, tools=None, json_mode=True, max_tokens=ANSWER_MAX_TOKENS,
+            )
+            if not completion.tool_calls and completion.finish_reason != "length":
+                recovered, _ = parse_answer(completion.content or "")
+        except (ChatUnavailable, ValidationError):
+            pass  # The original failure remains observable in the existing fallback contract.
+        self._trace("answer_recovery", {
+            "reason": failure, "status": "ok" if recovered is not None else "failed", "count": 1,
+        })
+        return recovered
 
     # -- response -----------------------------------------------------------------------
 
@@ -578,6 +715,59 @@ class AgentRunner:
         while self._background:
             await asyncio.gather(*tuple(self._background), return_exceptions=True)
 
+    def needs_embedding(self, question: str) -> bool:
+        """Directory-only requests must not wait for a network embedding prefetch."""
+        return not (self.concise and (
+            quick_view(question, self.repository) is not None or entry_subject(question) is not None
+        ))
+
+    async def _entry_response(
+        self, question: str, context: ConversationContext, emit: Emit | None,
+    ) -> dict[str, JsonValue] | None:
+        subject = entry_subject(question)
+        if not subject or not self._knowledge_tools:
+            return None
+        scope = query_filters(question, campus_today(), audience=context.audience,
+                              academic_year=context.academic_year, campus=context.campus)
+        ev = Evidence(emit=emit, retrieval_scope=scope)
+        status = await self._call('search_knowledge', {
+            'query': subject, 'audience': scope.audience, 'academic_year': scope.academic_year,
+        }, ev, entry_only=True)
+        if status != 'success':
+            return None
+        matched = []
+        for hit in ev.grounded_hits():
+            values = hit.get('service_links')
+            if (not isinstance(values, list) or not values or hit.get('stale')
+                    or hit.get('verification_status') not in {'verified', 'official_document'}):
+                continue
+            titles = [str(hit.get('title') or ''), *(str(link.get('title') or '')
+                      for link in values if isinstance(link, dict))]
+            if any(entry_title_matches(subject, title) for title in titles):
+                matched.append(hit)
+        if len({h.get('source_id') for h in matched}) != 1:
+            return None
+        from campuspilot.service_links import answer_service_links
+
+        cited = tuple(str(h['chunk_id']) for h in matched)
+        links = answer_service_links(matched, cited, 'success')
+        if not links:
+            return None
+        self._apply_rerank(ev, cited)
+        direct = any(isinstance(link, dict) and link.get('kind') != 'guide' for link in links)
+        view = Understanding(intent='政策问答', slots=Slots(service=subject))
+        await ev.notify('understanding', {'intent': view.intent, 'slots': view.slots.model_dump(),
+                                          'missing': []})
+        context.service_focus = None
+        return self.responses.build(
+            answer='可从下方官方入口进入；具体受理状态以平台显示为准。' if direct else
+            '已找到下方官方办理指南，按指南进入对应平台；尚未核验可直接办理的网址。',
+            status='success' if direct else 'limited', view=view, plan=None,
+            steps=[StepRecord(step=1, tool='search_knowledge', label='核对官方入口',
+                              status='success')],
+            ev=ev, cited=cited, mode='agent_entry',
+        )
+
     async def run(
         self,
         question: str,
@@ -589,7 +779,8 @@ class AgentRunner:
         """One turn. `emit` (optional) receives understanding/plan/tool_start/tool_end events."""
         snapshots = self.snapshots
         if snapshots is None or not public_input(question):
-            return await self._run(question, context, emit, images=images)
+            result = await self._run(question, context, emit, images=images)
+            return self._profile_result(result)
         try:
             retriever = await asyncio.to_thread(snapshots.acquire)
         except Exception as exc:
@@ -608,7 +799,13 @@ class AgentRunner:
         with ExitStack() as scope:
             for store in self._snapshot_stores:
                 scope.enter_context(store.pin(retriever))
-            return await self._run(question, context, emit, images=images)
+            result = await self._run(question, context, emit, images=images)
+            return self._profile_result(result)
+
+    def _profile_result(self, result: dict[str, JsonValue]) -> dict[str, JsonValue]:
+        if self.profile is not None:
+            result["harness_profile"] = dict(self.profile.identity())
+        return result
 
     async def _run(
         self,
@@ -628,6 +825,16 @@ class AgentRunner:
                 steps=[],
                 ev=ev,
                 mode="agent_local",
+            )
+        if re.search(r"(?:替我|代我).{0,12}(?:登录|提交|缴费|支付|预约|申请)|"
+                     r"帮我(?:登录|提交|缴费|支付|预约|申请)", question) and not re.search(
+            r"怎么|如何|入口|指南|材料|流程|不(?:要|用|需).{0,4}(?:替我|代我|帮我)", question
+        ):
+            return self.responses.build(
+                answer="我可以提供办理指引；登录、缴费、预约或提交需要你本人操作，"
+                       "我不能代办或声称已办理成功。请从学校官方入口办理并查看确认结果。",
+                status="limited", view=None, plan=None, steps=[], ev=ev,
+                mode="agent_local", show_sources=False,
             )
         identifiers = tuple(image.attachment_id for image in images)
         changed = bool(images) and identifiers != context.image_attachment_ids
@@ -661,7 +868,9 @@ class AgentRunner:
                         context.image_task = ImageTask(question[:2000], "reading")
                 else:
                     context.image_task = ImageTask(question[:2000], "campus")
-        elif reading or self._refers_image(question):
+        elif (reading or self._refers_image(question)) and not (
+            context.image_task is None and self._quoted_figure_text(question)
+        ):
             context.image_task = ImageTask(question[:2000], "reading" if reading else "campus")
             return self.responses.build(
                 answer="请上传要阅读或查询的图片，我会接着处理这个问题。",
@@ -676,8 +885,19 @@ class AgentRunner:
         else:
             context.image_task = None
         ev.images = images
+        if self.concise and not images:
+            previous_service = self.repository.find_service(context.service_focus or "")
+            if previous_service is not None and FOLLOWUP.fullmatch(question.strip()):
+                question = previous_service.name + " " + question
+        shortcut = quick_view(question, self.repository) if (
+            self.concise and not images and context.campus == 'chengdu'
+        ) else None
+        if self.concise and not images and shortcut is None:
+            entry = await self._entry_response(question, context, emit)
+            if entry is not None:
+                return entry
         understanding_model = self.reader if images else self.model
-        view = await understand(understanding_model, question, context.history, images)
+        view = shortcut or await understand(understanding_model, question, context.history, images)
         ev.user_observation = view.image_observation
         ev.visible_text = view.image_visible_text if images else ""
         if images and view.image_observation:
@@ -740,6 +960,19 @@ class AgentRunner:
             )
         if view.slots.academic_year:
             context.academic_year = view.slots.academic_year
+        elif context.academic_year:
+            view = view.model_copy(update={"slots": view.slots.model_copy(
+                update={"academic_year": context.academic_year}
+            )})
+        # Resolve the human question once. A tool query rewritten by the model cannot
+        # silently change this turn's campus, identity or academic-year restrictions.
+        from campuspilot.knowledge import campus_today
+
+        ev.retrieval_scope = query_filters(
+            question, campus_today(), audience=context.audience,
+            academic_year=context.academic_year, campus=context.campus,
+        )
+        context.campus = ev.retrieval_scope.campus
         view = view.model_copy(update={"missing": self.needed(view, question)})
         await ev.notify(
             "understanding",
@@ -784,7 +1017,35 @@ class AgentRunner:
                 view = view.model_copy(
                     update={"slots": view.slots.model_copy(update={"service": hint})}
                 )
-        plan = make_plan(view, question)
+        plan = make_plan(view, question, on_demand_checklist=self.concise)
+        if shortcut and view.intent == "办事":
+            plan = plan.model_copy(update={
+                "steps": tuple(s for s in plan.steps if s.tool == "search_service"),
+            })
+        selected_recipe: str | None = None
+        plugin = self.routing_jev
+        if plugin is not None and plugin.mode != "off" and shortcut is None:
+            from campuspilot.agent.routing import RouteDecision
+
+            try:
+                decision = await self.execution.run(
+                    "jev_assess", lambda: self._jev_turn(ev, plugin).route(question, view.intent)
+                )
+            except ToolError as exc:
+                decision = RouteDecision("denied", reason=exc.code)
+            applied = False
+            if plugin.mode == "on" and decision.status == "ok" and decision.route in ROUTES:
+                view, plan = route_plan(view, question, decision.route)
+                applied = decision.route not in {"clarify", "chat"}
+                if applied:
+                    selected_recipe = decision.route
+                    if self.concise and not DETAILS.search(question):
+                        plan = plan.model_copy(update={
+                            "steps": tuple(s for s in plan.steps if s.tool != "make_checklist"),
+                        })
+            await ev.decision("route", decision.status,
+                              decision.route if applied else "baseline",
+                              reason=decision.reason, latency_ms=decision.latency_ms)
         ev.question = question
         if view.intent in {"找地点", "路线"}:
             ev.destination_query = view.slots.destination or question
@@ -803,7 +1064,10 @@ class AgentRunner:
                     update={"slots": view.slots.model_copy(update={"destination": matched[0].name})}
                 )
                 ev.destination_query = matched[0].name
-                plan = make_plan(view, question)
+                if selected_recipe is not None:
+                    view, plan = route_plan(view, question, selected_recipe)
+                else:
+                    plan = make_plan(view, question, on_demand_checklist=self.concise)
             elif images and not view.slots.destination and not classroom_code(question):
                 return self.responses.build(
                     answer="图片中没有可确认的地点名称或教室编号，请补充文字，或在地图上选择目的地。",
@@ -824,6 +1088,24 @@ class AgentRunner:
             {"steps": [{"step": s.step, "tool": s.tool, "label": s.label} for s in plan.steps]},
         )
         steps = await self._run_plan(plan, ev)
+        if self.concise:
+            context.service_focus = next(iter(ev.services), None)
+        if shortcut and len(ev.services) == 1:
+            service = next(iter(ev.services.values()))
+            text = service_answer(service, question)
+            if text:
+                if service_channel(question) == 'online':
+                    ev.places.clear()
+                    context.destination_candidates = []
+                return self.responses.build(
+                    answer=text, status="success", view=view, plan=plan, steps=steps, ev=ev,
+                    cited=tuple(ev.citations), mode="agent_direct",
+                )
+            # Unsupported channels retain the normal evidence path.
+            extra = make_plan(view, question, on_demand_checklist=True)
+            steps.extend(await self._run_plan(extra.model_copy(update={
+                "steps": tuple(s for s in extra.steps if s.tool != "search_service"),
+            }), ev))
         if view.intent in {"找地点", "路线"}:
             context.destination_candidates = [
                 self.responses.place_card(p) for p in ev.places.values()
@@ -834,15 +1116,32 @@ class AgentRunner:
                 return self._place_response(view, plan, steps, ev)
         else:
             context.destination_candidates = []
+        from campuspilot.agent.advice import evidence_advice
+
+        if evidence_advice(question, [t.content for t in context.history if t.role == "user"], ev):
+            return await self._compose(question, view, context, ev, plan, steps)
         if self.web_service is not None:
             return await self._with_web(question, view, context, ev, plan, steps)
         return await self._with_jev(question, view, context, ev, plan, steps)
 
     @staticmethod
+    def _quoted_figure_text(question: str) -> bool:
+        """A textual quotation about an official workflow needs sources, not image reading."""
+        return bool(
+            (re.search(r"图[上中里]", question)
+             and any(w in question for w in (
+                 "业务", "办理", "提交", "官方", "指南", "政策", "申请", "流程", "报修",
+             ))
+             or re.search(r"(?:图片|流程图).{0,20}正文|正文.{0,20}(?:图片|流程图)", question))
+            and not re.search(r"这张|那张|截图|上传|识别|读图|看图|帮我.*(?:看|读)", question)
+        )
+
+    @staticmethod
     def _refers_image(question: str) -> bool:
         return bool(
             re.search(
-                r"图片|照片|截图|课表|这张|那张|这两张|那两张|上传的|附件|图中|图里|图上|图一|图二"
+                r"图片|照片|截图|这张|那张|这两张|那两张|上传的|图中|图里|图上|图一|图二"
+                r"|(?:看|读|识别|解读|分析|整理).{0,6}课表|课表(?:图|中|里|上)"
                 r"|这栋|那个楼|这个楼",
                 question,
             )
@@ -1056,10 +1355,20 @@ class AgentRunner:
             user_observations=(ev.user_observation,)
             if ev.user_observation and public_input(ev.user_observation)
             else (),
+            retrieval_scope={key: value for key, value in
+                             ev.retrieval_scope.model_dump(mode="json").items()
+                             if key in {"audience", "campus", "academic_year"}}
+            if ev.retrieval_scope else {},
         )
-        assessment = await self._judge(turn, question, candidates, local, before) if turn else None
+        assessment = (
+            await self._judge(turn, question, candidates, local, before)
+            if turn and (not self.concise or (local == "unassessed" and bool(ev.hits)))
+            else None
+        )
         if assessment is not None:
             self._trace("jev", {**assessment.record("on"), "stage": "before_search"})
+            await ev.decision("evidence", assessment.status, assessment.decision,
+                              reason=assessment.reason, latency_ms=assessment.latency_ms)
         explicit_search = any(w in question for w in ("联网", "查最新", "最新通知", "最新政策"))
         if assessment is not None and assessment.usable:
             search = assessment.search_needed is True or assessment.decision == "insufficient"
@@ -1074,7 +1383,7 @@ class AgentRunner:
             self._apply_rerank(ev, assessment.ranked_ids)
         else:
             search = local != "grounded"
-        search = search or explicit_search
+        search = search or explicit_search or bool(self._constraint_conflict_ids(question, ev))
         if not search:
             return await self._compose(question, view, context, ev, plan, steps)
         await ev.notify("tool_start", {"tool": "search_web", "label": "联网查找资料"})
@@ -1093,7 +1402,8 @@ class AgentRunner:
         )
         # Third-party pages may be shown as explicitly marked leads, but must not enter
         # the answer's authoritative evidence for campus procedures and contacts.
-        official = tuple(p for p in result.pages if p.source_authority == "official_university")
+        official = tuple(p for p in result.pages if p.source_authority == "official_university"
+                         and campus_page_matches(p.url, context.campus))
         trusted = WebSearchResult(
             result.status,
             official,
@@ -1110,6 +1420,7 @@ class AgentRunner:
             user_observations=before.user_observations,
             web_pages=official,
             search_completed=True,
+            retrieval_scope=before.retrieval_scope,
         )
         checked = (
             await self._judge(turn, question, candidates, local, after, "after_search")
@@ -1117,6 +1428,8 @@ class AgentRunner:
         )
         if checked is not None:
             self._trace("jev", {**checked.record("on"), "stage": "after_search"})
+            await ev.decision("web_evidence", checked.status, checked.decision,
+                              reason=checked.reason, latency_ms=checked.latency_ms)
         approved = bool(
             official and checked and checked.usable and checked.decision == "sufficient"
         )
@@ -1140,7 +1453,10 @@ class AgentRunner:
         suffix = messages.get(result.status, "联网材料仍不足以确认答案。")
         if result.pages and (checked is None or not checked.usable):
             suffix += "新网页的内容尚未核实，暂不作为答案依据。"
-        if ev.has_local_evidence():
+        current_local = ev.has_structured() or any(
+            hit.get('text') and not hit.get('stale') and not hit.get('web') for hit in ev.hits
+        )
+        if ev.has_local_evidence() and (not explicit_search or current_local):
             body = await self._compose(
                 question, view, context, ev, plan, steps, evidence_notice=suffix
             )
@@ -1160,7 +1476,9 @@ class AgentRunner:
                 "title": p.title,
                 "url": p.url,
                 "source_authority": p.source_authority,
-                "source_label": "待核对的官方材料" if p in official else "第三方辅助信息",
+                "source_label": "待核对的官方材料" if p in official else
+                "其他校区官方材料" if p.source_authority == "official_university" else
+                "第三方辅助信息",
             }
             for p in result.pages
         ]
@@ -1173,7 +1491,8 @@ class AgentRunner:
         if cards:
             exact = len(cards) == 1 and ev.place_resolution != "candidates"
             answer = (
-                f"已找到{cards[0]['name']}，点击“带我去”可规划到该地点的步行路线。"
+                f"已找到{cards[0]['name']}，可在地图上查看建筑参考位置。"
+                "具体入口、楼层和室内路线尚未确认，前往时请按现场指示。"
                 if exact
                 else "找到多个可能的地点，请选择你要去的那个。"
             )
@@ -1221,12 +1540,63 @@ class AgentRunner:
     # -- optional Jev plugin (CAMPUSPILOT_JEV) -------------------------------------------
 
     def _local_grounding(self, ev: Evidence) -> str:
+        if self._constraint_conflict_ids(ev.question, ev):
+            return "unassessed"
         decisions = [str(c.get("decision")) for c in ev.grounding_checks]
         if any(d == "grounded" for d in decisions):
             return "grounded"
         if decisions and all(d == "insufficient" for d in decisions):
             return "insufficient"
         return "unassessed"
+
+    @staticmethod
+    def _constraint_conflict_ids(question: str, ev: Evidence) -> tuple[str, ...]:
+        if not re.search(r"冲突|不一致|不同|差异|对不上", question):
+            return ()
+        if not re.search(r"条件|长度|期限|金额|资格|上限|数量|边界|适用范围", question):
+            return ()
+        if any(h.get("web") and h.get("grounded") for h in ev.hits):
+            return ()  # Fresh official evidence has already crossed the online judge.
+        return tuple(dict.fromkeys(
+            str(h["source_id"]) for h in ev.hits
+            if h.get("source_id") in ev.allowed and re.search(
+                r"(?:条件|长度|期限|金额|资格|上限|数量|边界|适用范围).{0,25}"
+                r"(?:表述|写法|口径).{0,4}(?:不同|不一致)|未解决.{0,4}冲突",
+                str(h.get("text") or ""),
+            )
+        ))
+
+    @staticmethod
+    def _knowledge_citation(row: dict[str, JsonValue], ev: Evidence) -> None:
+        """Bind a source card to exactly the chunk revisions still available this turn."""
+        source_id = str(row.get("source_id"))
+        previous = ev.citations.get(source_id, {})
+        previous_refs = previous.get("evidence_refs", [])
+        reference: JsonValue = {
+            "chunk_id": row.get("chunk_id"), "document_id": row.get("document_id"),
+            "revision_id": row.get("revision_id"), "locator": row.get("locator"),
+            "text_sha256": row.get("text_sha256"),
+        }
+        refs = previous_refs if isinstance(previous_refs, list) else []
+        ev.citations[source_id] = {
+            "id": row.get("source_id"), "title": row.get("source_title"),
+            "url": row.get("url"), "publisher": row.get("publisher"),
+            "audience": row.get("applicability"),
+            "date": row.get("published_at") or row.get("updated_at"),
+            "source_authority": row.get("source_authority") or (
+                None if row.get("web") else "official_university"
+            ),
+            "access_method": row.get("access_method"),
+            "source_label": "联网官方页面"
+            if row.get("web") and row.get("source_authority") == "official_university"
+            else "第三方辅助信息" if row.get("web") else "学校官方资料",
+            "stale": bool(row.get("stale") or previous.get("stale")),
+            "document_id": row.get("document_id"), "revision_id": row.get("revision_id"),
+            "locator": row.get("locator"), "text_sha256": row.get("text_sha256"),
+            "scope_notes": row.get("scope_notes"),
+            "evidence_refs": [*[ref for ref in refs if ref != reference], reference],
+            **({"note": OCR_NOTE} if row.get("ocr") or previous.get("note") else {}),
+        }
 
     def _apply_rerank(self, ev: Evidence, kept: tuple[str, ...]) -> None:
         """Keep only `kept` knowledge chunks, in that order, everywhere evidence is read."""
@@ -1236,7 +1606,10 @@ class AgentRunner:
             rows = [r for r in rows or [] if isinstance(r, dict) and r.get("chunk_id") in order]
             return sorted(rows, key=lambda r: order[str(r.get("chunk_id"))])
 
-        ev.hits = rerank(ev.hits)
+        contexts = context_rows(ev.hits, [{"chunk_id": cid} for cid in kept])
+        ranked = rerank(ev.hits)
+        ranked_ids = {row.get("chunk_id") for row in ranked}
+        ev.hits = [*ranked, *[row for row in contexts if row.get("chunk_id") not in ranked_ids]]
         for entry in ev.results:
             result = entry.get("result")
             if entry.get("tool") == "search_knowledge" and isinstance(result, dict):
@@ -1244,16 +1617,18 @@ class AgentRunner:
                 entry["result"] = {
                     **result,
                     "hits": hits,
+                    "context": cast(JsonValue, context_rows(result.get("context"), hits)),
                     "answer": "\n".join(str(h.get("text")) for h in hits[:3]),
                     "result_status": "success" if hits else "empty",
                 }
         ev.allowed = set()
         for entry in ev.results:
             _collect_ids(entry.get("result"), ev.allowed)
-        sources = {str(h.get("source_id")) for h in ev.hits}
-        for source_id in ev.knowledge_sources - sources:
+        for source_id in ev.knowledge_sources:
             ev.citations.pop(source_id, None)
-        ev.knowledge_sources &= sources
+        for row in ev.hits:
+            self._knowledge_citation(row, ev)
+        ev.knowledge_sources = {str(h.get("source_id")) for h in ev.hits}
 
     async def _with_jev(
         self,
@@ -1265,6 +1640,8 @@ class AgentRunner:
         steps: list[StepRecord],
     ) -> dict[str, JsonValue]:
         """Hook between _run_plan and _answer. Every Jev fault falls back to the plain flow."""
+        if self.concise and self._local_grounding(ev) == "grounded":
+            return await self._compose(question, view, context, ev, plan, steps)
         jev = self.jev
         candidates = (
             await asyncio.to_thread(jev.resolve, ev.hits)
@@ -1288,7 +1665,11 @@ class AgentRunner:
             task.add_done_callback(done)
             return await self._compose(question, view, context, ev, plan, steps)
         assessment = await self._judge(turn, question, candidates, local)
+        await ev.decision("evidence", assessment.status, assessment.decision,
+                          reason=assessment.reason, latency_ms=assessment.latency_ms)
         decision = assessment.decision
+        if self.concise and assessment.usable and decision == "sufficient":
+            ev.routing_complete = True
         other = ev.has_structured()
         if (
             assessment.usable and not other and not assessment.ranked_ids
@@ -1337,8 +1718,32 @@ class AgentRunner:
         evidence_notice: str = "",
     ) -> dict[str, JsonValue]:
         await ev.notify("composing", {"label": "组织答案并核对引用"})
+        from campuspilot.agent.advice import evidence_advice
+
+        user_history = [t.content for t in context.history if t.role == "user"]
+        advice = evidence_advice(question, user_history, ev)
+        if advice is not None:
+            return self.responses.build(
+                answer=advice.answer, status=advice.status, view=view, plan=plan,
+                steps=steps, ev=ev, cited=advice.cited,
+            )
+        conflict_ids = self._constraint_conflict_ids(question, ev)
+        if conflict_ids:
+            return self.responses.build(
+                answer="来源的条件表述存在差异，当前不能据此保证具体边界。"
+                       "请以当前官方办理页面的校验或主管部门确认为准。",
+                status="limited", view=view, plan=plan, steps=steps, ev=ev,
+                cited=conflict_ids, degraded="unresolved_source_conflict",
+            )
         ev.question, ev.answering = question, True
         reply, failure, _ = await self._answer(question, view, context, ev)
+        context_withheld = any(
+            isinstance(entry.get("result"), dict)
+            and entry["result"].get("reason") == CONTEXT_BUDGET_REASON  # type: ignore[union-attr]
+            for entry in ev.results
+        )
+        if context_withheld:
+            evidence_notice = "\n".join(filter(None, (evidence_notice, CONTEXT_BUDGET_NOTICE)))
         if reply is not None:
             # Checklist item keys (e.g. "limit-3") are local UI keys, not evidence; models
             # sometimes cite them. They are dropped; every other citation stays strict.
@@ -1360,7 +1765,9 @@ class AgentRunner:
                     ev.allowed,
                     reply.status,
                     json.dumps(
-                        [entry for entry in ev.results if entry.get("tool") != "user_images"],
+                        {"today": campus_today().isoformat(), "tool_results": [
+                            entry for entry in ev.results if entry.get("tool") != "user_images"
+                        ]},
                         ensure_ascii=False,
                     ),
                     premise,
@@ -1387,7 +1794,8 @@ class AgentRunner:
                     steps=steps,
                     ev=ev,
                     cited=reply.source_ids,
-                    degraded="evidence_insufficient" if evidence_notice else "",
+                    degraded=CONTEXT_BUDGET_REASON if context_withheld else
+                    "evidence_insufficient" if evidence_notice else "",
                 )
         summary = self.responses.summary(ev)
         return self.responses.build(
@@ -1397,6 +1805,6 @@ class AgentRunner:
             plan=plan,
             steps=steps,
             ev=ev,
-            degraded=failure or "unverified",
+            degraded=CONTEXT_BUDGET_REASON if context_withheld else failure or "unverified",
             show_sources=summary != NO_BASIS_ANSWER,
         )

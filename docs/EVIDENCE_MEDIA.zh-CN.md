@@ -59,8 +59,6 @@ CAMPUSPILOT_WEB_SEARCH_PROVIDER=deepseek
 CAMPUSPILOT_EVIDENCE_BUDGET_DIR=/var/lib/campuspilot/evidence-budget
 CAMPUSPILOT_EVIDENCE_DAILY_USD=1
 CAMPUSPILOT_EVIDENCE_DAILY_FLOWS=100
-CAMPUSPILOT_SEARCH_INPUT_USD_PER_M=0.3
-CAMPUSPILOT_SEARCH_OUTPUT_USD_PER_M=1.2
 CAMPUSPILOT_JEV=on
 CAMPUSPILOT_JEV_MODEL=typesafe/jev-1.13
 CAMPUSPILOT_JEV_KEY_FILE=/PRIVATE/PATH/openrouter-jev-key.txt
@@ -70,16 +68,22 @@ TAVILY_API_KEY=
 TAVILY_FREE_PLAN_CONFIRMED=false
 ```
 
-价格按 2026-10-14 官方资料核对：
-[DeepSeek](https://api-docs.deepseek.com/quick_start/pricing/)、
-[Jev](https://openrouter.ai/typesafe/jev-1.13)。部署时再次确认，缺少价格不启用付费调用。
-原生搜索可能产生隐藏检索 token，因此先保守预留至模型上下文上限的费用，已知用量再结算；
-超时或未知用量不退回预留。并发共用账本，达上限就降级。
+2026-10-21 改为 DeepSeek 独立 `POST /v1/tools/search`、`POST /v1/tools/fetch`，
+不再以模型消息工具模拟搜索。Search 请求 `need_content=true`；已有完整正文不重复 Fetch。
+按[官方独立工具说明](https://api-docs.deepseek.com/guides/search)保守预留每次 $0.00075，
+成功非空按该额结算，明确失败或空结果按零结算；超时、取消、未知响应保留预留。
+旧 `SEARCH_INPUT/OUTPUT_USD_PER_M` 配置继续接受以兼容旧运行环境，但不用于独立 Search/Fetch 计费。
+Jev 价格配置仍按 [OpenRouter](https://openrouter.ai/typesafe/jev-1.13) 核对。
+并发共用账本，达上限就降级；后续部署需再次核对价格。
 配置可降低额度；超过每天一美元或一百次流程会拒绝启动，不能靠环境变量扩大批准预算。
 
 Tavily 必须确认免费账户、无自动付费后才将 `TAVILY_FREE_PLAN_CONFIRMED=true`，并保守限制每月一千次基础查询。
 原生正文被学校访问保护阻止时，可在剩余截止时间和读取额度内使用供应商 `raw_content`，
 标为 `provider_extraction`；摘要或生成答案不作正文。缺备用凭据时返回明确限制。
+
+本轮共享十秒截止时间、最多两次 Search 和三页正文；不截断正文后把它称作完整政策。
+搜索列表、登录或访问验证页不能进入答案；不同校区材料分开核对。
+真实 Search/Fetch 与交互检查见 [2026-10-21 报告](qa/student-experience-20261021.md)。
 
 ## 验证与待验边界
 

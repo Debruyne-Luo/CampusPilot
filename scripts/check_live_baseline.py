@@ -5,19 +5,23 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import runpy
 from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-RECEIPT = ROOT / "docs/releases/live-20261013.manifest.json"
+RECEIPT = ROOT / "docs/releases/live-20261022.manifest.json"
 
 
 def digest(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def release_paths(root: Path, bundle: str) -> set[str]:
+def release_paths(root: Path, bundle: str, *, knowledge_current: bool = False) -> set[str]:
     """Match the published scopes in deploy/_release.py; exclude runtime caches/raw sources."""
+    if knowledge_current:
+        collect = runpy.run_path(str(ROOT / "deploy/_release.py"))["collect"]
+        return set(collect(root, knowledge_current=True))
     paths: set[Path] = set()
     for folder in (root / "backend/src/campuspilot", root / "data/cdut/rag" / bundle):
         paths.update(
@@ -54,12 +58,18 @@ def check(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
             line_endings.append(name)
         else:
             changed.append(name)
-    added = sorted(release_paths(root, manifest["knowledge_bundle"]) - hashes.keys())
+    try:
+        paths = release_paths(root, manifest["knowledge_bundle"],
+                              knowledge_current=bool(manifest.get("knowledge_version")))
+        scope_error = None
+    except ValueError as exc:
+        paths, scope_error = set(), str(exc)
+    added = sorted(paths - hashes.keys())
     version_valid = (
         manifest["version"] == "r-" + digest(json.dumps(hashes, sort_keys=True).encode())[:12]
     )
     return {
-        "matches_live_manifest": not (missing or changed or added) and version_valid,
+        "matches_live_manifest": not (missing or changed or added or scope_error) and version_valid,
         "release": manifest["version"],
         "source_commit": manifest["git_commit"],
         "manifest_files": len(hashes),
@@ -68,14 +78,16 @@ def check(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
         "changed": changed,
         "added": added,
         "crlf_only_count": len(line_endings),
+        "scope_error": scope_error,
     }
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", type=Path, default=ROOT)
+    parser.add_argument("--manifest", type=Path, default=RECEIPT)
     args = parser.parse_args()
-    result = check(args.root.resolve(), json.loads(RECEIPT.read_text(encoding="utf-8")))
+    result = check(args.root.resolve(), json.loads(args.manifest.read_text(encoding="utf-8")))
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0 if result["matches_live_manifest"] else 1
 

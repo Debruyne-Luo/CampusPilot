@@ -1,0 +1,371 @@
+# 2026级成理萌新看过来！这份超全缴费指南请收好
+
+成都理工大学财务处
+
+_Aug 19, 2026, 10:57 PM_
+
+在小说阅读器读本章
+
+去阅读
+
+在公众号小说中沉浸阅读
+
+**2026级成理萌新看过来！** **这份超全缴费指南请收好**
+
+**各位2026级的新同学，大家好！**
+
+欢迎加入成都理工大学大家庭！ 为了方便大家顺利完成入学前的各项准备，我们特别准备了这份详细的学杂费缴纳指南。请仔细阅读，确保您的报到流程顺畅无忧。
+
+![Image](https://mmbiz.qpic.cn/sz_mmbiz_gif/EY6oPHibu6L6TLEBR5H4cLtEdbZNKib1HVTrKUURA8SI2GnWSyoP9UnFqiaOUBtTe4MHdjRfM9nJB2sAyX7JVJyb9AfVlTgzlcYEyJcialTAjc0/640?wx_fmt=gif#imgIndex=0)
+
+**01**
+
+**缴费时间**
+
+![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/ARa08UR2jFKaqTwNE71Phib7lbOicicib6KhhDsqJB3XDF5CMnqiaHI18qAkl0pks3Nto6Nb1PEPRlV7hdJAbJ6iatbQhia4cfcUHhibxXibHQEK4ttA/640?wx_fmt=png#imgIndex=1)
+
+**缴费通道开启时间**：8月20日全面开放
+
+**建议完成时间**：请在 2026年9月14日 前完成缴费，以免影响后续的学籍注册和选课。
+
+**系统维护时段**：每日22:00至24:00，以及每月最后两天，缴费系统将进行维护，届时将暂停服务。
+
+**02**
+
+**缴费方式**
+
+![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/ARa08UR2jFKaqTwNE71Phib7lbOicicib6KhhDsqJB3XDF5CMnqiaHI18qAkl0pks3Nto6Nb1PEPRlV7hdJAbJ6iatbQhia4cfcUHhibxXibHQEK4ttA/640?wx_fmt=png#imgIndex=2)
+
+**01**
+
+**迎新系统缴费**
+
+1.登录学校迎新网 [yx.cdut.edu.cn](https://yx.cdut.edu.cn/) 点击【在线报到】。
+
+2.输入用户名和密码（新生第一次登录需要激活账号、设置密码后登录），登录数字迎新系统。
+
+3.进入【财务缴费】模块，选择缴费项，点击【网上缴费】支付。
+
+![Image](https://mmecoa.qpic.cn/mmecoa_png/b4krpQr9W77WpkYIGKcicqBQGX8iaMT4SGUob0hor8Nh317E8YfgZYhVfaficsAIppGg3DtKzPvA1srF27x98ufsWiaH01YVRShvq8A0AnGTSTo/640?wx_fmt=png#imgIndex=3)![Image](https://mmecoa.qpic.cn/sz_mmecoa_png/b4krpQr9W74BNaG3Atu0yd6SlODDIZDD9wrmdUwDWhTvgVOu10x1UZWqtuzBtWrlcHlfiaKMvA7nqcxsuBsmERDgBEMIUhRh8jJJdCfnx3Qo/640?wx_fmt=png#imgIndex=4)
+
+**02**
+
+**微信公众号缴费**
+
+1.打开微信，搜索并关注“成都理工大学财务处”微信服务号。
+
+2.进入微信服务号，选择【学生服务】→【在线缴费】，输入用户名和密码（新生第一次登录需要激活账号、设置密码后登录），选择缴费项进行缴费。
+
+![Image](https://mmecoa.qpic.cn/sz_mmecoa_png/b4krpQr9W74OG3aE2Yz97mzkuomqVW2WC4ia08XnXbmrpKwNahntZeU1t80687qJic9Nv50vZUXhlV7PptcweCfia6vykhrTq7IVg2uvIlVMtI/640?wx_fmt=png#imgIndex=5)
+
+**03**
+
+**支付宝缴费**
+
+1.打开手机支付宝，搜索并关注“成都理工大学”生活号。
+
+2.关注后点击【缴费大厅】→【学杂费】，输入用户名和密码（新生第一次登录需要激活账号、设置密码后登录），选择缴费项进行缴费。
+
+![Image](https://mmecoa.qpic.cn/mmecoa_png/b4krpQr9W76HFHIibeWeRWbGPzhIufI3C7ovI5rDXq1VXfpdOFDVyLD8WnYZxCxgl8FkE5hfKUwDkDhDicuVvsJUVmxkJ0zib2gueiagjPKm0SM/640?wx_fmt=png#imgIndex=6)
+
+支付宝缴费详解
+
+**04**
+
+**网上缴费方式**
+
+1.打开浏览器（建议使用谷歌或 IE10 以上的浏览器）校外访问：成都理工大学主页→砚湖易办→VPN 入口→财务缴费平台。
+
+校内访问：成都理工大学财务处主页访问 [https://jcc.cdut.edu.cn](https://jcc.cdut.edu.cn/)
+
+→学生网上缴费
+
+2\. 输入用户名和密码（新生第一次登录需要激活账号、设置密码后登录），选择缴费项进行缴费。
+
+![Image](https://mmecoa.qpic.cn/mmecoa_png/b4krpQr9W76oxc89TVFzeah7licS5grorZL29eM4B072EFqdgX9yBZYTQIxG0Ga9dpQibvzSDPY1IUwYibMPP64icN9oYBIKn0iaEj1Cv2ianXiako/640?wx_fmt=png#imgIndex=7)
+
+图文详解请点开大图阅读
+
+5
+
+**生源地缴费**
+
+1.国家开发银行和中国银行生源地信用贷款缴费的学生
+
+开学报到时通过学工系统（ [https://xgfw.cdut.edu.cn](https://xgfw.cdut.edu.cn/)）在线填报提交贷款回执校验码，贷款银行会直接将款项划拨至学校。请您在收到银行放款短信后，及时登录缴费平台确认学费、住宿费是否已抵扣。若学杂费超出贷款金额，请自行补缴差额部分。
+
+2\. 四川省农村信用合作社（以下简称“四川农信”）生源地信用助学贷款学生
+
+     开学报到时需将四川农信 APP 中的二维码截图上传学工系统（ [https://xgfw.cdut.edu.cn](https://xgfw.cdut.edu.cn/)），学生生源地资助管理中心进行审核后，由贷款银行放款。贷款放到学生卡上后为冻结状态，学生需要自行支用缴费，支付到指定的学校学费账户才算完成缴费。学生可在四川农信 APP 中全程跟进货款状态。学杂费超过生源地贷款的部分请学生自行完成缴纳。
+
+**四川农信助学贷款自行支用缴费手机操作流程如下所示：**
+
+① 打开农信银行 APP，点击“贷款”
+
+![Image](https://mmecoa.qpic.cn/sz_mmecoa_png/b4krpQr9W76radFS6mWecDyPtjia4VVMrmrTuSAEBT87FA1mYeAU6KAichDUDF7MwE1TZYk435LYDvaFspib7PKLZIicrjrrXCBjTJ9RmfW7YqU/640?wx_fmt=png#imgIndex=8)
+
+② 点击“贷款申请”
+
+![Image](https://mmecoa.qpic.cn/sz_mmecoa_png/b4krpQr9W76dRyyZ21sVNiaeDwE2pXVgPSBZw54bWqXVMzEQbLn9d3ckPpRacF5gToibzaSupH5sTAJ1RK3mKLjNMibsTUeXXJ7lcibH3nr8kOE/640?wx_fmt=png#imgIndex=9)
+
+③ 在右上角点击“进度”
+
+![Image](https://mmecoa.qpic.cn/sz_mmecoa_png/b4krpQr9W74ne2FEiaLxlbFsUH2oPQdibM08ib3trH8JicE15bYQojP0AibFL8zPswfP5YrmUpkvGHhWZBWF1joZTSEN7iaMuuAF5tEhibhO3avia8o/640?wx_fmt=png#imgIndex=10)
+
+④ 在申请进度中点击“去缴费”
+
+![Image](https://mmecoa.qpic.cn/sz_mmecoa_png/b4krpQr9W75ty0XOraoDZUTicWxwEUHODnJ0dIGpGJn6dm5kts0KylXyljjIJyvWLHyCsPbKbHLpWTYVbfLlZFUibESeRKQFgjJhcY8kCeJ2g/640?wx_fmt=png#imgIndex=11)
+
+⑤点击“去缴费”
+
+![Image](https://mmecoa.qpic.cn/mmecoa_png/b4krpQr9W75PeTA2ALe2qZEReQNYyicickLyZNUzhnUFR45HehgIYZKqBGtcK1I8kMvZTMIJ9jW3eZ3KakwQ60hCkMzjvanrJdAz11Xvd62gE/640?wx_fmt=png#imgIndex=12)
+
+⑥点击“下一步”
+
+![Image](https://mmecoa.qpic.cn/sz_mmecoa_png/b4krpQr9W77af5MnicTJeBwN0AB2v4Y6K72FhFUtaxuUVlRzgGmaNkDQ3NWpfvM3HfLGqiasyIkW38gicIEcppbBeBeux1C2RKkmLXsMuXtZbo/640?wx_fmt=png#imgIndex=13)
+
+⑦点击“确认缴费”之后就完成啦
+
+![Image](https://mmecoa.qpic.cn/sz_mmecoa_png/b4krpQr9W7623AgE5Tktt1KHb0Oy9q8ftw55JtfkWEQmzgQSliagI6RJ4CRERRRAicZjHAHQLyysBhB3J12meEBCwePjPMfQicU8g9OuTTvf8c/640?wx_fmt=png#imgIndex=14)
+
+3.其他银行贷款学生
+
+除上述银行外，完成在线填报后，需将纸质贷款回执交至所在学院，由学院统一交至学校学生资助管理中心处理。如有疑问，请咨询贷款银行。
+
+有疑问，可咨询贷款银行热线。学杂费超过生源地贷款的部份请学生自行完成缴纳。
+
+**特别提醒**：助学贷款原则上仅用于学费、住宿费的缴纳，代办费（医保费、体检费等）请同学们自行缴纳。若因贷款未到先行缴纳学费的同学，贷款到账后，学校会定期自动退还已交学费。
+
+**03**
+
+**温馨提示**
+
+![Image](https://mmbiz.qpic.cn/sz_mmbiz_png/ARa08UR2jFKaqTwNE71Phib7lbOicicib6KhhDsqJB3XDF5CMnqiaHI18qAkl0pks3Nto6Nb1PEPRlV7hdJAbJ6iatbQhia4cfcUHhibxXibHQEK4ttA/640?wx_fmt=png#imgIndex=15)
+
+1\. 关于支付限额
+
+学校缴费平台本身不限制支付金额，但各银行或第三方支付平台（微信、支付宝）设有不同的单笔/单日支付限额。如缴费金额超出限额，可在支付页面修改金额，分次缴纳；或提前将足额资金转入微信/支付宝余额后进行支付。如有疑问，请咨询您的发卡银行或支付平台。
+
+2.关于电子票据
+
+缴费成功后，可在24小时后通过“成都理工大学财务处”微信公众号的【支付记录】中查看并下载电子票据。
+
+![Image](https://mmecoa.qpic.cn/mmecoa_png/b4krpQr9W76aTFeEnYCvicZjlQaNLRI7mticgXFVUJ7BQFt1BAp3C7vqt6rO7MvSLvZMFXXevLscMsayYeGWiaLcZhjz6f7zhbbfRuXDiaoicNs8/640?wx_fmt=png#imgIndex=16)
+
+也可登录网上缴费平台（ [https://jcc.cdut.edu.cn](https://jcc.cdut.edu.cn/)），点击“缴费平台→ 缴费历史查询→电子票据”，查看并打印电子票据，财务处不再提供纸质票据。
+
+![Image](https://mmecoa.qpic.cn/mmecoa_png/b4krpQr9W76kBC7LQ4WKKibgk7QiaWSTVs8a3m8ntIWmdvjsKKjUjFT7rgFG3zrEaJpSfiaicpvF99WLEKYDK4fFiaqeHq0Te5GicbqibV3NXvQOAM/640?wx_fmt=png#imgIndex=17)
+
+学生通过申请生源地贷款缴费的，在贷款银行汇出贷款一个月后， 登录网上缴费平台（如上操作）查看或打印票据
+
+3.关于银行卡绑定
+
+为确保入校后，各类学生补助、奖助学金正常发放，学生应自行办理中国建设银行借记卡并在“财务处学生信息门户”个人信息页面登记自己的中国建设银行卡相关信息。
+
+**登记流程如下：**
+
+进入 “砚湖易办”（ [https://bsdt.cdut.edu.cn](https://bsdt.cdut.edu.cn/)）→“登录”（新生第一次登录需要激活账号）→“常用系统入口”→“财务服务平台”→“新版财务查询”→“我的财务信息”→“财务信息维护”→“本部学生卡号修改”→点击“确认修改”→点击“继续”→点击“确认”，绑定卡号成功。
+
+4.关于基本医疗保险费
+
+根据属地原则，成都校区和宜宾校区的学生需分别参加成都市和宜宾市的城乡居民基本医疗保险。该费用由学校代收代缴。
+
+缴费时间：因2027年度缴费标准尚未下达，此项费用暂未开通。待正式文件发布后，将另行通知缴费时间，请同学们密切关注“成都理工大学医院”微信公众号或班级群通知。
+
+**截止日期**：原则上为 2026年12月20日。在此日期前未完成缴费的同学，将视为自愿放弃由学校代收代缴。
+
+**特别提醒**：若超过集中参保时间还需办理参保缴费的同学，请学院统一收集学生姓名，学号，身份证号码，电话号码，并将电子版发送到校医院医保办统一办理参保缴费。未尽事宜，按各市医疗保障局下发的城乡筹资文件为准。
+
+**若无需学校代收代缴，请同学务必自行购买，确保能享受大学生基本医疗保险这项惠民政策。**
+
+5.关于报到流程提醒
+
+在缴费系统中缴费成功的学生仍需在成都理工大学迎新系统（服务域名地址： [yx.cdut.edu.cn](https://yx.cdut.edu.cn/)）上完成在线报到。
+
+如有任何疑问，欢迎随时关注“成都理工大学财务处”微信公众号获取最新通知或进行咨询。祝各位新同学入学顺利！
+
+![Image](https://mmbiz.qpic.cn/sz_mmbiz_gif/EY6oPHibu6L6TLEBR5H4cLtEdbZNKib1HVTrKUURA8SI2GnWSyoP9UnFqiaOUBtTe4MHdjRfM9nJB2sAyX7JVJyb9AfVlTgzlcYEyJcialTAjc0/640?wx_fmt=gif#imgIndex=18)
+
+![Image](https://mmecoa.qpic.cn/mmecoa_jpg/b4krpQr9W75HsxtBoiauorA5nY4icr7BV2ic3yIgUTd4MRicplG7ia9icMuJtZVQH5YwvaE15wkVjSib1AMibKk1Lg5WbO9ib8fF0RiccibCtpoTzLpzUQ/640?wx_fmt=jpeg#imgIndex=19)
+
+编辑：俞毅霞 张理
+
+审核：蔺玉
+
+审定：向全珍
+
+排版：廖金侏
+
+预览时标签不可点
+
+Close
+
+更多
+
+Name cleared
+
+**微信扫一扫赞赏作者**
+
+Give AuthorOther Amount
+
+赞赏后展示我的头像
+
+作品
+
+暂无作品
+
+Give Author
+
+Other Amount
+
+¥
+
+最低赞赏 ¥0
+
+OK
+
+Back
+
+**Other Amount**
+
+更多
+
+赞赏金额
+
+¥
+
+最低赞赏 ¥0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+0
+
+.
+
+Close
+
+更多
+
+搜索「」网络结果
+
+Close
+
+**调整当前正文文字大小**
+
+更多
+
+100%
+
+此设置仅对当前内容生效，如需全局调整，请前往微信系统设置
+
+不喜欢
+
+​
+
+Scan to Follow
+
+当前内容可能存在未经审核的第三方商业营销信息，请确认是否继续访问。
+
+继续访问Cancel
+
+[微信公众平台广告规范指引](javacript:;)
+
+Got It
+
+Scan with Weixin to
+
+use this Mini Program
+
+CancelAllow
+
+CancelAllow
+
+CancelAllow
+
+×分析
+
+![跳转二维码](https://mp.weixin.qq.com/s/37b1EidELwZnhfLEiCDtjA)
+
+![作者头像](http://mmbiz.qpic.cn/mmbiz_png/ccGgXziaX43ZqiaUic5ODiaWLc6T5FelwS6v34ZvQtYw4QJRJXZPOhcjxdn7uwZLm6zdSu979ib34NShn5jxaDIU0zg/0?wx_fmt=png)
+
+微信扫一扫可打开此内容，
+
+使用完整服务
+
+![](https://mmbiz.qpic.cn/mmbiz_png/ccGgXziaX43ZqiaUic5ODiaWLc6T5FelwS6v34ZvQtYw4QJRJXZPOhcjxdn7uwZLm6zdSu979ib34NShn5jxaDIU0zg/0?wx_fmt=png)
+
+成都理工大学财务处
+
+已关注
+
+Like
+
+Share
+
+Boost
+
+Comment
+
+: ，，，，，，，，，，，，.VideoMini ProgramLike，轻点两下取消赞Wow，轻点两下取消在看ShareCommentFavorite听过
+
+可在「公众号 \> 右上角  \> 划线」找到划线过的内容
+
+![划线引导图](https://res.wx.qq.com/op_res/opqv3ix6k9E4e64ZzO7uIqE3ZblwIojfmt7u70m59yS1ylFK-hTu6Ra8V_LaWQJ1P4OlUJPdXLfVBtrm3TwRrw)
+
+OK
+
+,
+
+,
+
+选择留言身份
+
+Close
+
+**Comment**
+
+更多
+
+加载失败，点击重试
+
+Close
+
+更多
+
+Back
+
+**的内容会推荐给朋友和关注你的人**
+
+更多
+
+对关注你的人展示公众号身份
+
+![](https://res.wx.qq.com/op_res/RCdSzC74aDD_QnWHvT8sNtESWCvezsiPOk6PEvubsj8wv5t3hSJndZcCOdHhYDBlk8xXexSC1CZccFnFO5JCHg)![](https://res.wx.qq.com/op_res/RCdSzC74aDD_QnWHvT8sNnXUvwtSaR2y5wHybXLJy_bhOTBTw97S11whc3dq9C0qRKv2tXjGNhrEXV4-6jYgIQ)
+
+OK
+
+关闭
+
+## 确认提交投诉
+
+你可以补充投诉原因（选填）
+
+确定
+
+wxa-pcopensdk

@@ -5,14 +5,18 @@ async page=>{
   const stop=()=>page.getByRole('button',{name:/^结束(演示|引导)$/}).click();
   const ready=()=>page.getByRole('button',{name:/^开始(路线演示|步行引导)$/}).waitFor();
   // Loading can finish after a rapid stop. No late layer may take over the map.
-  await page.route('**/models/cdutdino-guide.glb',async r=>{await new Promise(ok=>setTimeout(ok,900));await r.fallback();});
+  await page.route('**/models/graduate-dino.glb',async r=>{await new Promise(ok=>setTimeout(ok,900));await r.fallback();});
   await start();await stop();await ready();await page.waitForTimeout(1500);
   if(await frame.evaluate(()=>!!guide || !!dinoState || !map.getStatus().dragEnable))throw new Error('late guide survived stop');
-  await page.unroute('**/models/cdutdino-guide.glb');
-  // A failed GLB is explicit 2D fallback and still exits cleanly.
-  await page.route('**/models/cdutdino-guide.glb',r=>r.fulfill({status:503,body:'SYNTHETIC model unavailable'}));
+  await page.unroute('**/models/graduate-dino.glb');
+  // The default model can fail independently: the older 3D model must still load.
+  await page.route('**/models/graduate-dino.glb',r=>r.fulfill({status:503,body:'SYNTHETIC primary model unavailable'}));
+  await start();await frame.waitForFunction(()=>guide?.kind==='3d');await stop();await ready();
+  // Only failure of both GLBs selects the 2D compatibility marker.
+  await page.route('**/models/cdutdino-guide.glb',r=>r.fulfill({status:503,body:'SYNTHETIC fallback model unavailable'}));
   await start();await frame.waitForFunction(()=>guide?.kind==='sprite');await stop();await ready();
   await page.unroute('**/models/cdutdino-guide.glb');
+  await page.unroute('**/models/graduate-dino.glb');
   await page.emulateMedia({reducedMotion:'reduce'});await start();
   await frame.waitForFunction(()=>guide?.kind==='sprite');
   const bearing=await frame.evaluate(()=>map.getRotation());await page.waitForTimeout(1100);
@@ -32,5 +36,5 @@ async page=>{
   await page.getByRole('button',{name:'退出路线',exact:true}).click();
   await frame.waitForFunction(()=>!guide && !routeGeometry.length && map.getStatus().dragEnable);
   if(await page.locator('#route-note').isVisible())throw new Error('route exit kept stale controls');
-  return {cancelDuringLoad:true,modelFailureFallback:true,reducedMotion:true,widths,exitRoute:true};
+  return {cancelDuringLoad:true,primaryFailureUsesFallback3d:true,bothModelsFailureUsesSprite:true,reducedMotion:true,widths,exitRoute:true};
 }

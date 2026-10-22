@@ -34,7 +34,8 @@ from campuspilot.chat_runtime import ChatRuntime, Mode
 from campuspilot.config import parse_retrieval_mode
 from campuspilot.dify import DifyClient
 from campuspilot.directory.repository import DirectoryRepository
-from campuspilot.evaluation_budget import OnlineBudget, TokenPrice
+from campuspilot.evaluation_budget import OnlineBudget
+from campuspilot.harness_profile import HarnessProfile
 from campuspilot.jev_plugin import JevMode, build_plugin
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.llm.chat_model import ProductionModel, ToolCallingModel
@@ -45,7 +46,7 @@ from campuspilot.rag import SnapshotStore
 from campuspilot.retrieval.grounding import GroundingMode
 from campuspilot.tools import agent_registry
 from campuspilot.web_evidence import (
-    DeepSeekSearchProvider,
+    DeepSeekToolsProvider,
     TavilySearchProvider,
     WebEvidenceService,
 )
@@ -73,7 +74,10 @@ def _allowed_hosts(public_origin: str | None, api_token: str | None) -> list[str
 def asset_hash(root: Path = ASSETS) -> str:
     """Short content hash of every shipped front-end file (names + bytes)."""
     h = hashlib.sha256()
-    for path in sorted(p for p in root.rglob("*") if p.is_file() and "__pycache__" not in p.parts):
+    # Path ordering follows the host's case rules. Sort explicit relative components to
+    # preserve the Linux release fingerprint on Windows exports of identical bytes.
+    paths = (p for p in root.rglob("*") if p.is_file() and "__pycache__" not in p.parts)
+    for path in sorted(paths, key=lambda p: p.relative_to(root).parts):
         h.update(path.relative_to(root).as_posix().encode() + b"\0" + path.read_bytes())
     return h.hexdigest()[:12]
 
@@ -114,6 +118,9 @@ def create_web_app(
     agent_loop: bool = False,
     grounding: GroundingMode = "flag",
     jev: JevMode = "off",
+    jev_routing: bool = False,
+    harness_profile: str = "",
+    lab_records_dir: str = "",
     jev_budget_dir: str = "",
     jev_daily_usd: str = "1",
     jev_daily_calls: int = 2000,
@@ -122,8 +129,6 @@ def create_web_app(
 ) -> FastAPI:
     configure_logging()
     # Directory tools keep their own service credential, never exposed to the browser.
-    repository = DirectoryRepository.load(data_dir)
-    knowledge = KnowledgeStore.load(data_dir / "knowledge.json")
     if runtime_mode not in {"legacy", "phase1", "phase2"}:
         raise ValueError("Invalid backend runtime mode")
     version = asset_hash() if asset_version == "auto" else asset_version
@@ -136,6 +141,9 @@ def create_web_app(
         embedding_model=embedding_model,
         bundled=knowledge_bundle,
     )
+    data_dir = snapshots.bind_directory(data_dir)
+    repository = DirectoryRepository.load(data_dir)
+    knowledge = KnowledgeStore.load(data_dir / "knowledge.json")
     web_service = None
     shared_budget = None
     if web_search:
@@ -156,19 +164,11 @@ def create_web_app(
             2000,
             max_search_flows=evidence_daily_flows,
         )
-        price = (
-            TokenPrice(Decimal(search_input_price), Decimal(search_output_price))
-            if search_input_price and search_output_price
-            else None
-        )
-        native = DeepSeekSearchProvider(
+        native = DeepSeekToolsProvider(
             api_key=str(getattr(model, "api_key", ""))
             if getattr(model, "base_url", "").rstrip("/")
             in {"https://api.deepseek.com", "https://api.deepseek.com/v1"}
             else "",
-            price=price,
-            search_cost_per_use=Decimal("0") if price is not None else None,
-            model=str(getattr(model, "model", "deepseek-flash")),
         )
         alternative = TavilySearchProvider(
             tavily_api_key, free_plan_confirmed=tavily_free_plan_confirmed
@@ -180,7 +180,7 @@ def create_web_app(
         )
     try:
         plugin = build_plugin(
-            jev,
+            jev if jev != "off" else "on" if jev_routing else "off",
             evidence_budget_dir if web_search else jev_budget_dir,
             snapshots,
             jev_daily_usd,
@@ -250,9 +250,13 @@ def create_web_app(
                 model if isinstance(model, ToolCallingModel) else None,
                 grounding=grounding,
                 jev=plugin,
+                concise=True,
                 web_service=web_service,
                 snapshots=snapshots,
                 reader=reader if isinstance(reader, ToolCallingModel) else None,
+                profile=HarnessProfile.load(Path(harness_profile)) if harness_profile else None,
+                jev_routing=jev_routing,
+                jev_evidence=jev != "off",
             )
             if agent_loop and runtime_mode == "phase2"
             else None
@@ -292,6 +296,9 @@ def create_web_app(
 
     app.router.lifespan_context = lifespan
     _register_shell(app, state, version)
+    from campuspilot.app.routes_lab import register as register_lab
+
+    register_lab(app, Path(lab_records_dir) if lab_records_dir else None, version)
     routes_chat.register(app, state)
     routes_data.register(app, state)
     routes_attachments.register(app, state)
@@ -336,12 +343,19 @@ def _register_shell(app: FastAPI, state: WebState, version: str = "") -> None:
             if map_view
             else "script-src 'self'; "
         )
+        # GLTFLoader fetches embedded image blobs for createImageBitmap.
+        # Limit this permission to the frame that renders the 3D guide.
+        connect_policy = (
+            "connect-src 'self' "
+            + ("blob: " if map_view else "")
+            + "https://*.amap.com https://*.autonavi.com; "
+        )
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; " + script_policy + "frame-src 'self'; "
             "style-src 'self' 'unsafe-inline'; "
             "img-src 'self' data: blob: https://*.amap.com https://*.autonavi.com; "
-            "connect-src 'self' https://*.amap.com https://*.autonavi.com; "
-            "worker-src 'self' blob:; "
+            + connect_policy
+            + "worker-src 'self' blob:; "
             + ("frame-ancestors 'self'; " if map_view else "frame-ancestors 'none'; ")
             + "base-uri 'none'; form-action 'none'"
         )
@@ -380,6 +394,7 @@ def _register_shell(app: FastAPI, state: WebState, version: str = "") -> None:
     if version:
         app.mount(f"/assets/v-{version}", StaticFiles(directory=ASSETS), name="assets-versioned")
     app.mount("/assets", StaticFiles(directory=ASSETS), name="assets")
+
 
     @app.post("/api/session")
     async def start(request: Request) -> JSONResponse:

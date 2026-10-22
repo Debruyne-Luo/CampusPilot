@@ -1,5 +1,8 @@
 // Delayed synthetic Fetch stream exercises incremental rendering and scroll/focus.
 async(page)=>{
+  const baseUrl=page.url();
+  if(!baseUrl.startsWith('http://127.0.0.1:'))throw new Error('Use a local verification server');
+  page.setDefaultTimeout(10000);
   const showChat=async()=>{if(await page.locator('#return-reading').isVisible()){await page.locator('#return-reading').click();await page.waitForTimeout(350);}for(let i=0;i<3&&await page.locator('#handling-panel').isVisible();i++)await page.locator('.handling-back').first().click();};
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.unrouteAll({behavior:'wait'});
@@ -17,7 +20,7 @@ async(page)=>{
       }}),{headers:{'Content-Type':'text/event-stream'}}));
     };
   });
-  await page.setViewportSize({width:1440,height:900});await page.goto('http://127.0.0.1:8875/');
+  await page.setViewportSize({width:1440,height:900});await page.goto(baseUrl);
   await page.locator('#send:not([disabled])').waitFor();
   await page.locator('#question').fill('合成持续流测试');await page.locator('#send').click();
   await page.locator('.streaming').waitFor();
@@ -33,8 +36,8 @@ async(page)=>{
   if(await page.locator('#handling-panel').isHidden())throw new Error('final stole checklist view');
   await showChat();
   if(!(await page.locator('.answer').innerText()).includes('已完成'))throw new Error('final missing');
-  await page.locator('#desktop-settings').click();await page.setViewportSize({width:390,height:844});
-  if(await page.locator('#reading-settings').isVisible())throw new Error('desktop modal stranded on phone');
+  await page.setViewportSize({width:390,height:844});
+  if(await page.locator('#desktop-settings, #reading-settings').count())throw new Error('removed settings returned');
   if(errors.length)throw new Error(errors.join(','));
-  return {incremental:true,draftPreserved:true,readingPositionPreserved:true,checklistRemainsOpen:true,resizeClosesSettings:true,pageErrors:0};
+  return {incremental:true,draftPreserved:true,readingPositionPreserved:true,checklistRemainsOpen:true,settingsRemoved:true,pageErrors:0};
 }

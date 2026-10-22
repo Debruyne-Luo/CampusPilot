@@ -1,5 +1,68 @@
 # 整包发布（release 布局）
 
+## 2026-10-21 整合版与新机器
+
+本轮状态、验收和切换前提见 [发布交接](qa/release-20261021.md)。用户最终选择原机
+`38.244.61.184`（Ubuntu 24.04.3），沿用 `https://cdutdino.pages.dev/`。初选95.40.212.65
+因Gemini和Jev地区限制退出本次发布。宣传片是本地实验材料，不进入 Git、
+源码包、运行包或 Release 附件。
+
+新知识使用 `current.json`、`last_good.json` 与 `versions/`，必须用以下新模式；旧 `--bundle`
+继续可读，但不能用旧包名替代活动知识。两种模式互斥：
+
+```powershell
+python deploy/publish_release.py --knowledge-current --output output/release-current.tar.gz
+python scripts/package_release.py --committed --output output/submission
+```
+
+新模式冻结两个指针及其完整 manifest 绑定内容，包括目录、向量、原件与验收材料。
+损坏、缺文件、哈希不符、路径越界及符号链接都使打包失败。源码包来自 Git HEAD，最终运行包也
+必须从该源码导出目录生成；开发工作区和旧的10月20日运行包不能替代最终提交。
+解包后冷启动 `SnapshotStore` 与应用，核对活动版本、36项服务、前端资源及恐龙模型 SHA-256。
+
+新机先只读盘点已有服务，再使用 `deploy/vps/04-prepare-migration.sh` 准备独立目录、用户、
+1 GiB swap、官方 Caddy 与 Python 3.14.7。依赖在发布树中用锁定的 `uv.lock` 安装到共享 venv：
+
+```bash
+UV_PROJECT_ENVIRONMENT=/opt/campuspilot/venv /opt/campuspilot/tooling/uv sync \
+  --project /opt/campuspilot/current --locked --no-dev --extra api --extra vector --no-install-project
+```
+
+`deploy/vps/03-env.example` 是本次显式开关模板：lexical，Jev证据/路由与DeepSeek Search开启，
+Harness profile为空。真实密钥、已消耗预算和读图配置通过仓库外私有文件迁移；没有价格或凭据
+时不得伪称联网/Jev启用成功，不重置原账本。应用单worker，保留systemd资源限制。
+
+Pages代理源码在 `deploy/pages/_worker.js`，默认新源站为
+`https://campuspilot.38-244-61-184.sslip.io:8443`，可用 `CAMPUSPILOT_ORIGIN` 覆盖。
+它只改写真正同源浏览器的Origin，外站Origin保持原值供后端拒绝；流式正文、Cookie、状态和
+缓存/安全头保留，双斜杠路径不能改变目标主机。后端 `PUBLIC_ORIGIN` 与源站HTTPS地址一致。
+代理配置不授予模型权限，不把网页线索自动写入知识库。
+
+原机的80/443已有服务，使用`deploy/Caddyfile.shared`与独立`campuspilot-gateway`。
+`CAMPUSPILOT_DOMAIN`不带端口，`CAMPUSPILOT_BIND_ADDRESS=38.244.61.184`；应用的
+`PUBLIC_ORIGIN`包含8443。服务单元沿用`deploy/campuspilot-gateway.service`的隔离限制，
+采用APT安装时将ExecStart中的旧二进制路径替换为`/usr/bin/caddy`。Caddy发行包的默认
+`caddy.service`在安装前保持masked，避免占用已有nginx的80。
+
+复制`deploy/nginx.campuspilot-acme.conf.example`并替换主机名，只将本主机名的ACME路径
+转发到127.0.0.1:18880；nginx语法检查成功后reload。Caddy在公网IP:8443提供HTTPS，
+不占用原127.0.0.1:8443；HTTP挑战经已有80转发，不使用已占用的443做TLS-ALPN挑战。
+共享配置保留错误状态与错误ID，删除错误日志中的request字段，避免记录请求头、查询或位置。
+配置经Caddy 2.11.7、nginx语法验证与实际签证通过；其他站点保持原有配置。
+依据：[内部HTTP端口](https://caddyserver.com/docs/caddyfile/options#http-port)、
+[接口绑定](https://caddyserver.com/docs/caddyfile/directives/bind)、
+[TLS挑战](https://caddyserver.com/docs/caddyfile/directives/tls)。
+
+保留现有Pages项目，先创建预览部署并联调，再由Tech Lead最终审阅后提升生产部署。
+旧Pages生产部署ID为 `cca0404b-2d63-4a15-b0f3-a7a204d5f17a`；它当前返回526，
+只能作为配置回退记录，不能当作可用服务回滚目标。新机应保留通过检查的上一稳定应用包，
+验证应用回滚后再安装候选。正式切换后观察24小时，旧环境保留至观察完成。
+
+Cloudflare确认 `_worker.js` 支持控制台直接上传，可把 `deploy/pages/` 打成zip部署到原项目；
+无需创建新的账号级令牌。[官方上传说明](https://developers.cloudflare.com/pages/get-started/direct-upload/#functions)
+
+## 既有发布流程与事故记录
+
 2026-10-12 已只读核对生产使用 release 布局，当前版本为 `r-0f1805acf68e`。
 完整提交、知识包和实际配置见 [线上基线](LIVE_BASELINE.zh-CN.md)。下面保留发布操作说明；
 不要因为早期 PR 的“未执行”描述而在现有服务器上重复初始化。

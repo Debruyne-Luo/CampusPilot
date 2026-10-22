@@ -1,7 +1,8 @@
-"""Retrieval eval (lexical / vector / hybrid): Recall@1/3/5, MRR@20, refusal handling.
+"""Retrieval eval (lexical / vector / hybrid): Recall@1/3/5, MRR@20, empty results.
 
 Case formats: {"question","target_chunk_ids","topic"} or {"case_id","question","chunk_ids",...}.
-Cases with no gold ids are refusal cases: correct when the retriever returns no hits.
+Missing gold IDs are unlabeled unless an explicit expected behavior says otherwise.
+An empty retrieval result does not establish whether an answer correctly refused.
 Query embeddings come from Cloudflare Workers AI (CF_ACCOUNT_ID / CF_API_TOKEN, never printed)
 and are cached on disk keyed by sha256(model + text) so tuning sweeps do not re-call the API.
 """
@@ -15,6 +16,7 @@ from pathlib import Path
 
 from campuspilot.chat_runtime import ConversationContext, filters_for
 from campuspilot.config import Settings
+from campuspilot.knowledge_evaluation import legacy_behavior
 from campuspilot.llm.embedding import CloudflareEmbedder
 from campuspilot.rag import KnowledgeSnapshot
 from campuspilot.retrieval.hybrid import HybridRetriever
@@ -37,6 +39,7 @@ def load_cases(path: Path) -> list[dict]:
                     "id": c.get("case_id", f"q{i + 1:03d}"),
                     "question": c["question"],
                     "gold": gold,
+                    "expected_behavior": legacy_behavior(c),
                     "group": c.get("topic") or c.get("split") or "all",
                 }
             )
@@ -68,7 +71,7 @@ def evaluate(cases, snap, index, vectors, modes, retriever_kwargs=None):
     )
     for m in modes:
         r = HybridRetriever(snap, mode=m, index=index, **(retriever_kwargs or {}))
-        rows, refusals = [], []
+        rows, unlabeled_empty = [], []
         for c in cases:
             hits = r.search(
                 c["question"],
@@ -79,7 +82,7 @@ def evaluate(cases, snap, index, vectors, modes, retriever_kwargs=None):
             ranked = [h.chunk.chunk_id for h in hits]
             per_case[c["id"]][m] = {"rank": None, "top3": ranked[:3], "n_hits": len(ranked)}
             if not c["gold"]:
-                refusals.append(not ranked)
+                unlabeled_empty.append(not ranked)
                 continue
             g = set(c["gold"])
             rank = next((i + 1 for i, x in enumerate(ranked) if x in g), None)
@@ -95,7 +98,8 @@ def evaluate(cases, snap, index, vectors, modes, retriever_kwargs=None):
             "mrr@20": round(sum(1 / x[1] for x in rows if x[1]) / n, 4),
             "miss@20": sum(1 for x in rows if not x[1]),
             "answerable_empty": sum(1 for x in rows if x[2]),
-            "refusal_correct": f"{sum(refusals)}/{len(refusals)}",
+            "no_gold_empty_retrieval": f"{sum(unlabeled_empty)}/{len(unlabeled_empty)}",
+            "answer_refusal_correctness": "UNASSESSED_RETRIEVAL_ONLY",
         }
     return results, list(per_case.values())
 
@@ -125,7 +129,10 @@ def main() -> None:
         "cases_file": str(a.cases),
         "knowledge_version": snap.version,
         "n": len(cases),
-        "n_refusal": sum(1 for c in cases if not c["gold"]),
+        "n_explicit_refusal_or_clarification": sum(
+            c["expected_behavior"] in {"refuse", "clarify"} for c in cases
+        ),
+        "n_unlabeled": sum(c["expected_behavior"] == "unlabeled" for c in cases),
         "unknown_gold_ids": sorted({g for c in cases for g in c["gold"]} - known),
         "vector_backend": index.backend if index else None,
         "results": results,

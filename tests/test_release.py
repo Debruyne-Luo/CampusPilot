@@ -30,6 +30,123 @@ def load(name: str) -> ModuleType:
 R: Any = load("_release")
 
 
+def published_root(tmp: Path) -> tuple[Path, list[str]]:
+    """Two hash-bound synthetic versions and an unrelated candidate."""
+    from campuspilot.knowledge_release import release_reference
+
+    root = fake_root(tmp)
+    versions = []
+    for pointer, label in (("current.json", "current"), ("last_good.json", "previous")):
+        snapshot = synthetic_snapshot(label)
+        target = root / "data/cdut/rag/versions" / snapshot.version
+        write_candidate(target, snapshot)
+        (root / "data/cdut/rag" / pointer).write_text(json.dumps(release_reference(target)))
+        versions.append(snapshot.version)
+    return root, versions
+
+
+def test_current_release_carries_active_and_recovery_versions(tmp_path: Path) -> None:
+    root, versions = published_root(tmp_path)
+    output = tmp_path / "current.tar.gz"
+    manifest = R.build(root, output, knowledge_current=True)
+    files = R.read_archive(output.read_bytes())[1]
+    assert manifest["knowledge_version"] == versions[0]
+    assert manifest["knowledge_last_good"] == versions[1]
+    assert "data/cdut/rag/current.json" in files
+    assert "data/cdut/rag/last_good.json" in files
+    for version in versions:
+        assert f"data/cdut/rag/versions/{version}/snapshot.json" in files
+        assert f"data/cdut/rag/versions/{version}/manifest.json" in files
+    assert not any("packages/" in name or "candidates/" in name for name in files)
+    installed = tmp_path / "unpacked"
+    for name, body in files.items():
+        dest = installed / name
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(body)
+    store = SnapshotStore(installed / "data/cdut/rag", "lexical")
+    reader = store.acquire()
+    assert reader is not None and reader.snapshot.version == versions[0]
+    (installed / "data/cdut/rag/current.json").write_text("{}")
+    recovered = SnapshotStore(installed / "data/cdut/rag", "lexical").acquire()
+    assert recovered is not None and recovered.snapshot.version == versions[1]
+
+
+@pytest.mark.parametrize("damage", ["pointer", "manifest", "snapshot", "missing", "traversal"])
+def test_current_release_rejects_incomplete_or_changed_knowledge(
+    tmp_path: Path, damage: str,
+) -> None:
+    root, versions = published_root(tmp_path)
+    rag = root / "data/cdut/rag"
+    directory = rag / "versions" / versions[1]
+    if damage == "pointer":
+        (rag / "current.json").write_text("{}")
+    elif damage == "manifest":
+        (directory / "manifest.json").write_text("{}")
+    elif damage == "snapshot":
+        (directory / "snapshot.json").write_text("{}")
+    elif damage == "missing":
+        (directory / "snapshot.json").unlink()
+    else:
+        raw = json.loads((rag / "current.json").read_text())
+        raw["version"] = "../outside"
+        (rag / "current.json").write_text(json.dumps(raw))
+    with pytest.raises(ValueError):
+        R.collect(root, knowledge_current=True)
+
+
+def test_current_release_mode_and_legacy_bundle_are_mutually_exclusive(tmp_path: Path) -> None:
+    root, _ = published_root(tmp_path)
+    with pytest.raises(ValueError, match="mutually exclusive"):
+        R.collect(root, "approved-20991231", knowledge_current=True)
+
+
+def exported_source(root: Path) -> str:
+    """A synthetic Git export whose bytes are bound to a source commit."""
+    commit = "a" * 40
+    hashes = {p.relative_to(root).as_posix(): R.sha256(p.read_bytes())
+              for p in root.rglob("*") if p.is_file() and "__pycache__" not in p.parts}
+    (root / "SOURCE_MANIFEST.json").write_text(json.dumps({
+        "git_commit": commit, "working_tree_changes": False, "files_sha256": hashes,
+    }))
+    return commit
+
+
+def test_runtime_built_outside_git_retains_exported_source_identity(tmp_path: Path) -> None:
+    root = fake_root(tmp_path)
+    commit = exported_source(root)
+    archive = tmp_path / "exported.tar.gz"
+    manifest = R.build(root, archive)
+    assert manifest["git_commit"] == commit
+    assert R.read_archive(archive.read_bytes())[0]["git_commit"] == commit
+
+
+@pytest.mark.parametrize("damage", ["edit", "missing", "extra", "wrong_commit", "traversal"])
+def test_runtime_rejects_changed_or_misattributed_source_export(
+    tmp_path: Path, damage: str,
+) -> None:
+    root = fake_root(tmp_path)
+    exported_source(root)
+    source = root / "backend/src/campuspilot/__init__.py"
+    commit = ""
+    if damage == "edit":
+        source.write_text("SYNTHETIC tampered source")
+    elif damage == "missing":
+        source.unlink()
+    elif damage == "extra":
+        source.with_name("unexpected.py").write_text("SYNTHETIC unbound module")
+    elif damage == "wrong_commit":
+        commit = "b" * 40
+    else:
+        path = root / "SOURCE_MANIFEST.json"
+        manifest = json.loads(path.read_text())
+        manifest["files_sha256"]["../outside.py"] = "a" * 64
+        path.write_text(json.dumps(manifest))
+    archive = tmp_path / "bad-export.tar.gz"
+    with pytest.raises(ValueError, match="[Ss]ource"):
+        R.build(root, archive, commit=commit)
+    assert not archive.exists()
+
+
 def fake_root(tmp: Path, marker: str = "1") -> Path:
     root = tmp / f"src-{marker}"
     for name, text in {

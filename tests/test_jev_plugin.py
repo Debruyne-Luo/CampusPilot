@@ -125,7 +125,8 @@ def run(agent: AgentRunner, question: str = QUESTION) -> Any:
 
 
 def without_jev(out: dict[str, Any]) -> dict[str, Any]:
-    return {k: v for k, v in out.items() if k != "jev"}
+    # Optional execution metadata is tested separately; answers and evidence stay equal.
+    return {k: v for k, v in out.items() if k not in {"jev", "decisions"}}
 
 
 def answering_model() -> FakeLLM:
@@ -397,23 +398,31 @@ def test_web_metadata_exception_cannot_bypass_private_context_checks(
 
 
 def test_shadow_runs_in_background_and_does_not_delay_the_answer(tmp_path: Path) -> None:
-    fake = FakeJev(delay=0.5, sufficient=0.05)
+    release = asyncio.Event()
+
+    class GatedJev(FakeJev):
+        async def evaluate(self, *args: Any, **kwargs: Any) -> ShadowResult:
+            await release.wait()
+            return await super().evaluate(*args, **kwargs)
+
+    fake = GatedJev(sufficient=0.05)
     agent = runner(OFF_TOPIC, answering_model(), fake, "shadow", tmp_path)
     records: list[tuple[str, Any]] = []
     agent.trace = lambda kind, record: records.append((kind, record))
 
-    async def turn() -> tuple[Any, float, list[Any]]:
+    async def turn() -> tuple[Any, list[Any]]:
         from campuspilot.chat_runtime import ConversationContext as Context
 
-        started = asyncio.get_running_loop().time()
-        body = await agent.run(QUESTION, Context())
-        elapsed = asyncio.get_running_loop().time() - started
+        body = await asyncio.wait_for(agent.run(QUESTION, Context()), timeout=10)
         before = [k for k, _ in records if k == "jev"]
+        release.set()
         await agent.drain()
-        return body, elapsed, before
+        return body, before
 
-    body, elapsed, before = asyncio.run(turn())
-    assert elapsed < 0.4 and before == [] and "jev" not in body
+    body, before = asyncio.run(turn())
+    # The answer returned while the judge was explicitly blocked. This ordering assertion
+    # does not depend on source-fixture disk speed (notably WSL on an NTFS checkout).
+    assert before == [] and "jev" not in body
     assert [r["mode"] for k, r in records if k == "jev"] == ["shadow"]
 
 

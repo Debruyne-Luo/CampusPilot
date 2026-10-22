@@ -18,14 +18,15 @@ class ChecklistQuery(Contract):
 def _evidence_for(field_evidence: Any, prefix: str) -> list[str]:
     ids: list[str] = []
     for item in field_evidence:
-        if item.field_path == prefix or item.field_path.startswith(prefix + "."):
+        if (item.field_path == prefix or item.field_path.startswith(prefix + ".")
+                or prefix.startswith(item.field_path + ".")):
             ids.extend(i for i in item.evidence_ids if i not in ids)
     return ids
 
 
 class ChecklistTool:
     name = "make_checklist"
-    description = "根据已收录的办事事项生成可勾选清单：要带的材料、需要的信息、注意限制、办理步骤。"
+    description = "读取办事事项的已知准备信息；仅完整且有来源支持的流程可生成办理步骤清单。"
     params_model: type[BaseModel] = ChecklistQuery
 
     def __init__(self, repository: DirectoryRepository) -> None:
@@ -50,18 +51,24 @@ class ChecklistTool:
                 }
             )
 
-        for text in service.required_materials or ():
-            add("material", text, "required_materials")
-        for text in service.required_inputs or ():
-            add("input", text, "required_inputs")
-        for text in service.limits or ():
-            add("limit", text, "limits")
-        for step in service.steps:
-            add("step", step.instruction, "steps", step.place_ids or ())
+        for index, text in enumerate(service.required_materials or ()):
+            add("material", text, f"required_materials.{index}")
+        for index, text in enumerate(service.required_inputs or ()):
+            add("input", text, f"required_inputs.{index}")
+        for index, text in enumerate(service.limits or ()):
+            add("limit", text, f"limits.{index}")
+        if service.information_level == "procedure":
+            for index, step in enumerate(service.steps):
+                add("step", step.instruction, f"steps.{index}", step.place_ids or ())
         return {
             "status": "success",
+            "information_level": service.information_level,
+            "checklist_available": service.information_level == "procedure",
+            "procedure_note": service.procedure_note,
             "service_id": service.service_id,
-            "title": service.name + " 办理清单",
+            "title": service.name + (
+                " 办理清单" if service.information_level == "procedure" else " 已知准备信息"
+            ),
             "audience_note": service.audience,
             "items": items,
             "fees_note": [str(f) for f in service.fees or ()],

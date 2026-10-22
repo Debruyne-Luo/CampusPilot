@@ -266,7 +266,7 @@ function showService(service) {
   // Tolerate a record missing an optional field instead of breaking the demo panel.
   const content = $("detail-content"); content.replaceChildren();
   const audience = service.audience || "";
-  const steps = service.steps || [];
+  const steps = service.information_level === "procedure" ? service.steps || [] : [];
   content.append(element("h2", service.name || "事务"));
   content.append(element("p", `${service.department || ""} · ${audience.split(/[；;]/)[0]}`, "detail-meta"));
   if (service.limits?.length) {
@@ -278,7 +278,9 @@ function showService(service) {
     for (const material of service.required_materials) content.append(element("p", material));
   }
   appendServiceLinks(content, service);
-  content.append(element("h3", "办理步骤"));
+  content.append(element("h3", steps.length ? "办理步骤" : "已知指南信息"));
+  if (!steps.length) content.append(element("p", service.procedure_note || "完整办理流程尚未核验，请查阅官方指南。"));
+  for (const entry of service.entry_points || []) content.append(element("p", entry));
   const list = element("ol");
   for (const step of steps) {
     const row = element("li", step.instruction);
@@ -326,7 +328,7 @@ async function loadCatalogue() {
       const top = element("div", undefined, "card-top");
       top.append(element("span", "▤", "card-icon"));
       const bottom = element("div", undefined, "card-bottom");
-      bottom.append(element("span", service.department || ""), element("span", "查看步骤 ↗"));
+      bottom.append(element("span", service.department || ""), element("span", service.information_level === "procedure" ? "查看步骤 ↗" : "查看指南 ↗"));
       card.append(top, element("h3", service.name), element("p", service.steps[0]?.instruction || "查看已收录的公开办理说明"), bottom);
       card.addEventListener("click", () => showService(service)); $("service-list").append(card);
     });

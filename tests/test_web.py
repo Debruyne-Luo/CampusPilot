@@ -11,6 +11,7 @@ import pytest
 pytest.importorskip("fastapi")
 
 from campuspilot.dify import DifyClient  # noqa: E402
+from campuspilot.directory.repository import DirectoryRepository  # noqa: E402
 from campuspilot.web import create_web_app  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
 
@@ -19,8 +20,21 @@ KEY = "synthetic-dify-key-not-for-deployment"
 HEADERS = {"Origin": "http://testserver", "X-CampusPilot-Request": "1"}
 
 
-def test_unconfigured_ui_catalogue_and_no_mock_answer() -> None:
-    with TestClient(create_web_app(data_dir=DATA)) as client:
+def test_unconfigured_ui_catalogue_and_no_mock_answer(tmp_path: Path) -> None:
+    # Freeze the four-service transport fixture independently of the expanding live inventory.
+    import shutil
+
+    for source in DATA.glob("*.json"):
+        shutil.copyfile(source, tmp_path / source.name)
+    services = json.loads((tmp_path / "services.json").read_bytes())
+    selected = services[:4] if isinstance(services, list) else services["services"][:4]
+    if isinstance(services, list):
+        services = selected
+    else:
+        services["services"] = selected
+    (tmp_path / "services.json").write_text(json.dumps(services), encoding="utf-8")
+    assert len(DirectoryRepository.load(tmp_path).services()) == 4
+    with TestClient(create_web_app(data_dir=tmp_path)) as client:
         assert "理小龙" in client.get("/").text and "CDUTdino" in client.get("/").text
         script = client.get("/assets/app.js")
         assert script.status_code == 200 and "innerHTML" not in script.text

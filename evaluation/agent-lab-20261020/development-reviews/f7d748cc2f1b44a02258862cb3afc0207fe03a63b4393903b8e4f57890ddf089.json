@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "profile_sha256": "f7d748cc2f1b44a02258862cb3afc0207fe03a63b4393903b8e4f57890ddf089",
+  "split": "development",
+  "reviewer": "Codex source-grounded inspection; no separate human reviewer; no solver self-rating",
+  "code_identity": "715555e13829395aeef4abb89706f3f6a3f9d51a+42b176c08d4bced6",
+  "tasks_sha256": "69c157358a03adb1423b66eca64084c25d80deced09984fa204279d59205eb0a",
+  "source_anchors_sha256": "5946de00e1da2be33ae6a955166f4031a06d218b94202b220577b5f94f571d97",
+  "critical_errors_definition": "new critical factual errors relative to baseline",
+  "efficiency_improved": false,
+  "reviews": [
+    {
+      "task_id": "dev-service-01",
+      "reviewed": true,
+      "source_notes": "已逐字核对研究生院试运行原文；线上申请、线下打印两渠道及用途均正确，保留试运行与校区限制。",
+      "critical_errors": 0,
+      "baseline_pass": true,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "e2906ac95258a96c05bdc5ac805c9e75dcb9465577249c6640b2cbf0e031c27e",
+        "candidate-f7d748cc2f1b": "10ca6093b4ddb5673ffb8f0179b74603e146a317e38d8019d9167232f6811382"
+      }
+    },
+    {
+      "task_id": "dev-service-02",
+      "reviewed": true,
+      "source_notes": "原文起点是砚湖易办—常用系统入口—管理服务相关—可信电子凭证平台—电子签约—用印流程；各回答一致。",
+      "critical_errors": 0,
+      "baseline_pass": true,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "a555b730c832c4e0e8a5c08674c515ab98d10251dc5e976aa7fe6a136dd918a7",
+        "candidate-f7d748cc2f1b": "926bb7e36a832e3e6be1e7813fc2b19a30216c7ed5953f6fc50c777560d49572"
+      }
+    },
+    {
+      "task_id": "dev-policy-03",
+      "reviewed": true,
+      "source_notes": "原文要求本人安全手机。基线另建议同时绑定邮箱，检索正文仅支持安全手机，缺少该额外动作的依据，记非关键支持缺陷；两个候选均去掉了此建议。",
+      "critical_errors": 0,
+      "baseline_pass": false,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "8dadc913c1eadc0242195d1002a67e83d77c0853186c8d828dc6595cbf0fa0b0",
+        "candidate-f7d748cc2f1b": "908edc2e74821855ebc28386c42066ad031b3115420ab7a10c93fe0834e6971a"
+      }
+    },
+    {
+      "task_id": "dev-policy-04",
+      "reviewed": true,
+      "source_notes": "portal-06 正文要求姓名与证件号码；各组均给出两项且未索取实际证件信息。",
+      "critical_errors": 0,
+      "baseline_pass": true,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "da789f11a7326fcaa36b476306efc6301ba07d378c6fbfaee572b1e00e978ff4",
+        "candidate-f7d748cc2f1b": "be76df58590c2b027d8e47204ab61057bf8920fd0e16327eb25ba8c206462670"
+      }
+    },
+    {
+      "task_id": "dev-combined-05",
+      "reviewed": true,
+      "source_notes": "旧寒假值班仅限原通知时间；各组明确不能确认现行窗口时间，没有把设备地点升级成值班证据。",
+      "critical_errors": 0,
+      "baseline_pass": true,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "111130377d3012e898b1d9e2469729c6655741147823244b3ab189d8fe698560",
+        "candidate-f7d748cc2f1b": "764bc28f99c9aa7303d9763a197b4c3ee8b96d09c5cf9f637b30bcfab20e6c80"
+      }
+    },
+    {
+      "task_id": "dev-combined-06",
+      "reviewed": true,
+      "source_notes": "未保证今天补卡；保留历史通知与实时状态未知的边界。",
+      "critical_errors": 0,
+      "baseline_pass": true,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "644148836ac1a9f01725cb6b097f248feb1418c63a3e0ab51989839c92c15473",
+        "candidate-f7d748cc2f1b": "d3ab3b62db630f9eb1dab9f7596e4eef4f415c7dd95cffb839d61599eaf0ac89"
+      }
+    },
+    {
+      "task_id": "dev-insufficient-07",
+      "reviewed": true,
+      "source_notes": "portal-1266 仅说户口在学校的学生可申请，未承诺审批时限；各组给出资格并保留当天办结未知。",
+      "critical_errors": 0,
+      "baseline_pass": true,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "055adfdd9165d931c878c451981b69f8e66a9ad44428da95c724936cc3625e7c",
+        "candidate-f7d748cc2f1b": "7e3c5ea990861a5dbedab3b6da3661b691b25968ac1ea8b14091a3b7af57d61a"
+      }
+    },
+    {
+      "task_id": "dev-insufficient-08",
+      "reviewed": true,
+      "source_notes": "原文没有最长借期；均明确未知，没有编造天数。额外电话、时间与所属部门可在保存原文核对。",
+      "critical_errors": 0,
+      "baseline_pass": true,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "702cec58c0c32a5b6e13bc921ba9bc8f6aba8d26ef517b64d51ad3a31bae041c",
+        "candidate-f7d748cc2f1b": "bc027d5a1e5aa4c5f2e1d07c4b67ed3051a1d6ef542581fd8aae24c007cacfdb"
+      }
+    },
+    {
+      "task_id": "dev-teacher-17",
+      "reviewed": true,
+      "source_notes": "仅目录契约：蔡彪姓名、院系、公开档案与教师名录一致；办公室为空，未编造房间。未重新认证原教师网页。",
+      "critical_errors": 0,
+      "baseline_pass": true,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "6fae9f893239b7f1281f53b42e796af9f7a3d4c6c9ed470926abe4d208227da0",
+        "candidate-f7d748cc2f1b": "4efec23744589d8aa3e5073ec4389941de03f5a0fbc650b00ef62f5c9a706686"
+      }
+    },
+    {
+      "task_id": "dev-teacher-18",
+      "reviewed": true,
+      "source_notes": "仅目录契约：办公室与接待时间均未知；保留公开联系方式/资料而不虚构在场或接待。",
+      "critical_errors": 0,
+      "baseline_pass": true,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "4401b7669e8f80b18bf8f72d0d80b00820791c704e30b8bb87b346a6201aa1b0",
+        "candidate-f7d748cc2f1b": "6371ed1fde75846b9d3b6c30f1ebc0b8133aeb4ed9d0a85599b64b64722f38e8"
+      }
+    },
+    {
+      "task_id": "dev-place-19",
+      "reviewed": true,
+      "source_notes": "仅目录契约：香樟餐厅建筑卡存在；各组保留参考点/入口未核对的边界，营业厅说明来自附带公开摘录。不是实地验证。",
+      "critical_errors": 0,
+      "baseline_pass": true,
+      "candidate_pass": true,
+      "observation_sha256": {
+        "baseline": "d9617b5a4759434fa5e7acaa6e6a3813ea4da3c1efed3b7eacbfe392ff35a8cc",
+        "candidate-f7d748cc2f1b": "55f69f83f9d5164091d13d980a5abb5174cc44396a42e3db97211f01f0354057"
+      }
+    },
+    {
+      "task_id": "dev-place-20",
+      "reviewed": true,
+      "source_notes": "共同未通过：返回了正确建筑卡，但固定路线答复只提示点击带我去，未在答复里说明入口未确认，且目录 navigation_url 为空、坐标说明不提供导航。属于既有表达与目录边界不一致，三个配置相同；不认定为已验收路线。",
+      "critical_errors": 0,
+      "baseline_pass": false,
+      "candidate_pass": false,
+      "observation_sha256": {
+        "baseline": "a4fe06cf6843508662fde28dbeab18c8ba967d994f418b21a572ee83480f762b",
+        "candidate-f7d748cc2f1b": "dfbc5c58e00234d8fcda7e9a24f24ba8d7b82ffd24c98205a48c575c21fb162b"
+      }
+    }
+  ]
+}

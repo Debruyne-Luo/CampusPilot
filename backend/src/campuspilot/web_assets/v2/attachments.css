@@ -5,11 +5,11 @@
 .attachment-drafts{display:flex;gap:8px;flex-basis:100%;overflow-x:auto;padding:2px}
 .attachment-draft{position:relative;margin:0;flex:0 0 90px;max-width:110px}
 .attachment-draft img{display:block;width:90px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
-.attachment-draft figcaption{font-size:11px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere;margin-top:4px}
-.composer .attachment-remove{position:absolute;top:0;right:0;padding:0;width:24px;height:24px;border-radius:50%;background:var(--ink);color:#fff;line-height:24px}
-.composer .attachment-retry{padding:2px 6px;font-size:11px;background:var(--brand-soft);color:var(--brand);margin-top:2px}
+.attachment-draft figcaption{font-size:12px;line-height:1.4;color:var(--muted);overflow-wrap:anywhere;margin-top:4px}
+.composer .attachment-remove{position:absolute;top:0;right:0;padding:0;width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--on-ink);line-height:44px}
+.composer .attachment-retry{padding:2px 6px;font-size:12px;background:var(--brand-soft);color:var(--brand);margin-top:2px}
 .attachment-notice{flex-basis:100%;font-size:12px;color:var(--danger);margin:0}
 .message-images{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .message-images img{max-width:140px;max-height:140px;object-fit:contain;border-radius:8px;background:var(--panel)}
 .place-source{color:var(--muted);font-size:12px;margin-top:3px}
-@media(max-width:420px){.composer .attach-button{padding:8px;font-size:13px}.composer.has-attachments #send{padding:8px 12px}}
+@media(max-width:420px){.composer .attach-button{padding:8px;font-size:14px}.composer.has-attachments #send{padding:8px 12px}}

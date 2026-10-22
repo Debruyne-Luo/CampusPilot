@@ -48,7 +48,7 @@ function applyTheme(mode) {
   $("theme-dark")?.classList.toggle("on", !light);
   $("theme-light")?.setAttribute("aria-pressed", String(light));
   $("theme-dark")?.setAttribute("aria-pressed", String(!light));
-  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", light ? "#f4f8f8" : "#040708");
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", light ? "#f5f7f6" : "#141414");
 }
 try { applyTheme(localStorage.getItem(THEME_KEY) === "dark" ? "dark" : "light"); }
 catch { applyTheme("light"); }
@@ -157,14 +157,21 @@ function finishArrival() {
 function highlight(place) {
   if(isDesktop()) {routeIntent++;pendingTarget=null;note();desktopUI?.enterMap(place);}
   map.focus(place);
-  document.querySelectorAll(".place-row").forEach((c) => c.classList.toggle("active", c.dataset.placeId === place.place_id));
+  document.querySelectorAll(".place-row").forEach((c) => {
+    const selected = c.dataset.placeId === place.place_id;
+    c.classList.toggle("active", selected);
+    c.querySelector(".place-name")?.setAttribute("aria-pressed", String(selected));
+  });
   showCard({ name: place.name, position: hasPosition(place) ? place.position : null, place });
 }
 function selectPoi(poi) {
   if(isDesktop()) {
     routeIntent++;pendingTarget=null;note();desktopUI?.enterMap(poi);
     map.focus({...poi,place_id:`poi:${poi.poi_id||poi.position.longitude+','+poi.position.latitude}`});
-    document.querySelectorAll('.place-row.active').forEach(e=>e.classList.remove('active'));
+    document.querySelectorAll('.place-row.active').forEach(e=>{
+      e.classList.remove('active');
+      e.querySelector('.place-name')?.setAttribute('aria-pressed', 'false');
+    });
   }
   showCard({name:poi.name,position:poi.position,poi:true});collapseForMap();
 }
@@ -372,7 +379,7 @@ async function submit(text) {
   $("new-chat").disabled = true; attachments.refresh();
   $("empty")?.remove();
   bubble(text, images); followAnswer = true; scrollEnd(true);
-  let state = initialPlan();
+  let state = initialPlan(), answerAnchor = null;
   const planHost = h("div", { class: "plan-host" });
   const live = h("p", { class: "conclusion streaming", "aria-live": "polite" });
   thread.append(planHost);
@@ -395,7 +402,8 @@ async function submit(text) {
       if (!live.isConnected) {
         const bar = h("div", { class: "stream-line", "aria-hidden": "true" }, h("i", { style: "width:12%" }));
         bar.dataset.streamBar = "true";
-        thread.append(bar, live);
+        thread.insertBefore(bar, planHost);
+        thread.insertBefore(live, planHost);
       }
       live.textContent = state.answer;
       const barFill = thread.querySelector('[data-stream-bar] i');
@@ -407,6 +415,7 @@ async function submit(text) {
   if (ticket !== conversationRevision) return;
   thread.querySelector('[data-stream-bar]')?.remove();
   if (!result.ok) {
+    state = reducePlan(state, { event: "final", data: { degraded_reason: "request_failed" } }); paint();
     if (state.answer) {
       live.textContent = `${state.answer}\n\n（以上内容未完成，尚未核对引用）`;
       live.classList.remove("streaming");
@@ -419,13 +428,17 @@ async function submit(text) {
     else { state = reducePlan(state, { event: "final", data: {} }); paint(); }
     attachments.sent();
     const cards = answerCards(result.body, { checklistPreview: handling.preview, onFocus: highlight, onGo: go, onMapPick: pickDestination, onFrom: (p) => setOrigin({ type: "place", place: p }), origin: routeOrigin(origin) });
+    answerAnchor = cards[0];
     for (const c of cards) if (c.update) placeCards.add(c);
     thread.append(...cards); cardsIn(cards);
     map.addPlaces(result.body.places || []);
     map.reveal((result.body.places || []).map((p) => p.place_id));
   }
+  if (planHost.isConnected) thread.append(planHost);
   busy = false; chatController = null; $("new-chat").disabled = false; $("send-label").textContent = "发送"; attachments.refresh();
-  scrollEnd();
+  if (answerAnchor && followAnswer && !handling.active && !desktopUI?.mapMode) {
+    thread.scrollTo({ top: thread.scrollTop + answerAnchor.getBoundingClientRect().top - thread.getBoundingClientRect().top - 12, behavior: "instant" });
+  } else scrollEnd();
   if (!mobile() && !handling.active && !desktopUI?.mapMode) input.focus({ preventScroll: true });
 }
 
