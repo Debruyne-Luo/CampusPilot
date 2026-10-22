@@ -74,7 +74,10 @@ def _allowed_hosts(public_origin: str | None, api_token: str | None) -> list[str
 def asset_hash(root: Path = ASSETS) -> str:
     """Short content hash of every shipped front-end file (names + bytes)."""
     h = hashlib.sha256()
-    for path in sorted(p for p in root.rglob("*") if p.is_file() and "__pycache__" not in p.parts):
+    # Path ordering follows the host's case rules. Sort explicit relative components to
+    # preserve the Linux release fingerprint on Windows exports of identical bytes.
+    paths = (p for p in root.rglob("*") if p.is_file() and "__pycache__" not in p.parts)
+    for path in sorted(paths, key=lambda p: p.relative_to(root).parts):
         h.update(path.relative_to(root).as_posix().encode() + b"\0" + path.read_bytes())
     return h.hexdigest()[:12]
 
