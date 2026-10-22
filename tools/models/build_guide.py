@@ -322,8 +322,14 @@ for side in [-1, 1]:
     dome("eye rim", p - n * 0.018, (0.240, 0.026, 0.310), ink, n, head, side * 0.12)
     front = tangent(n, (1, 0, 0))
     up = tangent(n, (0, 0, 1))
-    dome("eye iris", p + front * 0.055 + n * 0.022, (0.145, 0.030, 0.190), iris, n, head, side * 0.12)
-    dome("eye pupil", p + front * 0.075 + n * 0.036, (0.088, 0.028, 0.115), ebony, n, head, side * 0.12)
+    dome(
+        "eye iris", p + front * 0.055 + n * 0.022,
+        (0.145, 0.030, 0.190), iris, n, head, side * 0.12,
+    )
+    dome(
+        "eye pupil", p + front * 0.075 + n * 0.036,
+        (0.088, 0.028, 0.115), ebony, n, head, side * 0.12,
+    )
     dome(
         "catchlight major",
         p + front * 0.082 + up * 0.082 + n * 0.055,
@@ -365,7 +371,7 @@ for i in range(19):
     y = t * 0.30
     z = -0.16 + 0.16 * t * t
     p, n = surface(head_mesh, (2.54, y, 2.94 + z), (-1, 0, 0))
-    mouth_pts.append((head.matrix_world.inverted() @ (p + n * 0.008)))
+    mouth_pts.append(head.matrix_world.inverted() @ (p + n * 0.008))
     mouth_normals.append(n)
     mouth_half.append(0.019 - 0.005 * abs(t))
 mouth_verts = []
@@ -466,7 +472,7 @@ for x, z, r in navy_specks:
     for side in [-1, 1]:
         p, n = surface(body, (x, side * 4, z), (0, -side, 0))
         dome("navy dot", p + n * (r * 0.05), (r, r * 0.42, r), navy, n, torso)
-for lx, cy, ry, lz, r, mat, name in [
+for lx, _cy, _ry, lz, r, mat, name in [
     (-0.82, -0.05, 0.413, -0.03, 0.070, copper, "tail dot"),
     (-1.15, -0.08, 0.307, -0.02, 0.052, navy, "tail speck"),
 ]:
