@@ -100,6 +100,53 @@ def test_current_release_mode_and_legacy_bundle_are_mutually_exclusive(tmp_path:
         R.collect(root, "approved-20991231", knowledge_current=True)
 
 
+def exported_source(root: Path) -> str:
+    """A synthetic Git export whose bytes are bound to a source commit."""
+    commit = "a" * 40
+    hashes = {p.relative_to(root).as_posix(): R.sha256(p.read_bytes())
+              for p in root.rglob("*") if p.is_file() and "__pycache__" not in p.parts}
+    (root / "SOURCE_MANIFEST.json").write_text(json.dumps({
+        "git_commit": commit, "working_tree_changes": False, "files_sha256": hashes,
+    }))
+    return commit
+
+
+def test_runtime_built_outside_git_retains_exported_source_identity(tmp_path: Path) -> None:
+    root = fake_root(tmp_path)
+    commit = exported_source(root)
+    archive = tmp_path / "exported.tar.gz"
+    manifest = R.build(root, archive)
+    assert manifest["git_commit"] == commit
+    assert R.read_archive(archive.read_bytes())[0]["git_commit"] == commit
+
+
+@pytest.mark.parametrize("damage", ["edit", "missing", "extra", "wrong_commit", "traversal"])
+def test_runtime_rejects_changed_or_misattributed_source_export(
+    tmp_path: Path, damage: str,
+) -> None:
+    root = fake_root(tmp_path)
+    exported_source(root)
+    source = root / "backend/src/campuspilot/__init__.py"
+    commit = ""
+    if damage == "edit":
+        source.write_text("SYNTHETIC tampered source")
+    elif damage == "missing":
+        source.unlink()
+    elif damage == "extra":
+        source.with_name("unexpected.py").write_text("SYNTHETIC unbound module")
+    elif damage == "wrong_commit":
+        commit = "b" * 40
+    else:
+        path = root / "SOURCE_MANIFEST.json"
+        manifest = json.loads(path.read_text())
+        manifest["files_sha256"]["../outside.py"] = "a" * 64
+        path.write_text(json.dumps(manifest))
+    archive = tmp_path / "bad-export.tar.gz"
+    with pytest.raises(ValueError, match="[Ss]ource"):
+        R.build(root, archive, commit=commit)
+    assert not archive.exists()
+
+
 def fake_root(tmp: Path, marker: str = "1") -> Path:
     root = tmp / f"src-{marker}"
     for name, text in {

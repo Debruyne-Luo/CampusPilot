@@ -55,6 +55,7 @@ from campuspilot.agent.responses import (
     ResponseBuilder,
 )
 from campuspilot.agent.routing import ROUTES, route_plan
+from campuspilot.agent.structured_answers import parse_answer
 from campuspilot.agent.understand import (
     Slots,
     Understanding,
@@ -107,6 +108,8 @@ AGENT_SYSTEM = """你是理小龙（CDUTdino），成都理工大学校园办事
 具体操作由页面“查看办理步骤”折叠展示，不在正文逐项复述，也不要求用户再次追问才能查看。
 没有结构化步骤时仍须给出证据支持的必要操作，不提示不存在的折叠入口。
 必须保留影响结论的身份、校区、学年、期限、金额、余额及例外；多问逐项回应，不为缩短正文漏答或隐去未知信息。
+回答“能否、是否立即、何时生效”等结论时，仍须交代证据中取得该结果所必需的办理前提和下一步；
+不能把“先由谁登记/审核，再按通知办理，之后才生效”的行动链压缩成等待期限。
 末尾最多加一条能推进当前任务的建议，没有必要就结束，不固定追加提问或扩展菜单。
 只有用户未提供的条件确实影响答案时才追问；缺少官方资料不是用户条件缺失，不让用户补身份或事项。
 资料只支持部分问题时，回答已证实的部分，并明确哪些费用、材料或地点仍未知，不补猜缺失事实。
@@ -212,18 +215,29 @@ class AgentRunner:
         """Keep only clarifications the data can act on.
 
         Models tend to ask for identity on every question; identity is asked only when a
-        matching service is restricted to one identity (e.g. graduate-only enrollment proof).
+        matching service actually restricts identity (e.g. graduate-only enrollment proof),
+        not merely because an all-student-and-staff audience happens to name graduates.
         A vague 办事 request with no recognisable service may ask which service is meant.
         """
         keep: list[str] = []
         matches = self.matching_services(question)
+
+        def restricted(service_id: str) -> bool:
+            service = self.repository.find_service(service_id)
+            audience = service.audience if service else ""
+            if "师生" in audience:
+                return False
+            students = bool(re.search(r"(?:^|[\s,，、;；])学生(?:$|[\s,，、;；])", audience))
+            undergraduate = students or "本科" in audience
+            graduate = students or "研究生" in audience
+            staff = any(word in audience for word in ("教职工", "教师", "职工"))
+            return any((undergraduate, graduate, staff)) and not all((
+                undergraduate, graduate, staff,
+            ))
+
         for item in view.missing:
             if "identity" in item or "身份" in item:
-                restricted = any(
-                    any(w in (svc.audience if svc else "") for w in ("本科", "研究生", "教职工"))
-                    for svc in map(self.repository.find_service, matches)
-                )
-                if view.slots.identity == "unknown" and restricted:
+                if view.slots.identity == "unknown" and any(map(restricted, matches)):
                     keep.append("identity")
             elif "service" in item or "事项" in item:
                 if view.intent == "办事" and not view.slots.service and not matches:
@@ -617,14 +631,49 @@ class AgentRunner:
                         }
                     )
                 continue
-            if completion.finish_reason == "length":
-                return None, "output_truncated", extra_calls
-            try:
-                answer = GroundedAnswer.model_validate_json(completion.content or "")
-            except ValidationError:
-                return None, "model_format", extra_calls
-            return answer, "", extra_calls
+            failure = "output_truncated" if completion.finish_reason == "length" else ""
+            if not failure:
+                try:
+                    answer, repaired = parse_answer(completion.content or "")
+                except ValidationError:
+                    failure = "model_format"
+                else:
+                    if repaired:
+                        self._trace("answer_recovery", {
+                            "reason": "model_format", "status": "ok", "count": 0,
+                        })
+                    return answer, "", extra_calls
+            # Retry generation once from the original evidence, without replaying the
+            # malformed/truncated content or granting another round of tool authority.
+            recovered_answer = await self._recover_answer(messages, failure)
+            if recovered_answer is None:
+                return None, failure, extra_calls
+            return recovered_answer, "", extra_calls
         return None, "tool_rounds_exceeded", extra_calls
+
+    async def _recover_answer(
+        self, messages: list[dict[str, object]], failure: str
+    ) -> GroundedAnswer | None:
+        assert self.model is not None
+        retry_messages: list[dict[str, object]] = [*messages, {"role": "system", "content": (
+            "上次答复未通过格式检查。请只根据本轮已有证据重新给出紧凑答复，不再调用工具。"
+            "先完成直接结论和必要前提、例外；删除无关背景，不重复整段资料。"
+            "仅返回含answer、source_ids、status的完整JSON对象；answer内换行必须用\\n转义。"
+            "不得补写证据没有的事实、引用或操作，也不能为了简短省略影响结论的信息。"
+        )}]
+        recovered = None
+        try:
+            completion = await self.model.complete(
+                retry_messages, tools=None, json_mode=True, max_tokens=ANSWER_MAX_TOKENS,
+            )
+            if not completion.tool_calls and completion.finish_reason != "length":
+                recovered, _ = parse_answer(completion.content or "")
+        except (ChatUnavailable, ValidationError):
+            pass  # The original failure remains observable in the existing fallback contract.
+        self._trace("answer_recovery", {
+            "reason": failure, "status": "ok" if recovered is not None else "failed", "count": 1,
+        })
+        return recovered
 
     # -- response -----------------------------------------------------------------------
 

@@ -1,8 +1,75 @@
 # 当前线上版本基线
 
+## 2026-10-21 完整线上核对
+
+核对时间：2026-10-21 22:53:17（America/Los_Angeles），即 `2026-10-22T05:53:17Z`。
+文件名中的 `20261022` 使用原始 UTC 证据日期，不能据此误读为洛杉矶次日。
+本次只读读取服务器发布清单并重新计算全部文件哈希，没有修改配置、文件或服务。
+
+| 项目 | 核对结果 |
+| --- | --- |
+| 用户入口 | <https://cdutdino.pages.dev/> |
+| 源码提交 | `0f982edb2cc57d33bee9542c5c14b3031a775633` |
+| 整合分支 | `feat/harness-jev-submission-20261020`；[PR #38](https://github.com/Debruyne-Luo/CampusPilot/pull/38) 未合并 |
+| 发布目录 | `/opt/campuspilot/releases/r-9431bf8d5c80` |
+| 发布文件 | 623 个文件 SHA-256 逐项一致，0 个哈希错误 |
+| 前端资源 ID | `ea0e123f8db8`；源码 ZIP 中前端与实际页面引用相符 |
+| 知识版本 | `kb-1d15bf97b31c0d90`（192 来源、402 片段） |
+| 知识恢复版本 | `kb-229ee34eba99ef34` |
+| 服务 | `campuspilot`、`campuspilot-gateway`、`nginx`、`x-ui` 均为 active |
+| GitHub 长期主线 | 本轮开始时 `origin/main` 为 `01d5318`；线上不等于当前 GitHub main |
+
+原始发布文件清单见 [live-20261022.manifest.json](releases/live-20261022.manifest.json)。
+非敏感运行配置、服务状态和逐项检查结果保留在本地交付证据
+`output/submission-closeout-20261022/live-audit.json`；未导出完整环境、凭据或生产对话。
+这次检查补足了此前仅核对源码 ZIP/前端的证据，确认完整后端发布身份；
+文件匹配和服务 active 不等于每项业务、模型回答、实际地图路线均正确。
+
+### 运行配置
+
+以下来自活动服务的显式环境，区别于源码默认及无密钥模板：
+
+| 变量 | 生效值 |
+| --- | --- |
+| `CAMPUSPILOT_RUNTIME_MODE` | `phase2` |
+| `CAMPUSPILOT_AGENT_LOOP` | `on` |
+| `CAMPUSPILOT_RETRIEVAL_MODE` | `lexical` |
+| `CAMPUSPILOT_MODEL` | `deepseek-flash` |
+| `CAMPUSPILOT_GROUNDING` | `flag` |
+| `CAMPUSPILOT_JEV` / `CAMPUSPILOT_JEV_ROUTING` | `on` / `on` |
+| `CAMPUSPILOT_IMAGES` | `on` |
+| `CAMPUSPILOT_ASSET_VERSION` | `auto` |
+| `CAMPUSPILOT_HARNESS_PROFILE` | 空，未采用实验 profile |
+| `PUBLIC_ORIGIN` | `https://campuspilot.38-244-61-184.sslip.io:8443` |
+
+图片理解使用独立 reader，文本回答与图片能力分别验证。Search/Fetch 是按需只读能力；
+本次白名单配置快照未捕获其全部配置，不能由此推断每家外部服务的即时可用性或价格。
+模型名是供应商别名，不锁定供应商内部权重；后续同名模型的回答可能改变。
+
+### 验证状态与提交候选
+
+此前最新固定回答验收为 **55/60**，自动检查记录为 Linux Python **1183 项**、Node **105 项**；
+这些是已有版本的证据，本轮不把它们重新标记为修复后的通过结果。旧 `57/60`、`54/60`
+是不同源码/提示词及执行阶段的报告，原文继续保留，不能合并为同一次验收。
+
+本轮以此线上版本为基线收尾，针对 `kq-037/039/076/079/112` 复验；
+完整过程、工作区清单和交付要求见 [提交版收尾](SUBMISSION_CLOSEOUT.zh-CN.md)。
+候选代码与线上代码分别固定身份；本轮不直接合并 PR 或切换生产，既有 Release 不变。
+
+真实手机 Safari/微信、实际 GPS 和低端设备验收仍未被此次文件核对覆盖；
+固定 RAG 验收与 Search/Fetch、图片、地图联调分别记录。24 小时观察须对应真实切换时间，
+不能因自动化存在就声称观察完整。评审结束日期仍未提供，未宣称已覆盖整个评审期。
+
+## 历史记录阅读方式
+
+以下内容保留当时的提交、配置、失败和测试结论；“当前”“本次”“未上线”和 526 均指该阶段。
+它们不覆盖页首的实际线上身份，不作为再次初始化或删除历史工作区的依据。
+
 2026-10-21迁移核对：原`cdutdino.pages.dev`返回526，旧服务器未找到原应用目录或活动服务。
 以下历史清单不构成健康回滚目标。新机整合、验收与剩余门槛见
 [本轮发布交接](qa/release-20261021.md)；正式切换后以PR/发布清单记录的提交和包身份为准。
+
+## 2026-10-15 历史核对记录（非当前部署）
 
 核对日期：2026-10-15（Asia/Shanghai）。用户批准发布整合后的集成分支，不合并 main。
 

@@ -1,0 +1,159 @@
+{
+  "answer_flow": [
+    {
+      "width": 1440,
+      "presentation": {
+        "processLast": true,
+        "processClosed": true,
+        "detailsClosed": true,
+        "paragraphs": 2,
+        "labels": [
+          "先做：",
+          "注意："
+        ],
+        "secret": false,
+        "body": "先做：SYNTHETIC 先冻结合成卡，再选择自助或人工渠道。\n\n注意：余额大于20元是余额要求，不是工本费；费用及材料仍待核实。"
+      },
+      "reading": {
+        "top": 67.17874908447266,
+        "visible": true
+      },
+      "geometry": {
+        "width": 114.52083587646484,
+        "height": 44,
+        "left": 420.8125,
+        "right": 535.3333358764648,
+        "overflow": false
+      },
+      "firstAnswerSave": true,
+      "progressRetained": true,
+      "interruptedStream": {
+        "processLast": true,
+        "closed": true,
+        "running": 0
+      },
+      "pageErrors": 0
+    },
+    {
+      "width": 390,
+      "presentation": {
+        "processLast": true,
+        "processClosed": true,
+        "detailsClosed": true,
+        "paragraphs": 2,
+        "labels": [
+          "先做：",
+          "注意："
+        ],
+        "secret": false,
+        "body": "先做：SYNTHETIC 先冻结合成卡，再选择自助或人工渠道。\n\n注意：余额大于20元是余额要求，不是工本费；费用及材料仍待核实。"
+      },
+      "reading": {
+        "top": 11.805419921875,
+        "visible": true
+      },
+      "geometry": {
+        "width": 114.52083587646484,
+        "height": 44,
+        "left": 225.4791717529297,
+        "right": 340.00000762939453,
+        "overflow": false
+      },
+      "firstAnswerSave": true,
+      "progressRetained": true,
+      "interruptedStream": {
+        "processLast": true,
+        "closed": true,
+        "running": 0
+      },
+      "pageErrors": 0
+    },
+    {
+      "width": 320,
+      "presentation": {
+        "processLast": true,
+        "processClosed": true,
+        "detailsClosed": true,
+        "paragraphs": 2,
+        "labels": [
+          "先做：",
+          "注意："
+        ],
+        "secret": false,
+        "body": "先做：SYNTHETIC 先冻结合成卡，再选择自助或人工渠道。\n\n注意：余额大于20元是余额要求，不是工本费；费用及材料仍待核实。"
+      },
+      "reading": {
+        "top": 11.653564453125,
+        "visible": true
+      },
+      "geometry": {
+        "width": 114.52083587646484,
+        "height": 44,
+        "left": 155.4791717529297,
+        "right": 270.00000762939453,
+        "overflow": false
+      },
+      "firstAnswerSave": true,
+      "progressRetained": true,
+      "interruptedStream": {
+        "processLast": true,
+        "closed": true,
+        "running": 0
+      },
+      "pageErrors": 0
+    }
+  ],
+  "pine_states": {
+    "uploads": 2,
+    "retry": true,
+    "remove": true,
+    "targets": [
+      {
+        "w": 44,
+        "h": 44,
+        "right": 114.66667175292969,
+        "bottom": 724.5416870117188
+      },
+      {
+        "w": 54.90625,
+        "h": 44,
+        "right": 77.57291793823242,
+        "bottom": 825.3333740234375
+      },
+      {
+        "w": 56,
+        "h": 44,
+        "right": 367.3333435058594,
+        "bottom": 825.3333740234375
+      }
+    ],
+    "savedChecklist": true,
+    "reload": true,
+    "newChat": true,
+    "completeUndo": true,
+    "networkRecovery": true,
+    "htmlInert": true,
+    "withoutGsap": true,
+    "pageErrors": 0
+  },
+  "streaming": {
+    "incremental": true,
+    "draftPreserved": true,
+    "readingPositionPreserved": true,
+    "checklistRemainsOpen": true,
+    "settingsRemoved": true,
+    "pageErrors": 0
+  },
+  "map": {
+    "route": "水上图书馆 → 香樟餐厅\n步行约 23 分钟 · 1718 米",
+    "mode": "3d",
+    "paused": true,
+    "exited": true,
+    "guidanceControls": 0,
+    "pageErrors": []
+  },
+  "limitations": [
+    "Shared-page streaming attempt failed scroll assertion; isolated browser context passed; both outputs preserved.",
+    "Desktop viewport emulation is not physical Safari/WeChat or real GPS acceptance."
+  ]
+}

@@ -19,6 +19,32 @@ class Advice:
 
 
 def evidence_advice(question: str, history: Sequence[str], ev: Evidence) -> Advice | None:
+    # A declared channel establishes that channel, not the absence of all alternatives.
+    # Use only an explicit source field; unrelated mentions of "online" prove nothing.
+    channel_question = re.search(
+        r"(?:可[以否]?|能(?:否|不能)?|是否|允许|有(?:没有|无)|支持).{0,10}(?:线下|现场|窗口)"
+        r"|(?:线下|现场|窗口).{0,10}(?:可[以否]?|能(?:否|不能)?|是否|允许|支持)", question,
+    )
+    if (channel_question and re.search(r"提交|办理|受理|申请", question)
+            and re.search(r"指南|文字|页面", question)):
+        for hit in ev.grounded_hits():
+            source = hit.get("source_id")
+            if not isinstance(source, str) or source not in ev.allowed:
+                continue
+            field = re.search(r"办理(?:方式|途径)[ \t:：]*(线上办理|网上办理|线上|网上)",
+                              str(hit.get("text", "")))
+            if field is None:
+                continue
+            source_text = "\n".join(str(row.get("text", "")) for row in ev.grounded_hits()
+                                    if row.get("source_id") == source)
+            if re.search(r"线下|现场|窗口|仅限|只能|不得|不支持|不受理", source_text):
+                continue  # Explicit alternatives/exclusions need the full evidence path.
+            return Advice(
+                f"这份指南明确列出的办理方式是“{field[1]}”，无法确认是否另有线下受理。"
+                "没有列出线下渠道不能排除其他受理安排；请按已列的线上渠道办理，"
+                "如需现场提交，先向该事项主管部门核实。",
+                cited=(source,),
+            )
     if page_status_question(question):
         hits = [h for h in ev.hits if re.search(
             r"停[止用]|不再提供|废止", str(h.get("title", "")) + str(h.get("text", "")),

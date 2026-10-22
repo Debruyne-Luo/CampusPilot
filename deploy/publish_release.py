@@ -52,9 +52,12 @@ def main() -> None:
     parser.add_argument("--publish", action="store_true")
     parser.add_argument("--host", default="campuspilot-vps")
     args = parser.parse_args()
-    commit = subprocess.run(
-        ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=False
-    ).stdout.strip()
+    # An exported ZIP has no .git; do not accidentally take an enclosing checkout's HEAD.
+    commit = ""
+    if not (ROOT / "SOURCE_MANIFEST.json").exists():
+        commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=False
+        ).stdout.strip()
     manifest = _release.build(
         ROOT, args.output, args.bundle, commit, knowledge_current=args.knowledge_current,
     )

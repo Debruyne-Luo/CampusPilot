@@ -8,7 +8,7 @@ from campuspilot.chat_runtime import ConversationContext
 from campuspilot.knowledge import KnowledgeStore
 from campuspilot.llm.chat_model import ImageInput
 from campuspilot.tools import agent_registry
-from test_agent_loop import DATA, REPO, FakeLLM, understood
+from test_agent_loop import DATA, REPO, FakeLLM, answer, understood
 
 
 def empty_runner(model: FakeLLM | None) -> AgentRunner:
@@ -49,7 +49,9 @@ def test_reading_turns_use_the_reader_model() -> None:
 
 
 def test_text_turns_still_use_the_main_model() -> None:
-    main = FakeLLM(understood("办事"))
+    # This model is composing an answer, not classifying intent. Return its real schema
+    # so the image-routing assertion is independent of malformed-answer recovery.
+    main = FakeLLM(answer("SYNTHETIC 无法从所附图片确认上课日期。", [], "empty"))
     reading = FakeLLM(understood("办事", image_observation="must not appear"))
     agent = reader_runner(main, reading)
     run_with_images(agent, "这张课表周几有课？", images=(schedule_image(),))

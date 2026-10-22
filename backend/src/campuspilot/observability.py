@@ -29,6 +29,7 @@ _ERROR_TYPE = re.compile(r"[A-Za-z_][A-Za-z0-9_]{0,63}\Z")
 _EVENTS = frozenset({
     "turn_started", "turn_completed", "turn_cancelled", "turn_failed", "tool_start", "tool_end",
     "execution", "knowledge_acquired", "grounding_check", "jev", "answer_decision",
+    "answer_recovery",
 })
 _CAPABILITIES = frozenset({
     "search_service", "find_office", "search_place", "search_teacher", "find_teacher",

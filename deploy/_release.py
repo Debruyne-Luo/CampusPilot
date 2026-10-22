@@ -199,11 +199,38 @@ def manifest_for(files: dict[str, bytes], bundle: str, commit: str = "") -> dict
     }
 
 
+def source_export_commit(root: Path, files: dict[str, bytes], commit: str = "") -> str:
+    """Bind a runtime built from a Git ZIP to its verified source identity."""
+    source = root / "SOURCE_MANIFEST.json"
+    if not source.exists():
+        return commit
+    try:
+        manifest = json.loads(source.read_bytes())
+        identity = manifest["git_commit"]
+        hashes = manifest["files_sha256"]
+        if (
+            not isinstance(identity, str) or not re.fullmatch(r"[0-9a-f]{40,64}", identity)
+            or manifest.get("working_tree_changes") is not False
+            or not isinstance(hashes, dict) or not hashes
+            or (commit and commit != identity)
+        ):
+            raise ValueError("Source export identity is invalid or mismatched")
+        for name, expected in hashes.items():
+            if not isinstance(expected, str) or sha256(_knowledge_bytes(root, name)) != expected:
+                raise ValueError("Source export file hash mismatch")
+        if any(hashes.get(name) != sha256(body) for name, body in files.items()):
+            raise ValueError("Source export contains unbound release files")
+    except (KeyError, TypeError, OSError, ValueError) as exc:
+        raise ValueError("Source export verification failed") from exc
+    return identity
+
+
 def build(
     root: Path, output: Path, bundle: str = "", commit: str = "", *,
     knowledge_current: bool = False,
 ) -> dict[str, object]:
     files = collect(root, bundle, knowledge_current=knowledge_current)
+    commit = source_export_commit(root, files, commit)
     manifest = manifest_for(files, bundle, commit)
     if knowledge_current:
         manifest["knowledge_version"] = json.loads(files["data/cdut/rag/current.json"])["version"]
