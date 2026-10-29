@@ -1,4 +1,7 @@
 "use strict";
+// Match v2 --accent. The stroke is the light-theme indigo; the one-shot draw uses the lighter dark-theme accent so it stays visible on the stroke and on a dimmed map.
+const ROUTE_COLOR = "#4f46e5";
+const ROUTE_EMPHASIS = "#a5b4fc";
 let map = null;
 let markers = [];
 let started = false;
@@ -43,7 +46,7 @@ function manualCamera() {
 }
 function emphasizeRoute(path) {
   stopAccent();if(!desktopMode||reduceMotion)return;
-  routeAccent=new AMap.Polyline({path:[path[0],path[0]],strokeColor:'#06b6d4',strokeWeight:6,zIndex:152,bubble:true});map.add(routeAccent);
+  routeAccent=new AMap.Polyline({path:[path[0],path[0]],strokeColor:ROUTE_EMPHASIS,strokeWeight:6,zIndex:152,bubble:true});map.add(routeAccent);
   const line=routeAccent,start=performance.now();
   const frame=now=>{if(routeAccent!==line)return;const t=Math.min(1,(now-start)/450);line.setPath(path.slice(0,Math.max(2,Math.ceil(t*path.length))));if(t<1)accentRaf=requestAnimationFrame(frame);else stopAccent();};
   accentRaf=requestAnimationFrame(frame);
@@ -51,7 +54,7 @@ function emphasizeRoute(path) {
 function emphasizeMarker(position) {
   clearTimeout(markerTimer);if(markerAccent)map.remove(markerAccent);markerAccent=null;
   if(!desktopMode||reduceMotion)return;
-  const el=document.createElement('span');el.style.cssText='display:block;width:38px;height:38px;border:2px solid #4f46e5;border-radius:50%;pointer-events:none';
+  const el=document.createElement('span');el.style.cssText=`display:block;width:38px;height:38px;border:2px solid ${ROUTE_COLOR};border-radius:50%;pointer-events:none`;
   markerAccent=new AMap.Marker({position:[position.longitude,position.latitude],content:el,anchor:'center',zIndex:190,bubble:true});map.add(markerAccent);
   el.animate([{transform:'scale(.65)',opacity:1},{transform:'scale(1.25)',opacity:0}],{duration:160,easing:'ease-out'});
   markerTimer=setTimeout(()=>{if(markerAccent)map.remove(markerAccent);markerAccent=null;},160);
@@ -294,7 +297,7 @@ async function planWalking(data) {
     if (id !== routeId) return;
     const path = route.steps?.flatMap((step) => step.path || []);
     if (!path?.length || !Number.isFinite(route.distance) || !Number.isFinite(route.time)) throw new Error("invalid route");
-    const line = new AMap.Polyline({path, isOutline: true, outlineColor: "#fff", borderWeight: 2, strokeWeight: 6, strokeColor: "#347451", strokeOpacity: 1, zIndex: 150, lineJoin: "round", bubble: true});
+    const line = new AMap.Polyline({path, isOutline: true, outlineColor: "#fff", borderWeight: 2, strokeWeight: 6, strokeColor: ROUTE_COLOR, strokeOpacity: 1, zIndex: 150, lineJoin: "round", bubble: true});
     const endpoint = (position, text) => {
       const content = document.createElement("span"); content.className = "route-marker"; content.textContent = text;
       return new AMap.Marker({position, content, anchor: "center", zIndex: 200, bubble: true});
@@ -431,7 +434,7 @@ function pinIcon(place, selected) {
     // 44x48 image: the transparent margin is the (invisible) tap target around a small pin.
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="48" viewBox="0 0 44 48">`
       + `<path d="M22 ${cy + r + 9} l-5-${7} h10z" fill="${color}"/>`
-      + `<circle cx="22" cy="${cy}" r="${r + 1.5}" fill="#fff"/><circle cx="22" cy="${cy}" r="${r}" fill="${selected&&!desktopMode ? "#1f3d2b" : color}"/>`
+      + `<circle cx="22" cy="${cy}" r="${r + 1.5}" fill="#fff"/><circle cx="22" cy="${cy}" r="${r}" fill="${selected&&!desktopMode ? ROUTE_COLOR : color}"/>`
       + `<g transform="translate(${22 - r * .62} ${cy - r * .62}) scale(${r * 1.24 / 24})" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${path}"/></g></svg>`;
     iconCache.set(key, {type: "image", image: "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg), size: [44, 48], anchor: "bottom-center"});
   }

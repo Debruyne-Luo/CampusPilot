@@ -46,8 +46,8 @@
   .reading-sample p{font-size:16px;line-height:1.75;margin:8px 0 0}
   body[data-reading-size="large"] .conclusion,body[data-reading-size="large"] .handling-items li,body[data-reading-size="large"] .citations,body[data-reading-size="large"] .reading-sample p{font-size:18px}
   .handling-toast{left:calc(16px + var(--read-width,540px) / 2);max-width:calc(var(--read-width,540px) - 32px);bottom:98px}
-  .step.running{animation:none;background:var(--brand-soft)}
-  .step.running .dot{background:var(--brand);border-color:var(--brand);animation:pulse 1s ease-in-out infinite}
+  .step.running{animation:none;background:color-mix(in srgb,var(--accent) 16%,transparent)}
+  .step.running .dot{background:var(--accent);border-color:var(--accent);animation:pulse 1s ease-in-out infinite}
   .app{will-change:grid-template-columns}
   .mapwrap .card{box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.6)}
   body[data-reduce-motion="true"] *,body[data-reduce-motion="true"] *::before,body[data-reduce-motion="true"] *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
